@@ -1,0 +1,27 @@
+<?php
+// Heading
+$_['heading_title']       = 'PayPal Direct';
+
+// Text 
+$_['text_payment']        = 'Pago';
+$_['text_success']        = 'Exito: You have modified PayPal Direct Checkout account details!';
+$_['text_pp_direct']      = '<a onclick="window.open(\'https://www.paypal.com/uk/mrb/pal=W9TBB5DTD6QJW\');"><img src="view/image/payment/paypal.png" alt="PayPal" title="PayPal" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_authorization']  = 'Authorizaci&oacute;n';
+$_['text_sale']           = 'Venta';
+
+// Entry
+$_['entry_username']      = 'API Username:';
+$_['entry_password']      = 'API Password:';
+$_['entry_signature']     = 'API Signature:';
+$_['entry_test']          = 'Test Mode:<br /><span class="help">Use the live or testing (sandbox) gateway server to process transactions?</span>';
+$_['entry_transaction']   = 'Transaction Method:';
+$_['entry_order_status']  = 'Order Status:';
+$_['entry_geo_zone']      = 'Geo Zone:';
+$_['entry_status']        = 'Estado:';
+$_['entry_sort_order']    = 'Sort Order:';
+
+// Error
+$_['error_permission']    = 'Warning: You do not have permission to modify payment PayPal Direct Checkout!';
+$_['error_username']      = 'API Username Required!'; 
+$_['error_password']      = 'API Password Required!'; 
+$_['error_signature']     = 'API Signature Required!'; 

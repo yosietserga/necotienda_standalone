@@ -1,5 +1,4 @@
 <?php 
-define('VERSION','2.0.0');
 define('C_FOLDER','%folder%');      // la ruta completa donde se encuantra instalado la aplicacion
 define('C_CODE','NT000000001');         // el codigo del cliente define('C_CODE','123456789');
 define('C_URL','%url%');            // URL de la tienda con la que se creó la licencia

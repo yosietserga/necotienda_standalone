@@ -119,7 +119,7 @@ class xhttp {
 		if($output !== null) return $output;
 
 		if(!isset($requestData['headers']['User-Agent']))
-			$requestData['headers']['User-Agent'] = "codecri.me xhttp class";
+			$requestData['headers']['User-Agent'] = "necotienda-update";
 
 		# Create cURL instance
 		$ch = curl_init();

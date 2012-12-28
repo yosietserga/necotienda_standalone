@@ -68,7 +68,6 @@ class Update
             fclose($f);
             if (file_exists($file_saved) && sha1_file($file_saved) == $info['checksum']) {
                 $zip = new PclZip();
-                echo "Linea: ".__LINE__." se abre el archivo - ". __FILE__ ."<br />";
                 $zip->setZipName($file_saved);
                 if ($zip->extract(PCLZIP_OPT_PATH,DIR_ROOT) > 0) {
                     unlink($file_saved);

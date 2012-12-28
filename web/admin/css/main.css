@@ -1854,7 +1854,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c8dbf7', end
 ol {
     margin: 0px;
     padding: 0px;
-	list-style-type: none;
 }
 ol.items, ol.items ol {
     margin: 0px 0px 0px 25px;

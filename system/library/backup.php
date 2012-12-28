@@ -93,7 +93,7 @@ class Backup
         return $this->getPaths(DIR_ROOT . 'web/',$ignore);
     }
     
-    public function run() {
+    public function run($send = false) {
         $appFolders     = $this->getAppPaths();
         $systemFolders  = $this->getSystemPaths();
         
@@ -164,6 +164,12 @@ class Backup
         $fd = fopen ($this->backup_dir . "/CKECKSUM", "w");
         fwrite ($fd, $checksum);
         fclose ($fd);
+        
+        if ($send) {
+            $this->load->library('email/mailer');
+            $mailer = new Mailer();
+            
+        }
     }
     
     /**

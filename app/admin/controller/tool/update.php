@@ -22,7 +22,8 @@ class ControllerToolUpdate extends Controller {
      * @see Response
 	 * @return void
 	 */
-	public function index() {		
+	public function index() {
+	    $this->language->load('tool/update');
 		$this->document->title = $this->language->get('heading_title');
 		$this->data['heading_title'] = $this->language->get('heading_title');
 		

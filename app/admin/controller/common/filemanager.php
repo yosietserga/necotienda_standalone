@@ -111,6 +111,7 @@ class ControllerCommonFileManager extends Controller {
 			'.xls',
 			'.xlsx',
 			'.txt',
+			'.csv',
 			'.gif'
 		);
 		
@@ -147,7 +148,8 @@ class ControllerCommonFileManager extends Controller {
                 elseif ($ext=='.doc' || $ext=='.docx') {$thumb = HTTP_IMAGE . "icons/doc.png";}
                 elseif ($ext=='.xls' || $ext=='.xlsx') {$thumb = HTTP_IMAGE . "icons/xls.png";}
                 elseif ($ext=='.txt') {$thumb = HTTP_IMAGE . "icons/txt.png";}
-                elseif ($ext=='.pdf') {$thumb = HTTP_IMAGE . "icons/pdf.png";}
+                elseif ($ext=='.csv') {$thumb = HTTP_IMAGE . "icons/csv.png";}
+                elseif (!in_array($ext,$allowed)) {$thumb = HTTP_IMAGE . "icons/_blank.png";}
                 else {$thumb = NTImage::resizeAndSave(substr($file, strlen(DIR_IMAGE)), 100, 100);}
                 
 				$json[] = array(

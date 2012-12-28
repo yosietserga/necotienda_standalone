@@ -444,6 +444,7 @@
     <?php } ?>
     </ul>
     <?php } ?>
+    <?php if ($msg) { ?><div class="grid_24"><div class="message warning"><?php echo $msg; ?></div></div><?php } ?>
 </div>
 <div class="clear"></div>
 <div class="container_24">

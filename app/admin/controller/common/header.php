@@ -115,6 +115,13 @@ class ControllerCommonHeader extends Controller {
             $this->load->auto("sale/order");
             $this->data['new_orders'] = $this->modelOrder->getTotalOrdersByOrderStatusId($this->config->get("config_stock_status_id"));
                         
+            $this->load->library('update');
+            $update = new Update($this->registry);
+            $update_info = $update->getInfo();
+            if (version_compare(VERSION,$update_info['version'],'<')) {
+                $this->data['msg'] = "Hay una nueva versi&oacute;n disponible, Para instalarla haz click <a href=\"". Url::createAdminUrl("tool/update") ."\" title=\"Actualizar\">aqu&iacute;</a>";
+            }
+        
 			$this->data['store']         = HTTP_CATALOG;
 			$this->data['home']          = Url::createAdminUrl('common/home'); 
 			$this->data['logout']        = Url::createAdminUrl('common/logout');

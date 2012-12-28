@@ -1296,9 +1296,9 @@ $url = '';
      * @return boolean
      * */
      public function sortable() {
-        if (!isset($_POST['tr'])) return false;
+        if (!isset($this->request->post['tr'])) return false;
         $this->load->auto('store/product');
-        $result = $this->modelProduct->sortProduct($_POST['tr']);
+        $result = $this->modelProduct->sortProduct($this->request->post['tr']);
         if ($result) {
             echo 1;
         } else {
@@ -1324,6 +1324,7 @@ $url = '';
   	}
       
     public function import() {
+         $this->document->title = $this->data['heading_title'] = "Importar Productos";
          
    		$this->document->breadcrumbs = array();
    		$this->document->breadcrumbs[] = array(
@@ -1343,9 +1344,53 @@ $url = '';
    		);
         
          $scripts[] = array('id'=>'form','method'=>'ready','script'=>
-            "$('#wizardWrapper').load('". Url::createAdminUrl("store/product/importwizard",array('step'=>1)) ."',function(e){
-                $('#q').liveUpdate('.scrollbox').focus();
+            "$('#gridWrapper').load('". Url::createAdminUrl("store/product/importwizard",array('step'=>1)) ."',function(e){
+                $('#gridPreloader').hide();
+                $('#q').on('keyup',function(e){
+                    var that = this;
+                    var valor = $(that).val().toLowerCase();
+                    if (valor.length <= 0) {
+                        $('#categoriesWrapper li').show();
+                    } else {
+                        $('#categoriesWrapper li b').each(function(){
+                            if ($(this).text().toLowerCase().indexOf( valor ) != -1) {
+                                $(this).closest('li').show();
+                            } else {
+                                $(this).closest('li').hide();
+                            }
+                        });
+                    }
+                }); 
+                
             });");
+                    
+         $scripts[] = array('id'=>'importFunctions','method'=>'function','script'=>
+            "function file_delete(field, preview) {
+                $('#' + field).val('');
+                $('#' + preview).parent('.row').find('.clear').remove();
+                $('#' + preview).replaceWith('<a class=\"button\" id=\"'+ preview +'\" onclick=\"file_upload(\\'file_to_import\\', \\'preview\\');\">Seleccionar Archivo</a>');
+            }
+            
+            function file_upload(field, preview) {
+                var height = $(window).height() * 0.8;
+                var width = $(window).width() * 0.8;
+            	$('#dialog').remove();
+            	$('#form').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+                
+                $('#dialog').dialog({
+            		title: '".$this->data['text_image_manager']."',
+            		close: function (event, ui) {
+            			var csv = $('#' + field).val();
+            			if (csv) {
+            				$('#' + preview).replaceWith('<input type=\"text\" value=\"' + csv.replace('data/','') + '\" id=\"' + preview + '\" disabled=\"disabled\" /><div class=\"clear\"></div>');
+            			}
+            		},	
+            		bgiframe: false,
+            		width: width,
+            		height: height,
+            		resizable: false,
+            		modal: false
+            	});}");
                     
         $this->scripts = array_merge($this->scripts,$scripts);
          
@@ -1359,63 +1404,55 @@ $url = '';
     }
 	
     public function importwizard() {
-         
+         $this->data['Url'] = new Url;
          switch((int)$_GET['step']) {
             case 1:
             default:
-                $this->data['Url'] = new Url;
                 $this->load->auto("store/category");
                 $this->data['categories'] = $this->modelCategory->getCategories(0);
         		$this->template = 'store/product_import_1.tpl';
         		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
                 break;
             case 2:
-                $this->data['Url'] = new Url;
+                $data    = unserialize(file_get_contents(DIR_CACHE . "temp_product_data.csv"));
+                
+                $handle  = fopen(DIR_IMAGE . $data['file'], "r+");
+                $this->data['header'] = fgetcsv($handle, 1000, $data['separator'], $data['enclosure']);
+                $this->data['fields']['Producto'] = array(
+                        'product_id'    =>'Producto ID',
+                        'model'         =>'Modelo',
+                        'quantity'      =>'Catnidad',
+                        'price'         =>'Precio',
+                        'tax_class_id'  =>'Impuesto ID',
+                        'sku'           =>'SKU',
+                        'stock_status_id'=>'Stock Status ID',
+                        'manufacturer_id'=>'Fabricante ID',
+                        'date_available'=>'Fecha de Disponibilidad',
+                        'weight'        =>'Peso',
+                        'weight_class_id'=>'Unidad de Peso ID',
+                        'minimum'       =>'Cantidad M&iacute;nima'
+                    );
+                $this->data['fields']['Descripciones'] = array(
+                        'language_id'   =>'Idioma ID',
+                        'name'          =>'Nombre del Producto',
+                        'description'   =>'Descripci&oacute;n del Producto',
+                        'meta_description'=>'Resumen',
+                        'meta_keywords' =>'Palabras Claves'
+                    );
+                $this->data['fields']['Opciones'] = array(
+                        'language_id'   =>'Idioma ID',
+                        'option_id'     =>'Opci&oacute;n ID',
+                        'option_name'   =>'Grupo de la Opci&oacute;n',
+                        'option_label'  =>'Nombre de la Opci&oacute;n',
+                        'option_quantity'=>'Cantidad de la Opci&oacute;n',
+                        'option_price'  =>'Precio de la Opci&oacute;n',
+                        'option_prefix' =>'Prefijo de la Opci&oacute;n'
+                    );
         		$this->template = 'store/product_import_2.tpl';
         		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
                 break;
             case 3:
-                $this->data['Url'] = new Url;
-                $data    = unserialize(file_get_contents(DIR_CACHE . "temp_product_data.csv"));
-                
-                $handle = fopen(DIR_CACHE . "temp_product_upload.csv", "r+");
-                $this->data['header'] = fgetcsv($handle, 1000, $data['separator'], $data['enclosure']);
-                $this->data['fields'] = array(
-                        'product_id'=>'Producto ID',
-                        'model'=>'Modelo',
-                        'name'=>'Nombre del Producto',
-                        'quantity'=>'Catnidad',
-                        'price'=>'Precio',
-                        'tax_class_id'=>'Impuesto ID',
-                        'sku'=>'SKU',
-                        'location'=>'Ubicaci&oacute;n',
-                        'stock_status_id'=>'Stock Status ID',
-                        'manufacturer_id'=>'Fabricante ID',
-                        'date_available'=>'Fecha de Disponibilidad',
-                        'weight'=>'Peso',
-                        'weight_class_id'=>'Unidad de Peso ID',
-                        'status'=>'Estado del Producto',
-                        'sort_order'=>'Posici&oacute;n',
-                        'subtract'=>'Restar Stcok',
-                        'minimum'=>'Cantidad M&iacute;nima',
-                        'language_id'=>'Idioma ID',
-                        'description'=>'Descripci&oacute;n del Producto',
-                        'meta_description'=>'Resumen',
-                        'meta_keywords'=>'Palabras Claves',
-                        'option_name'=>'Grupo de la Opci&oacute;n',
-                        'option_value'=>'Valor de la Opci&oacute;n',
-                        'option_quantity'=>'Cantidad de la Opci&oacute;n',
-                        'option_subtract'=>'Restar Stock de la Opci&oacute;n',
-                        'option_price'=>'Precio de la Opci&oacute;n',
-                        'option_prefix'=>'Prefijo de la Opci&oacute;n',
-                        'option_sort_order'=>'Posici&oacute;n de la Opci&oacute;n'
-                    );
         		$this->template = 'store/product_import_3.tpl';
-        		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-                break;
-            case 4:
-                $this->data['Url'] = new Url;
-        		$this->template = 'store/product_import_4.tpl';
         		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
                 break;
          } 
@@ -1424,62 +1461,47 @@ $url = '';
     public function importprocess() {
          switch($_GET['step']) {
             case 2:
-                if (isset($_POST['product_category'])) {
-                    $handle = fopen(DIR_CACHE . "temp_product_categories.csv", "w+");
-                    fputs($handle,serialize($_POST['product_category']));
-                    fclose($handle);
-                    unset($handle);
+                $data = array();
+                if (isset($this->request->post['product_category'])) {
+                    $data['product_categories'] = serialize($this->request->post['product_category']);
                 }
-                break;
-            case 3:
-                $handle     = fopen(DIR_CACHE . "temp_product_upload.csv", "r+");
-                $handle2    = fopen(DIR_CACHE . "temp_product_data.csv", "w+");
-                $data['separator']  = ($_POST['separator']) ? $_POST['separator'] : ";";
-                $data['enclosure']  = ($_POST['enclosure'] && $_POST['enclosure'] != '&quote;') ? $_POST['enclosure'] : '"';
-                $data['escape']     = ($_POST['escape']) ? $_POST['escape'] : '\\';
-                $data['update']     = $_POST['update'];
-                $data['header']     = $_POST['header'];
+                $data['file']       = ($this->request->post['file']) ? $this->request->post['file'] : '';
+                $data['separator']  = ($this->request->post['separator']) ? $this->request->post['separator'] : ";";
+                $data['enclosure']  = ($this->request->post['enclosure'] && $this->request->post['enclosure'] != '&quote;') ? $this->request->post['enclosure'] : '"';
+                $data['escape']     = ($this->request->post['escape']) ? $this->request->post['escape'] : '\\';
+                $data['update']     = (int)$this->request->post['update'];
+                $data['header']     = (int)$this->request->post['header'];
                 
+                $handle     = fopen(DIR_IMAGE . $data['file'], "r+");
+                $handle2    = fopen(DIR_CACHE . "temp_product_data.csv", "w+");
                 $handle3    = fopen(DIR_CACHE . "temp_product_header.csv", "w+");
                 fputcsv($handle3,(fgetcsv($handle, 1000, $data['separator'], $data['enclosure'])), $data['separator'], $data['enclosure']);
                 fclose($handle3);
                 
                 fputs($handle2,serialize($data));
-                
-                fclose($handle);
                 fclose($handle2);
                 
+                fclose($handle);
                 unset($handle,$handle2,$handle3);
                 break;
-            case 4:
+            case 3:
                 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
                 header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
                 header("Cache-Control: no-cache, must-revalidate"); 
                 header("Pragma: no-cache");
                 header("Content-type: application/json");
         
-                $return    = array();
-                $handle = fopen(DIR_CACHE . "temp_product_upload.csv", "r+");
-                $handle2 = fopen(DIR_CACHE . "temp_product_header.csv", "r+");
-                
-                $data = unserialize(file_get_contents(DIR_CACHE . "temp_product_data.csv"));
+                $return     = array();
+                $data       = unserialize(file_get_contents(DIR_CACHE . "temp_product_data.csv"));
+                $handle     = fopen(DIR_IMAGE . $data['file'], "r+");
+                $handle2    = fopen(DIR_CACHE . "temp_product_header.csv", "r+");
                 
                 if ($data['header']) $header = fgetcsv($handle2, 1000, $data['separator'], $data['enclosure']);
                 
                 $keys   = array();
-                if (!in_array('model',$_POST['Header'])) {
+                if (!in_array('model',$this->request->post['Header'])) {
                     $return['error'] = 1;
                     $return['msg'] = "Debe seleccionar el campo correspondiente al modelo del producto, de lo contrario no se podr&aacute;n cargar los productos";
-                }
-                
-                if ($data['update']) {
-                    $sql        = "UPDATE ". DB_PREFIX ."product (";
-                    $sql_options= "UPDATE ". DB_PREFIX ."product_option (";
-                    $sql_desc   = "UPDATE ". DB_PREFIX ."product_description (";
-                } else {
-                    $sql        = "INSERT INTO ". DB_PREFIX ."product (";
-                    $sql_options= "INSERT INTO ". DB_PREFIX ."product_option (";
-                    $sql_desc   = "INSERT INTO ". DB_PREFIX ."product_description (";
                 }
                 
                 if (!$return['error']) {
@@ -1496,9 +1518,6 @@ $url = '';
                         'date_available',
                         'weight',
                         'weight_class_id',
-                        'status',
-                        'sort_order',
-                        'subtract',
                         'minimum'
                     );
                     $descriptions = array(
@@ -1510,139 +1529,194 @@ $url = '';
                     );
                     $options = array(
                         'language_id',
+                        'option_id',
                         'option_name',
+                        'option_label',
                         'option_quantity',
-                        'option_subtract',
                         'option_price',
-                        'option_prefix',
-                        'option_sort_order'
+                        'option_prefix'
                     );
-                    $sql_ = $sql_desc_ = $sql_options_ = "";
-                    foreach ($header as $key=>$col) { //$key = 0; $col = 'Nombre'
-                        foreach ($_POST['Header'] as $column => $field) {//$column = 'Nombre'; $field = 'name'; <select name="Header[name]">
-                            $col = str_replace(" ","_",$col);
-                            if (!empty($field) && $col == $column && in_array($field,$product)) {
-                                $keys[$key] = $field;
-                                $sql_ .= "`$field`,";
-                            }
-                            
-                            if (!empty($field) && $col == $column && in_array($field,$descriptions)) {
-                                $keys[$key] = $field;
-                                $sql_desc_ .= "`$field`,";
-                            }
-                            
-                            if (!empty($field) && $col == $column && in_array($field,$options)) {
-                                $keys[$key] = $field;
-                                $sql_options_ .= "`$field`,";
-                            }
-                        }
-                    } 
-                    
-                    if (!$sql_) {
-                        $sql_error = true;
-                    } else {
-                        $sql .= $sql_;
-                    }
-                    
-                    if (!$sql_desc_) {
-                        $desc_error = true;
-                    } else {
-                        $sql_desc .= $sql_desc_;
-                    }
-                    
-                    if (!strpos($sql_desc,'language_id')) {
-                        $noDescLanguage = true;
-                    }
-                    
-                    if (!$sql_options_) {
-                        $options_error = true;
-                    } else {
-                        $sql_options .= $sql_options_;
-                    }
-                    
-                    if (!strpos($sql_options,'language_id')) {
-                        $noOptionsLanguage = true;
-                    }
-                    
-                    if (!$sql_error) $sql = substr($sql,0,(strlen($sql)-1)) . ") VALUES (";
-                    if (!$desc_error) $sql_desc = substr($sql_desc,0,(strlen($sql_desc)-1)) . ") VALUES (";
-                    if (!$options_error) $sql_options = substr($sql_options,0,(strlen($sql_options)-1)) . ") VALUES (";
                     
                     $d = $data;
-                    $new = $updated = $bad = $total = 0;
-                    while (($data = fgetcsv($handle, 1000, $d['separator'], $d['enclosure'])) !== false) {
+                    $new = $updated = $bad = $total = 1;
+                    $headers = $this->request->post['Header'];
+                    while ($data = fgetcsv($handle, 1000, $d['separator'], $d['enclosure'])) {
+                        $product_id = $model = $forceUpdate = null;
                         if ($data == $header && $d['header']) continue;
                         $return['total'] = $total++;
-                        $s = $s_options = $s_desc = "";
-                        if (!$pid = array_search('product_id',$keys)) {
-                            $idx = array_search('model',$keys);
-                        }
-                        if ($pid) {
-                            $product_id = $data[$pid];
-                        } elseif ($idx) {
-                            $model = $data[$idx];
-                        } else {
-                            $return['error'] = 1;
-                            $return['msg'] = "Debe especificar el modelo del producto";
-                        }
-                        if (!$product_id && $model) {
-                            $result = $this->db->query("SELECT * FROM ".DB_PREFIX."product WHERE model='". $this->db->escape($model) ."'");
-                            if ($result->row['product_id']) $product_id = $result->row['product_id'];
-                        }
-                        foreach ($keys as $key => $field) {//$key = 0; $field = 'name'
-                            $data[$key] = preg_replace('/<\s*html.*?>/','',$data[$key]);
-                            $data[$key] = preg_replace('/<\s*\/\s*html\s*.*?>/','',$data[$key]);
-                            $data[$key] = preg_replace(
-                                    	array (
-                                        	'@<head[^>]*?>.*?</head>@siu',
-                                        	'@<style[^>]*?>.*?</style>@siu',
-                                        	'@<script[^>]*?.*?</script>@siu',
-                                        	'@<object[^>]*?.*?</object>@siu',
-                                        	'@<embed[^>]*?.*?</embed>@siu',
-                                        	'@<applet[^>]*?.*?</applet>@siu',
-                                        	'@<iframe[^>]*?.*?</iframe>@siu',
-                                        	'@<noframes[^>]*?.*?</noframes>@siu',
-                                        	'@<noscript[^>]*?.*?</noscript>@siu',
-                                        	'@<noembed[^>]*?.*?</noembed>@siu'),
-                                         array(' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '),
-                                         $data[$key]
-                                     );
-                            if (in_array($field,$descriptions) && !$desc_error) {
-                                //TODO: validar cada campo para evitar la insercion de datos basura
-                                $s_desc .= "'" . $this->db->escape($data[$key]) . "',";
-                            }
-                            
-                            if (in_array($field,$options) && !$options_error) {
-                                //TODO: validar cada campo para evitar la insercion de datos basura
-                                 $s_options .= "'" . $this->db->escape($data[$key]) . "',";
-                            }
-                            
-                            if (in_array($field,$product) && !$sql_error) {
-                                //TODO: validar cada campo para evitar la insercion de datos basura
-                                $s .= "'" . $this->db->escape($data[$key]) . "',";
-                            }
-                            
-                            
-                        }
-                        
-                        if (!$sql_error) $s = substr($s,0,(strlen($s)-1)) . ")";
-                        if (!$desc_error) $s_desc = substr($s_desc,0,(strlen($s_desc)-1)) . ")";
-                        if (!$options_error) $s_options = substr($s_options,0,(strlen($s_options)-1)) . ")";
                         
                         if ($d['update']) {
-                            if (!$product_id) {
-                                if (!$sql_error) $sq = str_replace("UPDATE","INSERT INTO",$sql) . $s;
-                                if (!$desc_error) $sq_desc = str_replace("UPDATE","INSERT INTO",$sql_desc) . $s_desc;
-                                if (!$options_error) $sq_options = str_replace("UPDATE","INSERT INTO",$sql_options) . $s_options;
+                            $sql        = "UPDATE ". DB_PREFIX ."product SET ";
+                            $sql_desc   = "UPDATE ". DB_PREFIX ."product_description SET ";
+                            
+                            $sql_options = "UPDATE ". DB_PREFIX ."product_option SET ";
+                            $sql_options_value = "UPDATE ". DB_PREFIX ."product_option_value SET ";
+                            $sql_options_description = "UPDATE ". DB_PREFIX ."product_option_descrption SET ";
+                            $sql_options_value_description = "UPDATE ". DB_PREFIX ."product_option_value_description SET ";
+                        } else {
+                            $sql        = "INSERT INTO ". DB_PREFIX ."product SET ";
+                            $sql_desc   = "INSERT INTO ". DB_PREFIX ."product_description SET ";
+                            
+                            $sql_options = "INSERT INTO ". DB_PREFIX ."product_option SET ";
+                            $sql_options_value = "INSERT INTO ". DB_PREFIX ."product_option_value SET ";
+                            $sql_options_description = "INSERT INTO ". DB_PREFIX ."product_option_descrption SET ";
+                            $sql_options_value_description = "INSERT INTO ". DB_PREFIX ."product_option_value_description SET ";
+                        }
+                
+                        foreach ($header as $key=>$col) { //$key = 0; $col = 'Nombre'
+                            $data[$key] = preg_replace('/<\s*html.*?>/','',$data[$key]);
+                            $data[$key] = preg_replace('/<\s*\/\s*html\s*.*?>/','',$data[$key]);
+                            $data[$key] = preg_replace('@<head[^>]*?>.*?</head>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<style[^>]*?>.*?</style>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<script[^>]*?.*?</script>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<object[^>]*?.*?</object>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<embed[^>]*?.*?</embed>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<applet[^>]*?.*?</applet>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<iframe[^>]*?.*?</iframe>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<noframes[^>]*?.*?</noframes>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<noscript[^>]*?.*?</noscript>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<noembed[^>]*?.*?</noembed>@siu', '', $data[$key]);
+                            foreach ($headers as $column => $field) {//$column = 'Nombre'; $field = 'name'; <select name="Header[name]">
+                                $col = str_replace(" ","_",$col);
+                                
+                                //TODO: validar cada campo de acuerdo a su tipo y longitud para evitar la insercion de datos basura
+                                if (!empty($field) && $col == $column) {
+                                    if (in_array($field,$product)) {
+                                        $keys[$key] = $field;
+                                        $sql .= "`$field`='". $this->db->escape($data[$key]) ."',";
+                                    } elseif (in_array($field,$descriptions)) {
+                                        $keys[$key] = $field;
+                                        if ($field == 'language_id') {
+                                            $language_id = (int)$data[$key];
+                                        }
+                                        $sql_desc .= "`$field`='". $this->db->escape($data[$key]) ."',";
+                                        $hasDescription = true;
+                                    } elseif (in_array($field,$options)) {
+                                        $keys[$key] = $field;
+                                        if ($field == 'option_id') {
+                                            $option_id = (int)$data[$key];
+                                        }
+                                        if ($field == 'language_id') {
+                                            $language_id = (int)$data[$key];
+                                        }
+                                        if ($field == 'language_id' || $field == 'option_name') {
+                                            $sql_options_description .= "`". str_replace("option_","",$field) ."`='". $this->db->escape($data[$key]) ."',";
+                                        }
+                                        if ($field == 'option_quantity' || $field == 'option_price' || $field == 'option_prefix') {
+                                            $sql_options_value .= "`". str_replace("option_","",$field) ."`='". $this->db->escape($data[$key]) ."',";
+                                        }
+                                        if ($field == 'option_label' || $field == 'language_id') {
+                                            $sql_options_value_description .= "`". str_replace("option_label","name",$field) ."`='". $this->db->escape($data[$key]) ."',";
+                                        }
+                                        $hasOptions = true;
+                                    }
+                                }
+                            }
+                        } 
+                    
+                        $pid = array_search('product_id',$keys);
+                        $idx = array_search('model',$keys);
+                        
+                        if (!array_search('date_added',$keys)) $sql .= "`date_added`=NOW(),";
+                        if (!array_search('date_modified',$keys)) $sql .= "`date_modified`=NOW(),";
+                        if (!array_search('language_id',$keys)) {
+                            $sql_desc .= "`language_id`='1',";
+                            $sql_options_description .= "`language_id`='1',";
+                            $sql_options_value_description .= "`language_id`='1',";
+                            $language_id = 1;
+                        }
+                        
+                        $forceOptionUpdate = false;
+                        if (!empty($option_id)) {
+                            $res = $this->db->query("SELECT * FROM ".DB_PREFIX."product_option WHERE option_id='". (int)$option_id ."'");
+                            if ($res->num_rows) {
+                                $forceOptionUpdate = true;
+                            }
+                            
+                            $sql_options_value .= "`option_id`='". (int)$option_id ."',";
+                            $sql_options_description .= "`option_id`='". (int)$option_id ."',";
+                            $sql_options_value_description .= "`option_id`='". (int)$option_id ."',";
+                        }
+                        
+                        if (!$pid && !$idx) {
+                            $return['error'] = 1;
+                            $return['msg'] = "Debe especificar el modelo del producto";
+                            break;
+                        }
+                        
+                        if ($pid) { $product_id = (int)$data[$pid]; }
+                        if ($idx) { $model = $data[$idx]; }
+                        
+                        $forceUpdate = false; 
+                        if (!empty($product_id) && !empty($model)) {
+                            $res = $this->db->query("SELECT * FROM ".DB_PREFIX."product WHERE product_id='". (int)$product_id ."' OR model='". $this->db->escape($model) ."'");
+                            if ($res->num_rows && !$d['update']) {
+                                continue;
+                            } elseif ($res->num_rows && $d['update']) {
+                                $forceUpdate = true;
+                            }
+                        } elseif (!empty($model)) {
+                            $res = $this->db->query("SELECT * FROM ".DB_PREFIX."product WHERE model='". $this->db->escape($model) ."'");
+                            if ($res->num_rows && !$d['update']) {
+                                continue;
+                            } elseif ($res->num_rows && $d['update']) {
+                                $product_id = $res->row['product_id'];
+                                $forceUpdate = true;
+                            }
+                        } elseif (!empty($product_id)) {
+                            $res = $this->db->query("SELECT * FROM ".DB_PREFIX."product WHERE product_id='". (int)$product_id ."'");
+                            if ($res->num_rows && !$d['update']) {
+                                continue;
+                            } elseif ($res->num_rows && $d['update']) {
+                                $forceUpdate = true;
+                            }
+                        }
+                        
+                        $sql = substr($sql,0,(strlen($sql)-1));
+                        $sql_desc = substr($sql_desc,0,(strlen($sql_desc)-1));
+                        $sql_options = substr($sql_options,0,(strlen($sql_options)-1));
+                        $sql_options_value = substr($sql_options_value,0,(strlen($sql_options_value)-1));
+                        $sql_options_description = substr($sql_options_description,0,(strlen($sql_options_description)-1));
+                        $sql_options_value_description = substr($sql_options_value_description,0,(strlen($sql_options_value_description)-1));
+                    
+                        if ($d['update']) {
+                            if (!$forceUpdate) {
+                                $sql = str_replace("UPDATE","INSERT INTO",$sql);
                                 $insert = true;
                             } else {
-                                if (!$sql_error) $sq = $sql . $s . " WHERE `model` = '$model'";
-                                if (!$desc_error) $sq_desc = $sql_desc . $s_desc . " WHERE `product_id` = '$product_id'";
-                                if (!$options_error) $sq_options = $sql_options . $s_options . " WHERE `product_id` = '$product_id'";
+                                $sql = str_replace("INSERT INTO","UPDATE",$sql) . " WHERE `product_id` = '". (int)$product_id ."'";
                             }
-                            if (!$sql_error) $result = $this->db->query($sql);
-                            if (!$desc_error && $result) $this->db->query($sql_desc);
-                            if (!$options_error && $result) $this->db->query($sql_options);
+                            $result = $this->db->query($sql);
+                            if (!$forceUpdate) $product_id = $this->db->getLastId();
+                            
+                            if (!$forceUpdate) {
+                                $sql_desc .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_desc = str_replace("UPDATE","INSERT INTO",$sql_desc);
+                                $insert = true;
+                            } else {
+                                $sql_desc = str_replace("INSERT INTO","UPDATE",$sql_desc) . " WHERE `product_id` = '". (int)$product_id ."' AND `language_id` = '". (int)$language_id ."'";
+                            }
+                            if (isset($hasDescription) && $result) $this->db->query($sql_desc);
+                            
+                            if ($product_id) {
+                                $sql_options .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_options_value .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_options_description .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_options_value_description .= ",`product_id`='". (int)$product_id ."'";
+                            }
+                        
+                            if (!$forceOptionUpdate) {
+                                $sql_options = str_replace("UPDATE","INSERT INTO",$sql_options);
+                                $sql_options_value = str_replace("UPDATE","INSERT INTO",$sql_options_value);
+                                $sql_options_description = str_replace("UPDATE","INSERT INTO",$sql_options_description);
+                                $sql_options_value_description = str_replace("UPDATE","INSERT INTO",$sql_options_value_description);
+                            } else {
+                                $sql_options = str_replace("INSERT INTO","UPDATE",$sql_options) . " WHERE `option_id` = '". (int)$option_id ."'";
+                                $sql_options_value = str_replace("INSERT INTO","UPDATE",$sql_options_value) . " WHERE `option_id` = '". (int)$option_id ."'";
+                                $sql_options_description = str_replace("INSERT INTO","UPDATE",$sql_options_description) . " WHERE `option_id` = '". (int)$option_id ."' AND `language_id` = '". (int)$language_id ."'";
+                                $sql_options_value_description = str_replace("INSERT INTO","UPDATE",$sql_options_value_description) . " WHERE `option_id` = '". (int)$option_id ."' AND `language_id` = '". (int)$language_id ."'";
+                            }
+                            if (isset($hasOptions) && $result) $this->db->query($sql_options);
                             
                             if ($result && isset($insert)) {
                                 $return['nuevo'] = $new++;
@@ -1652,76 +1726,41 @@ $url = '';
                                 $return['bad'] = $bad++;
                             }
                         } else {
-                            if (!$product_id) {
-                                if (!$sql_error)  {
-                                    $sq = $sql . $s;
-                                    $result = $this->db->query($sq);
-                                    $product_id = $this->db->getLastId();
-                                }
-                                if (!$desc_error && $result) {
-                                    $sq_desc = $sql_desc . $s_desc;
-                                    $result_desc = $this->db->query($sq_desc);
-                                    $product_description_id = $this->db->getLastId();
-                                    $this->db->query("UPDATE ". DB_PREFIX ."product_description SET product_id = '". (int)$product_id ."' WHERE product_description_id = '". (int)$product_description_id ."'");
-                                }
-                                if (!$options_error && $result) {
-                                    $sq_options = $sql_options . $s_options;
-                                    $result_options = $this->db->query($sql_options . $s_options);
-                                    $product_option_id = $this->db->getLastId();
-                                    $this->db->query("UPDATE ". DB_PREFIX ."product_option SET product_id = '". (int)$product_id ."' WHERE product_option_id = '". (int)$product_option_id ."'");
-                                }
-                                if ($result) {
-                                    $return['nuevo'] = $new++;
-                                } else {
-                                    $return['bad'] = $bad++;
-                                }
+                            $result = $this->db->query($sql);
+                            $product_id = $this->db->getLastId();
+                                
+                            if ($product_id) {
+                                $sql_desc .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_options .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_options_value .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_options_description .= ",`product_id`='". (int)$product_id ."'";
+                                $sql_options_value_description .= ",`product_id`='". (int)$product_id ."'";
+                            }
+                            
+                            if (isset($hasDescription) && $result) {
+                                $result_desc = $this->db->query($sql_desc);
+                            }
+                        
+                            if (isset($hasOptions) && $result) {
+                                $result_options = $this->db->query($sql_options);
+                                $result_options = $this->db->query($sql_options_value);
+                                $result_options = $this->db->query($sql_options_description);
+                                $result_options = $this->db->query($sql_options_value_description);
+                            }
+                            
+                            if ($result) {
+                                $return['nuevo'] = $new++;
+                            } else {
+                                $return['bad'] = $bad++;
                             }
                         }
-                        unlink(DIR_CACHE . "temp_product_upload.csv");
-                        unlink(DIR_CACHE . "temp_product_header.csv");
-                        unlink(DIR_CACHE . "temp_product_data.csv");
-                        unlink(DIR_CACHE . "temp_product_categories.csv");
-                        //TODO: contar los registros insertados con exito para mostrar resumen
+                        
+                        //TODO: asociar las categorias a cada producto
                     }
                 }
-                $this->load->library('json');
-        		$this->response->setOutput(Json::encode($return), $this->config->get('config_compression'));
-                break;
-            case 'upload':
-                $return    = array();
-                $allowed   = array("csv", "tsv", "txt", "text/csv", "text/comma-separated-values", "text/tab-separated-values", "text/plain");
-                $extension = end(explode(".", $_FILES["file"]["name"]));
-                
-                if(!in_array($extension, $allowed)) {
-                    $return['error'] = 1;
-                    $return['msg'] = "Archivo no permitido, debe seleccionar un archivo .CSV o .TXT";
-                }
-                
-                if(!in_array($_FILES["file"]["type"], $allowed)) {
-                    $return['error'] = 1;
-                    $return['msg'] = "Archivo no permitido, debe seleccionar un archivo .CSV o .TXT";
-                }
-                
-                if($_FILES["file"]["size"] == 0 && !$return['error']) {
-                    $return['error'] = 1;
-                    $return['msg'] = "El archivo est&aacute; vac&iacute;o";
-                }
-                
-                if(($_FILES["file"]["size"] / 1024 / 1024) > 50 && !$return['error']) {
-                    $return['error'] = 1;
-                    $return['msg'] = "El tama&ntilde;o del archivo es muy grande, solo se permiten archivos hasta 50MB";
-                }
-                
-                if ($_FILES["file"]["error"] > 0 && !$return['error']) {
-                    $return['error'] = 1;
-                    $return['msg'] = $_FILES["file"]["error"];
-                }
-                
-                if (!$return['error']) {
-                    $tmp_name = $_FILES["file"]["tmp_name"];
-                    move_uploaded_file($tmp_name, DIR_CACHE . "temp_product_upload.csv");
-                }
-                
+                unlink(DIR_CACHE . "temp_product_header.csv");
+                unlink(DIR_CACHE . "temp_product_data.csv");
+                unlink(DIR_CACHE . "temp_product_categories.csv");
                 $this->load->library('json');
         		$this->response->setOutput(Json::encode($return), $this->config->get('config_compression'));
                 break;

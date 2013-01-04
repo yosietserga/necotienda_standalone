@@ -135,16 +135,6 @@
                                         <br /><span><?php echo $text_review; ?></span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a title="Facebook" href="<?php echo $facebook; ?>">
-                                        <img src="image/menu/facebook.png" />
-                                        <br /><span>Facebook</span>
-                                    </a>
-                                    <a title="Twitter" href="<?php echo $twitter; ?>">
-                                        <img src="image/menu/twitter.png" />
-                                        <br /><span>Twitter</span>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         <li id="contenido" class="on" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/computer.png" alt="Inicio" /><span><?php echo $tab_content; ?></span></a>
@@ -205,10 +195,6 @@
                                     <a title="<?php echo $text_customer_group; ?>" href="<?php echo $customer_group; ?>">
                                         <img src="image/menu/client_group.png" alt="<?php echo $text_customer_group; ?>" />
                                         <br /><span><?php echo $text_customer_group; ?></span>
-                                    </a>
-                                    <a title="Cumplea&ntilde;os" href="<?php echo $cumpleanos; ?>">
-                                        <img src="image/menu/birthday.png" alt="Cumplea&ntilde;os" />
-                                        <br /><span>Cumplea&ntilde;os</span>
                                     </a>
                                 </li> 
                             </ul>

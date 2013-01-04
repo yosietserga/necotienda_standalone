@@ -161,7 +161,7 @@ a.searchButton {
 #links a, #links a:visited {}
 #links a:hover {}
 
-#geolocalization {float:left}
+#geolocate {float:left}
 /* switcher */
 
 .switcher {

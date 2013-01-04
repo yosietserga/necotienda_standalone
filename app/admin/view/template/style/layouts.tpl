@@ -171,48 +171,18 @@
 </div>
 <div id="panel">
     <ul>
-        <li><a href="#properties">Propiedades</a></li>
         <li><a href="#style">Estilos</a></li>
         <li><a href="#advanced">Avanzado</a></li>
     </ul>
-    <div id="properties">
-    </div>
     <div id="style">
         <div style="float:left;width:50%;">
             <p><b>General</b></p>
             <hr />
             <div class="cssContainer">
-            <?php /*
-                <div class="property">
-                    <div style="float: left;margin-right:5px;">border:</div>
-                    <input class="smallInput" type="text" id="border-value" name="border-value" value="0" />px
-                    <div id="border-slider" style="width: 45%;float: left;"></div>
-                    <a class="showMore" onclick="$(this).parent().find('.more').slideToggle();if ($(this).text() == '+') {$(this).text('-') } else {$(this).text('+')}">+</a>
-                    <div class="clear"></div>
-                    <div class="more">
-                        <hr />
-                        <div style="float: left;margin-right:5px;">border-top:</div>
-                        <div id="border-topleft-slider" style="width: 45%;float: left;"></div>
-                        <input class="smallInput" type="text" id="border-topleft-value" name="border-topleft-value" value="0" />px
-                        <div class="clear"></div>
-                        <div style="float: left;margin-right:5px;">border-bottom:</div>
-                        <div id="border-topright-slider" style="width: 45%;float: left;"></div>
-                        <input class="smallInput" type="text" id="border-topright-value" name="border-topright-value" value="0" />px
-                        <div class="clear"></div>
-                        <div style="float: left;margin-right:5px;">bottom-left:</div>
-                        <div id="border-bottomright-slider" style="width: 45%;float: left;"></div>
-                        <input class="smallInput" type="text" id="border-bottomright-value" name="border-bottomright-value" value="0" />px
-                        <div class="clear"></div>
-                        <div style="float: left;margin-right:5px;">bottom-right:</div>
-                        <div id="border-bottomleft-slider" style="width: 45%;float: left;"></div>
-                        <input class="smallInput" type="text" id="border-bottomleft-value" name="border-bottomleft-value" value="0" />px
-                        <input type="hidden" id="border" name="border" value="" />
-                    </div>
-                </div>
-                */ ?>
+
                 <div class="property">
                     <div style="float: left;margin-right:5px;">background:</div>
-                    <input class="smallInput" type="text" id="background-value" name="background-value" value="0" /><div id="colorpicker" style="float: right;"></div>
+                    <input class="smallInput" type="text" id="background-value" name="background-value" value="0" /><div id="clorpicker" style="float: right;"></div>
                     <a class="showMore" onclick="$(this).parent().find('.more').slideToggle();if ($(this).text() == '+') {$(this).text('-') } else {$(this).text('+')}">+</a>
                     <div class="clear"></div>
                     <div class="more">
@@ -356,7 +326,7 @@ function changeLayout(layout) {
     }
 }
 $(function(){
-    $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/fullcontentfeatured"); ?>');
+    /* $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/fullcontentfeatured"); ?>'); */
     $("#cssToolsWrapper > div").each(function(){ $(this).hide(); });
     $("#layoutsWrapper").fadeIn();
     
@@ -528,7 +498,7 @@ $(function(){
 	});
     $("#panel").dialog({
         width:'940px',
-        modal: true,
+        modal: false,
         buttons:{
             'Guardar':function() {
                 
@@ -540,9 +510,8 @@ $(function(){
         create:function(event,ui) {
             $(this).find('.ui-dialog-titlebar').css({'display':'none'});
         }
-        }).tabs();
+        });
         $(".ui-dialog-titlebar").remove(); 
-    // habilitamos Drag en el panel lateral de widgets
     $("#widgetsPanel li").draggable({
         revert: true, 
         helper: "clone",
@@ -581,23 +550,19 @@ $(function(){
     
     $("#widgetsWrapper").mouseenter(function(){
         clearTimeout($(this).data('timeoutId'));
-        //$(this).find(".tooltip").fadeIn("slow");
     }).mouseleave(function(){
         var e = this;
         var timeoutId = setTimeout(function(){
             if ($(e).hasClass("up")) {
                 $("#widgetsWrapper").removeClass('up').addClass('down').animate({'marginLeft':'-200px'});
                 $("#widgetsToggle").find('img').attr('src','<?php echo HTTP_IMAGE; ?>up.png');
-                //$("#widgetsToggle").css({'marginLeft':'0px'});
             }
         }, 900);
-        //set the timeoutId, allowing us to clear this trigger if the mouse comes back over
         $(this).data('timeoutId', timeoutId); 
     });
     
     $("#toolWrapper").mouseenter(function(){
         clearTimeout($(this).data('timeoutId'));
-        //$(this).find(".tooltip").fadeIn("slow");
     }).mouseleave(function(){
         var e = this;
         var timeoutId = setTimeout(function(){
@@ -606,7 +571,6 @@ $(function(){
                 $("#toolToggle").find('img').attr('src','<?php echo HTTP_IMAGE; ?>up.png');
             }
         }, 900);
-        //set the timeoutId, allowing us to clear this trigger if the mouse comes back over
         $(this).data('timeoutId', timeoutId); 
     });
     /******************** Begin Tools and Panels ******************************/
@@ -633,9 +597,10 @@ function lockBlock(e) {
         $("#" + e + " .widgetContainer").attr('ondrop','');
         $("#" + e + " .addWidget").attr('onclick','');
         $("#" + e + " .deleteWidget").attr('onclick','');
-        $("#" + e + " .editWidget").attr('onclick','');editWidget(this)
+        $("#" + e + " .editWidget").attr('onclick','');
+        editWidget(this);
         $("#" + e + " .moveWidget").removeClass('moveWidget').addClass('dontMoveWidget');
-        //$("#" + e + " > .blockContent > a").removeClass(''); //TODO: remover acciones de los botones agregar widgets
+        /* $("#" + e + " > .blockContent > a").removeClass(''); */
     } else {
         $("#" + e).removeClass('blockLocked');
         $("#" + e + "_lock").addClass('lock').removeClass('unlock');
@@ -646,7 +611,7 @@ function lockBlock(e) {
         $("#" + e + " .deleteWidget").attr('onclick','deleteWidget(this)');
         $("#" + e + " .editWidget").attr('onclick','editWidget(this)');
         $("#" + e + " .dontMoveWidget").removeClass('dontMoveWidget').addClass('moveWidget');
-        //$("#" + e + " > .blockContent > a").removeClass(''); //TODO: remover acciones de los botones agregar widgets
+        /* $("#" + e + " > .blockContent > a").removeClass(''); */
     }
 }
 function checkListWrapper(section) {
@@ -704,10 +669,9 @@ function countUlChildrens(section) {
 }
 function showPanel() {
     
-    $("#properties").html();
     $("#panel").dialog({
         width:'940px',
-        modal: true,
+        modal: false,
         buttons:{
             'Guardar':function() {
                 
@@ -720,7 +684,7 @@ function showPanel() {
             console.log(event);
             $(this).find('.ui-dialog-titlebar').css({'display':'none'});
         }
-        }).tabs();
+        });
         $(".ui-dialog-titlebar").remove(); 
 }
 function showWidgets() {
@@ -736,7 +700,6 @@ function showWidgets() {
     });
 }
 function dropWidget(e) {
-    // datos del widget
     var widgetId = $("#inputWidgetId").val();
     var widgetName = $("#inputWidgetName").val();
     var widgetDesc = $("#inputWidgetDesc").val();
@@ -747,7 +710,7 @@ function dropWidget(e) {
        widgetCount = widgetCount + 1 * 1; 
     });
     
-    // se crea y asigna el contenedor de la lista
+    /* se crea y asigna el contenedor de la lista */
     if ($("#" + e.id + " > ul").length < 1) {
         ulWidget = $(document.createElement("ul")).attr("id",e.id + "_ulWidget").addClass("widgetsPanel widgetsInGrid");
         $(e).append(ulWidget);
@@ -755,7 +718,7 @@ function dropWidget(e) {
         ulWidget = $("#" + e.id + " > ul");
     }
     
-    // se asigna el identificador del widget
+    /* se asigna el identificador del widget */
     var _id = "widget_" + widgetCount + "_" + rand();
     output  = '<div style="float:left">';
     output += '<img src="' + widgetIcon + '" />';

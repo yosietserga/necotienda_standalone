@@ -78,4 +78,4 @@ body {
 #maincontent {
   zoom: 1;
 }
-#nav, #column_left, #column_right, .aside, #geolocalization, #links, #footer, #header, #comment, #review, #related {display:none}
+#nav, #column_left, #column_right, .aside, #geolocate, #links, #footer, #header, #comment, #review, #related {display:none}

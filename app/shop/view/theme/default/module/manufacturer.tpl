@@ -1,5 +1,5 @@
-<div class="box manufacturerModule">
-    <div class="header"><?php echo $heading_title; ?></div>
+<li class="box manufacturerModule">
+    <div class="header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div>
     <div class="content">
         <select onchange="location = this.value">
             <option value=""><?php echo $text_select; ?></option>
@@ -12,4 +12,4 @@
             <?php } ?>
         </select>
     </div>
-</div>
+</li>

@@ -4,7 +4,8 @@
 <section id="maincontent">
     <aside id="column_left"><?php echo $column_left; ?></aside>
     <section id="content">
-        <div class="grid_10">{%module_latest_1%}
+        <div class="grid_10">
+        
           <h1><?php echo $heading_title; ?></h1>
           <p><?php echo $welcome; ?></p>
           

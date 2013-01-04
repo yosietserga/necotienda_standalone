@@ -10,11 +10,6 @@
 			}
     	}		
 		
-        $this->load->library('user');
-        if ($this->user->getId()) {
-            $this->data['is_admin'] = true;
-        }
-        
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['currency_code'])) {
       		$this->currency->set($this->request->post['currency_code']);
 			$this->session->clear('shipping_methods');
@@ -59,8 +54,12 @@
         $styles[] = array('media'=>'all','href'=>$csspath.'screen.css'); 
         $styles[] = array('media'=>'print','href'=>$csspath.'print.css');
         
+        $this->load->library('user');
         if ($this->user->getId()) {
-            $styles[] = array('media'=>'all','href'=>$csspath.'admin.css'); 
+            $this->data['is_admin'] = true;
+            $styles[] = array('media'=>'screen','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
+            $styles[] = array('media'=>'screen','href'=>$csspath.'neco.colorpicker.css');
+            $styles[] = array('media'=>'screen','href'=>$csspath.'admin.css');
         }
         
         $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);

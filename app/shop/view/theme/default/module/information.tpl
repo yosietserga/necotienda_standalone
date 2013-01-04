@@ -1,5 +1,5 @@
-<div class="box informationModule">
-    <div class="header"><?php echo $heading_title; ?></div>
+<li class="box informationModule">
+    <div class="header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div>
     <div class="content">
         <ul>
             <?php foreach ($informations as $information) { ?>
@@ -9,4 +9,4 @@
             <li><a title="<?php echo $text_sitemap; ?>" href="<?php echo str_replace('&', '&amp;', $sitemap); ?>"><?php echo $text_sitemap; ?></a></li>
         </ul>
     </div>
-</div>
+</li>

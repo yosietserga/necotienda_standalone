@@ -1,5 +1,5 @@
-<div id="module_cart" class="box cartModule">
-    <div class="header"><?php echo $heading_title; ?></div>
+<li id="module_cart" class="box cartModule">
+    <div class="header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div>
     <div class="content">
     <?php if ($products) { ?>
         <?php foreach ($products as $product) { ?>
@@ -26,4 +26,4 @@
         <div style="text-align: center;"><?php echo $text_empty; ?></div>
     <?php } ?>
   </div>
-</div>
+</li>

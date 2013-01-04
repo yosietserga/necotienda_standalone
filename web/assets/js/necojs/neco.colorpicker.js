@@ -85,14 +85,10 @@
                 });
             },
             open: function() {
-                return this.each(function() {
-                    $('.neco-color-picker-wrapper').fadeIn();
-                });
+                return $(this).get(0).find('.neco-color-picker-wrapper:eq(0)').fadeIn();
             },
             close: function() {
-                return this.each(function() {
-                    $('.neco-color-picker-wrapper').fadeOut();
-                });
+                return $(this).get(0).find('.neco-color-picker-wrapper:eq(0)').fadeOut();
             }
         }
  
@@ -113,7 +109,7 @@
                     $(data.element).after(data.target);
                 }
                 data.e = $('.neco-color-picker', data.container);
-                data.wrapper = $('.neco-color-picker-wrapper');
+                data.wrapper = $(data.element).find('.neco-color-picker-wrapper:eq(0)');
                 $(".neco-color-picker-submit").val(settings.textSubmit).on('click', function() {
                     $(data.wrapper).fadeOut();
                     helpers._update();

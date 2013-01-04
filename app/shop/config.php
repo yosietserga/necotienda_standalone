@@ -51,5 +51,6 @@ define('DIR_SYSTEM',    $mainPath . "system" . DIRECTORY_SEPARATOR);
 define('DIR_DATABASE',  DIR_SYSTEM . 'database/');
 define('DIR_CONFIG',    DIR_SYSTEM . 'config/');
 define('DIR_CACHE',     DIR_SYSTEM . 'cache/');
+define('DIR_LOGS',      DIR_SYSTEM . 'logs' . DIRECTORY_SEPARATOR . 'frontend' . DIRECTORY_SEPARATOR);
 
 require_once($mainPath . "cconfig.php");

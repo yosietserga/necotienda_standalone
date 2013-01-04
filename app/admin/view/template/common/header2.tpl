@@ -13,15 +13,15 @@
     <?php } ?>
     
     <base href="<?php echo $base; ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $base; ?>stylesheet/layouts/main.css" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $base; ?>stylesheet/layouts/screen.css" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $base; ?>stylesheet/jquery-ui-1.8.14.custom.css" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $base; ?>stylesheet/layouts/twocolscenterfeatured.css" />
+    <link rel="stylesheet" type="text/css" href="css/layouts/main.css" />
+    <link rel="stylesheet" type="text/css" href="css/layouts/screen.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/layouts/twocolscenterfeatured.css" />
 
-    <script type="text/javascript" src="javascript/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="javascript/jquery/jquery-ui.custom.min.js"></script>
-    <script type="text/javascript" src="javascript/jquery/farbtastic/farbtastic.js"></script>
-    <script type="text/javascript" src="javascript/jquery/necojs/neco.colorpicker.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery.min-1.8.1.js"></script>
+    <script type="text/javascript" src="js/plugins.js"></script>
+    <script type="text/javascript" src="js/vendor/farbtastic/farbtastic.js"></script>
+    <script type="text/javascript" src="js/necojs/neco.colorpicker.js"></script>
 </head>
 
 <body>

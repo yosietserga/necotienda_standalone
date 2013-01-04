@@ -1,4 +1,4 @@
-<nav>
+<nav id="nav">
     <div class="container_16">
         <div class="grid_16">
             <ul>

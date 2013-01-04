@@ -125,7 +125,6 @@
     
     $("#widgetsWrapper").mouseenter(function(){
         clearTimeout($(this).data('timeoutId'));
-        //$(this).find(".tooltip").fadeIn("slow");
     }).mouseleave(function(){
         var e = this;
         var timeoutId = setTimeout(function(){
@@ -135,13 +134,11 @@
                 $("#widgetsToggle").css({'marginLeft':'0px'});
             }
         }, 900);
-        //set the timeoutId, allowing us to clear this trigger if the mouse comes back over
         $(this).data('timeoutId', timeoutId); 
     });
     
     $("#toolWrapper").mouseenter(function(){
         clearTimeout($(this).data('timeoutId'));
-        //$(this).find(".tooltip").fadeIn("slow");
     }).mouseleave(function(){
         var e = this;
         var timeoutId = setTimeout(function(){
@@ -150,7 +147,6 @@
                 $("#toolToggle").find('img').attr('src','<?php echo HTTP_IMAGE; ?>up.png');
             }
         }, 900);
-        //set the timeoutId, allowing us to clear this trigger if the mouse comes back over
         $(this).data('timeoutId', timeoutId); 
     });
  });

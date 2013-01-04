@@ -37,27 +37,8 @@
 </head>
 <body>
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-<?php if ($is_admin) { ?>
-<div id="admin-top-menu">
-    <div class="grid_3"><h2><a href="#" title="">Panel de Control</a></h2></div>
-    <div class="grid_3">
-        <div id="create">
-            Crear
-            <ul>
-                <li><a href="#" title="">Producto</a></li>
-                <li><a href="#" title="">Art&iacute;lo</a></li>
-                <li><a href="#" title="">P&aacute;gina</a></li>
-                <li><a href="#" title="">Fabricante</a></li>
-                <li><a href="#" title="">Categor&iacute;a de Productos</a></li>
-                <li><a href="#" title="">Categor&iacute;a de Art&iacute;los</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<?php } ?>
-<?php if ($is_admin) { ?><div id="admin-left-menu">LEFt</div><?php } ?>
-<?php if ($is_admin) { ?><div id="admin-bottom-menu">BOTTOM</div><?php } ?>
-<header> 
+<?php if ($is_admin) { require_once('admin.tpl'); } ?>
+<header id="header"> 
     <div class="container_16">
         <div id="logo" class="grid_5">
             <?php if ($logo) { ?>
@@ -84,7 +65,7 @@
                 </ul>
             </div>
             
-            <div id="geolocalization">
+            <div id="geolocate">
                 <div>
                     <?php   if ($currencies) { ?>
                     <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="currency_form">

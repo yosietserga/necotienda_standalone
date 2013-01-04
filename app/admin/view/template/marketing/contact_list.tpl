@@ -22,7 +22,7 @@
                     
                 <div class="row">
                     <label>Email del Contacto:</label>
-                    <input type="text" name="filter_email" value="" />
+                    <input type="email" name="filter_email" value="" />
                 </div>
                 
                 <div class="row">

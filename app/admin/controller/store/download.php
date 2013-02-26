@@ -52,7 +52,7 @@ class ControllerStoreDownload extends Controller {
 				}
 			}
 
-			$this->modelDownload->addDownload(array_merge($this->request->post, $data));
+			$download_id = $this->modelDownload->addDownload(array_merge($this->request->post, $data));
    	  		
 			$this->session->set('success',$this->language->get('text_success'));
 	  
@@ -70,7 +70,13 @@ class ControllerStoreDownload extends Controller {
 				$url['order'] = $this->request->get['order'];
 			}
 			
-			$this->redirect(Url::createAdminUrl('store/download',$url));
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('store/download/update',array('download_id'=>$download_id))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('store/download/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('store/download')); 
+            }
 		}
 	
     	$this->getForm();
@@ -120,7 +126,13 @@ class ControllerStoreDownload extends Controller {
 				$url['order'] = $this->request->get['order'];
 			}
 			
-			$this->redirect(Url::createAdminUrl('store/download',$url));
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('store/download/update',array('download_id'=>$this->request->get['download_id']))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('store/download/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('store/download')); 
+            }
 		}
 		
     	$this->getForm();
@@ -224,9 +236,9 @@ class ControllerStoreDownload extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("store/download/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("store/download/eliminar") ."',{
                             id:e
                         },
@@ -346,16 +358,19 @@ class ControllerStoreDownload extends Controller {
 			
 			$action = array(
                 'activate'  => array(
+                        'action'  => 'activate',
                         'text'  => $this->language->get('text_activate'),
                         'href'  =>Url::createAdminUrl('store/download/activate',array_merge(array('download_id'=>$result['download_id']),$url)),
                         'img'   => 'good.png'
                 ),
                 'edit'      => array(
+                        'action'  => 'edit',
                         'text'  => $this->language->get('text_edit'),
                         'href'  =>Url::createAdminUrl('store/download/update',array_merge(array('download_id'=>$result['download_id']),$url)),
                         'img'   => 'edit.png'
                 ),
                 'delete'    => array(
+                        'action'  => 'delete',
                         'text'  => $this->language->get('text_delete'),
                         'href'  =>Url::createAdminUrl('store/download/delete',array_merge(array('download_id'=>$result['download_id']),$url)),
                         'img'   => 'delete.png'
@@ -416,7 +431,9 @@ class ControllerStoreDownload extends Controller {
     	$this->data['help_filename']   = $this->language->get('help_filename');
     	$this->data['help_remaining']  = $this->language->get('help_remaining');
     	$this->data['help_update']     = $this->language->get('help_update');
-    	$this->data['button_save']     = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
     	$this->data['button_cancel']   = $this->language->get('button_cancel');
   
  		$this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
@@ -477,7 +494,59 @@ class ControllerStoreDownload extends Controller {
 		} else {
 			$this->data['download_description'] = array();
 		}   	
-		
+		       
+        $scripts[] = array('id'=>'downloadScripts','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                lockButton:false,
+                cancelButton:false,
+                submitButton:false
+            });");
+             
+         $scripts[] = array('id'=>'downloadFunctions','method'=>'function','script'=>
+            "function file_delete(field, preview) {
+                $('#' + field).val('');
+                $('#' + preview).parent('.row').find('.clear').remove();
+                $('#' + preview).replaceWith('<a class=\"button\" id=\"'+ preview +'\" onclick=\"file_upload(\\'download\\', \\'preview\\');\">Seleccionar Archivo</a>');
+            }
+            
+            function file_upload(field, preview) {
+                var height = $(window).height() * 0.8;
+                var width = $(window).width() * 0.8;
+            	$('#dialog').remove();
+            	$('#form').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+                
+                $('#dialog').dialog({
+            		title: '".$this->data['text_image_manager']."',
+            		close: function (event, ui) {
+            			var csv = $('#' + field).val();
+            			if (csv) {
+            				$('#' + preview).replaceWith('<input type=\"text\" value=\"' + csv.replace('data/','') + '\" id=\"' + preview + '\" disabled=\"disabled\" /><div class=\"clear\"></div>');
+            			}
+            		},	
+            		bgiframe: false,
+            		width: width,
+            		height: height,
+            		resizable: false,
+            		modal: false
+            	});}
+                
+             function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }");
+                    
+        $this->scripts = array_merge($this->scripts,$scripts);
+         
 		$this->template = 'store/download_form.tpl';
 		$this->children = array(
 			'common/header',	

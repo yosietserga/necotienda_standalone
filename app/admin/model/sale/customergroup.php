@@ -19,15 +19,11 @@ class ModelSaleCustomerGroup extends Model {
 	 */
 	public function addCustomerGroup($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "customer_group SET 
-        name = '" . $this->db->escape($data['name']) . "',
-        cant_orders = '" . (int)$data['cant_orders'] . "',
-        cant_invoices = '" . (int)$data['cant_invoices'] . "',
-        cant_reviews = '" . (int)$data['cant_reviews'] . "',
-        cant_references = '" . (int)$data['cant_references'] . "',
-        total_orders = '" . (int)$data['total_orders'] . "',
-        total_invoices = '" . (int)$data['total_invoices'] . "',
-        total_reviews = '" . (int)$data['total_reviews'] . "',
-        total_references = '" . (int)$data['total_references'] . "'");
+        `name` = '" . $this->db->escape($data['name']) . "',
+        `params` = '" . $this->db->escape($data['params']) . "',
+        `status` = '1',
+        `date_added` = NOW()");
+        return $this->db->getLastId();
 	}
 	
 	/**
@@ -40,15 +36,9 @@ class ModelSaleCustomerGroup extends Model {
 	 */
 	public function editCustomerGroup($customer_group_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer_group SET 
-        name = '" . $this->db->escape($data['name']) . "',
-        cant_orders = '" . (int)$data['cant_orders'] . "',
-        cant_invoices = '" . (int)$data['cant_invoices'] . "',
-        cant_reviews = '" . (int)$data['cant_reviews'] . "',
-        cant_references = '" . (int)$data['cant_references'] . "',
-        total_orders = '" . (int)$data['total_orders'] . "',
-        total_invoices = '" . (int)$data['total_invoices'] . "',
-        total_reviews = '" . (int)$data['total_reviews'] . "',
-        total_references = '" . (int)$data['total_references'] . "'
+        `name` = '" . $this->db->escape($data['name']) . "',
+        `params` = '" . $this->db->escape($data['params']) . "',
+        `date_modified` = NOW()
         WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 	}
 	
@@ -59,7 +49,7 @@ class ModelSaleCustomerGroup extends Model {
      * @see DB
 	 * @return void
 	 */
-	public function deleteCustomerGroup($customer_group_id) {
+	public function delete($customer_group_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_group WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 	}
@@ -85,8 +75,30 @@ class ModelSaleCustomerGroup extends Model {
 	 * @return array sql records
 	 */
 	public function getCustomerGroups($data = array()) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "customer_group";
+		$sql = "SELECT * FROM " . DB_PREFIX . "customer_group cg";
 		
+		$implode = array();
+    		
+    	if ($data['filter_name']) {
+    	   $implode[] = "LCASE(name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+    	}
+    		
+    	if ($data['filter_date_start'] && $data['filter_date_end']) {
+            $implode[] = " date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
+   		} elseif ($data['filter_date_start']) {
+            $implode[] = " date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
+   		}
+    
+        if ($data['filter_customer']) {
+            $implode[] = " cg.customer_group_id IN (SELECT customer_group_id 
+                FROM " . DB_PREFIX . "customer c
+                WHERE LCASE(CONCAT(firstname, ' ', lastname)) LIKE '%" . $this->db->escape(strtolower($data['filter_customer'])) . "%')";
+        } 
+            
+  		if ($implode) {
+    	   $sql .= " WHERE " . implode(" AND ", $implode);
+    	}
+    		
 		$sql .= " ORDER BY name";	
 			
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -119,8 +131,32 @@ class ModelSaleCustomerGroup extends Model {
 	 * @return int Count sql records
 	 */
 	public function getTotalCustomerGroups() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer_group");
+		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer_group cg";
 		
+		$implode = array();
+    		
+    	if ($data['filter_name']) {
+    	   $implode[] = "LCASE(name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+    	}
+    		
+    	if ($data['filter_date_start'] && $data['filter_date_end']) {
+            $implode[] = " date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
+   		} elseif ($data['filter_date_start']) {
+            $implode[] = " date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
+   		}
+    
+        if ($data['filter_customer']) {
+            $implode[] = " cg.customer_group_id IN (SELECT customer_group_id 
+                FROM " . DB_PREFIX . "customer c
+                WHERE LCASE(CONCAT(firstname, ' ', lastname)) LIKE '%" . $this->db->escape(strtolower($data['filter_customer'])) . "%')";
+        } 
+            
+  		if ($implode) {
+    	   $sql .= " WHERE " . implode(" AND ", $implode);
+    	}
+    		
+		$query = $this->db->query($sql);
+        
 		return $query->row['total'];
 	}
 	

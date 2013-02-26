@@ -1,4 +1,6 @@
-<?php define('CATALOG', 'shop');
+<?php
+define('CATALOG', 'shop');
+define('ADMIN', 'servitecpc');
 
 $publictPath    = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR;
 $privatePath    = dirname(__FILE__) . DIRECTORY_SEPARATOR;
@@ -7,23 +9,19 @@ $mainPath       = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEP
 $protocol       = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http://' : 'https://';
 $httpDefaultPath= isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] : substr($_SERVER['PHP_SELF'],0,strrpos($_SERVER['PHP_SELF'],"/")+1);
 $httpPath = str_replace('/index.php',"",$httpDefaultPath);
+$httpPath = str_replace('/web/',"",$httpPath);
 
-/*
-$httpPath   = $_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'],0,strrpos($_SERVER['PHP_SELF'],"/")+1);
-$httpPath   = str_replace("//","/",$httpPath);
-*/
-/**
- * descomentar para agregar un cdn
- * define('CDN', null);
- * */
- 
  // HTTP addresses
 define('HTTP_HOME',     "http://" . $httpPath . "/");
+define('HTTP_ADMIN',     "http://" . $httpPath . "/". ADMIN ."/");
 define('HTTP_IMAGE',    HTTP_HOME . "assets/images/");
 define('HTTP_CSS',      HTTP_HOME . "assets/css/");
 define('HTTP_JS',       HTTP_HOME . "assets/js/");
 define('HTTP_UPLOAD',   HTTP_HOME . "assets/upload/");
 define('HTTP_DOWNLOAD', HTTP_HOME . "assets/upload/");
+define('HTTP_THEME_CSS', HTTP_HOME . "assets/theme/%theme%/css/");
+define('HTTP_THEME_JS', HTTP_HOME . "assets/theme/%theme%/js/");
+define('HTTP_THEME_IMAGE', HTTP_HOME . "assets/theme/%theme%/image/");
 
  // HTTPS addresses
 define('HTTPS_HOME',     "https://" . $httpPath . "/");
@@ -45,6 +43,9 @@ define('DIR_CSS',       $publictPath . "assets/css/");
 define('DIR_JS',        $publictPath . "assets/js/");
 define('DIR_UPLOAD',    $publictPath . "assets/upload/");
 define('DIR_DOWNLOAD',  $publictPath . "assets/upload/");
+define('DIR_THEME_CSS', $publictPath . "assets/theme/%theme%/css/");
+define('DIR_THEME_JS',  $publictPath . "assets/theme/%theme%/js/");
+define('DIR_THEME_IMAGE', $publictPath . "assets/theme/%theme%/image/");
 
 // System files
 define('DIR_SYSTEM',    $mainPath . "system" . DIRECTORY_SEPARATOR);

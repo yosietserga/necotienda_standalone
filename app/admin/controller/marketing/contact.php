@@ -8,6 +8,16 @@ class ControllerMarketingContact extends Controller {
     	$this->getList();
   	}
     
+    public function insert() {
+		$this->load->language('marketing/contact');
+		 
+		$this->document->title = $this->language->get('heading_title');
+		
+		$this->load->auto('marketing/contact');
+		
+    	$this->getExportList();
+  	}
+    
     public function export() {
 		$this->load->language('marketing/contact');
 		 

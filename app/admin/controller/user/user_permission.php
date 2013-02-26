@@ -135,9 +135,9 @@ class ControllerUserUserPermission extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("user/user_permission/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("user/user_permission/eliminar") ."',{
                             id:e
                         },

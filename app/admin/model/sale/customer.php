@@ -18,13 +18,37 @@ class ModelSaleCustomer extends Model {
 	 * @return void
 	 */
 	public function addCustomer($data) {
-      	$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', sexo = '" . $this->db->escape($data['sexo']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', newsletter = '" . (int)$data['newsletter'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', password = '" . $this->db->escape(md5($data['password'])) . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
+      	$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET 
+          firstname = '" . $this->db->escape($data['firstname']) . "', 
+          lastname = '" . $this->db->escape($data['lastname']) . "', 
+          company = '" . $this->db->escape($data['company']) . "', 
+          rif = '" . $this->db->escape($data['rif']) . "', 
+          email = '" . $this->db->escape($data['email']) . "', 
+          sexo = '" . $this->db->escape($data['sexo']) . "', 
+          telephone = '" . $this->db->escape($data['telephone']) . "', 
+          fax = '" . $this->db->escape($data['fax']) . "', 
+          newsletter = '" . (int)$data['newsletter'] . "', 
+          customer_group_id = '" . (int)$data['customer_group_id'] . "', 
+          password = '" . $this->db->escape(md5($data['password'])) . "', 
+          approved = '1', 
+          status = '1', 
+          date_added = NOW()");
       	
       	$customer_id = $this->db->getLastId();
       	
       	if (isset($data['addresses'])) {		
       		foreach ($data['addresses'] as $address) {	
-      			$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int)$customer_id . "', firstname = '" . $this->db->escape($address['firstname']) . "', lastname = '" . $this->db->escape($address['lastname']) . "', company = '" . $this->db->escape($address['company']) . "', address_1 = '" . $this->db->escape($address['address_1']) . "', address_2 = '" . $this->db->escape($address['address_2']) . "', city = '" . $this->db->escape($address['city']) . "', postcode = '" . $this->db->escape($address['postcode']) . "', country_id = '" . (int)$address['country_id'] . "', zone_id = '" . (int)$address['zone_id'] . "'");
+      			$this->db->query("INSERT INTO " . DB_PREFIX . "address SET 
+                  customer_id = '" . (int)$customer_id . "', 
+                  firstname = '" . $this->db->escape($address['firstname']) . "', 
+                  lastname = '" . $this->db->escape($address['lastname']) . "', 
+                  company = '" . $this->db->escape($address['company']) . "', 
+                  address_1 = '" . $this->db->escape($address['address_1']) . "', 
+                  address_2 = '" . $this->db->escape($address['address_2']) . "', 
+                  city = '" . $this->db->escape($address['city']) . "', 
+                  postcode = '" . $this->db->escape($address['postcode']) . "', 
+                  country_id = '" . (int)$address['country_id'] . "', 
+                  zone_id = '" . (int)$address['zone_id'] . "'");
 			}
 		}
 	}
@@ -38,17 +62,40 @@ class ModelSaleCustomer extends Model {
 	 * @return void
 	 */
 	public function editCustomer($customer_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', sexo = '" . $this->db->escape($data['sexo']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', newsletter = '" . (int)$data['newsletter'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', status = '" . (int)$data['status'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "customer SET 
+            firstname = '" . $this->db->escape($data['firstname']) . "', 
+            lastname = '" . $this->db->escape($data['lastname']) . "', 
+            company = '" . $this->db->escape($data['company']) . "', 
+            rif = '" . $this->db->escape($data['rif']) . "', 
+            email = '" . $this->db->escape($data['email']) . "', 
+            sexo = '" . $this->db->escape($data['sexo']) . "', 
+            telephone = '" . $this->db->escape($data['telephone']) . "', 
+            fax = '" . $this->db->escape($data['fax']) . "', 
+            newsletter = '" . (int)$data['newsletter'] . "', 
+            customer_group_id = '" . (int)$data['customer_group_id'] . "'
+        WHERE customer_id = '" . (int)$customer_id . "'");
 	
       	if ($data['password']) {
-        	$this->db->query("UPDATE " . DB_PREFIX . "customer SET password = '" . $this->db->escape(md5($data['password'])) . "' WHERE customer_id = '" . (int)$customer_id . "'");
+        	$this->db->query("UPDATE " . DB_PREFIX . "customer SET 
+            password = '" . $this->db->escape(md5($data['password'])) . "' 
+            WHERE customer_id = '" . (int)$customer_id . "'");
       	}
       	
       	$this->db->query("DELETE FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$customer_id . "'");
       	
       	if (isset($data['addresses'])) {
       		foreach ($data['addresses'] as $address) {	
-				$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int)$customer_id . "', firstname = '" . $this->db->escape($address['firstname']) . "', lastname = '" . $this->db->escape($address['lastname']) . "', company = '" . $this->db->escape($address['company']) . "', address_1 = '" . $this->db->escape($address['address_1']) . "', address_2 = '" . $this->db->escape($address['address_2']) . "', city = '" . $this->db->escape($address['city']) . "', postcode = '" . $this->db->escape($address['postcode']) . "', country_id = '" . (int)$address['country_id'] . "', zone_id = '" . (int)$address['zone_id'] . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "address SET 
+                customer_id = '" . (int)$customer_id . "', 
+                firstname = '" . $this->db->escape($address['firstname']) . "', 
+                lastname = '" . $this->db->escape($address['lastname']) . "', 
+                company = '" . $this->db->escape($address['company']) . "', 
+                address_1 = '" . $this->db->escape($address['address_1']) . "', 
+                address_2 = '" . $this->db->escape($address['address_2']) . "', 
+                city = '" . $this->db->escape($address['city']) . "', 
+                postcode = '" . $this->db->escape($address['postcode']) . "', 
+                country_id = '" . (int)$address['country_id'] . "', 
+                zone_id = '" . (int)$address['zone_id'] . "'");
 			}
 		}
 	}
@@ -170,30 +217,33 @@ class ModelSaleCustomer extends Model {
 
 		$implode = array();
 		
-		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-			$implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+		if (!empty($data['filter_name'])) {
+			$implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '%" . strtolower($this->db->escape($data['filter_name'])) . "%'";
 		}
 		
-		if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
-			$implode[] = "c.email = '" . $this->db->escape($data['filter_email']) . "'";
+		if (!empty($data['filter_email'])) {
+			$implode[] = "LCASE(c.email) LIKE '%" . $this->db->escape(strtolower($data['filter_email'])) . "%'";
 		}
 		
-		if (isset($data['filter_customer_group_id']) && !is_null($data['filter_customer_group_id'])) {
+		if (!empty($data['customer_group_id'])) {
 			$implode[] = "cg.customer_group_id = '" . $this->db->escape($data['filter_customer_group_id']) . "'";
 		}	
-		
+		/*
+        //TODO: pensar mejor como condicionar el status del cliente
 		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
 			$implode[] = "c.status = '" . (int)$data['filter_status'] . "'";
 		}	
-		
-		if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
+		*/
+		if (!empty($data['filter_approved'])) {
 			$implode[] = "c.approved = '" . (int)$data['filter_approved'] . "'";
 		}		
 		
-		if (isset($data['filter_date_added']) && !is_null($data['filter_date_added'])) {
-			$implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $implode[] = " c.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
+		} elseif (!empty($data['filter_date_start'])) {
+            $implode[] = " c.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
 		}
-		
+    
 		if ($implode) {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}
@@ -229,99 +279,10 @@ class ModelSaleCustomer extends Model {
 			
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}		
-		
+        
 		$query = $this->db->query($sql);
 		
 		return $query->rows;	
-	}
-    
-    /**
-     * ModelSaleCustomer::getCumpleaneros()
-     * 
-     * @param mixed $data
-     * @see DB
-	 * @return array sql records
-     */
-    public function getCumpleaneros($data) {
-        $hoy = getdate();
-        $datMes  = $hoy['mon'];
-        $datDia  = $hoy['mday'];
-        $cumpleaneros = array();
-        $sql = "SELECT * FROM " . DB_PREFIX . "customer ";		
-		$sort_data = array(
-			'firstname',
-			'email',
-			'facebook',
-			'twitter',
-		);	
-			
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];	
-		} else {
-			$sql .= " ORDER BY firstname";	
-		}
-			
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC";
-		} else {
-			$sql .= " ASC";
-		}
-		
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}			
-
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
-			}	
-			
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}		
-		
-		$query = $this->db->query($sql);
-        if ($query->num_rows) {
-            foreach ($query->rows as $value) {
-                $datDay = substr($value['nacimiento'],0,2);
-                $datMonth = substr($value['nacimiento'],4,2);
-                if (($datMes == $datMonth) && ($datDay == $datDia)){
-                    $cumpleaneros[] = array (
-                    'customer_id' => $value['customer_id'],
-                    'name' => $value['firstname'].' '.$value['lastname'],
-                    'email' => $value['email'],
-                    'facebook' => $value['facebook'],
-                    'twitter' => $value['twitter'],
-                    'telephone' => $value['telephone']
-                    );
-                }
-            }
-        }		
-		return $cumpleaneros;	
-	}
-	
-    /**
-     * ModelSaleCustomer::getTotalCumpleaneros()
-     * 
-     * @see DB
-	 * @return int Count sql records
-     */
-    public function getTotalCumpleaneros() {
-        $hoy = getdate();
-        $datMes  = $hoy['mon'];
-        $datDia  = $hoy['mday'];
-        $total = 0;
-        $sql = "SELECT COUNT(*) AS total, nacimiento FROM " . DB_PREFIX . "customer GROUP BY nacimiento";		
-		$query = $this->db->query($sql);
-        if ($query->num_rows) {
-            foreach ($query->rows as $value) {
-                $datDay = substr($value['nacimiento'],0,2);
-                $datMonth = substr($value['nacimiento'],4,2);
-                if (($datMes == $datMonth) && ($datDay == $datDia)){
-                    $total ++;
-                }
-            }
-        }
-		return $total;	
 	}
     
 	/**
@@ -402,26 +363,37 @@ class ModelSaleCustomer extends Model {
 	 * @return int Count sql records
 	 */
 	public function getTotalCustomers($data = array()) {
-      	$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer";
+      	$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer c";
 		
 		$implode = array();
 		
-		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-			$implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+		if (!empty($data['filter_name'])) {
+			$implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '%" . $this->db->escape(strtolower(trim($data['filter_name']))) . "%'";
 		}
 		
-		if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
-			$implode[] = "email = '" . $this->db->escape($data['filter_email']) . "'";
+		if (!empty($data['filter_email'])) {
+			$implode[] = "LCASE(c.email) LIKE '%" . $this->db->escape(strtolower(trim($data['filter_email']))) . "%'";
+		}
+		
+		if (!empty($data['customer_group_id'])) {
+			$implode[] = "cg.customer_group_id = '" . $this->db->escape($data['filter_customer_group_id']) . "'";
 		}	
-		
+		/*
+        //TODO: pensar mejor como condicionar el status del cliente
 		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-			$implode[] = "status = '" . (int)$data['filter_status'] . "'";
-		}			
+			$implode[] = "c.status = '" . (int)$data['filter_status'] . "'";
+		}	
+		*/
+		if (!empty($data['filter_approved'])) {
+			$implode[] = "c.approved = '" . (int)$data['filter_approved'] . "'";
+		}		
 		
-		if (isset($data['filter_date_added']) && !is_null($data['filter_date_added'])) {
-			$implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $implode[] = " c.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
+		} elseif (!empty($data['filter_date_start'])) {
+            $implode[] = " c.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
 		}
-		
+    
 		if ($implode) {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}

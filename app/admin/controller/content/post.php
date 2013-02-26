@@ -41,7 +41,74 @@ class ControllerContentPost extends Controller {
 	public function insert() {
 		$this->document->title = $this->language->get('heading_title');
 	
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            
+            foreach ($this->request->post['post_description'] as $language_id => $description) {
+                $dom = new DOMDocument;
+                $dom->preserveWhiteSpace = false;
+                $dom->loadHTML(html_entity_decode($description['description']));
+                $images = $dom->getElementsByTagName('img');
+                foreach ($images as $image) {
+                    $src = $image->getAttribute('src');
+                    
+                    if (preg_match('/data:([^;]*);base64,(.*)/',$src)) {
+                        list($type,$img) = explode(",",$src);
+                        $type = trim(substr($type,strpos($type,"/")+1,3));
+                        
+                        //TODO: validar imagenes
+                        
+                        $str = $this->config->get('config_name');
+                        if($str !== mb_convert_encoding( mb_convert_encoding($str, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
+                            $str = mb_convert_encoding($str, 'UTF-8', mb_detect_encoding($str));
+                        $str = htmlentities($str, ENT_NOQUOTES, 'UTF-8');
+                        $str = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $str);
+                        $str = html_entity_decode($str, ENT_NOQUOTES, 'UTF-8');
+                        $str = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $str);
+                        $str = strtolower( trim($str, '-') );
+                                
+                        $filename = uniqid($str."-") . "_" . time() . "." . $type;
+                        $fp = fopen( DIR_IMAGE . "data/" . $filename, 'wb' );
+                        fwrite( $fp, base64_decode($img));
+                        fclose( $fp );
+                        $image->setAttribute('src', HTTP_IMAGE . "data/" . $filename);
+                    }
+                }
+                $description['description'] = htmlentities($dom->saveHTML());
+                $this->request->post['page_description'][$language_id] = $description;
+            }
+              
+			$post_id = $this->modelPost->addPost($this->request->post);
+        
+			
+			$this->session->set('success',$this->language->get('text_success'));
+
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('content/post/update',array('post_id'=>$post_id))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('content/post/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('content/post')); 
+            }
+		}
+
+		$this->getForm();
+	}
+
+	/**
+	 * ControllerContentPost::update()
+	 * 
+	 * @see Load
+	 * @see Document
+	 * @see Model
+	 * @see Request
+	 * @see Session
+	 * @see Redirect
+	 * @see getForm
+	 * @return void
+	 */
+	public function update() {
+		$this->document->title = $this->language->get('heading_title');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') ) {
             
             foreach ($this->request->post['post_description'] as $language_id => $description) {
                 $dom = new DOMDocument;
@@ -77,64 +144,17 @@ class ControllerContentPost extends Controller {
                 $this->request->post['post_description'][$language_id] = $description;
             }
               
-			$this->modelPost->addPost($this->request->post);
+			$post_id = $this->modelPost->editPost($this->request->get['post_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
-			$url = '';
-			
-			if (isset($this->request->get['post'])) {
-				$url .= '&post=' . $this->request->get['post'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('content/post') . $url);
-		}
-
-		$this->getForm();
-	}
-
-	/**
-	 * ControllerContentPost::update()
-	 * 
-	 * @see Load
-	 * @see Document
-	 * @see Model
-	 * @see Request
-	 * @see Session
-	 * @see Redirect
-	 * @see getForm
-	 * @return void
-	 */
-	public function update() {
-		$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelPost->editPost($this->request->get['post_id'], $this->request->post);
-			
-			$this->session->set('success',$this->language->get('text_success'));
-
-			$url = '';
-			
-			if (isset($this->request->get['post'])) {
-				$url .= '&post=' . $this->request->get['post'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('content/post') . $url);
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('content/post/update',array('post_id'=>$post_id))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('content/post/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('content/post')); 
+            }
 		}
 
 		$this->getForm();
@@ -249,9 +269,9 @@ class ControllerContentPost extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("content/post/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("content/post/eliminar") ."',{
                             id:e
                         },
@@ -280,9 +300,9 @@ class ControllerContentPost extends Controller {
                             'data': $(this).sortable('serialize'),
                             'success': function(data) {
                                 if (data > 0) {
-                                    var msj = '<div class=\"messagesuccess\">Se han ordenado los objetos correctamente</div>';
+                                    var msj = '<div class=\"message success\">Se han ordenado los objetos correctamente</div>';
                                 } else {
-                                    var msj = '<div class=\"messagewarning\">Hubo un error al intentar ordenar los objetos, por favor intente m&aacute;s tarde</div>';
+                                    var msj = '<div class=\"message warning\">Hubo un error al intentar ordenar los objetos, por favor intente m&aacute;s tarde</div>';
                                 }
                                 $('#msg').fadeIn().append(msj).delay(3600).fadeOut();
                             }
@@ -391,9 +411,9 @@ class ControllerContentPost extends Controller {
 			$this->data['posts'][] = array(
 				'post_id'    => $result['post_id'],
 				'title'      => $result['title'],
-				'publish'    => $result['publish'],
-				'date_publish_start'=> date('d-m-Y h:i',strtotime($result['date_publish_start'])),
-				'date_publish_end'=> date('d-m-Y h:i',strtotime($result['date_publish_end'])),
+				'publish'    => ($result['publish']) ? $this->language->get('text_yes') : $this->language->get('text_no'),
+				'date_publish_start'=> date('d-m-Y h:i A',strtotime($result['date_publish_start'])),
+				'date_publish_end'=> date('d-m-Y h:i A',strtotime($result['date_publish_end'])),
 				'sort_order' => $result['sort_order'],
 				'selected'   => isset($this->request->post['selected']) && in_array($result['post_id'], $this->request->post['selected']),
 				'action'     => $action
@@ -469,15 +489,17 @@ class ControllerContentPost extends Controller {
 	private function getForm() {
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
-		$this->data['text_default'] = $this->language->get('text_default');
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-    	$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_none'] = $this->language->get('text_none');
 		
 		$this->data['entry_title'] = $this->language->get('entry_title');
+		$this->data['entry_seo_title'] = $this->language->get('entry_seo_title');
 		$this->data['entry_description'] = $this->language->get('entry_description');
+		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
+		$this->data['entry_meta_keywords'] = $this->language->get('entry_meta_keywords');
 		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
-		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_parent'] = $this->language->get('entry_parent');
+		$this->data['entry_date_start'] = $this->language->get('entry_date_start');
+		$this->data['entry_date_end'] = $this->language->get('entry_date_end');
 		
 		$this->data['help_title'] = $this->language->get('help_title');
 		$this->data['help_description'] = $this->language->get('help_description');
@@ -485,51 +507,26 @@ class ControllerContentPost extends Controller {
 		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
 		$this->data['help_status'] = $this->language->get('help_status');
 		
-		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
-		$this->data['token'] = $this->session->get('ukey');
+        $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
+        $this->data['error_title'] = isset($this->error['title']) ? $this->error['title'] : '';
+        $this->data['error_description'] = isset($this->error['description']) ? $this->error['description'] : '';
 
- 		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-
- 		if (isset($this->error['title'])) {
-			$this->data['error_title'] = $this->error['title'];
-		} else {
-			$this->data['error_title'] = '';
-		}
-		
-	 	if (isset($this->error['description'])) {
-			$this->data['error_description'] = $this->error['description'];
-		} else {
-			$this->data['error_description'] = '';
-		}
-		
 		$url = '';
-			
-		if (isset($this->request->get['post'])) {
-			$url .= '&post=' . $this->request->get['post'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		if (isset($this->request->get['post'])) { $url .= '&post=' . $this->request->get['post']; }
+		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
+		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
 		
   		$this->document->breadcrumbs = array();
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => Url::createAdminUrl('common/home'),
        		'text'      => $this->language->get('text_home'),
       		'separator' => false
    		);
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => Url::createAdminUrl('content/post') . $url,
        		'text'      => $this->language->get('heading_title'),
@@ -547,8 +544,11 @@ class ControllerContentPost extends Controller {
 		if (isset($this->request->get['post_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$post_info = $this->modelPost->getPost($this->request->get['post_id']);
 		}
+        
 		$this->data['languages'] = $this->modelLanguage->getLanguages();
-		
+        
+        $this->setvar('keyword',$post_info,'');
+        
 		if (isset($this->request->post['post_description'])) {
 			$this->data['post_description'] = $this->request->post['post_description'];
 		} elseif (isset($this->request->get['post_id'])) {
@@ -557,30 +557,117 @@ class ControllerContentPost extends Controller {
 			$this->data['post_description'] = array();
 		}
 
-		if (isset($this->request->post['status'])) {
-			$this->data['status'] = $this->request->post['status'];
-		} elseif (isset($post_info)) {
-			$this->data['status'] = $post_info['status'];
+		if (isset($this->request->post['date_publish_start'])) {
+			$this->data['date_publish_start'] = date('d-m-Y',strtotime($this->request->post['date_publish_start']));
+		} elseif ($post_info) {
+			$this->data['date_publish_start'] = date('d-m-Y',strtotime($post_info['date_publish_start']));
 		} else {
-			$this->data['status'] = 1;
+			$this->data['date_publish_start'] = date('d-m-Y');
 		}
-		
-		if (isset($this->request->post['keyword'])) {
-			$this->data['keyword'] = $this->request->post['keyword'];
-		} elseif (isset($post_info)) {
-			$this->data['keyword'] = $post_info['keyword'];
+
+		if (isset($this->request->post['date_publish_end'])) {
+			$this->data['date_publish_end'] = date('d-m-Y',strtotime($this->request->post['date_publish_end']));
+		} elseif ($post_info) {
+			$this->data['date_publish_end'] = date('d-m-Y',strtotime($post_info['date_publish_end']));
 		} else {
-			$this->data['keyword'] = '';
+			$this->data['date_publish_end'] = '';
 		}
-		
-		if (isset($this->request->post['sort_order'])) {
-			$this->data['sort_order'] = $this->request->post['sort_order'];
-		} elseif (isset($post_info)) {
-			$this->data['sort_order'] = $post_info['sort_order'];
-		} else {
-			$this->data['sort_order'] = '';
-		}
-		
+
+        $scripts[] = array('id'=>'postForm','method'=>'ready','script'=>
+            "$('#post_description_1_title').blur(function(e){
+                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',{ slug : $(this).val() },function(data){
+                        $('#slug').val(data.slug);
+                });
+            });
+            
+            $('.trends').fancybox({
+        		maxWidth	: 640,
+        		maxHeight	: 600,
+        		fitToView	: false,
+        		width		: '70%',
+        		height		: '70%',
+        		autoSize	: false,
+        		closeClick	: false,
+        		openEffect	: 'none',
+        		closeEffect	: 'none'
+        	});
+            
+            $('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.tabs li').on('click',function() {
+                $('.tabs li').each(function(){
+                   $('#' + this.id + '_content').hide();
+                   $(this).removeClass('active'); 
+                });
+                $(this).addClass('active');
+                $('#' + this.id + '_content').show(); 
+           }); 
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        foreach ($this->data['languages'] as $language) {
+            $scripts[] = array('id'=>'postLanguage'.$language["language_id"],'method'=>'ready','script'=>
+                "var editor". $language["language_id"] ." = CKEDITOR.replace('description". $language["language_id"] ."', {
+                	filebrowserBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
+                	filebrowserImageBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
+                	filebrowserFlashBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
+                	filebrowserUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
+                	filebrowserImageUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
+                	filebrowserFlashUploadUrl: '". Url::createAdminUrl("common/filemanager") ."'
+                });");
+        }
+        
+        $scripts[] = array('id'=>'postFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+        // javascript files
+        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+        
+        $javascripts[] = "js/vendor/ckeditor/ckeditor.js";
+        
+        $this->javascripts = array_merge($javascripts,$this->javascripts);
+        
 		$this->template = 'content/post_form.tpl';
 		$this->children = array(
 			'common/header',	

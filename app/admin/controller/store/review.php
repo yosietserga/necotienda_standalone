@@ -9,26 +9,18 @@ class ControllerStoreReview extends Controller {
 
 	public function insert() {
 		$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelReview->addReview($this->request->post);
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+			$review_id = $this->modelReview->addReview($this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
-
-			$url = '';
-			
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-						
-			$this->redirect(Url::createAdminUrl('store/review') . $url);
+		
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('store/review/update',array('review_id'=>$review_id))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('store/review/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('store/review')); 
+            }
 		}
 
 		$this->getForm();
@@ -41,55 +33,34 @@ class ControllerStoreReview extends Controller {
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
-			$url = '';
-			
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-						
-			$this->redirect(Url::createAdminUrl('store/review') . $url);
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('store/review/update',array('review_id'=>$this->request->get['review_id']))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('store/review/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('store/review')); 
+            }
 		}
 
 		$this->getForm();
 	}
 
-	public function delete() { 
-		$this->document->title = $this->language->get('heading_title');
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $review_id) {
-				$this->modelReview->deleteReview($review_id);
-			}
-
-			$this->session->set('success',$this->language->get('text_success'));
-
-			$url = '';
-			
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-						
-			$this->redirect(Url::createAdminUrl('store/review') . $url);
+    /**
+     * ControllerStoreCategory::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        $this->load->auto('store/category');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelReview->delete($id);
+            }
+		} else {
+            $this->modelReview->delete($_GET['id']);
 		}
-
-		$this->getList();
-	}
-
+     }
+    
 	private function getList() {
   		$this->document->breadcrumbs = array();
 
@@ -139,15 +110,22 @@ class ControllerStoreReview extends Controller {
                     }
                 });
             }
-            function borrar() {
-                $('#gridWrapper').html('<img src=\"image/nt_loader.gif\" alt=\"Cargando...\" />');
-                $.post('". Url::createAdminUrl("store/review/delete") ."',$('#formGrid').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("store/review/grid") ."');
-                });
-            } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function deleteAll() {
+                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("store/category/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("store/category/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                    $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("store/review/eliminar") ."',{
                             id:e
                         },
@@ -277,13 +255,13 @@ class ControllerStoreReview extends Controller {
             );	
 			$this->data['reviews'][] = array(
 				'review_id'  => $result['review_id'],
-				'product_url'=> Url::createAdminUrl('store/product/see') . '&amp;product_id=' . $result['product_id'],
+				'product_url'=> HTTP_CATALOG . '/index.php?r=store/product&amp;product_id=' . $result['product_id'],
 				'name'       => $result['name'],
 				'author'     => $result['author'],
 				'rating'     => $result['rating'],       
 				'text'       => $result['text'],
-				'status'     => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'date_added' => date('d-m-Y h:i', strtotime($result['date_added'])),
+				'status'     => ($result['rstatus']==1) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+				'date_added' => date('d-m-Y h:i:s', strtotime($result['created'])),
 				'selected'   => isset($this->request->post['selected']) && in_array($result['review_id'], $this->request->post['selected']),
 				'action'     => $action
 			);
@@ -354,53 +332,18 @@ class ControllerStoreReview extends Controller {
 		$this->data['entry_good'] = $this->language->get('entry_good');
 		$this->data['entry_bad'] = $this->language->get('entry_bad');
 
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel']      = $this->language->get('button_cancel');
 
- 		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
- 		
-		if (isset($this->error['product'])) {
-			$this->data['error_product'] = $this->error['product'];
-		} else {
-			$this->data['error_product'] = '';
-		}
-		
- 		if (isset($this->error['author'])) {
-			$this->data['error_author'] = $this->error['author'];
-		} else {
-			$this->data['error_author'] = '';
-		}
-		
- 		if (isset($this->error['text'])) {
-			$this->data['error_text'] = $this->error['text'];
-		} else {
-			$this->data['error_text'] = '';
-		}
-		
- 		if (isset($this->error['rating'])) {
-			$this->data['error_rating'] = $this->error['rating'];
-		} else {
-			$this->data['error_rating'] = '';
-		}
-
-		$url = '';
-			
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-				
+ 		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
+ 		$this->data['error_product'] = ($this->error['product']) ? $this->error['product'] : '';
+ 		$this->data['error_author']  = ($this->error['author']) ? $this->error['author'] : '';
+ 		$this->data['error_text']    = ($this->error['text']) ? $this->error['text'] : '';
+ 		$this->data['error_rating']  = ($this->error['rating']) ? $this->error['rating'] : '';
+ 		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
+        	
    		$this->document->breadcrumbs = array();
 
    		$this->document->breadcrumbs[] = array(
@@ -423,70 +366,119 @@ class ControllerStoreReview extends Controller {
 		
 		$this->data['cancel'] = Url::createAdminUrl('store/review') . $url;
 
-		$this->data['token'] = $this->session->get('ukey');
-
 		if (isset($this->request->get['review_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$review_info = $this->modelReview->getReview($this->request->get['review_id']);
 		}
 		
-		$this->data['categories'] = $this->modelCategory->getCategories(0);
+        $this->setvar('author',$review_info,'');
+        $this->setvar('text',$review_info,'');
+        $this->setvar('rating',$review_info,'');
+        $this->setvar('status',$review_info,'');
+        $this->setvar('product_id',$review_info,'');
+        
+        $product_info = ($this->data['product_id']) ? $this->modelProduct->getProduct($this->data['product_id']) : '';
+		$this->data['product'] = ($product_info) ? $product_info['name'] : '';
 		
-		if (isset($this->request->post['product_id'])) {
-			$this->data['product_id'] = $this->request->post['product_id'];
-			
-			$product_info = $this->modelProduct->getProduct($this->request->post['product_id']);
-			
-			if ($product_info) {
-				$this->data['product'] = $product_info['name'];
-			} else {
-				$this->data['product'] = '';
-			}
-		} elseif (isset($review_info)) {
-			$this->data['product_id'] = $review_info['product_id'];
-			
-			$product_info = $this->modelProduct->getProduct($review_info['product_id']);
-			
-			if ($product_info) {
-				$this->data['product'] = $product_info['name'];
-			} else {
-				$this->data['product'] = '';
-			}
-		} else {
-			$this->data['product_id'] = '';
-		}
-		
-		if (isset($this->request->post['author'])) {
-			$this->data['author'] = $this->request->post['author'];
-		} elseif (isset($review_info)) {
-			$this->data['author'] = $review_info['author'];
-		} else {
-			$this->data['author'] = '';
-		}
-
-		if (isset($this->request->post['text'])) {
-			$this->data['text'] = $this->request->post['text'];
-		} elseif (isset($review_info)) {
-			$this->data['text'] = $review_info['text'];
-		} else {
-			$this->data['text'] = '';
-		}
-
-		if (isset($this->request->post['rating'])) {
-			$this->data['rating'] = $this->request->post['rating'];
-		} elseif (isset($review_info)) {
-			$this->data['rating'] = $review_info['rating'];
-		} else {
-			$this->data['rating'] = '';
-		}
-
-		if (isset($this->request->post['status'])) {
-			$this->data['status'] = $this->request->post['status'];
-		} elseif (isset($review_info)) {
-			$this->data['status'] = $review_info['status'];
-		} else {
-			$this->data['status'] = '';
-		}
-		
+        $this->data['Url'] = new Url;
+        //TODO: mostrar los productos al scrolldown para no colapsar el navegador cuando se listan todos los productos
+        //TODO: crear cache del layout de los productos y luego detetar los seleccionados con jquery
+        $scripts[] = array('id'=>'reviewScripts','method'=>'ready','script'=>
+            "$('#addProductsWrapper').hide();
+            
+            $('#addProductsPanel').on('click',function(e){
+                var products = $('#addProductsWrapper').find('.row');
+                
+                if (products.length == 0) {
+                    $.getJSON('".Url::createAdminUrl("store/review/products")."',
+                        {
+                            'review_id':'".$this->request->getQuery('review_id')."'
+                        }, function(data) {
+                            
+                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            
+                            $.each(data, function(i,item){
+                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.product_id + '\" /></li>');
+                                
+                            });
+                            
+                            $('#q').on('change',function(e){
+                                var that = this;
+                                var valor = $(that).val().toLowerCase();
+                                if (valor.length <= 0) {
+                                    $('#addProducts li').show();
+                                } else {
+                                    $('#addProducts li b').each(function(){
+                                        if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
+                                            $(this).closest('li').show();
+                                        } else {
+                                            $(this).closest('li').hide();
+                                        }
+                                    });
+                                }
+                            }); 
+                            
+                            $('li').on('click',function() {
+                                $('li b').removeClass('added');
+                                $(this).find('b').addClass('added');
+                                $('#product_id').val( $(this).find('input').val() );
+                                $('#product_name').text( $(this).find('img').attr('alt') );
+                                
+                            });
+                    });
+                }
+            });
+                
+            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
+            
+            $('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'reviewFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
 		$this->template = 'store/review_form.tpl';
 		$this->children = array(
 			'common/header',	
@@ -495,30 +487,44 @@ class ControllerStoreReview extends Controller {
 		
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 	}
-	
-	public function category() {
-		$this->load->auto('store/product');
-		
-		if (isset($this->request->get['category_id'])) {
-			$category_id = $this->request->get['category_id'];
-		} else {
-			$category_id = 0;
-		}
-		
-		$product_data = array();
-		
-		$results = $this->modelProduct->getProductsByCategoryId($category_id);
-		$html_output = '';
-		if ($results) {
-			foreach ($results as $result) {
-              $html_output .= "<option value='".$result['product_id']."'>".$result['name']."</option>";
-			}
-		} else {		
-              $html_output .= 1;
+
+     public function products() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+        header("Cache-Control: no-cache, must-revalidate"); 
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        $this->load->auto("store/product");
+        $this->load->auto("image");
+        $this->load->auto("url");
+        
+        $cache = $this->cache->get("products.for.reviews.form");
+        if ($cache) {
+            $products = unserialize($cache);
+        } else {
+            $model = $this->modelProduct->getAll();
+            $products = $model->obj;
+            $this->cache->set("products.for.reviews.form",serialize($products));
         }
-        echo $html_output;
-	}
-	
+        
+        $this->data['Image'] = new NTImage();
+        $this->data['Url'] = new Url;
+        
+        $output = array();
+        
+        foreach ($products as $product) {
+            $output[] = array(
+                'product_id'=>$product->product_id,
+                'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
+                'pname'     =>$product->pname,
+                'class'     =>'add',
+                'value'     =>0
+            );
+        }
+        $this->load->auto('json');
+        $this->response->setOutput(Json::encode($output), $this->config->get('config_compression'));
+            
+     }
 	private function validateForm() {
 		if (!$this->user->hasPermission('modify', 'store/review')) {
 			$this->error['warning'] = $this->language->get('error_permission');
@@ -528,19 +534,15 @@ class ControllerStoreReview extends Controller {
 			$this->error['product'] = $this->language->get('error_product');
 		}
 		
-		if ((strlen(utf8_decode($this->request->post['author'])) < 3) || (strlen(utf8_decode($this->request->post['author']))> 64)) {
+		if (!$this->request->post['author']) {
 			$this->error['author'] = $this->language->get('error_author');
 		}
 
-		if ((strlen(utf8_decode($this->request->post['text'])) < 25) || (strlen(utf8_decode($this->request->post['text']))> 1000)) {
+		if (!$this->request->post['text']) {
 			$this->error['text'] = $this->language->get('error_text');
 		}
 		
-		if ((strlen(utf8_decode($this->request->post['text'])) < 25) || (strlen(utf8_decode($this->request->post['text']))> 1000)) {
-			$this->error['text'] = $this->language->get('error_text');
-		}
-		
-		if (!isset($this->request->post['rating'])) {
+		if (!$this->request->post['rating']) {
 			$this->error['rating'] = $this->language->get('error_rating');
 		}
 		

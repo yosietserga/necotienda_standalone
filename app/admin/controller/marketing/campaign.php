@@ -242,9 +242,9 @@ class ControllerMarketingCampaign extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("marketing/campaign/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("marketing/campaign/eliminar") ."',{
                             id:e
                         },

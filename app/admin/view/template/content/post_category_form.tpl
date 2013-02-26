@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?><div class="warning"><?php echo $error_warning; ?></div><?php } ?>
+<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
         <h1><?php echo $heading_title; ?></h1>
         <div class="buttons">
@@ -21,19 +21,19 @@
                     
                         <div class="row">
                             <label><?php echo $entry_name; ?></label>
-                            <input class="category" id="category_description_<?php echo $language['language_id']; ?>_name" name="category_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['name'] : ''; ?>" required="true" />
+                            <input class="category" id="category_description_<?php echo $language['language_id']; ?>_name" name="category_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['name'] : ''; ?>" required="true" style="width:40%" />
                         </div>
                         
                         <div class="clear"></div>
                         
                         <div class="row">
                             <label><?php echo $entry_meta_description; ?></label>
-                            <textarea title="<?php echo $help_meta_description; ?>" name="category_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'meta_description'] : ''; ?></textarea>
+                            <textarea title="<?php echo $help_meta_description; ?>" name="category_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5" style="width:40%"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'meta_description'] : ''; ?></textarea>
                         </div>
                         
                         <div class="row">
                             <label><?php echo $entry_meta_keywords; ?></label>
-                            <textarea title="<?php echo $help_meta_keywords; ?>" name="category_keywords[<?php echo $language['language_id']; ?>][meta_keywords]" cols="40" rows="5"><?php echo isset($category_keywords[$language[ 'language_id']]) ? $category_keywords[$language[ 'language_id']][ 'meta_keywords'] : ''; ?></textarea>
+                            <textarea title="<?php echo $help_meta_keywords; ?>" name="category_description[<?php echo $language['language_id']; ?>][meta_keywords]" cols="40" rows="5" style="width:40%"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'meta_keywords'] : ''; ?></textarea>
                         </div>
                         
                         <div class="clear"></div>
@@ -54,21 +54,17 @@
             
             <div class="row">
                 <label>Slug (<b style="font:normal 10px verdana;color:#999;"><?php echo HTTP_CATALOG; ?>/</b>)</label>
-                <input type="text" id="slug" name="keyword" value="<?php echo $keyword; ?>" />
+                <input type="text" id="slug" name="keyword" value="<?php echo $keyword; ?>" style="width:40%" />
             </div>
             
             <div class="clear"></div>
             
             <div class="row">
                 <label><?php echo $entry_category; ?></label>
-                <select name="parent_id">
+                <select name="parent_id" style="width:40%">
                     <option value="0"><?php echo $text_none; ?></option>
 	           <?php foreach ($categories as $category) { ?>
-                    <?php if ($category[ 'category_id']==$parent_id) { ?>
-					<option value="<?php echo $category['category_id']; ?>" selected="selected"><?php echo $category[ 'name']; ?></option>
-                    <?php } else { ?>
-					<option value="<?php echo $category['category_id']; ?>"><?php echo $category[ 'name']; ?></option>
-                    <?php } ?>
+					<option value="<?php echo $category['post_category_id']; ?>"<?php if ($category['post_category_id']==$parent_id) { ?> selected="selected"<?php } ?>><?php echo $category['name']; ?></option>
                <?php } ?>
                </select>
             </div>
@@ -78,16 +74,19 @@
             <div class="row">
                 <label><?php echo $entry_image; ?></label>
                 <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
-                <img alt="Imagen de la categor&iacute;a" src="<?php echo $preview; ?>" id="preview" class="image" onclick="image_upload('image', 'preview');" />
+                <img alt="Imagen de la categor&iacute;a" src="<?php echo $preview; ?>" id="preview" class="image" onclick="image_upload('image', 'preview');" width="100" height="100" />
+                <br />
+                <a onclick="image_upload('image', 'preview');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+                <a onclick="image_delete('image', 'preview');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
             </div>
                    
             <div class="clear"></div><br />
-            
-            <div id="addProductsPanel"><b>Agregar / Eliminar Productos</b></div>
-            <div id="addProductsWrapper"><img src="image/nt_loader.gif" alt="Cargando..." /></div>
+            <!--
+            <div id="addPostsPanel"><b>Agregar / Eliminar Art&iacute;culos</b></div>
+            <div id="addPostsWrapper"><div id="gridPreloader"></div></div>
             
             <div class="clear"></div><br />
-            
+            -->
         </form>
 </div>
 <div class="sidebar" id="feedbackPanel">

@@ -1,5 +1,7 @@
 <?php   class ControllerCommonHeader extends Controller {
-	protected function index() {     
+	protected function index() {
+        $this->data['Url'] = new Url;
+        
     	if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['language_code'])) {
 			$this->session->set('language',$this->request->post['language_code']);
 		
@@ -21,12 +23,6 @@
 			}
    		}
 		
-		$this->data['title']      = $this->document->title;
-		$this->data['keywords']   = $this->document->keywords;
-		$this->data['description']= $this->document->description;
-		$this->data['template']   = $this->config->get('config_template');
-		
-		
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
 			$this->data['base'] = HTTPS_HOME;
 		} else {
@@ -39,6 +35,16 @@
 			$this->data['icon'] = '';
 		}
 		
+		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
+			$this->data['logo'] = HTTP_IMAGE . $this->config->get('config_logo');
+		} else {
+			$this->data['logo'] = '';
+		}
+        
+		$this->data['title']      = $this->document->title;
+		$this->data['keywords']   = $this->document->keywords;
+		$this->data['description']= $this->document->description;
+		$this->data['template']   = $this->config->get('config_template');
 		$this->data['charset']    = $this->language->get('charset');
 		$this->data['lang']       = $this->language->get('code');
 		$this->data['direction']  = $this->language->get('direction');
@@ -50,9 +56,14 @@
         // style files
         $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
         //TODO: detectar browser y cargar el estilo adecuado
-        $styles[] = array('media'=>'all','href'=>$csspath.'main.css');
         $styles[] = array('media'=>'all','href'=>$csspath.'screen.css'); 
-        $styles[] = array('media'=>'print','href'=>$csspath.'print.css');
+        //$styles[] = array('media'=>'print','href'=>$csspath.'print.css');
+        
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+			$styles[] = array('media'=>'all','href'=> str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_CSS) . 'theme.css');
+		} else {
+			$styles[] = array('media'=>'all','href'=> str_replace('%theme%','default',HTTP_THEME_CSS) . 'theme.css');
+		}
         
         $this->load->library('user');
         if ($this->user->getId()) {
@@ -60,27 +71,24 @@
             $styles[] = array('media'=>'screen','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
             $styles[] = array('media'=>'screen','href'=>$csspath.'neco.colorpicker.css');
             $styles[] = array('media'=>'screen','href'=>$csspath.'admin.css');
+            
+            
+            $this->data['create_product']= Url::createAdminUrl('store/product/insert',array(),'NONSSL',HTTP_ADMIN);
+            $this->data['create_page']= Url::createAdminUrl('content/page/insert',array(),'NONSSL',HTTP_ADMIN);
+            $this->data['create_post']= Url::createAdminUrl('content/post/insert',array(),'NONSSL',HTTP_ADMIN);
+            $this->data['create_manufacturer']= Url::createAdminUrl('store/manufacturer/insert',array(),'NONSSL',HTTP_ADMIN);
+            $this->data['create_product_category']= Url::createAdminUrl('store/category/insert',array(),'NONSSL',HTTP_ADMIN);
+            $this->data['create_post_category']= Url::createAdminUrl('content/post_category/insert',array(),'NONSSL',HTTP_ADMIN);
         }
-        
-        $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        $this->data['styles'] = $this->styles = array_merge($styles,$this->styles);
 
-        // importamos el archivo css generado desde la administración 
-        // para personalizar la apariencia de la tienda, este archivo sobreescribe los parámetros iniciales de estilo
         if (is_file($csspath."custom.css")) {
-            $styles = array(
-                array('media'=>'all','href'=>$csspath.'custom.css')
-            );
+            $styles[] = array('media'=>'all','href'=>$csspath.'custom.css');
             $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
         }
         
 		$this->data['store'] = $this->config->get('config_name');
 		
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = HTTP_IMAGE . $this->config->get('config_logo');
-		} else {
-			$this->data['logo'] = '';
-		}
-        
 		$this->data['text_store']     = $this->config->get('config_name');
 		$this->data['text_home']      = $this->language->get('text_home');
 		$this->data['text_special']   = $this->language->get('text_special');
@@ -95,88 +103,84 @@
 		$this->data['text_keyword']   = $this->language->get('text_keyword');
 		$this->data['text_category']  = $this->language->get('text_category');
 		$this->data['text_advanced']  = $this->language->get('text_advanced');
+		$this->data['text_my_actitivties']= $this->language->get('text_my_actitivties');
+		$this->data['text_my_reviews']    = $this->language->get('text_my_reviews');
+		$this->data['text_my_orders']     = $this->language->get('text_my_orders');
+		$this->data['text_my_addresses']  = $this->language->get('text_my_addresses');
+		$this->data['text_my_account']    = $this->language->get('text_my_account');
+		$this->data['text_credits']       = $this->language->get('text_credits');
+		$this->data['text_payments']      = $this->language->get('text_payments');
+		$this->data['text_messages']      = $this->language->get('text_messages');
+		$this->data['text_compare']       = $this->language->get('text_compare');
+		$this->data['text_my_lists']      = $this->language->get('text_my_lists');
+		$this->data['text_forgotten']     = $this->language->get('text_forgotten');
+        
 		$this->data['entry_search']   = $this->language->get('entry_search');
 		$this->data['button_go']      = $this->language->get('button_go');
 
-		$this->data['home']    = Url::createUrl('common/home');
-		$this->data['special'] = Url::createUrl('store/special');
-		$this->data['contact'] = Url::createUrl('information/contact');
-    	$this->data['sitemap'] = Url::createUrl('information/sitemap');
-    	$this->data['account'] = Url::createUrl('account/account');
-		$this->data['login']   = Url::createUrl('account/login');
-		$this->data['logout']  = Url::createUrl('account/logout');
-    	$this->data['cart']    = Url::createUrl('checkout/cart');
-		$this->data['checkout']= Url::createUrl('checkout/shipping');
-        
-		$this->data['logged']  = $this->customer->isLogged();
+		$this->data['isLogged']  = $this->customer->isLogged();
 		
         if ($this->customer->isLogged()) {
-       	    $customer_info = $this->modelCustomer->getCustomer($this->customer->getId());
-			$this->data['saludos'] = 'Bienvenido(a), '. ucwords($customer_info['firstname'] .' '.$customer_info['lastname']);
-            $this->data['enlace'] = Url::createUrl('account/account');
-		} else {			
-		    $this->data['enlace'] = Url::createUrl('account/register');
-            $this->data['saludos'] = 'Quiero Registrarme';
+			$this->data['greetings'] = 'Bienvenido(a), '. ucwords($this->customer->getFirstName() .' '. $this->customer->getLastName());
 		}
         
-		if (isset($this->request->get['keyword'])) {
-			$this->data['keyword'] = $this->request->get['keyword'];
+		if (isset($this->request->get['q'])) {
+			$this->data['q'] = $this->request->get['q'];
 		} else {
-			$this->data['keyword'] = '';
+			$this->data['q'] = '';
 		}
 		
 		if (isset($this->request->get['category_id'])) {
 			$this->data['category_id'] = $this->request->get['category_id'];
 		} elseif (isset($this->request->get['path'])) {
 			$path = explode('_', $this->request->get['path']);
-		
 			$this->data['category_id'] = end($path);
 		} else {
-			$this->data['category_id'] = '';
+			$this->data['category_id'] = 0;
 		}
         
-		
 		if (isset($this->request->get['product_id'])) {
-			$auto_suggest = $this->request->get['product_id'];
+			$this->data['product_id'] = $this->request->get['product_id'];
 		} else {
-			$auto_suggest = 0;
+			$this->data['product_id'] = 0;
 		}
         
-        if ($auto_suggest) {
-            $this->document->auto_suggest = $auto_suggest['name'];
-        }
-		
-		$this->data['advanced'] = Url::createUrl('product/search');
-		
-		
-		$this->data['categories'] = $this->getCategories(0);
-		
+		if (isset($this->request->get['manufacturer_id'])) {
+			$this->data['manufacturer_id'] = $this->request->get['manufacturer_id'];
+		} else {
+			$this->data['manufacturer_id'] = 0;
+		}
+        
+        /*
+        // Auto suggest through email and while is online
+        $this->track->autoSuggest(array(
+            'category_id'       =>$this->data['category_id'],
+            'product_id'        =>$this->data['product_id'],
+            'manufacturer_id'   =>$this->data['manufacturer_id'],
+            'q'                 =>$this->data['q']
+        ));
+		*/
+        
 		$this->data['action'] = Url::createUrl('common/home');
 
 		if (!isset($this->request->get['r'])) {
 			$this->data['redirect'] = Url::createUrl('common/home');
 		} else {			
 			$data = $this->request->get;
-			
 			unset($data['_route_']);
-			
 			$route = $data['r'];
-			
 			unset($data['r']);
-			
 			$url = '';
 			
 			if ($data) {
 				$url = '&' . urldecode(http_build_query($data));
 			}			
 			
-			$this->data['redirect'] = $this->model_tool_seo_url->rewrite(Url::createUrl($route,$url));
+			$this->data['redirect'] = $this->modelSeo_url->rewrite(Url::createUrl($route,$url));
 		}
 		
 		$this->data['language_code'] = $this->session->get('language');
-		
 		$this->data['languages'] = array();
-		
 		$results = $this->modelLanguage->getLanguages();
 		
 		foreach ($results as $result) {
@@ -189,10 +193,8 @@
 			}
 		}
 		
-		$this->data['currency_code'] = $this->currency->getCode(); 
-		
-		 $this->data['currencies'] = array();
-		 
+		$this->data['currency_code'] = $this->currency->getCode();
+	    $this->data['currencies'] = array();
 		$results = $this->model_localisation_currency->getCurrencies();	
 		
 		foreach ($results as $result) {
@@ -213,28 +215,5 @@
 		}
 		
     	$this->render();
-	}	
-	
-	private function getCategories($parent_id, $level = 0) {
-		$level++;
-		
-		$data = array();
-		
-		$results = $this->model_catalog_category->getCategories($parent_id);
-		
-		foreach ($results as $result) {
-			$data[] = array(
-				'category_id' => $result['category_id'],
-				'name'        => str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $level) . $result['name']
-			);
-			
-			$children = $this->getCategories($result['category_id'], $level);
-			
-			if ($children) {
-			  $data = array_merge($data, $children);
-			}
-		}
-		
-		return $data;
 	}
 }

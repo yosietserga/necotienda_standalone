@@ -42,16 +42,21 @@ if (!$session->has('fkey')) {
     $registry->set('fkey', $session->get('fkey'));
 }
     
-// Config
-$config = !$session->has("config") ? $config = new Config() : $session->get("config"); 
-
 // Settings
+    $query = $db->query("SELECT * FROM " . DB_PREFIX . "setting");
+    foreach ($query->rows as $setting) {
+            $config->set($setting['key'], $setting['value']);
+    }
+    /*
 if (!$session->has("config")) {
     $query = $db->query("SELECT * FROM " . DB_PREFIX . "setting");
     foreach ($query->rows as $setting) {
             $config->set($setting['key'], $setting['value']);
     }
+} else {
+    $config = unserialize($session->get("config")); 
 }
+*/
 
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 
@@ -149,7 +154,7 @@ set_error_handler('error_handler');
 
 // App Libs and Configs Preload
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app/shop/map.php');
-if (!$session->has("config")) $session->set("config", $config);
+$session->set("config", serialize($config));
 
 // Front Controller 
 $controller = new Front($registry);

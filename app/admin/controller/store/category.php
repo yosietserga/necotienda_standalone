@@ -394,6 +394,8 @@ class ControllerStoreCategory extends Controller {
 	 * @return void
 	 */
 	public function grid() {
+	   //TODO: mantener las jerarquias cuando se filtren los items
+       //TODO: Certificar todos los filtros
 		$filter_name = !empty($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
 		$filter_product = !empty($this->request->get['filter_product']) ? $this->request->get['filter_product'] : null;
 		$filter_date_start = !empty($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;

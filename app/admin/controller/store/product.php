@@ -76,43 +76,19 @@ class ControllerStoreProduct extends Controller {
                 $this->request->post['product_description'][$language_id] = $description;
             }
               
-			$result = $this->modelProduct->addProduct($this->request->post);
-            if ($result===false) {
-                $this->error['warning'] = "No puede crear m&aacute;s productos, ha llegado al l&iacute;mite permitido para su cuenta.\nSi desea agregar m&aacute;s productos a su tienda debe comprar un plan superior";
+			$product_id = $this->modelProduct->addProduct($this->request->post);
+            if ($product_id===false) {
+                $this->error['warning'] = "No puede crear m&aacute;s productos, ha llegado al l&iacute;mite permitido para su cuenta.\nSi desea agregar m&aacute;s productos a su tienda debe comprar una nueva licencia.";
             } else {            
     			$this->session->set('success',$this->language->get('text_success'));
     	  
-    			$url = '';
-    			
-    			if (isset($this->request->get['filter_name'])) {
-    				$url .= '&filter_name=' . $this->request->get['filter_name'];
-    			}
-    		
-    			if (isset($this->request->get['filter_model'])) {
-    				$url .= '&filter_model=' . $this->request->get['filter_model'];
-    			}
-    			
-    			if (isset($this->request->get['filter_quantity'])) {
-    				$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
-    			}
-    			
-    			if (isset($this->request->get['filter_status'])) {
-    				$url .= '&filter_status=' . $this->request->get['filter_status'];
-    			}
-    					
-    			if (isset($this->request->get['page'])) {
-    				$url .= '&page=' . $this->request->get['page'];
-    			}
-    
-    			if (isset($this->request->get['sort'])) {
-    				$url .= '&sort=' . $this->request->get['sort'];
-    			}
-    
-    			if (isset($this->request->get['order'])) {
-    				$url .= '&order=' . $this->request->get['order'];
-    			}
-    			
-    			$this->redirect(Url::createAdminUrl('store/product') . $url);
+                if ($_POST['to'] == "saveAndKeep") {
+                    $this->redirect(Url::createAdminUrl('store/product/update',array('product_id'=>$product_id))); 
+                } elseif ($_POST['to'] == "saveAndNew") {
+                    $this->redirect(Url::createAdminUrl('store/product/insert')); 
+                } else {
+                    $this->redirect(Url::createAdminUrl('store/product')); 
+                }
             }
 	  		
     	}
@@ -173,37 +149,13 @@ class ControllerStoreProduct extends Controller {
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			
-			$url = '';
-			
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . $this->request->get['filter_name'];
-			}
-		
-			if (isset($this->request->get['filter_model'])) {
-				$url .= '&filter_model=' . $this->request->get['filter_model'];
-			}
-			
-			if (isset($this->request->get['filter_quantity'])) {
-				$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
-			}	
-		
-			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
-			}
-					
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('store/product') . $url);
+                if ($_POST['to'] == "saveAndKeep") {
+                    $this->redirect(Url::createAdminUrl('store/product/update',array('product_id'=>$this->request->get['product_id']))); 
+                } elseif ($_POST['to'] == "saveAndNew") {
+                    $this->redirect(Url::createAdminUrl('store/product/insert')); 
+                } else {
+                    $this->redirect(Url::createAdminUrl('store/product')); 
+                }
 		}
 
     	$this->getForm();
@@ -249,8 +201,6 @@ class ControllerStoreProduct extends Controller {
 		$this->data['button_import'] = $this->language->get('button_import');
 		$this->data['button_filter'] = $this->language->get('button_filter');
  
- 		$this->data['token'] = $this->session->get('ukey');
-		
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -393,7 +343,8 @@ class ControllerStoreProduct extends Controller {
   	 * @see Response
   	 * @return void
   	 */
-  	public function grid() {	
+  	public function grid() {
+  	     //TODO: mantener y capturar los filtros en todos los enlaces
 		$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
 		$filter_model = isset($this->request->get['filter_model']) ? $this->request->get['filter_model'] : null;
 		$filter_quantity = isset($this->request->get['filter_quantity']) ? $this->request->get['filter_quantity'] : null;
@@ -430,7 +381,7 @@ class ControllerStoreProduct extends Controller {
 			'filter_date_end' => $filter_date_end,
 			'sort'            => $sort,
 			'order'           => $order,
-			'start'           => ($page - 1) * $this->config->get('config_admin_limit'),
+			'start'           => ($page - 1) * $limit,
 			'limit'           => $limit
 		);
         
@@ -536,18 +487,18 @@ $url = '';
 		if (isset($this->request->get['filter_quantity'])) {$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];}
 		if (isset($this->request->get['filter_status'])) {$url .= '&filter_status=' . $this->request->get['filter_status'];}
 		
-		$this->data['sort_name'] = Url::createAdminUrl('store/product/grid') . '&sort=pd.name' . $url;
-		$this->data['sort_model'] = Url::createAdminUrl('store/product/grid') . '&sort=p.model' . $url;
-		$this->data['sort_quantity'] = Url::createAdminUrl('store/product/grid') . '&sort=p.quantity' . $url;
-		$this->data['sort_status'] = Url::createAdminUrl('store/product/grid') . '&sort=p.status' . $url;
-		$this->data['sort_order'] = Url::createAdminUrl('store/product/grid') . '&sort=p.sort_order' . $url;
+		$this->data['sort_name']      = Url::createAdminUrl('store/product/grid') . '&sort=pd.name' . $url;
+		$this->data['sort_model']     = Url::createAdminUrl('store/product/grid') . '&sort=p.model' . $url;
+		$this->data['sort_quantity']  = Url::createAdminUrl('store/product/grid') . '&sort=p.quantity' . $url;
+		$this->data['sort_status']    = Url::createAdminUrl('store/product/grid') . '&sort=p.status' . $url;
+		$this->data['sort_order']     = Url::createAdminUrl('store/product/grid') . '&sort=p.sort_order' . $url;
 
 		$pagination = new Pagination();
 		$pagination->ajax = true;
 		$pagination->ajaxTarget = "gridWrapper";
 		$pagination->total = $product_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = Url::createAdminUrl('store/product/grid') . $url . '&page={page}';
 			
@@ -922,6 +873,7 @@ $url = '';
                         .append('<input type=\"hidden\" name=\"\" value=\"\" />');
                 }
             });
+            
             $('#relatedTarget li').draggable({
                 cancel: 'a.ui-icon',
                 revert: 'invalid', 
@@ -969,6 +921,7 @@ $url = '';
                 cancelButton:false,
                 lockButton:false
             });
+            
             $('textarea').ntTextArea();
             
             var form_clean = $('#form').serialize();  

@@ -33,9 +33,10 @@ class Url {
         
     }
     
-    static public function createAdminUrl($route,$params=array()) {
-        $params = is_array($params) ? array_merge(array('token'=>$_GET['token']),$params) : '&token='. $_GET['token'] . $params;
-        return self::createUrl($route,$params,'NONSSL');
+    static public function createAdminUrl($route,$params=array(),$connection= 'NONSSL',$base = null) {
+        $token = ($_SESSION[C_CODE . '_ukey']) ? $_SESSION[C_CODE . '_ukey'] : $_GET['token'];
+        $params = is_array($params) ? array_merge(array('token'=>$token),$params) : '&token='. $token . $params;
+        return self::createUrl($route,$params,$connection,$base);
     }
     
     

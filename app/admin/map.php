@@ -190,6 +190,13 @@ switch ($route) {
         $language->load('content/post_category');
         $loader->auto('content/post_category');
         $loader->auto('localisation/language');
+        $loader->auto('image');
+        break;
+    case 'store/post_category/posts':
+        $loader->auto('content/post');
+        $loader->auto('content/post_category');
+        $loader->auto('url');
+        $loader->auto('image');
         break;
     case 'content/post':
     case 'content/post/grid':
@@ -197,12 +204,15 @@ switch ($route) {
         $language->load('content/post');
         $loader->auto('content/post');
         $loader->auto('pagination');
+        $loader->auto('url');
         break;
     case 'content/post/insert':
     case 'content/post/update':
         $language->load('content/post');
         $loader->auto('content/post');
         $loader->auto('localisation/language');
+        $loader->auto('url');
+        $loader->auto('image');
         break;
     case 'extension/module':
     case 'extension/module/grid':
@@ -264,6 +274,11 @@ switch ($route) {
 		$loader->auto('localisation/language'); 
 		$loader->auto('store/category');
         break;
+    case 'sale/coupon/products':
+        $loader->auto('image');
+        $loader->auto('sale/coupon');
+		$loader->auto('store/product');
+        break;
     case 'sale/plan':
     case 'sale/plan/grid':
     case 'sale/plan/delete':
@@ -278,12 +293,6 @@ switch ($route) {
         $language->load('sale/plan');
         $loader->auto('sale/plan');
         $loader->auto('image');
-        break;
-    case 'sale/cumpleanos':
-    case 'sale/cumpleanos/grid':
-        $language->load('sale/cumpleanos');
-        $loader->auto('sale/customer');
-        $loader->auto('pagination');
         break;
     case 'sale/customer':
     case 'sale/customer/grid':

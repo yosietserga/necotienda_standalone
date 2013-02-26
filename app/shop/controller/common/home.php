@@ -6,7 +6,8 @@
             $this->config->get('config_currency') . "." . 
             (int)$this->config->get('config_store_id')
         );
-   	    if ($cached) {
+        $this->load->library('user');
+   	    if ($cached && !$this->user->isLogged()) {
             $this->response->setOutput($cached, $this->config->get('config_compression'));
    	    } else {
     		$this->document->title = $this->config->get('config_title');
@@ -22,11 +23,12 @@
     			$this->template = 'default/common/home.tpl';
     		}
     		
-    		$this->children[] = 'common/header';
     		$this->children[] = 'common/nav';
+    		$this->children[] = 'common/showslider';
     		$this->children[] = 'common/column_left';
     		$this->children[] = 'common/column_right';
     		$this->children[] = 'common/footer';
+    		$this->children[] = 'common/header';
             
             $this->load->helper('widgets');
             $widgets = new NecoWidget($this->registry,$this->Route);
@@ -65,4 +67,21 @@
     		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }
 	}
+    
+    
+    public function carousel() {
+        $json = array();
+        $this->load->model("catalog/product");
+        $this->load->library('image');
+        $json['results'] = $this->model_catalog_product->getRandomProducts(40);
+        $width = isset($_GET['width']) ? $_GET['width'] : 80;
+        $height = isset($_GET['height']) ? $_GET['height'] : 80;
+        foreach ($json['results'] as $k => $v) {
+            if (!file_exists(DIR_IMAGE . $v['image'])) $json['results'][$k]['image'] = HTTP_IMAGE ."no_image.jpg";
+            $json['results'][$k]['thumb'] = NTImage::resize($v['image'], $width, $height);
+        }
+        if (!count($json['results'])) $json['error'] = 1;
+        echo json_encode($json);
+    }
+    
 }

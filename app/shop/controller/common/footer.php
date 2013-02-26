@@ -62,7 +62,7 @@
             $javascripts[] = $jspath."admin.js";
         }
         
-        $this->data['javascripts'] = $this->javascripts = array_merge($javascripts,$this->javascripts);
+        $this->data['javascripts'] = $this->javascripts = array_merge($this->javascripts, $javascripts);
         
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/footer.tpl')) {
 			$this->template = $this->config->get('config_template') . '/common/footer.tpl';

@@ -55,7 +55,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td class="center" colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

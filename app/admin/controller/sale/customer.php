@@ -82,6 +82,7 @@ class ControllerSaleCustomer extends Controller {
 				$url .= '&order=' . $this->request->get['order'];
 			}
 			
+			//TODO: agregar los redirect condicionales
 			$this->redirect(Url::createAdminUrl('sale/customer') . $url);
 		}
     	
@@ -289,9 +290,9 @@ class ControllerSaleCustomer extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("sale/customer/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("sale/customer/eliminar") ."',{
                             id:e
                         },
@@ -409,8 +410,8 @@ class ControllerSaleCustomer extends Controller {
 			'filter_date_end'          => $filter_date_end,
 			'sort'                     => $sort,
 			'order'                    => $order,
-			'start'                    => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit'                    => $this->config->get('config_admin_limit')
+			'start'                    => ($page - 1) * $limit,
+			'limit'                    => $limit
 		);
 		
 		$customer_total = $this->modelCustomer->getTotalCustomers($data);
@@ -530,11 +531,13 @@ class ControllerSaleCustomer extends Controller {
 		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
 
 		$pagination = new Pagination();
+		$pagination->ajax = true;
+		$pagination->ajaxTarget = "gridWrapper";
 		$pagination->total = $customer_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = Url::createAdminUrl('sale/customer') . $url . '&page={page}';
+		$pagination->url = Url::createAdminUrl('sale/customer/grid') . $url . '&page={page}';
 			
 		$this->data['pagination'] = $pagination->render();
 
@@ -570,234 +573,111 @@ class ControllerSaleCustomer extends Controller {
   	private function getForm() {
     	$this->data['heading_title'] = $this->language->get('heading_title');
  
-    	$this->data['text_enabled'] = $this->language->get('text_enabled');
-    	$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_select'] = $this->language->get('text_select');
-    	$this->data['text_man'] = $this->language->get('text_man');
-		$this->data['text_woman'] = $this->language->get('text_woman');
-		$this->data['text_sexo'] = $this->language->get('text_sexo');
+    	$this->data['text_enabled']    = $this->language->get('text_enabled');
+    	$this->data['text_disabled']   = $this->language->get('text_disabled');
+		$this->data['text_select']     = $this->language->get('text_select');
+    	$this->data['text_man']        = $this->language->get('text_man');
+		$this->data['text_woman']      = $this->language->get('text_woman');
+		$this->data['text_sexo']       = $this->language->get('text_sexo');
     	
-    	$this->data['entry_rif'] = $this->language->get('entry_rif');
-    	$this->data['entry_facebook'] = $this->language->get('entry_facebook');
-    	$this->data['entry_twitter'] = $this->language->get('entry_twitter');
-    	$this->data['entry_msn'] = $this->language->get('entry_msn');
-    	$this->data['entry_yahoo'] = $this->language->get('entry_yahoo');
-    	$this->data['entry_gmail'] = $this->language->get('entry_gmail');
-    	$this->data['entry_skype'] = $this->language->get('entry_skype');
+    	$this->data['entry_rif']       = $this->language->get('entry_rif');
+    	$this->data['entry_facebook']  = $this->language->get('entry_facebook');
+    	$this->data['entry_twitter']   = $this->language->get('entry_twitter');
+    	$this->data['entry_msn']       = $this->language->get('entry_msn');
+    	$this->data['entry_yahoo']     = $this->language->get('entry_yahoo');
+    	$this->data['entry_gmail']     = $this->language->get('entry_gmail');
+    	$this->data['entry_skype']     = $this->language->get('entry_skype');
     	$this->data['entry_profesion'] = $this->language->get('entry_profesion');
-		$this->data['entry_titulo'] = $this->language->get('entry_titulo');
-    	$this->data['entry_blog'] = $this->language->get('entry_blog');
-		$this->data['entry_website'] = $this->language->get('entry_website');
-		$this->data['entry_foto'] = $this->language->get('entry_foto');
+		$this->data['entry_titulo']    = $this->language->get('entry_titulo');
+    	$this->data['entry_blog']      = $this->language->get('entry_blog');
+		$this->data['entry_website']   = $this->language->get('entry_website');
+		$this->data['entry_foto']      = $this->language->get('entry_foto');
     	$this->data['entry_firstname'] = $this->language->get('entry_firstname');
-    	$this->data['entry_lastname'] = $this->language->get('entry_lastname');
-    	$this->data['entry_email'] = $this->language->get('entry_email');
+    	$this->data['entry_lastname']  = $this->language->get('entry_lastname');
+    	$this->data['entry_email']     = $this->language->get('entry_email');
     	$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-    	$this->data['entry_fax'] = $this->language->get('entry_fax');
-    	$this->data['entry_password'] = $this->language->get('entry_password');
-    	$this->data['entry_confirm'] = $this->language->get('entry_confirm');
-		$this->data['entry_newsletter'] = $this->language->get('entry_newsletter');
+    	$this->data['entry_fax']       = $this->language->get('entry_fax');
+    	$this->data['entry_password']  = $this->language->get('entry_password');
+    	$this->data['entry_confirm']   = $this->language->get('entry_confirm');
+		$this->data['entry_newsletter']= $this->language->get('entry_newsletter');
     	$this->data['entry_customer_group'] = $this->language->get('entry_customer_group');
-		$this->data['entry_status'] = $this->language->get('entry_status');
-		$this->data['entry_company'] = $this->language->get('entry_company');
+		$this->data['entry_status']    = $this->language->get('entry_status');
+		$this->data['entry_company']   = $this->language->get('entry_company');
 		$this->data['entry_address_1'] = $this->language->get('entry_address_1');
 		$this->data['entry_address_2'] = $this->language->get('entry_address_2');
-		$this->data['entry_city'] = $this->language->get('entry_city');
-		$this->data['entry_postcode'] = $this->language->get('entry_postcode');
-		$this->data['entry_zone'] = $this->language->get('entry_zone');
-		$this->data['entry_country'] = $this->language->get('entry_country');
-		$this->data['entry_default'] = $this->language->get('entry_default');
-		$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_address'] = $this->language->get('entry_address');
+		$this->data['entry_city']      = $this->language->get('entry_city');
+		$this->data['entry_postcode']  = $this->language->get('entry_postcode');
+		$this->data['entry_zone']      = $this->language->get('entry_zone');
+		$this->data['entry_country']   = $this->language->get('entry_country');
+		$this->data['entry_default']   = $this->language->get('entry_default');
+		$this->data['entry_name']      = $this->language->get('entry_name');
+		$this->data['entry_address']   = $this->language->get('entry_address');
+		$this->data['entry_sexo']      = $this->language->get('entry_sexo');
 		$this->data['entry_city_postcode'] = $this->language->get('entry_city_postcode');
-		$this->data['entry_country_zone'] = $this->language->get('entry_country_zone');
-		$this->data['entry_sexo'] = $this->language->get('entry_sexo');
+		$this->data['entry_country_zone']  = $this->language->get('entry_country_zone');
     	
-    	$this->data['help_rif'] = $this->language->get('help_rif');
-    	$this->data['help_facebook'] = $this->language->get('help_facebook');
-    	$this->data['help_twitter'] = $this->language->get('help_twitter');
-    	$this->data['help_msn'] = $this->language->get('help_msn');
-    	$this->data['help_yahoo'] = $this->language->get('help_yahoo');
-    	$this->data['help_gmail'] = $this->language->get('help_gmail');
-    	$this->data['help_skype'] = $this->language->get('help_skype');
-    	$this->data['help_profesion'] = $this->language->get('help_profesion');
-		$this->data['help_titulo'] = $this->language->get('help_titulo');
-    	$this->data['help_blog'] = $this->language->get('help_blog');
-		$this->data['help_website'] = $this->language->get('help_website');
-		$this->data['help_foto'] = $this->language->get('help_foto');
-    	$this->data['help_firstname'] = $this->language->get('help_firstname');
-    	$this->data['help_lastname'] = $this->language->get('help_lastname');
-    	$this->data['help_email'] = $this->language->get('help_email');
-    	$this->data['help_telephone'] = $this->language->get('help_telephone');
-    	$this->data['help_fax'] = $this->language->get('help_fax');
-    	$this->data['help_password'] = $this->language->get('help_password');
-    	$this->data['help_confirm'] = $this->language->get('help_confirm');
+    	$this->data['help_rif']        = $this->language->get('help_rif');
+    	$this->data['help_facebook']   = $this->language->get('help_facebook');
+    	$this->data['help_twitter']    = $this->language->get('help_twitter');
+    	$this->data['help_msn']        = $this->language->get('help_msn');
+    	$this->data['help_yahoo']      = $this->language->get('help_yahoo');
+    	$this->data['help_gmail']      = $this->language->get('help_gmail');
+    	$this->data['help_skype']      = $this->language->get('help_skype');
+    	$this->data['help_profesion']  = $this->language->get('help_profesion');
+		$this->data['help_titulo']     = $this->language->get('help_titulo');
+    	$this->data['help_blog']       = $this->language->get('help_blog');
+		$this->data['help_website']    = $this->language->get('help_website');
+		$this->data['help_foto']       = $this->language->get('help_foto');
+    	$this->data['help_firstname']  = $this->language->get('help_firstname');
+    	$this->data['help_lastname']   = $this->language->get('help_lastname');
+    	$this->data['help_email']      = $this->language->get('help_email');
+    	$this->data['help_telephone']  = $this->language->get('help_telephone');
+    	$this->data['help_fax']        = $this->language->get('help_fax');
+    	$this->data['help_password']   = $this->language->get('help_password');
+    	$this->data['help_confirm']    = $this->language->get('help_confirm');
 		$this->data['help_newsletter'] = $this->language->get('help_newsletter');
     	$this->data['help_customer_group'] = $this->language->get('help_customer_group');
-		$this->data['help_status'] = $this->language->get('help_status');
-		$this->data['help_company'] = $this->language->get('help_company');
-		$this->data['help_address_1'] = $this->language->get('help_address_1');
-		$this->data['help_address_2'] = $this->language->get('help_address_2');
-		$this->data['help_city'] = $this->language->get('help_city');
-		$this->data['help_postcode'] = $this->language->get('help_postcode');
-		$this->data['help_zone'] = $this->language->get('help_zone');
-		$this->data['help_country'] = $this->language->get('help_country');
-		$this->data['help_default'] = $this->language->get('help_default');
-		$this->data['help_name'] = $this->language->get('help_name');
-		$this->data['help_address'] = $this->language->get('help_address');
+		$this->data['help_status']     = $this->language->get('help_status');
+		$this->data['help_company']    = $this->language->get('help_company');
+		$this->data['help_address_1']  = $this->language->get('help_address_1');
+		$this->data['help_address_2']  = $this->language->get('help_address_2');
+		$this->data['help_city']       = $this->language->get('help_city');
+		$this->data['help_postcode']   = $this->language->get('help_postcode');
+		$this->data['help_zone']       = $this->language->get('help_zone');
+		$this->data['help_country']    = $this->language->get('help_country');
+		$this->data['help_default']    = $this->language->get('help_default');
+		$this->data['help_name']       = $this->language->get('help_name');
+		$this->data['help_address']    = $this->language->get('help_address');
+		$this->data['help_sexo']       = $this->language->get('help_sexo');
 		$this->data['help_city_postcode'] = $this->language->get('help_city_postcode');
-		$this->data['help_country_zone'] = $this->language->get('help_country_zone');
-		$this->data['help_sexo'] = $this->language->get('help_sexo');
+		$this->data['help_country_zone']  = $this->language->get('help_country_zone');
  
-		$this->data['button_save'] = $this->language->get('button_save');
-    	$this->data['button_cancel'] = $this->language->get('button_cancel');
-    	$this->data['button_add'] = $this->language->get('button_add');
-    	$this->data['button_remove'] = $this->language->get('button_remove');
+		$this->data['button_save']     = $this->language->get('button_save');
+    	$this->data['button_cancel']   = $this->language->get('button_cancel');
+    	$this->data['button_add']      = $this->language->get('button_add');
+    	$this->data['button_remove']   = $this->language->get('button_remove');
+		$this->data['button_save_and_new'] = $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
 	
-		$this->data['tab_general'] = $this->language->get('tab_general');
-		$this->data['tab_address'] = $this->language->get('tab_address');
+		$this->data['tab_general']     = $this->language->get('tab_general');
+		$this->data['tab_address']     = $this->language->get('tab_address');
 
-		$this->data['token'] = $this->session->get('ukey');
-
- 		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-
- 		if (isset($this->error['firstname'])) {
-			$this->data['error_firstname'] = $this->error['firstname'];
-		} else {
-			$this->data['error_firstname'] = '';
-		}
-
- 		if (isset($this->error['lastname'])) {
-			$this->data['error_lastname'] = $this->error['lastname'];
-		} else {
-			$this->data['error_lastname'] = '';
-		}
-		
- 		if (isset($this->error['email'])) {
-			$this->data['error_email'] = $this->error['email'];
-		} else {
-			$this->data['error_email'] = '';
-		}
-		
- 		if (isset($this->error['sexo'])) {
-			$this->data['error_sexo'] = $this->error['sexo'];
-		} else {
-			$this->data['error_sexo'] = '';
-		}
-		
- 		if (isset($this->error['telephone'])) {
-			$this->data['error_telephone'] = $this->error['telephone'];
-		} else {
-			$this->data['error_telephone'] = '';
-		}
-		
- 		if (isset($this->error['password'])) {
-			$this->data['error_password'] = $this->error['password'];
-		} else {
-			$this->data['error_password'] = '';
-		}
-		
- 		if (isset($this->error['confirm'])) {
-			$this->data['error_confirm'] = $this->error['confirm'];
-		} else {
-			$this->data['error_confirm'] = '';
-		}
-		
-		if (isset($this->error['address_firstname'])) {
-			$this->data['error_address_firstname'] = $this->error['address_firstname'];
-		} else {
-			$this->data['error_address_firstname'] = '';
-		}
-
- 		if (isset($this->error['address_lastname'])) {
-			$this->data['error_address_lastname'] = $this->error['address_lastname'];
-		} else {
-			$this->data['error_address_lastname'] = '';
-		}
-		
-		if (isset($this->error['address_1'])) {
-			$this->data['error_address_1'] = $this->error['address_1'];
-		} else {
-			$this->data['error_address_1'] = '';
-		}
-		
-		if (isset($this->error['city'])) {
-			$this->data['error_city'] = $this->error['city'];
-		} else {
-			$this->data['error_city'] = '';
-		}
-		
-		if (isset($this->error['postcode'])) {
-			$this->data['error_postcode'] = $this->error['postcode'];
-		} else {
-			$this->data['error_postcode'] = '';
-		}
-		
-		if (isset($this->error['address_country'])) {
-			$this->data['error_country'] = $this->error['country'];
-		} else {
-			$this->data['error_country'] = '';
-		}
-        
-        if (isset($this->error['rif'])) {
-			$this->data['error_rif'] = $this->error['rif'];
-		} else {
-			$this->data['error_rif'] = '';
-		}
-		
-		if (isset($this->error['company'])) {
-			$this->data['error_company'] = $this->error['company'];
-		} else {
-			$this->data['error_company'] = '';
-		}
-		
-		if (isset($this->error['address_zone'])) {
-			$this->data['error_zone'] = $this->error['zone'];
-		} else {
-			$this->data['error_zone'] = '';
-		}
-		
-		$url = '';
-		
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . $this->request->get['filter_name'];
-		}
-		
-		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . $this->request->get['filter_email'];
-		}
-		
-		if (isset($this->request->get['filter_customer_group_id'])) {
-			$url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
-		}
-		
-		if (isset($this->request->get['filter_status'])) {
-			$url .= '&filter_status=' . $this->request->get['filter_status'];
-		}
-		
-		if (isset($this->request->get['filter_approved'])) {
-			$url .= '&filter_approved=' . $this->request->get['filter_approved'];
-		}	
-		
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-						
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+ 		$this->data['error_warning']     = ($this->error['warning']) ? $this->error['warning'] : '';
+ 		$this->data['error_firstname']   = ($this->error['firstname']) ? $this->error['firstname'] : '';
+ 		$this->data['error_lastname']    = ($this->error['lastname']) ? $this->error['lastname'] : '';
+ 		$this->data['error_email']       = ($this->error['email']) ? $this->error['email'] : '';
+ 		$this->data['error_sexo']        = ($this->error['sexo']) ? $this->error['sexo'] : '';
+ 		$this->data['error_telephone']   = ($this->error['telephone']) ? $this->error['telephone'] : '';
+ 		$this->data['error_password']    = ($this->error['password']) ? $this->error['password'] : '';
+ 		$this->data['error_confirm']     = ($this->error['confirm']) ? $this->error['confirm'] : '';
+ 		$this->data['error_address_1']   = ($this->error['address_1']) ? $this->error['address_1'] : '';
+ 		$this->data['error_city']        = ($this->error['city']) ? $this->error['city'] : '';
+ 		$this->data['error_postcode']    = ($this->error['postcode']) ? $this->error['postcode'] : '';
+ 		$this->data['error_address_zone']= ($this->error['address_zone']) ? $this->error['address_zone'] : '';
+ 		$this->data['error_rif']         = ($this->error['rif']) ? $this->error['rif'] : '';
+ 		$this->data['error_company']     = ($this->error['company']) ? $this->error['company'] : '';
+ 		$this->data['error_address_country'] = ($this->error['address_country']) ? $this->error['address_country'] : '';
 
   		$this->document->breadcrumbs = array();
 
@@ -825,197 +705,38 @@ class ControllerSaleCustomer extends Controller {
       		$customer_info = $this->modelCustomer->getCustomer($this->request->get['customer_id']);
     	}
         
-        if (isset($this->request->post['profesion'])) {
-      		$this->data['profesion'] = $this->request->post['profesion'];
-		} elseif (isset($customer_info)) { 
-			$this->data['profesion'] = $customer_info['profesion'];
-		} else {
-      		$this->data['profesion'] = '';
-    	}
-
-    	if (isset($this->request->post['titulo'])) {
-      		$this->data['titulo'] = $this->request->post['titulo'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['titulo'] = $customer_info['titulo'];
-		} else {
-      		$this->data['titulo'] = '';
-    	}
-
-    	if (isset($this->request->post['blog'])) {
-      		$this->data['blog'] = $this->request->post['blog'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['blog'] = $customer_info['blog'];
-		} else {
-      		$this->data['blog'] = '';
-    	}
-
-    	if (isset($this->request->post['website'])) {
-      		$this->data['website'] = $this->request->post['website'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['website'] = $customer_info['website'];
-		} else {
-      		$this->data['website'] = '';
-    	}
-
-    	if (isset($this->request->post['foto'])) {
-      		$this->data['foto'] = $this->request->post['foto'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['foto'] = $customer_info['foto'];
-		} else {
-      		$this->data['foto'] = '';
-    	}
-        if (isset($this->request->post['facebook'])) {
-      		$this->data['facebook'] = $this->request->post['facebook'];
-		} elseif (isset($customer_info)) { 
-			$this->data['facebook'] = $customer_info['facebook'];
-		} else {
-      		$this->data['facebook'] = '';
-    	}
-
-    	if (isset($this->request->post['twitter'])) {
-      		$this->data['twitter'] = $this->request->post['twitter'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['twitter'] = $customer_info['twitter'];
-		} else {
-      		$this->data['twitter'] = '';
-    	}
-
-    	if (isset($this->request->post['msn'])) {
-      		$this->data['msn'] = $this->request->post['msn'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['msn'] = $customer_info['msn'];
-		} else {
-      		$this->data['msn'] = '';
-    	}
-
-    	if (isset($this->request->post['yahoo'])) {
-      		$this->data['yahoo'] = $this->request->post['yahoo'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['yahoo'] = $customer_info['yahoo'];
-		} else {
-      		$this->data['yahoo'] = '';
-    	}
-
-    	if (isset($this->request->post['gmail'])) {
-      		$this->data['gmail'] = $this->request->post['gmail'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['gmail'] = $customer_info['gmail'];
-		} else {
-      		$this->data['gmail'] = '';
-    	}
-
-    	if (isset($this->request->post['skype'])) {
-      		$this->data['skype'] = $this->request->post['skype'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['skype'] = $customer_info['skype'];
-		} else {
-      		$this->data['skype'] = '';
-    	}
-			
-    	if (isset($this->request->post['firstname'])) {
-      		$this->data['firstname'] = $this->request->post['firstname'];
-		} elseif (isset($customer_info)) { 
-			$this->data['firstname'] = $customer_info['firstname'];
-		} else {
-      		$this->data['firstname'] = '';
-    	}
-
-    	if (isset($this->request->post['lastname'])) {
-      		$this->data['lastname'] = $this->request->post['lastname'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['lastname'] = $customer_info['lastname'];
-		} else {
-      		$this->data['lastname'] = '';
-    	}
-
-    	if (isset($this->request->post['email'])) {
-      		$this->data['email'] = $this->request->post['email'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['email'] = $customer_info['email'];
-		} else {
-      		$this->data['email'] = '';
-    	}
-
-    	if (isset($this->request->post['telephone'])) {
-      		$this->data['telephone'] = $this->request->post['telephone'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['telephone'] = $customer_info['telephone'];
-		} else {
-      		$this->data['telephone'] = '';
-    	}
-
-    	if (isset($this->request->post['fax'])) {
-      		$this->data['fax'] = $this->request->post['fax'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['fax'] = $customer_info['fax'];
-		} else {
-      		$this->data['fax'] = '';
-    	}
+        $this->setvar('profesion',$customer_info,'');
+        $this->setvar('titulo',$customer_info,'');
+        $this->setvar('blog',$customer_info,'');
+        $this->setvar('website',$customer_info,'');
+        $this->setvar('foto',$customer_info,'');
+        $this->setvar('facebook',$customer_info,'');
+        $this->setvar('twitter',$customer_info,'');
+        $this->setvar('yahoo',$customer_info,'');
+        $this->setvar('gmail',$customer_info,'');
+        $this->setvar('msn',$customer_info,'');
+        $this->setvar('skype',$customer_info,'');
+        $this->setvar('firstname',$customer_info,'');
+        $this->setvar('lastname',$customer_info,'');
+        $this->setvar('email',$customer_info,'');
+        $this->setvar('telephone',$customer_info,'');
+        $this->setvar('fax',$customer_info,'');
+        $this->setvar('rif',$customer_info,'');
+        $this->setvar('company',$customer_info,'');
+        $this->setvar('newsletter',$customer_info,'');
+        $this->setvar('sexo',$customer_info,'');
+        $this->setvar('status',$customer_info,1);
+        $this->setvar('customer_group_id',$customer_info,$this->config->get('config_customer_group_id'));
         
-        if (isset($this->request->post['rif'])) {
-      		$this->data['rif'] = $this->request->post['rif'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['rif'] = $customer_info['rif'];
-		} else {
-      		$this->data['rif'] = '';
-    	}
-
-    	if (isset($this->request->post['company'])) {
-      		$this->data['company'] = $this->request->post['company'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['company'] = $customer_info['company'];
-		} else {
-      		$this->data['company'] = '';
-    	}
-
-    	if (isset($this->request->post['newsletter'])) {
-      		$this->data['newsletter'] = $this->request->post['newsletter'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['newsletter'] = $customer_info['newsletter'];
-		} else {
-      		$this->data['newsletter'] = '';
-    	}
-
-    	if (isset($this->request->post['sexo'])) {
-      		$this->data['sexo'] = $this->request->post['sexo'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['sexo'] = $customer_info['sexo'];
-		} else {
-      		$this->data['sexo'] = '';
-    	}
+        $this->data['password'] = ($this->request->post['password']) ? $this->request->post['password'] : '';
+        $this->data['confirm'] = ($this->request->post['confirm']) ? $this->request->post['confirm'] : '';
 		
-		$this->data['customer_groups'] = $this->modelCustomergroup->getCustomerGroups();
-
-    	if (isset($this->request->post['customer_group_id'])) {
-      		$this->data['customer_group_id'] = $this->request->post['customer_group_id'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['customer_group_id'] = $customer_info['customer_group_id'];
-		} else {
-      		$this->data['customer_group_id'] = $this->config->get('config_customer_group_id');
-    	}
-		
-    	if (isset($this->request->post['status'])) {
-      		$this->data['status'] = $this->request->post['status'];
-    	} elseif (isset($customer_info)) { 
-			$this->data['status'] = $customer_info['status'];
-		} else {
-      		$this->data['status'] = 1;
-    	}
-
-    	if (isset($this->request->post['password'])) { 
-			$this->data['password'] = $this->request->post['password'];
-		} else {
-			$this->data['password'] = '';
-		}
-		
-		if (isset($this->request->post['confirm'])) { 
-    		$this->data['confirm'] = $this->request->post['confirm'];
-		} else {
-			$this->data['confirm'] = '';
-		}
-		
+		$this->data['customer_groups'] = $this->modelCustomergroup->getCustomerGroups();		
 		$this->data['countries'] = $this->modelCountry->getCountries();
-			
+		foreach ($this->data['countries'] as $country) { 
+            $countries .= "<option value=\"". $country["country_id"] ."\">". addslashes($country["name"]) ."</option>";
+        }
+        
 		if (isset($this->request->post['addresses'])) { 
       		$this->data['addresses'] = $this->request->post['addresses'];
 		} elseif (isset($this->request->get['customer_id'])) {
@@ -1023,7 +744,144 @@ class ControllerSaleCustomer extends Controller {
 		} else {
 			$this->data['addresses'] = array();
     	}
+        
+        $this->data['Url'] = new Url;
 		
+        $scripts[] = array('id'=>'customerScripts','method'=>'ready','script'=>
+            " $('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.vtabs_page').hide();
+            $('#tab_general').show();");
+            
+        $scripts[] = array('id'=>'customerFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }
+            
+            function showTab(a) {
+                $('.vtabs_page').hide();
+                $($(a).attr('data-target')).show();
+                console.log(a);
+            }
+            
+            function addAddress() {
+                var address_row = $('.vtabs_page:last-child').index() + 1 * 1;
+                var input = {};
+                var label = {};
+                
+                var div = $(document.createElement('div')).addClass('vtabs_page').attr({'id':'tab_address_'+ address_row});
+                var h2 = $(document.createElement('h2')).text('Direcci\u00F3n '+ address_row).appendTo(div);
+                var table = $(document.createElement('table')).addClass('form').appendTo(div);
+                
+                tr = $(document.createElement('tr')).appendTo(table);
+                td1 = $(document.createElement('td')).appendTo(tr);
+                td2 = $(document.createElement('td')).appendTo(tr);
+                
+                label.country_id = $(document.createElement('label')).text('". str_replace('&iacute;','\u00ED',$this->data['entry_country']) ."').appendTo(td1);
+                input.country_id = $(document.createElement('select')).attr({
+                    'type':'text',
+                    'name':'addresses[' + address_row + '][country_id]'
+                }).on('change',function(e){
+                    $('select[name=\"addresses['+ address_row +'][zone_id]\"]').load('". Url::createAdminUrl('sale/customer/zone') ."&country_id=' + this.value + '&zone_id=0');
+                }).appendTo(td2);
+                countries = '<option value=\"false\">". $this->data['text_select'] ."</option>';
+                countries += '". $countries ."';
+                input.country_id.append(countries);
+                
+                tr = $(document.createElement('tr')).appendTo(table);
+                td1 = $(document.createElement('td')).appendTo(tr);
+                td2 = $(document.createElement('td')).appendTo(tr);
+                
+                label.zone_id = $(document.createElement('label')).text('". $this->data['entry_zone'] ."').appendTo(td1);
+                input.zone_id = $(document.createElement('select')).attr({
+                    'type':'text',
+                    'name':'addresses['+ address_row +'][zone_id]'
+                }).appendTo(td2);
+                
+                tr = $(document.createElement('tr')).appendTo(table);
+                td1 = $(document.createElement('td')).appendTo(tr);
+                td2 = $(document.createElement('td')).appendTo(tr);
+                
+                label.city = $(document.createElement('label')).text('". $this->data['entry_city'] ."').appendTo(td1);
+                input.city = $(document.createElement('input')).attr({
+                    'type':'text',
+                    'name':'addresses['+ address_row +'][city]'
+                }).appendTo(td2);
+                
+                tr = $(document.createElement('tr')).appendTo(table);
+                td1 = $(document.createElement('td')).appendTo(tr);
+                td2 = $(document.createElement('td')).appendTo(tr);
+                
+                label.postcode = $(document.createElement('label')).text('". str_replace('&oacute;','\u00F3',$this->data['entry_postcode']) ."').appendTo(td1);
+                input.postcode = $(document.createElement('input')).attr({
+                    'type':'text',
+                    'name':'addresses['+ address_row +'][postcode]'
+                }).appendTo(td2);
+                
+                tr = $(document.createElement('tr')).appendTo(table);
+                td1 = $(document.createElement('td')).appendTo(tr);
+                td2 = $(document.createElement('td')).appendTo(tr);
+                
+                label.address = $(document.createElement('label')).text('". str_replace('&oacute;','\u00F3',$this->data['entry_address_1']) ."').appendTo(td1);
+                input.address = $(document.createElement('input')).attr({
+                    'type':'text',
+                    'name':'addresses['+ address_row +'][address_1]'
+                }).appendTo(td2);
+                
+            	$('#form').append(div);
+                
+                var li = $(document.createElement('li')).attr('id','address_'+ address_row);
+                
+                var a = $(document.createElement('a')).attr({
+                    'data-target':'#tab_address_'+ address_row,
+                    'onclick':'showTab(this)'
+                })
+                .text('". str_replace('&oacute;','\u00F3',$this->data['tab_address']) ." '+ address_row)
+                .appendTo(li);
+                
+                var span = $(document.createElement('span')).attr({
+                    'title':'Eliminar Direcci&oacute;n'
+                })
+                .text('\u00A0')
+                .addClass('remove')
+                .on('click',function(e){
+                    $('#vtabs a:first').trigger('click'); 
+                    $('#address_'+ address_row).remove(); 
+                    $('#tab_address_'+ address_row).remove();
+                })
+                .appendTo(a);
+                
+            	$('#address_add').before(li);
+            	$('#address_'+ address_row).trigger('click');
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
 		$this->template = 'sale/customer_form.tpl';
 		$this->children = array(
 			'common/header',	

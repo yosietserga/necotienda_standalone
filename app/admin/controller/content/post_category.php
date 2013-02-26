@@ -341,7 +341,7 @@ class ControllerContentPostCategory extends Controller {
             $data['error'] = 1;
             $data['msg'] = "No se encontr&oacute; la categor&iacute;a que se va a actualizar";
         } 
-        $result = $this->db->query("UPDATE ". DB_PREFIX ."category SET parent_id = ". (int)$_GET['parent_id'] ." WHERE category_id = ". (int)$_GET['category_id']);
+        $result = $this->db->query("UPDATE ". DB_PREFIX ."post_category SET parent_id = ". (int)$_GET['parent_id'] ." WHERE post_category_id = ". (int)$_GET['category_id']);
         if ($result) {
             $data['success'] = 1;
         } else {
@@ -435,7 +435,6 @@ class ControllerContentPostCategory extends Controller {
 			'limit'           => $limit
 		);
         
-		$this->data['categories'] = array();
         $this->data['categories'] = $this->getCategories(0,$data);
         
 		$this->data['text_no_results']    = $this->language->get('text_no_results');
@@ -446,7 +445,7 @@ class ControllerContentPostCategory extends Controller {
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_warning'] = $this->session->has('success') ? $this->session->get('success') : '';
         $this->session->clear('success');
-        $this->data['Url'] = Url;
+        $this->data['Url'] = new Url;
 		$this->template = 'content/post_category_grid.tpl';
         
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));  
@@ -459,32 +458,32 @@ class ControllerContentPostCategory extends Controller {
         if ($rows) {
             $output .= ($parent_id==0) ? '<ol class="items">' : '<ol>';
     		foreach ($rows as $result) {
-                $output .= '<li id="'. $result['category_id'] .'">';
+                $output .= '<li id="'. $result['post_category_id'] .'">';
                 $output .= '<div class="item">';
-                $output .= '<input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="'. $result['category_id'] .'">';
+                $output .= '<input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="'. $result['post_category_id'] .'">';
                 $output .= '<b class="name">'. $result['name'] .'</b>';
                 
                 $_img = ((int)$result['status'] == 1) ? 'good.png' : 'minus.png';
                 
                 $output .= '<div class="actions">';
                 /*
-                $output .= '<a title="'. $this->language->get('text_see') .'" href="'. Url::createAdminUrl("content/post_category/see",array('category_id'=>$result['category_id'])) .'">';
+                $output .= '<a title="'. $this->language->get('text_see') .'" href="'. Url::createAdminUrl("content/post_category/see",array('post_category_id'=>$result['post_category_id'])) .'">';
                 $output .= '<img src="image/report.png" alt="'. $this->language->get('text_see') .'" />';
                 $output .= '</a>';
                 */
-                $output .= '<a title="'. $this->language->get('text_edit') .'" href="'. Url::createAdminUrl("content/post_category/update",array('category_id'=>$result['category_id'])) .'">';
+                $output .= '<a title="'. $this->language->get('text_edit') .'" href="'. Url::createAdminUrl("content/post_category/update",array('category_id'=>$result['post_category_id'])) .'">';
                 $output .= '<img src="image/edit.png" alt="'. $this->language->get('text_edit') .'" />';
                 $output .= '</a>';
                 
-                $output .= '<a title="'. $this->language->get('text_activate') .'" onclick="activate('. $result['category_id'] .')">';
-                $output .= '<img id="img_'. $result['category_id'] .'" src="image/'. $_img .'" alt="'. $this->language->get('text_activate') .'" />';
+                $output .= '<a title="'. $this->language->get('text_activate') .'" onclick="activate('. $result['post_category_id'] .')">';
+                $output .= '<img id="img_'. $result['post_category_id'] .'" src="image/'. $_img .'" alt="'. $this->language->get('text_activate') .'" />';
                 $output .= '</a>';
                
-                $output .= '<a title="'. $this->language->get('text_delete') .'" onclick="eliminar('. $result['category_id'] .')">';
+                $output .= '<a title="'. $this->language->get('text_delete') .'" onclick="eliminar('. $result['post_category_id'] .')">';
                 $output .= '<img src="image/delete.png" alt="'. $this->language->get('text_delete') .'" />';
                 $output .= '</a>';
                /*
-                $output .= '<a title="'. $this->language->get('text_copy') .'" onclick="copy('. $result['category_id'] .')">';
+                $output .= '<a title="'. $this->language->get('text_copy') .'" onclick="copy('. $result['post_category_id'] .')">';
                 $output .= '<img src="image/copy.png" alt="'. $this->language->get('text_copy') .'" />';
                 $output .= '</a>';
                */
@@ -493,9 +492,9 @@ class ControllerContentPostCategory extends Controller {
                 $output .= '</div>';
                 
                 // subcategories
-                $childrens = $this->modelPost_category->getAllForList($result['category_id'],$data);
+                $childrens = $this->modelPost_category->getAllForList($result['post_category_id'],$data);
     			if ($childrens) {
-                    $output .= $this->getCategories($result['category_id'],$data);
+                    $output .= $this->getCategories($result['post_category_id'],$data);
     			}
                 
                 $output .= '</li>';
@@ -517,6 +516,7 @@ class ControllerContentPostCategory extends Controller {
 	 * @return void
 	 */
 	private function getForm() {
+	   $this->load->library('image');
 		$this->data['heading_title']      = $this->language->get('heading_title');
 		$this->data['text_none']          = $this->language->get('text_none');
 		$this->data['text_default']       = $this->language->get('text_default');
@@ -611,25 +611,25 @@ class ControllerContentPostCategory extends Controller {
                 });
             });
             
-            $('#addProductsWrapper').hide();
+            $('#addPostsWrapper').hide();
             
-            $('#addProductsPanel').on('click',function(e){
-                var products = $('#addProductsWrapper').find('.row');
+            $('#addPostsPanel').on('click',function(e){
+                var posts = $('#addPostsWrapper').find('.row');
                 
-                if (products.length == 0) {
-                    $.getJSON('".Url::createAdminUrl("content/post_category/products")."',
+                if (posts.length == 0) {
+                    $.getJSON('".Url::createAdminUrl("content/post_category/posts")."',
                         {
                             'category_id':'".$this->request->getQuery('category_id')."'
                         }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\">');
+                            $('#addPostsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" /></div><div class=\"clear\"></div><br /><ul id=\"addPosts\">');
                             
                             $.each(data, function(i,item){
-                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                $('#addPosts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Posts[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
                                 
                             });
                             
-                            $('#q').liveUpdate('#addProducts').focus();
+                            $('#q').liveUpdate('#addPosts').focus();
                             
                             $('li').on('click',function() {
                                 var b = $(this).find('b');
@@ -645,7 +645,7 @@ class ControllerContentPostCategory extends Controller {
                 }
             });
                 
-            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
+            $('#addPostsPanel').on('click',function(){ $('#addPostsWrapper').slideToggle() });
             
             $('.trends').fancybox({
         		maxWidth	: 640,
@@ -659,11 +659,22 @@ class ControllerContentPostCategory extends Controller {
         		closeEffect	: 'none'
         	});
             
-            $('#form').ntForm({lockButton:false});
+            $('#form').ntForm({
+                lockButton:false,
+                cancelButton:false,
+                submitButton:false,
+            });
             $('textarea').ntTextArea();
             
-            confirmExitIfModified(document.getElementById('form'), 'You have unsaved changes.');
-
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
             $('.tabs li').on('click',function() {
                 $('.tabs li').each(function(){
                    $('#' + this.id + '_content').hide();
@@ -688,7 +699,7 @@ class ControllerContentPostCategory extends Controller {
             });");
             
         foreach ($this->data['languages'] as $language) {
-            $scripts[] = array('id'=>'categoryLanguage$language["language_id"]','method'=>'ready','script'=>
+            $scripts[] = array('id'=>'categoryLanguage'.$language["language_id"],'method'=>'ready','script'=>
                 "CKEDITOR.replace('description". $language["language_id"] ."', {
                 	filebrowserBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserImageBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
@@ -873,7 +884,7 @@ class ControllerContentPostCategory extends Controller {
         }
      }
      
-     public function products() {
+     public function posts() {
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
         header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
         header("Cache-Control: no-cache, must-revalidate"); 
@@ -881,19 +892,18 @@ class ControllerContentPostCategory extends Controller {
         header("Content-type: application/json");
         
         if ($this->request->hasQuery('category_id')) {
-            $rows = $this->modelProduct->getProductsByCategoryId($this->request->getQuery('category_id'));
-            $products_by_category = array();
+            $rows = $this->modelPost->getPostsByCategoryId($this->request->getQuery('category_id'));
+            $posts_by_category = array();
             foreach ($rows as $row) {
-                $products_by_category[] = $row['product_id'];
+                $posts_by_category[] = $row['post_id'];
             }
         }
-        $cache = $this->cache->get("products.for.category.form");
+        $cache = $this->cache->get("posts.for.category.form");
         if ($cache) {
-            $products = unserialize($cache);
+            $posts = unserialize($cache);
         } else {
-            $model = $this->modelProduct->getAll();
-            $products = $model->obj;
-            $this->cache->set("products.for.category.form",serialize($products));
+            $posts = $this->modelPost->getPosts();
+            $this->cache->set("posts.for.category.form",serialize($posts));
         }
         
         $this->data['Image'] = new NTImage();
@@ -901,20 +911,20 @@ class ControllerContentPostCategory extends Controller {
         
         $output = array();
         
-        foreach ($products as $product) {
-            if (!empty($products_by_category) && in_array($product->product_id,$products_by_category)) {
+        foreach ($posts as $post) {
+            if (!empty($posts_by_category) && in_array($post['post_id'],$posts_by_category)) {
                 $output[] = array(
-                    'product_id'=>$product->product_id,
-                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
-                    'pname'     =>$product->pname,
+                    'post_id'   =>$post['post_id'],
+                    'image'     =>NTImage::resizeAndSave($post['image'],50,50),
+                    'name'      =>$post['name'],
                     'class'     =>'added',
                     'value'     =>1
                 );
             } else {
                 $output[] = array(
-                    'product_id'=>$product->product_id,
-                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
-                    'pname'     =>$product->pname,
+                    'post_id'   =>$post['post_id'],
+                    'image'     =>NTImage::resizeAndSave($post['image'],50,50),
+                    'name'      =>$post['name'],
                     'class'     =>'add',
                     'value'     =>0
                 );

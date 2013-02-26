@@ -26,7 +26,8 @@ class ModelStoreDownload extends Model {
 
       	foreach ($data['download_description'] as $language_id => $value) {
         	$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
-      	}	
+      	}
+        return $download_id;
 	}
 	
 	/**

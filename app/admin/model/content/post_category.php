@@ -30,7 +30,7 @@ class ModelContentPostCategory extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "post_category SET image = '" . $this->db->escape($data['image']) . "' WHERE post_category_id = '" . (int)$post_category_id . "'");
 		}
 		
-		foreach ($data['post_category_description'] as $language_id => $value) {
+		foreach ($data['category_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "post_category_description SET 
             post_category_id = '" . (int)$post_category_id . "', 
             language_id = '" . (int)$language_id . "', 
@@ -69,7 +69,6 @@ class ModelContentPostCategory extends Model {
 	public function editCategory($post_category_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "post_category SET 
         parent_id = '" . (int)$data['parent_id'] . "',
-        status = '" . (int)$data['status'] . "', 
         date_modified = NOW() 
         WHERE post_category_id = '" . (int)$post_category_id . "'");
 
@@ -79,15 +78,14 @@ class ModelContentPostCategory extends Model {
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "post_category_description WHERE post_category_id = '" . (int)$post_category_id . "'");
 
-		foreach ($data['post_category_description'] as $language_id => $value) {
+		foreach ($data['category_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "post_category_description SET 
             post_category_id = '" . (int)$post_category_id . "', 
             language_id = '" . (int)$language_id . "', 
             name = '" . $this->db->escape($value['name']) . "', 
             meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "', 
             meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-            seo_title = '" . $this->db->escape($value['seo_title']) . "', 
-            meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+            seo_title = '" . $this->db->escape($value['seo_title']) . "',
             description = '" . $this->db->escape($value['description']) . "'");
 		}
 		

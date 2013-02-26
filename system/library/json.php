@@ -1,6 +1,12 @@
 <?php
 final class Json {
 	static public function encode($data) {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+        header("Cache-Control: no-cache, must-revalidate"); 
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        
 		if (function_exists('json_encode')) {
 			return json_encode($data) . "\n\n\n\n\n\n";
 		} else {

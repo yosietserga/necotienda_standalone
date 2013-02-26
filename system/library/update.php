@@ -38,7 +38,7 @@ class Update
         $this->db = $registry->get('db');
         $this->load = $registry->get('load');
         
-        $this->update_info = "http://www.necotienda.com/index.php?route=update/info&p=" . PACKAGE;
+        $this->update_info = "http://www.necotienda.com/index.php?r=update/info&p=" . PACKAGE;
         
         if (in_array('curl', get_loaded_extensions())) {
             $this->handler = new xhttp;

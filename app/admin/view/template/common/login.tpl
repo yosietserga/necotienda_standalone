@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 <div id="login">
-    <h1><a href="http://www.necotienda.com/" title="NecoTienda.com"><img src="<?php echo HTTP_IMAGE; ?>admin/logo.png" alt="NecoTienda" /></a></h1>
+    <h1><a href="http://www.necotienda.com/" title="NecoTienda.com"><img src="image/logo.png" alt="NecoTienda" /></a></h1>
     <div class="box">
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
             <label><?php echo $entry_username; ?></label>
@@ -17,9 +17,9 @@
             
             <div class="clear"></div>
             <a href="#" title="Haga click aqu&iacute; si olvid&oacute; su contrase&ntilde;a">&iquest;Olvid&oacute; su contrase&ntilde;a?</a>
-          <?php if ($redirect) { ?>
-          <input  type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
-          <?php } ?>
+            <?php if ($redirect) { ?>
+            <input type="hidden" name="redirect" value="<?php echo $redirect; ?>" />
+            <?php } ?>
         </form>
     </div>
 </div>

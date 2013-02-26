@@ -22,13 +22,11 @@ class ModelContentPost extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "post SET 
         parent_id   = '0', 
         post_type   = 'post', 
-        status      = '" . (int)$this->request->post['status'] . "', 
         publish     = '" . (int)$this->request->post['publish'] . "', 
         date_publish_start = '" . $this->db->escape($value['date_publish_start']) . "', 
         date_publish_end = '" . $this->db->escape($value['date_publish_end']) . "', 
         template    = '" . $this->db->escape($value['template']) . "', 
-        status      = '" . (int)$this->request->post['status'] . "', 
-        sort_order  = '" . (int)$this->request->post['sort_order'] . "', 
+        status      = '1', 
         date_added  = NOW()");
 
 		$post_id = $this->db->getLastId(); 
@@ -52,6 +50,7 @@ class ModelContentPost extends Model {
 		}
 		
 		$this->cache->delete('post');
+        return $post_id;
 	}
 	
 	/**
@@ -66,13 +65,10 @@ class ModelContentPost extends Model {
 	public function editPost($post_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "post SET 
         parent_id   = '0',
-        status      = '" . (int)$this->request->post['status'] . "', 
         publish     = '" . (int)$this->request->post['publish'] . "', 
         date_publish_start = '" . $this->db->escape($value['date_publish_start']) . "', 
         date_publish_end = '" . $this->db->escape($value['date_publish_end']) . "', 
         template    = '" . $this->db->escape($value['template']) . "', 
-        status      = '" . (int)$this->request->post['status'] . "', 
-        sort_order  = '" . (int)$this->request->post['sort_order'] . "', 
         date_modified  = NOW() 
         WHERE post_id = '" . (int)$post_id . "'");
 
@@ -122,11 +118,36 @@ class ModelContentPost extends Model {
 	 * @return array sql record
 	 */
 	public function getPost($post_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'post_id=" . (int)$post_id . "') AS keyword FROM " . DB_PREFIX . "post WHERE post_id = '" . (int)$post_id . "'");
-		
-		return $query->row;
+	   $query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'post_id=" . (int)$post_id . "') AS keyword 
+            FROM " . DB_PREFIX . "post p
+            LEFT JOIN ". DB_PREFIX . "post_description pd ON (pd.post_id=p.post_id) 
+            WHERE p.post_id = '" . (int)$post_id . "' 
+            AND p.`post_type` = 'post'");
+		  return $query->row;
 	}
-		
+			
+   /**
+	 * ModelContentPage::getAll()
+	 * 
+	 * @param int $parent_id
+     * @see DB
+     * @see Cache
+	 * @return array sql records
+	 */
+	public function getAll($parent_id=0, $data=array()) {
+		      
+			$sql = "SELECT * 
+            FROM " . DB_PREFIX . "post c 
+                LEFT JOIN " . DB_PREFIX . "post_description cd ON (c.post_id = cd.post_id) 
+            WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+            AND post_type = 'post' 
+            AND parent_id = '". (int)$parent_id ."'
+             ORDER BY c.sort_order, cd.title ASC";
+			
+            $query = $this->db->query($sql);
+		return $query->rows;
+	}
+	
 	/**
 	 * ModelContentPost::getPosts()
 	 * 
@@ -139,7 +160,8 @@ class ModelContentPost extends Model {
 		if ($data) {
 			$sql = "SELECT * FROM " . DB_PREFIX . "post pa 
             LEFT JOIN " . DB_PREFIX . "post_description pad ON (pa.post_id = pad.post_id) 
-            WHERE pad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            WHERE pad.language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND post_type = 'post'";
 		
 			$sort_data = array(
 				'title',
@@ -194,6 +216,26 @@ class ModelContentPost extends Model {
 	}
 	
 	/**
+	 * ModelContentPost::getPostsByCategoryId()
+	 * 
+	 * @param int $id
+     * @see DB
+     * @see Cache
+	 * @return array sql records
+	 */
+	public function getPostsByCategoryId($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post p 
+        LEFT JOIN " . DB_PREFIX . "post_description pd ON (p.post_id = pd.post_id) 
+        LEFT JOIN " . DB_PREFIX . "post_to_category p2c ON (p.post_id = p2c.post_id) 
+        WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+        AND p2c.category_id = '" . (int)$id . "' 
+        AND post_type = 'post'
+        ORDER BY pd.name ASC");
+								  
+		return $query->rows;
+	} 
+	
+	/**
 	 * ModelContentPost::getPostDescriptions()
 	 * 
 	 * @param int $post_id
@@ -204,7 +246,9 @@ class ModelContentPost extends Model {
 	public function getPostDescriptions($post_id) {
 		$post_description_data = array();
 		
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_description WHERE post_id = '" . (int)$post_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_description pd
+        LEFT JOIN " . DB_PREFIX . "post p ON (pd.post_id =p.post_id) 
+        WHERE pd.post_id = '" . (int)$post_id . "' AND p.`post_type` = 'post'");
 
 		foreach ($query->rows as $result) {
 			$post_description_data[$result['language_id']] = array(

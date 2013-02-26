@@ -18,19 +18,37 @@ class ModelSaleCoupon extends Model {
 	 * @return void
 	 */
 	public function addCoupon($data) {
-      	$this->db->query("INSERT INTO " . DB_PREFIX . "coupon SET code = '" . $this->db->escape($data['code']) . "', discount = '" . (float)$data['discount'] . "', type = '" . $this->db->escape($data['type']) . "', total = '" . (float)$data['total'] . "', logged = '" . (int)$data['logged'] . "', shipping = '" . (int)$data['shipping'] . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', uses_total = '" . (int)$data['uses_total'] . "', uses_customer = '" . (int)$data['uses_customer'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
+      	$this->db->query("INSERT INTO " . DB_PREFIX . "coupon SET 
+          code      = '" . $this->db->escape($data['code']) . "', 
+          discount  = '" . (float)$data['discount'] . "', 
+          type      = '" . $this->db->escape($data['type']) . "', 
+          total     = '" . (float)$data['total'] . "', 
+          logged    = '" . (int)$data['logged'] . "', 
+          shipping  = '" . (int)$data['shipping'] . "', 
+          date_start= '" . $this->db->escape($data['date_start']) . "', 
+          date_end  = '" . $this->db->escape($data['date_end']) . "', 
+          uses_total= '" . (int)$data['uses_total'] . "', 
+          uses_customer = '" . (int)$data['uses_customer'] . "', 
+          status    = '" . (int)$data['status'] . "', 
+          date_added= NOW()");
 
       	$coupon_id = $this->db->getLastId();
 
       	foreach ($data['coupon_description'] as $language_id => $value) {
-        	$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_description SET coupon_id = '" . (int)$coupon_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
+        	$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_description SET 
+            coupon_id   = '" . (int)$coupon_id . "', 
+            language_id = '" . (int)$language_id . "', 
+            name        = '" . $this->db->escape($value['name']) . "', 
+            description = '" . $this->db->escape($value['description']) . "'");
       	}
 		
 		if (isset($data['coupon_product'])) {
-      		foreach ($data['coupon_product'] as $product_id) {
-        		$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_product SET coupon_id = '" . (int)$coupon_id . "', product_id = '" . (int)$product_id . "'");
-      		}			
+            foreach ($data['Products'] as $product_id => $value) {
+                if ($value == 0) continue;
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_product (product_id, coupon_id) VALUES ('" . (int)$product_id . "','" . (int)$coupon_id."')");
+            }
 		}
+        return $coupon_id;
 	}
 	
 	/**
@@ -42,20 +60,36 @@ class ModelSaleCoupon extends Model {
 	 * @return void
 	 */
 	public function editCoupon($coupon_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "coupon SET code = '" . $this->db->escape($data['code']) . "', discount = '" . (float)$data['discount'] . "', type = '" . $this->db->escape($data['type']) . "', total = '" . (float)$data['total'] . "', logged = '" . (int)$data['logged'] . "', shipping = '" . (int)$data['shipping'] . "', date_start = '" . $this->db->escape($data['date_start']) . "', date_end = '" . $this->db->escape($data['date_end']) . "', uses_total = '" . (int)$data['uses_total'] . "', uses_customer = '" . (int)$data['uses_customer'] . "', status = '" . (int)$data['status'] . "' WHERE coupon_id = '" . (int)$coupon_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "coupon SET 
+        code        = '" . $this->db->escape($data['code']) . "', 
+        discount    = '" . (float)$data['discount'] . "', 
+        type        = '" . $this->db->escape($data['type']) . "', 
+        total       = '" . (float)$data['total'] . "', 
+        logged      = '" . (int)$data['logged'] . "', 
+        shipping    = '" . (int)$data['shipping'] . "', 
+        date_start  = '" . $this->db->escape($data['date_start']) . "', 
+        date_end    = '" . $this->db->escape($data['date_end']) . "', 
+        uses_total  = '" . (int)$data['uses_total'] . "', 
+        uses_customer = '" . (int)$data['uses_customer'] . "', 
+        status      = '" . (int)$data['status'] . "' 
+        WHERE coupon_id = '" . (int)$coupon_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_description WHERE coupon_id = '" . (int)$coupon_id . "'");
 
       	foreach ($data['coupon_description'] as $language_id => $value) {
-        	$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_description SET coupon_id = '" . (int)$coupon_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "'");
+        	$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_description SET 
+            coupon_id   = '" . (int)$coupon_id . "', 
+            language_id = '" . (int)$language_id . "', 
+            name        = '" . $this->db->escape($value['name']) . "', 
+            description = '" . $this->db->escape($value['description']) . "'");
       	}
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_product WHERE coupon_id = '" . (int)$coupon_id . "'");
-		
 		if (isset($data['coupon_product'])) {
-      		foreach ($data['coupon_product'] as $product_id) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_product SET coupon_id = '" . (int)$coupon_id . "', product_id = '" . (int)$product_id . "'");
-      		}
+            foreach ($data['Products'] as $product_id => $value) {
+                if ($value == 0) continue;
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_product (product_id, coupon_id) VALUES ('" . (int)$product_id . "','" . (int)$coupon_id."')");
+            }
 		}		
 	}
 	

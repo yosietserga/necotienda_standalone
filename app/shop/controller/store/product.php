@@ -241,83 +241,55 @@
 				}
 			}
 			
-            // scripts
-            "";
-            $scripts[] = array(
-                    'id'=>'productImages',
-                    'method'=>'ready',
-                    'script'=>"$('#review .pagination a').live('click', function() {
-                        $('#review').slideUp('slow');
-                        $('#review').load(this.href);
-                        $('#review').slideDown('slow');
-                        return false;
-                    });
-                    $('#review').load('".HTTP_HOME."index.php?r=store/product/review&product_id={$this->data['product_id']}');
-                    $('#related').load('".HTTP_HOME."index.php?r=store/product/related&product_id={$this->data['product_id']}');
-                    $('#comment').load('".HTTP_HOME."index.php?r=store/product/comment&product_id={$this->data['product_id']}');
-                    $('a[rel=product_images]').fancybox({
-        				'transitionIn'		: 'elastic',
-        				'transitionOut'		: 'elastic',
-        				'titlePosition' 	: 'over',
-        				'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) {
-					       return '<span id=\"fancybox-title-over\">Image ' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; ' + title : '') + '</span>';
-        				}
-            		});");
-            $scripts[] = array(
-                    'id'=>'productImages',
-                    'method'=>'ready',
-                    'script'=>"jQuery('#productCarousel').jcarousel({
-        	           wrap: 'circular'
-                    });");
-            $scripts[] = array(
-                    'id'=>'productScroller',
-                    'method'=>'ready',
-                    'script'=>"$('#imageScroller div a').click(function(){
-                        var imgSrc = $(this).find('input.preview').attr('value');
-                        var hrefSrc = $(this).find('input.popup').attr('value');
-                        $('#image').attr('src',imgSrc);
-                        $('#popup').attr('href',hrefSrc);
-                    });");
-            $scripts[] = array(
-                    'id'=>'productReviews',
-                    'method'=>'ready',
-                    'script'=>"$('#review .pagination a').live('click', function() {
-    	               $('#review').slideUp('slow');
-    	               $('#review').load(this.href);
-    	               $('#review').slideDown('slow');
-                   	    return false;
-                    });			
-                    $('#review').load('index.php?r=store/product/review&product_id=". $_GET['product_id'] ."');");
-                    
-            $this->scripts = array_merge($this->scripts,$scripts);
-            // javascript files
-            $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+            // style files
+            $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
             
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-    		  $jspath = str_replace("%theme%",$this->config->get('config_template'),$jspath);
+    		  $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
     		} else {
-    		  $jspath = str_replace("%theme%","default",$jspath);
+    		  $csspath = str_replace("%theme%","default",$csspath);
     		}
-            $javascripts = array(
-                $jspath."jquery/jquery.jcarousel.min.js"
-            );
-            $this->data['javascripts'] = $this->javascripts = array_merge($this->javascripts,$javascripts);
-              
-   			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/product.tpl')) {
-  				$this->template = $this->config->get('config_template') . '/store/product.tpl';
+            
+            if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
+                $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+            }
+            
+            if (count($styles)) {
+                $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+            }
+            
+            if ($hasFeatured) {
+                //TODO: obtener los sliders si están asignados a este producto
+                $this->children[] = 'common/showslider';
+            }
+            
+            if (!$hasColumnLeft) {
+                //TODO: obtener si este template tiene columna izquierda, entonces cargar hijo
+                $this->children[] = 'common/column_left';
+            }
+            
+            if ($hasColumnRight) {
+                //TODO: obtener si este template tiene columna derecha, entonces cargar hijo
+                $this->children[] = 'common/column_right';
+            }
+            
+    		$this->children[] = 'common/header';
+    		$this->children[] = 'common/nav';
+    		$this->children[] = 'common/footer';
+            
+            //TODO: obtener el layout configurado y utilizarlo como template
+            
+            $template = ($this->config->get('config_product_layout')) ? $this->config->get('config_product_layout') : 'product';
+            
+   			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/'. $template .'.tpl')) {
+  				$this->template = $this->config->get('config_template') . '/store/'. $template .'.tpl';
    			} else {
-  				$this->template = 'default/store/product.tpl';
+  				$this->template = 'default/store/'. $template .'.tpl';
    			}
-    			
-    		$this->children = array(
-    			'common/header',
-    			'common/nav',
-    			'common/column_left',
-    			'common/column_right',
-    			'common/footer'
-    		);
+   			
 			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 		} else {
+		  //TODO: forward to error/not_found
 			$url = '';
 			if (isset($this->request->get['path'])) {
 				$url .= '&path=' . $this->request->get['path'];
@@ -359,6 +331,7 @@
     			'common/column_right',
     			'common/footer'
     		);
+            
 			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     	}
   	}

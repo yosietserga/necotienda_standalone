@@ -131,7 +131,7 @@ class ModelContentPage extends Model {
 	}
 		
 	/**
-	 * ModelStoreCategory::getCategories()
+	 * ModelContentPage::_getPages()
 	 * 
 	 * @param int $parent_id
      * @see DB
@@ -169,7 +169,7 @@ class ModelContentPage extends Model {
 	}
 	
 	/**
-	 * ModelStoreCategory::getCategories()
+	 * ModelContentPage::getAll()
 	 * 
 	 * @param int $parent_id
      * @see DB
@@ -302,8 +302,9 @@ class ModelContentPage extends Model {
 	public function getPageDescriptions($post_id) {
 		$post_description_data = array();
 		
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_description WHERE post_id = '" . (int)$post_id . "'");
-
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_description pd
+        LEFT JOIN " . DB_PREFIX . "post p ON (pd.post_id =p.post_id) 
+        WHERE pd.post_id = '" . (int)$post_id . "' AND p.`post_type` = 'page'");
 		foreach ($query->rows as $result) {
 			$post_description_data[$result['language_id']] = array(
 				'title'       => $result['title'],

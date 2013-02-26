@@ -62,6 +62,12 @@
                 <a id="logo" onclick="location = '<?php echo $home; ?>'"></a>
                 <div class="userNav">
                     <ul>
+                        <li>
+                            <a href="<?php echo $Url::createAdminUrl("setting/cache"); ?>" title="Borrar Cache">
+                                <img src="image/icons/topnav/smallBrush.png" alt="Borrar Cache" />
+                                <span>Borrar Cache</span>
+                            </a>
+                        </li>
                         <li class="dd"><img src="image/icons/topnav/register.png" alt="" /><span>Crear &darr;</span>
                             <ul class="menu_body">
                                 <li><a href="<?php echo $create_product; ?>" title="Crear Producto">Producto</a></li>
@@ -72,8 +78,19 @@
                                 <li><a href="<?php echo $create_post_category; ?>" title="Crear Producto">Categor&iacute;a de Art&iacute;los</a></li>
                             </ul>
                         </li>
-                        <li><a href="<?php echo $Url::createAdminUrl("sale/customer"); ?>" title="Clientes Nuevos"><img src="image/icons/topnav/profile.png" alt="Clientes Nuevos" /><span>Clientes</span><?php if ($new_customers) { ?><span class="numberTop"><?php echo (int)$new_customers; ?></span><?php } ?></a></li>
-                        <li><a href="<?php echo $Url::createAdminUrl("sale/order"); ?>" title="Pedidos Nuevos"><img src="image/icons/topnav/cart.png" alt="Pedidos Nuevos" /><span>Pedidos</span><?php if ($new_orders) { ?><span class="numberTop"><?php echo (int)$new_orders; ?></span><?php } ?></a></li>
+                        <li>
+                            <a href="<?php echo $Url::createAdminUrl("sale/customer"); ?>" title="Clientes Nuevos"><img src="image/icons/topnav/profile.png" alt="Clientes Nuevos" />
+                                <span>Clientes</span>
+                                <?php if ($new_customers) { ?><span class="numberTop"><?php echo (int)$new_customers; ?></span><?php } ?>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo $Url::createAdminUrl("sale/order"); ?>" title="Pedidos Nuevos">
+                                <img src="image/icons/topnav/cart.png" alt="Pedidos Nuevos" />
+                                <span>Pedidos</span>
+                                <?php if ($new_orders) { ?><span class="numberTop"><?php echo (int)$new_orders; ?></span><?php } ?>
+                            </a>
+                        </li>
                         <!--
                         <li class="dd"><img src="image/icons/topnav/messages.png" alt="" /><span>Mensajes</span><span class="numberTop">8</span>
                             <ul class="menu_body">
@@ -85,7 +102,11 @@
                         </li>
                         -->
                         <li><a href="<?php echo $Url::createAdminUrl("tool/task"); ?>" title="Tareas Programadas"><img src="image/icons/topnav/todo.png" alt="" /><span>Tareas</span></a></li>
-                        <li class="dd"><img src="image/icons/topnav/bag.png" alt="" /><span>Tiendas &darr;</span>
+                        <li class="dd">
+                            <a href="<?php echo HTTP_CATALOG; ?>" title="Visitar Tienda" target="_blank">
+                            <img src="image/icons/topnav/bag.png" alt="" />
+                            <span>Tiendas &darr;</span>
+                            </a>
                             <ul>
                                 <?php foreach ($stores as $store) { ?>
                                 <li><a href="<?php echo $store['url']; ?>" title="Ir a la tienda"><?php echo $store['name']; ?></a></li>
@@ -93,6 +114,7 @@
                             </ul>
                         </li>
                         <li><a href="<?php echo $Url::createAdminUrl("setting/setting"); ?>" title="Configuraci&oacute;n"><img src="image/icons/topnav/settings.png" alt="" /><span>Configuraci&oacute;n</span></a></li>
+                        <li class="BigScreen"><a onclick="if (BigScreen.enabled) { BigScreen.toggle(); } else { alert('No est\u00E1 habilitado esta opci\u00F3n en su navegador'); }"><img src="image/icons/color/arrow-in-out.png" alt="Full Screen" /></a></li>
                         <li><a href="<?php echo $logout; ?>" title=""><img src="image/icons/topnav/logout.png" alt="" /><span>Logout</span></a></li>
                     </ul>
                 </div>
@@ -182,7 +204,7 @@
                                         <img src="image/menu/order.png" alt="<?php echo $text_order; ?>" />
                                         <br /><span><?php echo $text_order; ?></span>
                                     </a>
-                                    <a title="<?php echo $text_coupon; ?>" href="<?php echo $customer_coupon; ?>" >
+                                    <a title="<?php echo $text_coupon; ?>" href="<?php echo $coupon; ?>" >
                                         <img src="image/menu/coupon.png" alt="<?php echo $text_coupon; ?>" />
                                         <br /><span><?php echo $text_coupon; ?></span>
                                     </a>
@@ -430,7 +452,9 @@
     <?php } ?>
     </ul>
     <?php } ?>
+    <?php if ($success) { ?><div class="grid_24"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
     <?php if ($msg) { ?><div class="grid_24"><div class="message warning"><?php echo $msg; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_24"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
 </div>
 <div class="clear"></div>
 <div class="container_24">

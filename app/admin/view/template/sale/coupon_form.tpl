@@ -1,247 +1,169 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?>
-<div class="warning"><?php echo $error_warning; ?></div>
-<?php } ?>
+<?php if ($error_warning) { ?><div class="warning"><?php echo $error_warning; ?></div><?php } ?>
 <div class="box">
-  <div class="left"></div>
-  <div class="right"></div>
-  <div class="heading">
     <h1><?php echo $heading_title; ?></h1>
-    <div class="buttons"><a  onclick="$('#form').submit();" class="button"><span><?php echo $button_save; ?></span></a><a  onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a></div>
-  </div>
-  <div class="content">
+    <div class="buttons">
+        <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $button_save_and_exit; ?></a>
+        <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $button_save_and_keep; ?></a>
+        <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $button_save_and_new; ?></a>
+        <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+    </div>
+    
+    <div class="clear"></div>
+    
     <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-      <div class="htabs">
+      
+        <div id="languages" class="htabs">
         <?php foreach ($languages as $language) { ?>
-        <a  tab="#language<?php echo $language['language_id']; ?>"><imgsrc="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"> <?php echo $language['name']; ?></a>
+            <a tab="#language<?php echo $language['language_id']; ?>" class="htab"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
         <?php } ?>
-      </div>
-      <?php foreach ($languages as $language) { ?>
-      <div id="language<?php echo $language['language_id']; ?>">
-        <table class="form">
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_name; ?><a title="<?php echo $help_name; ?>"> (?)</a></td>
-            <td><input title="<?php echo $help_name; ?>" name="coupon_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($coupon_description[$language['language_id']]) ? $coupon_description[$language['language_id']]['name'] : ''; ?>">
-              <?php if (isset($error_name[$language['language_id']])) { ?>
-              <span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
-              <?php } ?></td>
-          </tr>
-          <tr>
-            <td><span class="required">*</span> <?php echo $entry_description; ?><a title="<?php echo $help_description; ?>"> (?)</a></td>
-            <td><textarea title="<?php echo $help_description; ?>" name="coupon_description[<?php echo $language['language_id']; ?>][description]" cols="40" rows="5"><?php echo isset($coupon_description[$language['language_id']]) ? $coupon_description[$language['language_id']]['description'] : ''; ?></textarea>
-              <?php if (isset($error_description[$language['language_id']])) { ?>
-              <span class="error"><?php echo $error_description[$language['language_id']]; ?></span>
-              <?php } ?></td>
-          </tr>
-        </table>
-      </div>
-      <?php } ?>
-      <table class="form">
-        <tr>
-          <td><span class="required">*</span> <?php echo $entry_code; ?><a title="<?php echo $help_code; ?>"> (?)</a></td>
-          <td><input title="<?php echo $help_code; ?>" name="code" value="<?php echo $code; ?>">
-            <?php if ($error_code) { ?>
-            <span class="error"><?php echo $error_code; ?></span>
-            <?php } ?></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_type; ?><a title="<?php echo $help_type; ?>"> (?)</a></td>
-          <td><select title="<?php echo $help_type; ?>" name="type">
-              <?php if ($type == 'P') { ?>
-              <option value="P" selected="selected"><?php echo $text_percent; ?></option>
-              <?php } else { ?>
-              <option value="P"><?php echo $text_percent; ?></option>
-              <?php } ?>
-              <?php if ($type == 'F') { ?>
-              <option value="F" selected="selected"><?php echo $text_amount; ?></option>
-              <?php } else { ?>
-              <option value="F"><?php echo $text_amount; ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_discount; ?><a title="<?php echo $help_discount; ?>"> (?)</a></td>
-          <td><input title="<?php echo $help_discount; ?>" name="discount" value="<?php echo $discount; ?>"></td>
-        </tr>
-        <input  type="hidden" name="total" value="0">
-        <!-- 
-        <tr>
-          <td><?php echo $entry_total; ?><a title="Total"> (?)</a></td>
-          <td><input  type="text" name="total" value="<?php echo $total; ?>"></td>
-        </tr>
+        </div> 
+      
+        <?php foreach ($languages as $language) { ?>
+        <div id="language<?php echo $language['language_id']; ?>">
+                        
+            <div class="row">
+                <label><?php echo $entry_name; ?></label>
+                <input id="coupon_description<?php echo $language['language_id']; ?>_name" name="coupon_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($coupon_description[$language['language_id']]) ? $coupon_description[$language['language_id']]['name'] : ''; ?>" required="true" title="<?php echo $help_name; ?>" />
+            </div>
+                                
+            <div class="clear"></div>
+                                         
+            <div class="row">
+                <label><?php echo $entry_description; ?></label>
+                <textarea title="<?php echo $help_description; ?>" name="coupon_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($coupon_description[$language['language_id']]) ? $coupon_description[$language['language_id']]['description'] : ''; ?></textarea>
+            </div>
+                                  
+        </div>
+        <?php } ?>
+          
+        <div class="clear"></div>
         
-        <tr>
-          <td><?php echo $entry_logged; ?><a title="<?php echo $help_logged; ?>"> (?)</a><br><span class="help"><?php echo $help_logged; ?></span></td>
-          <td><?php if ($logged) { ?>
-            <input  type="radio" name="logged" value="1" checked="checked">
-            <?php echo $text_yes; ?>
-            <input  type="radio" name="logged" value="0">
-            <?php echo $text_no; ?>
-            <?php } else { ?>
-            <input  type="radio" name="logged" value="1">
-            <?php echo $text_yes; ?>
-            <input  type="radio" name="logged" value="0" checked="checked">
-            <?php echo $text_no; ?>
-            <?php } ?></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_shipping; ?><a title="<?php echo $help_shipping; ?>"> (?)</a></td>
-          <td><?php if ($shipping) { ?>
-            <input  type="radio" name="shipping" value="1" checked="checked">
-            <?php echo $text_yes; ?>
-            <input  type="radio" name="shipping" value="0">
-            <?php echo $text_no; ?>
-            <?php } else { ?>
-            <input  type="radio" name="shipping" value="1">
-            <?php echo $text_yes; ?>
-            <input  type="radio" name="shipping" value="0" checked="checked">
-            <?php echo $text_no; ?>
-            <?php } ?></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_product; ?><a title="<?php echo $help_product; ?>"> (?)</a></td>
-          <td><table>
-              <tr>
-                <td style="padding: 0;" colspan="3"><select id="category" style="margin-bottom: 5px;" onChange="getProducts();">
-                    <?php foreach ($categories as $category) { ?>
-                    <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
-                    <?php } ?>
-                  </select></td>
-              </tr>
-              <tr id="product_form">
-                <td style="padding: 0;"><select multiple="multiple" id="product" size="10" style="width: 200px;">
-                  </select></td>
-                <td style="vertical-align: middle;"><input  type="button" value="--&gt;" onclick="addProduct();">
-                  <br>
-                  <input  type="button" value="&lt;--" onclick="removeProduct();"></td>
-                <td style="padding: 0;"><select multiple="multiple" id="coupon" size="10" style="width: 200px;">
-                  </select></td>
-              </tr>
-            </table>
-            <div id="coupon_product">
-              <?php foreach ($coupon_product as $product_id) { ?>
-              <input  type="hidden" name="coupon_product[]" value="<?php echo $product_id; ?>">
-              <?php } ?>
-            </div></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_date_start; ?><a title="<?php echo $help_date_start; ?>"> (?)</a></td>
-          <td><input title="<?php echo $help_date_start; ?>" type="date" name="date_start" value="<?php echo $date_start; ?>" size="12" id="date_start"></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_date_end; ?><a title="<?php echo $help_date_end; ?>"> (?)</a></td>
-          <td><input title="<?php echo $help_date_end; ?>" type="date" name="date_end" value="<?php echo $date_end; ?>" size="12" id="date_end"></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_uses_total; ?><a title="<?php echo $help_uses_total; ?>"> (?)</a></td>
-          <td><input title="<?php echo $help_uses_total; ?>" type="number" name="uses_total" value="<?php echo $uses_total; ?>"></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_uses_customer; ?><a title="<?php echo $help_uses_customer; ?>"> (?)</a></td>
-          <td><input title="<?php echo $help_uses_customer; ?>" type="number" name="uses_customer" value="<?php echo $uses_customer; ?>"></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_status; ?><a title="<?php echo $help_status; ?>"> (?)</a></td>
-          <td><select title="<?php echo $help_status; ?>" name="status">
-              <?php if ($status) { ?>
-              <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-              <option value="0"><?php echo $text_disabled; ?></option>
-              <?php } else { ?>
-              <option value="1"><?php echo $text_enabled; ?></option>
-              <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-      </table>
+        <div class="row">
+            <label><?php echo $entry_code; ?></label>
+            <input id="code" name="code" value="<?php echo isset($code) ? $code : ''; ?>" required="true" title="<?php echo $help_code; ?>" />
+        </div>
+        
+        <div class="row">
+            <label><?php echo $entry_type; ?></label>
+            <select title="<?php echo $help_type; ?>" name="type">
+              <option value="P"<?php if ($type == 'P') { ?> selected="selected"<?php } ?>><?php echo $text_percent; ?></option>
+              <option value="F"<?php if ($type == 'F') { ?> selected="selected"<?php } ?>><?php echo $text_amount; ?></option>
+            </select>
+        </div>
+        
+        <div class="row">
+            <label><?php echo $entry_discount; ?></label>
+            <input id="discount" name="discount" value="<?php echo isset($discount) ? $discount : ''; ?>" required="true" title="<?php echo $help_discount; ?>" />
+        </div>
+        
+        <div class="row">
+            <label><?php echo $entry_total; ?></label>
+            <input type="number" id="total" name="total" value="<?php echo isset($total) ? $total : ''; ?>" required="true" title="<?php echo $help_total; ?>" />
+        </div>
+        
+        <div class="row">
+            <label><?php echo $entry_logged; ?></label>
+            <input type="checkbox" id="logged" name="logged" value="1" title="<?php echo $help_logged; ?>" showquick="off"<?php if ($logged) { ?> checked="checked"<?php } ?> />
+        </div>
+
+        <div class="row">
+            <label><?php echo $entry_shipping; ?></label>
+            <input type="checkbox" id="shipping" name="shipping" value="1" title="<?php echo $help_shipping; ?>" showquick="off"<?php if ($shipping) { ?> checked="checked"<?php } ?> />
+        </div>
+        
+        <div class="clear"></div>
+            
+        <div class="row">
+            <label><?php echo $entry_date_start; ?></label>
+            <input type="date" title="<?php echo $help_date_start; ?>" name="date_start" value="<?php echo $date_start; ?>" size="12" />
+        </div>
+            
+        <div class="clear"></div>
+            
+        <div class="row">
+            <label><?php echo $entry_date_end; ?></label>
+            <input type="date" title="<?php echo $help_date_end; ?>" name="date_end" value="<?php echo $date_end; ?>" size="12" />
+        </div>
+            
+        <div class="clear"></div>
+            
+        <div class="row">
+            <label><?php echo $entry_uses_total; ?></label>
+            <input type="number" title="<?php echo $help_uses_total; ?>" name="uses_total" value="<?php echo $uses_total; ?>" />
+        </div>
+            
+        <div class="clear"></div>
+        
+        <div class="row">
+            <label><?php echo $entry_uses_customer; ?></label>
+            <input type="number" title="<?php echo $help_uses_customer; ?>" name="uses_customer" value="<?php echo $uses_customer; ?>" />
+        </div>
+        
+        <div class="clear"></div>
+        
+        <div class="row">
+            <label><?php echo $entry_status; ?></label>
+            <select title="<?php echo $help_status; ?>" name="status">
+                <option value="1"<?php if ($status) { ?> selected="selected"<?php } ?>><?php echo $text_enabled; ?></option>
+                <option value="0"<?php if (!$status) { ?> selected="selected"<?php } ?>><?php echo $text_disabled; ?></option>
+            </select>
+        </div>
+
+        <div class="clear"></div><br />
+            
+        <div id="addProductsPanel"><b>Agregar / Eliminar Productos</b></div>
+        <div id="addProductsWrapper"><div id="gridPreloader"></div></div>
     </form>
-  </div>
 </div>
-<script type="text/javascript">
-function addProduct() {
-	$('#product :selected').each(function() {
-		$(this).remove();
-		
-		$('#coupon option[value=\'' + $(this).attr('value') + '\']').remove();
-		
-		$('#coupon').append('<option value="' + $(this).attr('value') + '">' + $(this).text() + '</option>');
-		
-		$('#coupon_product input[value=\'' + $(this).attr('value') + '\']').remove();
-		
-		$('#coupon_product').append('<input  type="hidden" name="coupon_product[]" value="' + $(this).attr('value') + '">');
-	});
-}
 
-function removeProduct() {
-	$('#coupon :selected').each(function() {
-		$(this).remove();
-		
-		$('#coupon_product input[value=\'' + $(this).attr('value') + '\']').remove();
-	});
-}
-
-function getProducts() {
-	$('#product option').remove();
-	
-	$.ajax({
-		url: 'index.php?r=sale/coupon/category&token=<?php echo $token; ?>&category_id=' + $('#category').attr('value'),
-		dataType: 'html',
-		type: 'get',
-        beforeSend: function() {
-            $('#add_product').remove();
-        },
-		success: function(data) {
-		  data = data.substr(2);
-		  data = $.trim(data);      
-            if (data == 1) {                
-                $('#category').after('<p id="add_product">No hay productos en esta categor&iacute;a. <a href="<?php echo HTTP_HOME; ?>index.php?r=store/product&token=<?php echo $_GET['token']; ?>">&iquest;Desea agregar alguno ahora?</a></p>');
-                $('#product_form').fadeOut();
-            } else {
-                $('#product').append(data);
-                $('#product_form').fadeIn();
-            }
-		}
-	});
-}
-
-function getProduct() {
-	$('#coupon option').remove();
-	
-	$.ajax({
-		url: 'index.php?r=sale/coupon/product&token=<?php echo $token; ?>',
-		type: 'POST',
-		dataType: 'json',
-		data: $('#coupon_product input'),
-		success: function(data) {
-			$('#coupon_product input').remove();
-			
-			for (i = 0; i < data.length; i++) {
-	 			$('#coupon').append('<option value="' + data[i]['product_id'] + '">' + data[i]['name'] + '</option>');
-				
-				$('#coupon_product').append('<input  type="hidden" name="coupon_product[]" value="' + data[i]['product_id'] + '">');
-			} 
-		}
-	});
-}
-
-getProducts();
-getProduct();
-</script>
-<script type="text/javascript">
-$(function() {
-	$('#date_start').datepicker({dateFormat: 'dd-mm-yy'});
-	$('#date_end').datepicker({dateFormat: 'dd-mm-yy'});
-	jQuery('input[type=text]').css({'width':'250px'});
-	jQuery('select').css({'width':'250px'});
-});
-</script>
-<script>
-$(function(){    
-	jQuery('#pdf_button img').attr('src','image/menu/pdf_off.png');
-	jQuery('#excel_button img').attr('src','image/menu/excel_off.png');
-	jQuery('#csv_button img').attr('src','image/menu/csv_off.png');
-})
-</script>
-<script type="text/javascript">
-$.tabs('.htabs a'); 
-</script>
+<div class="sidebar" id="feedbackPanel">
+    <div class="tab"></div>
+    <div class="content">
+        <h2>Sugerencias</h2>
+        <p style="margin: -10px auto 0px auto;">Tu opini&oacute;n es muy importante, dinos que quieres cambiar.</p>
+        <form id="feedbackForm">
+            <textarea name="feedback" id="feedback" cols="60" rows="10"></textarea>
+            <input type="hidden" name="account_id" id="account_id" value="<?php echo C_CODE; ?>" />
+            <input type="hidden" name="domain" id="domain" value="<?php echo HTTP_DOMAIN; ?>" />
+            <input type="hidden" name="server_ip" id="server_ip" value="<?php echo $_SERVER['SERVER_ADDR']; ?>" />
+            <input type="hidden" name="remote_ip" id="remote_ip" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" />
+            <input type="hidden" name="server" id="server" value="<?php echo serialize($_SERVER); ?>" />
+            <div class="clear"></div>
+            <br />
+            <div class="buttons"><a class="button" onclick="sendFeedback()">Enviar Sugerencia</a></div>
+        </form>
+    </div>
+</div>
+<div class="sidebar" id="toolPanel">
+    <div class="tab"></div>
+    <div class="content">
+        <h2>Herramientas</h2>
+        <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
+        <ul>
+            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
+            <li><a>Eliminar Esta Categor&iacute;a</a></li>
+        </ul>
+        <div class="toolWrapper"></div>
+    </div>
+</div>
+<div class="sidebar" id="helpPanel">
+    <div class="tab"></div>
+    <div class="content">
+        <h2>Ayuda</h2>
+        <p>No entres en p&aacute;nico, todo tiene una soluci&oacute;n.</p>
+        <ul>
+            <li><a>&iquest;C&oacute;mo se come esto?</a></li>
+            <li><a>&iquest;C&oacute;mo relleno este formulario?</a></li>
+            <li><a>&iquest;Qu&eacute; significan las figuritas al lado de los campos?</a></li>
+            <li><a>&iquest;C&oacute;mo me desplazo a trav&eacute;s de las pesta&ntilde;as?</a></li>
+            <li><a>&iquest;Pierdo la informaci&oacute;n si me cambio de pesta&ntilde;a?</a></li>
+            <li><a>Preguntas Frecuentes</a></li>
+            <li><a>Manual de Usuario</a></li>
+            <li><a>Videos Tutoriales</a></li>
+            <li><a>Auxilio, por favor ay&uacute;denme!</a></li>
+        </ul>
+    </div>
+</div>
 <?php echo $footer; ?>

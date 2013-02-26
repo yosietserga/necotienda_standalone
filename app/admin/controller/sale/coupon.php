@@ -41,7 +41,7 @@ class ControllerSaleCoupon extends Controller {
   	public function insert() {
     	$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelCoupon->addCoupon($this->request->post);
+			$coupon_id = $this->modelCoupon->addCoupon($this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
@@ -59,7 +59,13 @@ class ControllerSaleCoupon extends Controller {
 				$url .= '&order=' . $this->request->get['order'];
 			}
 			
-			$this->redirect(Url::createAdminUrl('sale/coupon') . $url);
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('sale/coupon/update',array('coupon_id'=>$coupon_id))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('sale/coupon/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('sale/coupon')); 
+            }
     	}
     
     	$this->getForm();
@@ -98,7 +104,14 @@ class ControllerSaleCoupon extends Controller {
 				$url .= '&order=' . $this->request->get['order'];
 			}
 			
-			$this->redirect(Url::createAdminUrl('sale/coupon') . $url);
+			
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('sale/coupon/update',array('coupon_id'=>$this->request->get['coupon_id']))); 
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('sale/coupon/insert')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('sale/coupon')); 
+            }
 		}
     
     	$this->getForm();
@@ -212,9 +225,9 @@ class ControllerSaleCoupon extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("sale/coupon/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("sale/coupon/eliminar") ."',{
                             id:e
                         },
@@ -228,6 +241,7 @@ class ControllerSaleCoupon extends Controller {
                 	});
                 }
              }");
+             //TODO: crear funciones comunes en un solo archivo javascript y pasarle los parametros
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("sale/coupon/grid") ."',function(){
                 $('#gridPreloader').hide();
@@ -271,8 +285,7 @@ class ControllerSaleCoupon extends Controller {
      * @see Request
   	 * @return void
   	 */
-  	public function grid() {
-  	 
+  	public function grid() {  	 
 		$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
 		$filter_product = isset($this->request->get['filter_product']) ? $this->request->get['filter_product'] : null;
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
@@ -433,62 +446,20 @@ class ControllerSaleCoupon extends Controller {
 		$this->data['help_status'] = $this->language->get('help_status');
 
     	$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
     	$this->data['button_cancel'] = $this->language->get('button_cancel');
 
     	$this->data['tab_general'] = $this->language->get('tab_general');
 
-		$this->data['token'] = $this->session->get('ukey');
-		
- 		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-	 	
-		if (isset($this->error['name'])) {
-			$this->data['error_name'] = $this->error['name'];
-		} else {
-			$this->data['error_name'] = '';
-		}
-		
-		if (isset($this->error['description'])) {
-			$this->data['error_description'] = $this->error['description'];
-		} else {
-			$this->data['error_description'] = '';
-		}
-		
-		if (isset($this->error['code'])) {
-			$this->data['error_code'] = $this->error['code'];
-		} else {
-			$this->data['error_code'] = '';
-		}		
-		
-		if (isset($this->error['date_start'])) {
-			$this->data['error_date_start'] = $this->error['date_start'];
-		} else {
-			$this->data['error_date_start'] = '';
-		}	
-		
-		if (isset($this->error['date_end'])) {
-			$this->data['error_date_end'] = $this->error['date_end'];
-		} else {
-			$this->data['error_date_end'] = '';
-		}	
-
-		$url = '';
-			
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
+        $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
+        $this->data['error_name'] = isset($this->error['name']) ? $this->error['name'] : '';
+        $this->data['error_description'] = isset($this->error['description']) ? $this->error['description'] : '';
+        $this->data['error_code'] = isset($this->error['code']) ? $this->error['code'] : '';
+        $this->data['error_date_start'] = isset($this->error['date_start']) ? $this->error['date_start'] : '';
+        $this->data['error_date_end'] = isset($this->error['date_end']) ? $this->error['date_end'] : '';
+        
   		$this->document->breadcrumbs = array();
 
    		$this->document->breadcrumbs[] = array(
@@ -517,6 +488,16 @@ class ControllerSaleCoupon extends Controller {
 		
     	$this->data['languages'] = $this->modelLanguage->getLanguages();
     
+        $this->setvar('code',$coupon_info,'');
+        $this->setvar('type',$coupon_info,'');
+        $this->setvar('discount',$coupon_info,'');
+        $this->setvar('logged',$coupon_info,'');
+        $this->setvar('shipping',$coupon_info,'');
+        $this->setvar('total',$coupon_info,'');
+        $this->setvar('uses_total',$coupon_info,1);
+        $this->setvar('uses_customer',$coupon_info,1);
+        $this->setvar('status',$coupon_info,1);
+        
 		if (isset($this->request->post['coupon_description'])) {
 			$this->data['coupon_description'] = $this->request->post['coupon_description'];
 		} elseif (isset($this->request->get['coupon_id'])) {
@@ -525,54 +506,6 @@ class ControllerSaleCoupon extends Controller {
 			$this->data['coupon_description'] = array();
 		}
 
-    	if (isset($this->request->post['code'])) {
-      		$this->data['code'] = $this->request->post['code'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['code'] = $coupon_info['code'];
-		} else {
-      		$this->data['code'] = '';
-    	}
-		
-    	if (isset($this->request->post['type'])) {
-      		$this->data['type'] = $this->request->post['type'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['type'] = $coupon_info['type'];
-		} else {
-      		$this->data['type'] = '';
-    	}
-		
-    	if (isset($this->request->post['discount'])) {
-      		$this->data['discount'] = $this->request->post['discount'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['discount'] = $coupon_info['discount'];
-		} else {
-      		$this->data['discount'] = '';
-    	}
-
-    	if (isset($this->request->post['logged'])) {
-      		$this->data['logged'] = $this->request->post['logged'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['logged'] = $coupon_info['logged'];
-		} else {
-      		$this->data['logged'] = '';
-    	}
-		
-    	if (isset($this->request->post['shipping'])) {
-      		$this->data['shipping'] = $this->request->post['shipping'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['shipping'] = $coupon_info['shipping'];
-		} else {
-      		$this->data['shipping'] = '';
-    	}
-
-    	if (isset($this->request->post['total'])) {
-      		$this->data['total'] = $this->request->post['total'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['total'] = $coupon_info['total'];
-		} else {
-      		$this->data['total'] = '';
-    	}
-		
     	if (isset($this->request->post['product'])) {
       		$this->data['coupon_product'] = $this->request->post['product'];
     	} elseif (isset($coupon_info)) {
@@ -580,49 +513,135 @@ class ControllerSaleCoupon extends Controller {
     	} else {
 			$this->data['coupon_product'] = array();
 		}
-	
+
 		$this->data['categories'] = $this->modelCategory->getCategories(0);
 		
 		if (isset($this->request->post['date_start'])) {
        		$this->data['date_start'] = $this->request->post['date_start'];
 		} elseif (isset($coupon_info)) {
-			$this->data['date_start'] = date('Y-m-d', strtotime($coupon_info['date_start']));
+			$this->data['date_start'] = date('d-m-Y', strtotime($coupon_info['date_start']));
 		} else {
-			$this->data['date_start'] = date('Y-m-d', time());
+			$this->data['date_start'] = date('d-m-Y', time());
 		}
 
 		if (isset($this->request->post['date_end'])) {
        		$this->data['date_end'] = $this->request->post['date_end'];
 		} elseif (isset($coupon_info)) {
-			$this->data['date_end'] = date('Y-m-d', strtotime($coupon_info['date_end']));
+			$this->data['date_end'] = date('d-m-Y', strtotime($coupon_info['date_end']));
 		} else {
-			$this->data['date_end'] = date('Y-m-d', time());
+			$this->data['date_end'] = date('d-m-Y', time());
 		}
-
-    	if (isset($this->request->post['uses_total'])) {
-      		$this->data['uses_total'] = $this->request->post['uses_total'];
-		} elseif (isset($coupon_info)) {
-			$this->data['uses_total'] = $coupon_info['uses_total'];
-    	} else {
-      		$this->data['uses_total'] = 1;
-    	}
-  
-    	if (isset($this->request->post['uses_customer'])) {
-      		$this->data['uses_customer'] = $this->request->post['uses_customer'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['uses_customer'] = $coupon_info['uses_customer'];
-		} else {
-      		$this->data['uses_customer'] = 1;
-    	}
- 
-    	if (isset($this->request->post['status'])) { 
-      		$this->data['status'] = $this->request->post['status'];
-    	} elseif (isset($coupon_info)) {
-			$this->data['status'] = $coupon_info['status'];
-		} else {
-      		$this->data['status'] = 1;
-    	}
-		
+        
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'couponForm','method'=>'ready','script'=>
+            "$('#addProductsWrapper').hide();
+            
+            $('#addProductsPanel').on('click',function(e){
+                var products = $('#addProductsWrapper').find('.row');
+                
+                if (products.length == 0) {
+                    $.getJSON('". Url::createAdminUrl("sale/coupon/products") ."',
+                        {
+                            'coupon_id':'". $this->request->getQuery('coupon_id') ."'
+                        }, function(data) {
+                            
+                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            
+                            $.each(data, function(i,item){
+                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                
+                            });
+                            
+                            $('#q').on('change',function(e){
+                                var that = this;
+                                var valor = $(that).val().toLowerCase();
+                                if (valor.length <= 0) {
+                                    $('#addProducts li').show();
+                                } else {
+                                    $('#addProducts li b').each(function(){
+                                        if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
+                                            $(this).closest('li').show();
+                                        } else {
+                                            $(this).closest('li').hide();
+                                        }
+                                    });
+                                }
+                            }); 
+                            
+                            $('li').on('click',function() {
+                                var b = $(this).find('b');
+                                if (b.hasClass('added')) {
+                                    b.removeClass('added').addClass('add');
+                                    $(this).find('input').val(0);
+                                } else {
+                                    b.removeClass('add').addClass('added');
+                                    $(this).find('input').val(1);
+                                }
+                            });
+                    });
+                }
+            });
+                
+            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
+            
+            $('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.tabs li').on('click',function() {
+                $('.tabs li').each(function(){
+                   $('#' + this.id + '_content').hide();
+                   $(this).removeClass('active'); 
+                });
+                $(this).addClass('active');
+                $('#' + this.id + '_content').show(); 
+           }); 
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'couponFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
 		$this->template = 'sale/coupon_form.tpl';
 		$this->children = array(
 			'common/header',	
@@ -704,48 +723,57 @@ class ControllerSaleCoupon extends Controller {
         echo $html_output;
 	}
 	
-	/**
-	 * ControllerSaleCoupon::product()
-	 * 
-     * @see Load
-     * @see Request
-     * @see Response
-  	 * @return void
-	 */
-	public function product() {
+    public function products() {
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
         header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
         header("Cache-Control: no-cache, must-revalidate"); 
         header("Pragma: no-cache");
         header("Content-type: application/json");
         
-		$this->load->auto('store/product');
-		
-		if (isset($this->request->post['coupon_product'])) {
-			$products = $this->request->post['coupon_product'];
-		} else {
-			$products = array();
-		}
-	
-		$product_data = array();
-		
-		foreach ($products as $product_id) {
-			$product_info = $this->modelProduct->getProduct($product_id);
-			
-			if ($product_info) {
-				$product_data[] = array(
-					'product_id' => $product_info['product_id'],
-					'name'       => $product_info['name'],
-					'model'      => $product_info['model']
-				);
-			}
-		}
-		
-		$this->load->library('json');
-		
-		$this->response->setOutput(Json::encode($product_data));
-	}
-
+        if ($this->request->hasQuery('coupon_id')) {
+            $rows = $this->modelCoupon->getCouponProducts($this->request->getQuery('coupon_id'));
+            $products_by_coupon = array();
+            foreach ($rows as $row) {
+                $products_by_coupon[] = $row['product_id'];
+            }
+        }
+        $cache = $this->cache->get("products.for.coupon.form");
+        if ($cache) {
+            $products = unserialize($cache);
+        } else {
+            $model = $this->modelProduct->getAll();
+            $products = $model->obj;
+            $this->cache->set("products.for.coupon.form",serialize($products));
+        }
+        
+        $this->data['Image'] = new NTImage();
+        $this->data['Url'] = new Url;
+        
+        $output = array();
+        
+        foreach ($products as $product) {
+            if (!empty($products_by_coupon) && in_array($product->product_id,$products_by_coupon)) {
+                $output[] = array(
+                    'product_id'=>$product->product_id,
+                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
+                    'pname'     =>$product->pname,
+                    'class'     =>'added',
+                    'value'     =>1
+                );
+            } else {
+                $output[] = array(
+                    'product_id'=>$product->product_id,
+                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
+                    'pname'     =>$product->pname,
+                    'class'     =>'add',
+                    'value'     =>0
+                );
+            }
+        }
+        $this->load->auto('json');
+        $this->response->setOutput(Json::encode($output), $this->config->get('config_compression'));
+            
+     }
   	/**
   	 * ControllerSaleCoupon::validateDelete()
   	 * 

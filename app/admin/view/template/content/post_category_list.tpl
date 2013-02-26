@@ -4,7 +4,7 @@
     <div class="header">
         <h1><?php echo $heading_title; ?></h1>
         <div class="buttons">
-            <a  onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Categor&iacute;a</a>
+            <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Categor&iacute;a</a>
         </div>
                   </div>      
         <div class="clear"></div><br />

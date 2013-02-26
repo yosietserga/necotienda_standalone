@@ -1,23 +1,20 @@
-<select name="" onchange="">
-    <option value="">Procesamiento en lote, selecciona una opci&oacute;n</option>
-    <option value="">Editar los productos seleccionados</option>
-    <option value="">Agregar a una categor&iacute;a</option>
-    <option value="">Comparar los productos seleccionados</option>
-    <option value="">Duplicar los productos seleccionados</option>
-    <option value="">Activar los productos seleccionados</option>
-    <option value="">Desactivar los productos seleccionados</option>
-    <option value="">Eliminar los productos seleccionados</option>
+<select id="batch">
+    <option value="">Procesamiento en lote</option>
+    <!--
+    <option value="editAll">Editar</option>
+    <option value="addToList">Agregar a una lista</option>
+    -->
+    <option value="deleteAll">Eliminar</option>
 </select>
-
+<a href="#" title="Ejecutar acci&oacute;n por lote" onclick="if ($('#batch').val().length <= 0) { return false; } else { window[$('#batch').val()](); return false;}" style="margin-left: 10px;font-size: 10px;">[ Ejecutar ]</a>
 <div class="clear"></div><br />
-
 <div class="pagination"><?php echo $pagination; ?></div>
 <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
     <table id="list">
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'pd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_name; ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'pd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_product; ?></a></th>
                 <th><a onclick="$('#gridWrapper').load('<?php echo $sort_author; ?>')"<?php if ($sort == 'r.author') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_author; ?></a></th>
                 <th><a onclick="$('#gridWrapper').load('<?php echo $sort_rating; ?>')"<?php if ($sort == 'r.rating') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_rating; ?></a></th>
                 <th><a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"<?php if ($sort == 'r.status') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_status; ?></a></th>
@@ -30,7 +27,7 @@
             <?php foreach ($reviews as $review) { ?>
             <tr id="tr_<?php echo $review['review_id']; ?>">
                 <td><input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $review['review_id']; ?>" <?php if ($review['selected']) { ?>checked="checked"<?php } ?>/></td>
-                <td><a href="<?php echo $review['product_url']; ?>" ><?php echo $review['name']; ?></a></td>
+                <td><a href="<?php echo $review['product_url']; ?>" target="_blank"><?php echo $review['name']; ?></a></td>
                 <td><?php echo $review['author']; ?></td>
                 <td><?php echo $review['rating']; ?></td>
                 <td><?php echo $review['status']; ?></td>

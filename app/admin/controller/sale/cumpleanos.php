@@ -56,9 +56,9 @@ class ControllerSaleCumpleanos extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("sale/cumpleanos/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("sale/cumpleanos/eliminar") ."',{
                             id:e
                         },

@@ -1,6 +1,6 @@
 <?php
 define('PACKAGE','standalone');
-define('VERSION','2.0.1');
+define('VERSION','2.0.0');
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app/admin/config.php');
 require_once(DIR_SYSTEM . 'startup.php');
 

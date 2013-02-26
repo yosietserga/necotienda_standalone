@@ -4,9 +4,7 @@
         <div class="header">
             <h1><?php echo $heading_title; ?></h1>
             <div class="buttons">
-                <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Producto</a>
-                <a onclick="location = '<?php echo $import; ?>'" class="button">Importar</a>
-                <a onclick="location = '<?php echo $export; ?>'" class="button">Exportar</a>
+                <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a>
             </div>
         </div>    
           
@@ -27,7 +25,12 @@
                 
                 <div class="row">
                     <label>Ordernar Por:</label>
-                    <input type="text" name="order" value="" />
+                    <select name="sort">
+                        <option value="">Selecciona un campo</option>
+                        <option value="cd.name">Nombre del Cup&oacute;n</option>
+                        <option value="c.sort_order">Posici&oacute;n</option>
+                        <option value="c.date_added">Fecha cuando se cre&oacute;</option>
+                    </select>
                 </div>
             </div>
             
@@ -42,7 +45,14 @@
                 </div>
                 <div class="row">
                     <label>Mostrar:</label>
-                    <input type="number" name="limit" value="" />
+                    <select name="limit">
+                        <option value="">Selecciona una cantidad</option>
+                        <option value="10">10 Resultados por p&aacute;gina</option>
+                        <option value="25">25 Resultados por p&aacute;gina</option>
+                        <option value="50">50 Resultados por p&aacute;gina</option>
+                        <option value="100">100 Resultados por p&aacute;gina</option>
+                        <option value="150">150 Resultados por p&aacute;gina</option>
+                    </select>
                 </div>
             </div>
                         

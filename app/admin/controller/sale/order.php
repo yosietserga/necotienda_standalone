@@ -137,8 +137,6 @@ class ControllerSaleOrder extends Controller {
 			$this->data['success'] = '';
 		}
 
-    	$this->data['order_statuses'] = $this->modelOrderstatus->getOrderStatuses();
-				
         // SCRIPTS
         $scripts[] = array('id'=>'orderList','method'=>'function','script'=>
             "function borrar() {
@@ -147,9 +145,9 @@ class ControllerSaleOrder extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("sale/order/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("sale/order/eliminar") ."',{
                             id:e
                         },
@@ -196,87 +194,29 @@ class ControllerSaleOrder extends Controller {
   	}
 	
   	public function grid() {
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-		
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'o.order_id';
-		}
-		
-		if (isset($this->request->get['order'])) {
-			$corder = $this->request->get['order'];
-		} else {
-			$corder = 'DESC';
-		}
-		
-		if (isset($this->request->get['filter_order_id'])) {
-			$filter_order_id = $this->request->get['filter_order_id'];
-		} else {
-			$filter_order_id = NULL;
-		}		
-		
-		if (isset($this->request->get['filter_name'])) {
-			$filter_name = $this->request->get['filter_name'];
-		} else {
-			$filter_name = NULL;
-		}
-
-		if (isset($this->request->get['filter_order_status_id'])) {
-			$filter_order_status_id = $this->request->get['filter_order_status_id'];
-		} else {
-			$filter_order_status_id = NULL;
-		}
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$filter_date_added = $this->request->get['filter_date_added'];
-		} else {
-			$filter_date_added = NULL;
-		}
-
-		if (isset($this->request->get['filter_total'])) {
-			$filter_total = $this->request->get['filter_total'];
-		} else {
-			$filter_total = NULL;
-		}		
+		$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
+		$filter_order_id = isset($this->request->get['filter_order_id']) ? $this->request->get['filter_order_id'] : null;
+		$filter_order_status_id = isset($this->request->get['filter_order_status_id']) ? $this->request->get['filter_order_status_id'] : null;
+		$filter_total = isset($this->request->get['filter_total']) ? $this->request->get['filter_total'] : null;
+		$filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
+		$filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
+		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'o.order_id';
+		$corder = isset($this->request->get['order']) ? $this->request->get['order'] : 'DESC';
+		$limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
 		
 		$url = '';
-				
-		if (isset($this->request->get['filter_order_id'])) {
-			$url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
-		}
-		
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . $this->request->get['filter_name'];
-		}
-
-		if (isset($this->request->get['filter_order_status_id'])) {
-			$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
-		}
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-
-		if (isset($this->request->get['filter_total'])) {
-			$url .= '&filter_total=' . $this->request->get['filter_total'];
-		}
-								
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['corder'])) {
-			$url .= '&corder=' . $this->request->get['corder'];
-		}
+			
+		if (isset($this->request->get['filter_name'])) { $url .= '&filter_name=' . $this->request->get['filter_name']; } 
+		if (isset($this->request->get['filter_order_id'])) { $url .= '&filter_order_id=' . $this->request->get['filter_order_id']; } 
+		if (isset($this->request->get['filter_order_status_id'])) {$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];} 
+		if (isset($this->request->get['filter_total'])) { $url .= '&filter_total=' . $this->request->get['filter_total']; }
+		if (isset($this->request->get['filter_date_start'])) { $url .= '&filter_date_start=' . $this->request->get['filter_date_start']; }
+		if (isset($this->request->get['filter_date_end'])) { $url .= '&filter_date_end=' . $this->request->get['filter_date_end']; }
+		if (isset($this->request->get['page'])) { $url .= '&page=' . $this->request->get['page']; }
+		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
+		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
+		if (!empty($this->request->get['limit'])) { $url .= '&limit=' . $this->request->get['limit']; }
 
 		$this->data['orders'] = array();
 
@@ -284,18 +224,19 @@ class ControllerSaleOrder extends Controller {
 			'filter_order_id'        => $filter_order_id,
 			'filter_name'	         => $filter_name, 
 			'filter_order_status_id' => $filter_order_status_id, 
-			'filter_date_added'      => $filter_date_added,
+			'filter_date_start'      => $filter_date_start,
+			'filter_date_end'        => $filter_date_end,
 			'filter_total'           => $filter_total,
 			'sort'                   => $sort,
 			'order'                  => $corder,
-			'start'                  => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit'                  => $this->config->get('config_admin_limit')
+			'start'                  => ($page - 1) * $limit,
+			'limit'                  => $limit
 		);
 		
 		$order_total = $this->modelOrder->getTotalOrders($data);
-
 		$results = $this->modelOrder->getOrders($data);
- 
+    	$this->data['order_statuses'] = $this->modelOrderstatus->getOrderStatuses();
+				
     	foreach ($results as $result) {
 			
 			$action = array(
@@ -320,28 +261,28 @@ class ControllerSaleOrder extends Controller {
             );
             
 			$this->data['orders'][] = array(
-				'order_id'   => $result['order_id'],
-				'name'       => $result['name'],
-				'status'     => $result['status'],                
-				'invoice_id'   => $result['invoice_prefix'].$result['invoice_id'],
-				'store_name'     => $result['store_name'],
-				'store_url'   => $result['store_url'],
-				'telephone'       => $result['telephone'],
-				'fax'     => $result['fax'],
-				'email'   => $result['email'],
-				'shipping_address'       => $result['shipping_address_1'].", ".$result['shipping_city'].". ".$result['shipping_zone']." - ".$result['shipping_country'],
-				'shipping_method'     => $result['shipping_method'],
+				'order_id'          => $result['order_id'],
+				'name'              => $result['name'],
+				'status'            => $result['status'],                
+				'invoice_id'        => $result['invoice_prefix'].$result['invoice_id'],
+				'store_name'        => $result['store_name'],
+				'store_url'         => $result['store_url'],
+				'telephone'         => $result['telephone'],
+				'fax'               => $result['fax'],
+				'email'             => $result['email'],
+				'shipping_address'  => $result['shipping_address_1'].", ".$result['shipping_city'].". ".$result['shipping_zone']." - ".$result['shipping_country'],
+				'shipping_method'   => $result['shipping_method'],
 				'payment_address'   => $result['payment_address_1'].", ".$result['payment_city'].". ".$result['payment_zone']." - ".$result['payment_country'],
-				'payment_method'       => $result['payment_method'],
-				'currency'     => $result['currency'],
-				'ip'   => $result['ip'],                
-				'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-				'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
-				'fdate_added' => $result['date_added'],
-				'fdate_modified' => $result['date_modified'],
-				'total'      => $this->currency->format($result['total'], $result['currency'], $result['value']),
-				'selected'   => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']),
-				'action'     => $action
+				'payment_method'    => $result['payment_method'],
+				'currency'          => $result['currency'],
+				'ip'                => $result['ip'],                
+				'date_added'        => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+				'date_modified'     => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
+				'fdate_added'       => $result['date_added'],
+				'fdate_modified'    => $result['date_modified'],
+				'total'             => $this->currency->format($result['total'], $result['currency'], $result['value']),
+				'selected'          => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']),
+				'action'            => $action
 			);
 		}		
         
@@ -357,25 +298,13 @@ class ControllerSaleOrder extends Controller {
 
 		$url = '';
 
-		if (isset($this->request->get['filter_order_id'])) {
-			$url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
-		}
-		
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . $this->request->get['filter_name'];
-		}
-
-		if (isset($this->request->get['filter_order_status_id'])) {
-			$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
-		}
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-
-		if (isset($this->request->get['filter_total'])) {
-			$url .= '&filter_total=' . $this->request->get['filter_total'];
-		}
+		if (isset($this->request->get['filter_order_id'])) { $url .= '&filter_order_id=' . $this->request->get['filter_order_id']; }
+		if (isset($this->request->get['filter_name'])) { $url .= '&filter_name=' . $this->request->get['filter_name']; }
+		if (isset($this->request->get['filter_order_status_id'])) { $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id']; }
+		if (isset($this->request->get['filter_date_start'])) { $url .= '&filter_date_start=' . $this->request->get['filter_date_start']; }
+		if (isset($this->request->get['filter_date_end'])) { $url .= '&filter_date_end=' . $this->request->get['filter_date_end']; }
+		if (isset($this->request->get['filter_total'])) { $url .= '&filter_total=' . $this->request->get['filter_total']; }
+		if (isset($this->request->get['page'])) { $url .= '&page=' . $this->request->get['page']; }
 		
 		if ($corder == 'ASC') {
 			$url .= '&order=DESC';
@@ -383,9 +312,6 @@ class ControllerSaleOrder extends Controller {
 			$url .= '&order=ASC';
 		}
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
 		
 		$this->data['sort_order'] = Url::createAdminUrl('sale/order/grid') . '&sort=o.order_id' . $url;
 		$this->data['sort_name'] = Url::createAdminUrl('sale/order/grid') . '&sort=name' . $url;
@@ -395,35 +321,17 @@ class ControllerSaleOrder extends Controller {
 		
 		$url = '';
 
-		if (isset($this->request->get['filter_order_id'])) {
-			$url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
-		}
-		
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . $this->request->get['filter_name'];
-		}
-
-		if (isset($this->request->get['filter_order_status_id'])) {
-			$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
-		}
-
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-
-		if (isset($this->request->get['filter_total'])) {
-			$url .= '&filter_total=' . $this->request->get['filter_total'];
-		}
-		
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-												
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		if (isset($this->request->get['filter_order_id'])) { $url .= '&filter_order_id=' . $this->request->get['filter_order_id']; }
+		if (isset($this->request->get['filter_name'])) { $url .= '&filter_name=' . $this->request->get['filter_name']; }
+		if (isset($this->request->get['filter_order_status_id'])) { $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id']; }
+		if (isset($this->request->get['filter_date_added'])) { $url .= '&filter_date_added=' . $this->request->get['filter_date_added']; }
+		if (isset($this->request->get['filter_total'])) { $url .= '&filter_total=' . $this->request->get['filter_total']; }
+		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
+		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
 
 		$pagination = new Pagination();
+		$pagination->ajax = true;
+		$pagination->ajaxTarget = "gridWrapper";
 		$pagination->total = $order_total;
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
@@ -447,116 +355,81 @@ class ControllerSaleOrder extends Controller {
   	}
 	
   	public function getForm() {
-		if (isset($this->request->get['order_id'])) {
-			$order_id = $this->request->get['order_id'];
-		} else {
-			$order_id = 0;
-		}
-		
-		$order_info = $this->modelOrder->getOrder($order_id);
+		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
+        
+        if ($order_id) {
+            $order_info = $this->modelOrder->getOrder($order_id);
+        }
 		
 		if ($order_info) {
 			$this->document->title = $this->language->get('heading_title');
 			
 			$this->data['heading_title'] = $this->language->get('heading_title');
 			
-			$this->data['text_wait'] = $this->language->get('text_wait');
-			$this->data['text_none'] = $this->language->get('text_none');
-			$this->data['text_default'] = $this->language->get('text_default');
+			$this->data['text_wait']         = $this->language->get('text_wait');
+			$this->data['text_none']         = $this->language->get('text_none');
+			$this->data['text_default']      = $this->language->get('text_default');
 			
-			$this->data['column_product'] = $this->language->get('column_product');
-			$this->data['column_model'] = $this->language->get('column_model');
-			$this->data['column_quantity'] = $this->language->get('column_quantity');
-			$this->data['column_price'] = $this->language->get('column_price');
-			$this->data['column_total'] = $this->language->get('column_total');
-			$this->data['column_download'] = $this->language->get('column_download');
-			$this->data['column_filename'] = $this->language->get('column_filename');
-			$this->data['column_remaining'] = $this->language->get('column_remaining');
+			$this->data['column_product']    = $this->language->get('column_product');
+			$this->data['column_model']      = $this->language->get('column_model');
+			$this->data['column_quantity']   = $this->language->get('column_quantity');
+			$this->data['column_price']      = $this->language->get('column_price');
+			$this->data['column_total']      = $this->language->get('column_total');
+			$this->data['column_download']   = $this->language->get('column_download');
+			$this->data['column_filename']   = $this->language->get('column_filename');
+			$this->data['column_remaining']  = $this->language->get('column_remaining');
 			$this->data['column_date_added'] = $this->language->get('column_date_added');
-			$this->data['column_status'] = $this->language->get('column_status');
-			$this->data['column_notify'] = $this->language->get('column_notify');
-			$this->data['column_comment'] = $this->language->get('column_comment');
+			$this->data['column_status']     = $this->language->get('column_status');
+			$this->data['column_notify']     = $this->language->get('column_notify');
+			$this->data['column_comment']    = $this->language->get('column_comment');
 			
-			$this->data['entry_order_id'] = $this->language->get('entry_order_id');
-			$this->data['entry_invoice_id'] = $this->language->get('entry_invoice_id');
-			$this->data['entry_name'] = $this->language->get('entry_name');
-			$this->data['entry_customer'] = $this->language->get('entry_customer');
+			$this->data['entry_order_id']    = $this->language->get('entry_order_id');
+			$this->data['entry_invoice_id']  = $this->language->get('entry_invoice_id');
+			$this->data['entry_name']        = $this->language->get('entry_name');
+			$this->data['entry_customer']    = $this->language->get('entry_customer');
 			$this->data['entry_customer_group'] = $this->language->get('entry_customer_group');
-			$this->data['entry_firstname'] = $this->language->get('entry_firstname');
-			$this->data['entry_lastname'] = $this->language->get('entry_lastname');
-			$this->data['entry_email'] = $this->language->get('entry_email');
-			$this->data['entry_ip'] = $this->language->get('entry_ip');
-			$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-			$this->data['entry_fax'] = $this->language->get('entry_fax');			
-			$this->data['entry_store_name'] = $this->language->get('entry_store_name');
-			$this->data['entry_store_url'] = $this->language->get('entry_store_url');
-			$this->data['entry_date_added'] = $this->language->get('entry_date_added');
-			$this->data['entry_comment'] = $this->language->get('entry_comment');
+			$this->data['entry_firstname']   = $this->language->get('entry_firstname');
+			$this->data['entry_lastname']    = $this->language->get('entry_lastname');
+			$this->data['entry_email']       = $this->language->get('entry_email');
+			$this->data['entry_ip']          = $this->language->get('entry_ip');
+			$this->data['entry_telephone']   = $this->language->get('entry_telephone');
+			$this->data['entry_fax']         = $this->language->get('entry_fax');			
+			$this->data['entry_store_name']  = $this->language->get('entry_store_name');
+			$this->data['entry_store_url']   = $this->language->get('entry_store_url');
+			$this->data['entry_date_added']  = $this->language->get('entry_date_added');
+			$this->data['entry_comment']     = $this->language->get('entry_comment');
 			$this->data['entry_shipping_method'] = $this->language->get('entry_shipping_method');
 			$this->data['entry_payment_method'] = $this->language->get('entry_payment_method');
-			$this->data['entry_total'] = $this->language->get('entry_total');
-			$this->data['entry_order_status'] = $this->language->get('entry_order_status');
-			$this->data['entry_company'] = $this->language->get('entry_company');
-			$this->data['entry_address_1'] = $this->language->get('entry_address_1');
-			$this->data['entry_address_2'] = $this->language->get('entry_address_2');
-			$this->data['entry_city'] = $this->language->get('entry_city');
-			$this->data['entry_postcode'] = $this->language->get('entry_postcode');
-			$this->data['entry_zone'] = $this->language->get('entry_zone');
-			$this->data['entry_zone_code'] = $this->language->get('entry_zone_code');
-			$this->data['entry_country'] = $this->language->get('entry_country');
-			$this->data['entry_status'] = $this->language->get('entry_status');
-			$this->data['entry_notify'] = $this->language->get('entry_notify');
-			$this->data['entry_append'] = $this->language->get('entry_append');
+			$this->data['entry_total']       = $this->language->get('entry_total');
+			$this->data['entry_order_status']= $this->language->get('entry_order_status');
+			$this->data['entry_company']     = $this->language->get('entry_company');
+			$this->data['entry_address_1']   = $this->language->get('entry_address_1');
+			$this->data['entry_address_2']   = $this->language->get('entry_address_2');
+			$this->data['entry_city']        = $this->language->get('entry_city');
+			$this->data['entry_postcode']    = $this->language->get('entry_postcode');
+			$this->data['entry_zone']        = $this->language->get('entry_zone');
+			$this->data['entry_zone_code']   = $this->language->get('entry_zone_code');
+			$this->data['entry_country']     = $this->language->get('entry_country');
+			$this->data['entry_status']      = $this->language->get('entry_status');
+			$this->data['entry_notify']      = $this->language->get('entry_notify');
+			$this->data['entry_append']      = $this->language->get('entry_append');
 			$this->data['entry_add_product'] = $this->language->get('entry_add_product');
 			
-			$this->data['button_invoice'] = $this->language->get('button_invoice');
-			$this->data['button_save'] = $this->language->get('button_save');
-			$this->data['button_cancel'] = $this->language->get('button_cancel');
-    		$this->data['button_generate'] = $this->language->get('button_generate');
-			$this->data['button_add_history'] = $this->language->get('button_add_history');
+			$this->data['button_invoice']    = $this->language->get('button_invoice');
+			$this->data['button_save']       = $this->language->get('button_save');
+			$this->data['button_cancel']     = $this->language->get('button_cancel');
+    		$this->data['button_generate']   = $this->language->get('button_generate');
+			$this->data['button_add_history']= $this->language->get('button_add_history');
+    		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+    		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+    		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
 		
-			$this->data['tab_order'] = $this->language->get('tab_order');
-			$this->data['tab_product'] = $this->language->get('tab_product');
-			$this->data['tab_history'] = $this->language->get('tab_history');
-			$this->data['tab_payment'] = $this->language->get('tab_payment');
-			$this->data['tab_shipping'] = $this->language->get('tab_shipping');
+			$this->data['tab_order']         = $this->language->get('tab_order');
+			$this->data['tab_product']       = $this->language->get('tab_product');
+			$this->data['tab_history']       = $this->language->get('tab_history');
+			$this->data['tab_payment']       = $this->language->get('tab_payment');
+			$this->data['tab_shipping']      = $this->language->get('tab_shipping');
 	
-			$this->data['token'] = $this->session->get('ukey');
-	
-			$url = '';
-	
-			if (isset($this->request->get['filter_order_id'])) {
-				$url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
-			}
-			
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . $this->request->get['filter_name'];
-			}
-	
-			if (isset($this->request->get['filter_order_status_id'])) {
-				$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
-			}
-	
-			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-			}
-	
-			if (isset($this->request->get['filter_total'])) {
-				$url .= '&filter_total=' . $this->request->get['filter_total'];
-			}
-						
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-	
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-	
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
 			$this->document->breadcrumbs = array();
 	
 			$this->document->breadcrumbs[] = array(
@@ -598,13 +471,13 @@ class ControllerSaleOrder extends Controller {
 			}
 			
 			// These only change for insert, not edit. To be added later
-			$this->data['ip'] = $order_info['ip'];
-			$this->data['store_name'] = $order_info['store_name'];
+			$this->data['ip']        = $order_info['ip'];
+			$this->data['store_name']= $order_info['store_name'];
 			$this->data['store_url'] = $order_info['store_url'];
-			$this->data['comment'] = nl2br($order_info['comment']);	
+			$this->data['comment']   = nl2br($order_info['comment']);	
 			$this->data['firstname'] = $order_info['firstname'];	
-			$this->data['lastname'] = $order_info['lastname'];	
-			$this->data['company'] = $order_info['payment_company'];
+			$this->data['lastname']  = $order_info['lastname'];	
+			$this->data['company']   = $order_info['payment_company'];
 			//
 			
 						
@@ -621,53 +494,41 @@ class ControllerSaleOrder extends Controller {
 			} else {
 				$this->data['customer_group'] = '';
 			}
-
-			if (isset($this->request->post['email'])) {
-				$this->data['email'] = $this->request->post['email'];
-			} elseif (isset($order_info['email'])) {
-				$this->data['email'] = $order_info['email'];
-			} else {
-				$this->data['email'] = '';
-			}
-			
-			if (isset($this->request->post['telephone'])) {
-				$this->data['telephone'] = $this->request->post['telephone'];
-			} elseif (isset($order_info['telephone'])) {
-				$this->data['telephone'] = $order_info['telephone'];
-			} else {
-				$this->data['telephone'] = '';
-			}
-			
-			if (isset($this->request->post['fax'])) {
-				$this->data['fax'] = $this->request->post['fax'];
-			} elseif (isset($order_info['fax'])) {
-				$this->data['fax'] = $order_info['fax'];
-			} else {
-				$this->data['fax'] = '';
-			}
-			
+            
+            $this->setvar('email',$order_info,'');
+            $this->setvar('telephone',$order_info,'');
+            $this->setvar('fax',$order_info,'');
+            $this->setvar('shipping_method',$order_info,'');
+            $this->setvar('shipping_firstname',$order_info,'');
+            $this->setvar('shipping_lastname',$order_info,'');
+            $this->setvar('shipping_company',$order_info,'');
+            $this->setvar('shipping_address_1',$order_info,'');
+            $this->setvar('shipping_address_2',$order_info,'');
+            $this->setvar('shipping_city',$order_info,'');
+            $this->setvar('shipping_postcode',$order_info,'');
+            $this->setvar('shipping_zone',$order_info,'');
+            $this->setvar('shipping_zone_id',$order_info,'');
+            $this->setvar('shipping_country',$order_info,'');
+            $this->setvar('shipping_country_id',$order_info,'');
+            $this->setvar('payment_method',$order_info,'');
+            $this->setvar('payment_firstname',$order_info,'');
+            $this->setvar('payment_lastname',$order_info,'');
+            $this->setvar('payment_company',$order_info,'');
+            $this->setvar('payment_address_1',$order_info,'');
+            $this->setvar('payment_address_2',$order_info,'');
+            $this->setvar('payment_city',$order_info,'');
+            $this->setvar('payment_postcode',$order_info,'');
+            $this->setvar('payment_zone',$order_info,'');
+            $this->setvar('payment_zone_id',$order_info,'');
+            $this->setvar('payment_country',$order_info,'');
+            $this->setvar('payment_country_id',$order_info,'');
+            
 			if (isset($this->request->post['date_added'])) {
 				$this->data['date_added'] = $this->request->post['date_added'];
 			} elseif (isset($order_info['date_added'])) {
 				$this->data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added'])); 
 			} else {
 				$this->data['date_added'] = date($this->language->get('date_format_short'), time()); 
-			}
-			
-			if (isset($this->request->post['shipping_method'])) {
-				$this->data['shipping_method'] = $this->request->post['shipping_method'];
-			} elseif (isset($order_info['shipping_method'])) {
-				$this->data['shipping_method'] = $order_info['shipping_method'];
-			} else {
-				$this->data['shipping_method'] = '';
-			}
-			
-			if (isset($this->request->post['payment_method'])) {
-				$this->data['payment_method'] = $this->request->post['payment_method'];
-			} elseif (isset($order_info['payment_method'])) {
-				$this->data['payment_method'] = $order_info['payment_method'];
-			} else {
-				$this->data['payment_method'] = '';
 			}
 			
 			// Not Shown variable, but needed for totals
@@ -700,186 +561,10 @@ class ControllerSaleOrder extends Controller {
 				$this->data['total'] = '';
 			}
 			
-			if (isset($this->request->post['shipping_firstname'])) {
-				$this->data['shipping_firstname'] = $this->request->post['shipping_firstname'];
-			} elseif (isset($order_info['shipping_firstname'])) {
-				$this->data['shipping_firstname'] = $order_info['shipping_firstname'];
-			} else {
-				$this->data['shipping_firstname'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_lastname'])) {
-				$this->data['shipping_lastname'] = $this->request->post['shipping_lastname'];
-			} elseif (isset($order_info['shipping_lastname'])) {
-				$this->data['shipping_lastname'] = $order_info['shipping_lastname'];
-			} else {
-				$this->data['shipping_lastname'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_company'])) {
-				$this->data['shipping_company'] = $this->request->post['shipping_company'];
-			} elseif (isset($order_info['shipping_company'])) {
-				$this->data['shipping_company'] = $order_info['shipping_company'];
-			} else {
-				$this->data['shipping_company'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_address_1'])) {
-				$this->data['shipping_address_1'] = $this->request->post['shipping_address_1'];
-			} elseif (isset($order_info['shipping_address_1'])) {
-				$this->data['shipping_address_1'] = $order_info['shipping_address_1'];
-			} else {
-				$this->data['shipping_address_1'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_address_2'])) {
-				$this->data['shipping_address_2'] = $this->request->post['shipping_address_2'];
-			} elseif (isset($order_info['shipping_address_2'])) {
-				$this->data['shipping_address_2'] = $order_info['shipping_address_2'];
-			} else {
-				$this->data['shipping_address_2'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_city'])) {
-				$this->data['shipping_city'] = $this->request->post['shipping_city'];
-			} elseif (isset($order_info['shipping_city'])) {
-				$this->data['shipping_city'] = $order_info['shipping_city'];
-			} else {
-				$this->data['shipping_city'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_postcode'])) {
-				$this->data['shipping_postcode'] = $this->request->post['shipping_postcode'];
-			} elseif (isset($order_info['shipping_postcode'])) {
-				$this->data['shipping_postcode'] = $order_info['shipping_postcode'];
-			} else {
-				$this->data['shipping_postcode'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_zone'])) {
-				$this->data['shipping_zone'] = $this->request->post['shipping_zone'];
-			} elseif (isset($order_info['shipping_zone'])) {
-				$this->data['shipping_zone'] = $order_info['shipping_zone'];
-			} else {
-				$this->data['shipping_zone'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_zone_id'])) {
-				$this->data['shipping_zone_id'] = $this->request->post['shipping_zone_id'];
-			} elseif (isset($order_info['shipping_zone_id'])) {
-				$this->data['shipping_zone_id'] = $order_info['shipping_zone_id'];
-			} else {
-				$this->data['shipping_zone_id'] = '';
-			}
-			
-			if (isset($this->request->post['shipping_country'])) {
-				$this->data['shipping_country'] = $this->request->post['shipping_country'];
-			} elseif (isset($order_info['shipping_country'])) {
-				$this->data['shipping_country'] = $order_info['shipping_country'];
-			} else {
-				$this->data['shipping_country'] = '';
-			}
-
-			if (isset($this->request->post['shipping_country_id'])) {
-				$this->data['shipping_country_id'] = $this->request->post['shipping_country_id'];
-			} elseif (isset($order_info['shipping_country_id'])) {
-				$this->data['shipping_country_id'] = $order_info['shipping_country_id'];
-			} else {
-				$this->data['shipping_country_id'] = '';
-			}
-			
-			if (isset($this->request->post['payment_firstname'])) {
-				$this->data['payment_firstname'] = $this->request->post['payment_firstname'];
-			} elseif (isset($order_info['payment_firstname'])) {
-				$this->data['payment_firstname'] = $order_info['payment_firstname'];
-			} else {
-				$this->data['payment_firstname'] = '';
-			}
-			
-			if (isset($this->request->post['payment_lastname'])) {
-				$this->data['payment_lastname'] = $this->request->post['payment_lastname'];
-			} elseif (isset($order_info['payment_lastname'])) {
-				$this->data['payment_lastname'] = $order_info['payment_lastname'];
-			} else {
-				$this->data['payment_lastname'] = '';
-			}
-			
-			if (isset($this->request->post['payment_company'])) {
-				$this->data['payment_company'] = $this->request->post['payment_company'];
-			} elseif (isset($order_info['payment_company'])) {
-				$this->data['payment_company'] = $order_info['payment_company'];
-			} else {
-				$this->data['payment_company'] = '';
-			}
-			
-			if (isset($this->request->post['payment_address_1'])) {
-				$this->data['payment_address_1'] = $this->request->post['payment_address_1'];
-			} elseif (isset($order_info['payment_address_1'])) {
-				$this->data['payment_address_1'] = $order_info['payment_address_1'];
-			} else {
-				$this->data['payment_address_1'] = '';
-			}
-			
-			if (isset($this->request->post['payment_address_2'])) {
-				$this->data['payment_address_2'] = $this->request->post['payment_address_2'];
-			} elseif (isset($order_info['payment_address_2'])) {
-				$this->data['payment_address_2'] = $order_info['payment_address_2'];
-			} else {
-				$this->data['payment_address_2'] = '';
-			}
-			
-			if (isset($this->request->post['payment_city'])) {
-				$this->data['payment_city'] = $this->request->post['payment_city'];
-			} elseif (isset($order_info['payment_city'])) {
-				$this->data['payment_city'] = $order_info['payment_city'];
-			} else {
-				$this->data['payment_city'] = '';
-			}
-			
-			if (isset($this->request->post['payment_postcode'])) {
-				$this->data['payment_postcode'] = $this->request->post['payment_postcode'];
-			} elseif (isset($order_info['payment_postcode'])) {
-				$this->data['payment_postcode'] = $order_info['payment_postcode'];
-			} else {
-				$this->data['payment_postcode'] = '';
-			}
-			
-			if (isset($this->request->post['payment_zone'])) {
-				$this->data['payment_zone'] = $this->request->post['payment_zone'];
-			} elseif (isset($order_info['payment_zone'])) {
-				$this->data['payment_zone'] = $order_info['payment_zone'];
-			} else {
-				$this->data['payment_zone'] = '';
-			}
-			
-			if (isset($this->request->post['payment_zone_id'])) {
-				$this->data['payment_zone_id'] = $this->request->post['payment_zone_id'];
-			} elseif (isset($order_info['payment_zone_id'])) {
-				$this->data['payment_zone_id'] = $order_info['payment_zone_id'];
-			} else {
-				$this->data['payment_zone_id'] = '';
-			}
-			
-			if (isset($this->request->post['payment_country'])) {
-				$this->data['payment_country'] = $this->request->post['payment_country'];
-			} elseif (isset($order_info['payment_country'])) {
-				$this->data['payment_country'] = $order_info['payment_country'];
-			} else {
-				$this->data['payment_country'] = '';
-			}
-			
-			if (isset($this->request->post['payment_country_id'])) {
-				$this->data['payment_country_id'] = $this->request->post['payment_country_id'];
-			} elseif (isset($order_info['payment_country_id'])) {
-				$this->data['payment_country_id'] = $order_info['payment_country_id'];
-			} else {
-				$this->data['payment_country_id'] = '';
-			}
-			
-			$this->data['countries'] = $this->modelCountry->getCountries();
-			$this->data['categories'] = $this->modelCategory->getCategories(0);
-			$this->data['products'] = $this->modelProduct->getProducts();
-			$this->data['order_products'] = array();
+			$this->data['countries']     = $this->modelCountry->getCountries();
+			$this->data['categories']    = $this->modelCategory->getCategories(0);
+			$this->data['products']      = $this->modelProduct->getProducts();
+			$this->data['order_products']= array();
 			
 			if (isset($this->request->get['order_id'])) {
 				$order_products = $this->modelOrder->getOrderProducts($this->request->get['order_id']);
@@ -978,8 +663,101 @@ class ControllerSaleOrder extends Controller {
 				);
 			}
 			
-			$this->data['token'] = $this->session->get('ukey');
-			
+        $this->data['Url'] = new Url;
+		//TODO: cambiar la manera en la que se agregan productos al pedido #addProductsPanel
+        $scripts[] = array('id'=>'orderScripts','method'=>'ready','script'=>
+            "$('#addProductsWrapper').hide();
+            
+            $('#addProductsPanel').on('click',function(e){
+                var products = $('#addProductsWrapper').find('.row');
+                
+                if (products.length == 0) {
+                    $.getJSON('".Url::createAdminUrl("sale/order/products")."',
+                        {
+                            'order_id':'".$this->request->getQuery('order_id')."'
+                        }, function(data) {
+                            
+                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            
+                            $.each(data, function(i,item){
+                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                
+                            });
+                            
+                            $('#q').on('change',function(e){
+                                var that = this;
+                                var valor = $(that).val().toLowerCase();
+                                if (valor.length <= 0) {
+                                    $('#addProducts li').show();
+                                } else {
+                                    $('#addProducts li b').each(function(){
+                                        if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
+                                            $(this).closest('li').show();
+                                        } else {
+                                            $(this).closest('li').hide();
+                                        }
+                                    });
+                                }
+                            }); 
+                            
+                            $('li').on('click',function() {
+                                var b = $(this).find('b');
+                                if (b.hasClass('added')) {
+                                    b.removeClass('added').addClass('add');
+                                    $(this).find('input').val(0);
+                                } else {
+                                    b.removeClass('add').addClass('added');
+                                    $(this).find('input').val(1);
+                                }
+                            });
+                    });
+                }
+            });
+                
+            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
+            
+            $('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.vtabs_page').hide();
+            $('#tab_order').show();");
+            
+        $scripts[] = array('id'=>'orderFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }
+            
+            function showTab(a) {
+                $('.vtabs_page').hide();
+                $($(a).attr('data-target')).show();
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
 			$this->template = 'sale/order_form.tpl';
 			$this->children = array(
 				'common/header',	
@@ -1035,8 +813,13 @@ class ControllerSaleOrder extends Controller {
   	} 
 	
 	public function history() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+        header("Cache-Control: no-cache, must-revalidate"); 
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        
 		$this->language->load('sale/order');
-		
 		$this->load->auto('sale/order');
 		
 		$json = array();
@@ -1046,35 +829,19 @@ class ControllerSaleOrder extends Controller {
     	} else {
 			$this->modelOrder->addOrderHistory($this->request->get['order_id'], $this->request->post);
 			
-			$json['success'] = $this->language->get('text_success');
-			
-			$json['date_added'] = date($this->language->get('date_format_short'));
+			$json['success']     = $this->language->get('text_success');
+			$json['date_added']  = date($this->language->get('date_format_short'));
 
 			$this->load->auto('localisation/orderstatus');
 			
 			$order_status_info = $this->modelOrderstatus->getOrderStatus($this->request->post['order_status_id']);
 			
-			if ($order_status_info) {
-				$json['order_status'] = $order_status_info['name'];
-			} else {
-				$json['order_status'] = '';
-			}	
-			
-			if ($this->request->post['notify']) {
-				$json['notify'] = $this->language->get('text_yes');
-			} else {
-				$json['notify'] = $this->language->get('text_no');
-			}
-			
-			if (isset($this->request->post['comment'])) {
-				$json['comment'] = $this->request->post['comment'];
-			} else {
-				$json['comment'] = '';
-			}
+			$json['order_status'] = ($order_status_info) ? $order_status_info['name'] : '';
+			$json['notify'] = ($this->request->post['notify']) ? $this->language->get('text_yes') :  $this->language->get('text_no');
+			$json['comment'] = isset($this->request->post['comment']) ? $this->request->post['comment'] : '';
 		}
 			
 		$this->load->library('json');
-		
 		$this->response->setOutput(Json::encode($json));
   	} 
 	

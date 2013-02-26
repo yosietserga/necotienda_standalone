@@ -983,7 +983,7 @@ a, a:visited {
 	cursor: pointer;
 }
 img {border:0}
-
+ol {list-style:none}
 /* ==========  Numbers notifications  ========== */
 
 .numberTop, .numberMiddle, .numberLeft { text-align: center; display: inline-block; padding: 1px 5px; color: #fff; float: right; margin: 10px 15px 10px -5px; font-size: 11px; line-height: 14px;
@@ -1390,32 +1390,30 @@ ul.right {
 .vtabs {
 	width: 180px;
 	padding: 10px 0px;
-	min-height: 300px;
+	min-height: 500px;
+	height: auto;
 	float: left;
 	display: block;
-	border-right: 1px solid #DDDDDD;
+	border-right: 2px solid #000;
 }
 .vtabs a {
-	display: block;
-	float: left;
-	width: 150px;
 	margin-bottom: 5px;
-	clear: both;
-	border-top: 1px solid #DDDDDD;
-	border-left: 1px solid #DDDDDD;
-	border-bottom: 1px solid #DDDDDD;
-	background: #F7F7F7;
-	padding: 6px 14px 7px 15px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	font-weight: bold;
+    margin-right: 14px;
+	padding: 7px 14px 7px 15px;
+	background: rgba(0,0,0,0.8);
+	border: 1px solid #000;
+	border-right: none;
+	display: block;
+    float: right; 
+	width: 150px;
+    font: bold 13px Arial, Helvetica, sans-serif;
 	text-align: right;
 	text-decoration: none;
-	color: #000000;
+	color: #ddd;
 }
 .vtabs a.selected {
 	padding-right: 15px;
-	background: #FFFFFF;
+	background: #F3AD06;
 }
 .vtabs_page {
 	margin-left: 195px;
@@ -1983,6 +1981,13 @@ div.item div.actions {
 	
 /* Mobile Portrait Size */
 @media only screen and (min-width: 320px) and (max-width: 479px) {
+	#logo {display:none;}
+    .BigScreen {display:none}
+	.userNav ul li span { display: none; }
+	.userNav ul li { margin:5px;padding:0px; }
+	.userNav ul li img { padding: 10px 14px; margin: 0px; }
+	.userNav ul li ul { right: -3px; left: auto; }
+
     #login {width: 300px;}
     #login .box {width:90%;padding: 0px;}
     #login label {float:none;color:#fff}
@@ -1991,17 +1996,18 @@ div.item div.actions {
 	
 /* Old Mobiles */
 @media only screen and (max-width: 319px) {
+    .BigScreen {display:none}
     
-    #login {width: 220px;}
-    #login .box {width:90%;padding: 10px;}
-    #login label {float:none;color:#fff}
-    #login input {display:block;width:180px;float:none;}
-	
-	#logo {background:url(../image/logo-small.png) no-repeat;width:24px;height:24px;}
+	#logo {display:none;}
 	.userNav ul li { margin:5px;padding:0px; }
 	.userNav ul li span { display: none; }
 	.userNav ul li img { padding: 10px 4px; margin: 0px; }
 	.userNav ul li ul { right: -3px; left: auto; }
+	
+    #login {width: 220px;}
+    #login .box {width:90%;padding: 10px;}
+    #login label {float:none;color:#fff}
+    #login input {display:block;width:180px;float:none;}
 	
     .itemenu {margin:0px !important;padding:5px !important;}
     .itemenu span {display:none}

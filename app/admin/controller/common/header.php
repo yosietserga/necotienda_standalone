@@ -104,10 +104,8 @@ class ControllerCommonHeader extends Controller {
 			$this->data['create_product']            = Url::createAdminUrl('store/product/insert'); 
 			$this->data['create_product']            = Url::createAdminUrl('store/product/insert'); 
             
-            /*
             $this->load->auto("setting/store");
-            $this['stores'] = $this->modelStore->getStores();
-            */
+            $this->data['stores'] = $this->modelStore->getStores();
             
             $this->load->auto("sale/customer");
             $this->data['new_customers'] = $this->modelCustomer->getTotalCustomersAwaitingApproval();
@@ -121,7 +119,17 @@ class ControllerCommonHeader extends Controller {
             if (version_compare(VERSION,$update_info['version'],'<')) {
                 $this->data['msg'] = "Hay una nueva versi&oacute;n disponible, Para instalarla haz click <a href=\"". Url::createAdminUrl("tool/update") ."\" title=\"Actualizar\">aqu&iacute;</a>";
             }
-        
+            
+            if ($this->session->has('success')) {
+                $this->data['success'] = $this->session->get('success');
+                $this->session->clear('success');
+            }
+            
+            if ($this->session->has('error')) {
+                $this->data['error'] = $this->session->get('error');
+                $this->session->clear('error');
+            }
+            
 			$this->data['store']         = HTTP_CATALOG;
 			$this->data['home']          = Url::createAdminUrl('common/home'); 
 			$this->data['logout']        = Url::createAdminUrl('common/logout');

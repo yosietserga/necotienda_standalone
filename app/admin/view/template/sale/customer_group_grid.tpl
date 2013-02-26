@@ -1,29 +1,26 @@
-<select name="" onchange="">
-    <option value="">Procesamiento en lote, selecciona una opci&oacute;n</option>
-    <option value="">Editar los productos seleccionados</option>
-    <option value="">Agregar a una categor&iacute;a</option>
-    <option value="">Comparar los productos seleccionados</option>
-    <option value="">Duplicar los productos seleccionados</option>
-    <option value="">Activar los productos seleccionados</option>
-    <option value="">Desactivar los productos seleccionados</option>
-    <option value="">Eliminar los productos seleccionados</option>
+<select id="batch">
+    <option value="">Procesamiento en lote</option>
+    <!--
+    <option value="editAll">Editar</option>
+    <option value="addToList">Agregar a una lista</option>
+    -->
+    <option value="copyAll">Copiar</option>
+    <option value="deleteAll">Eliminar</option>
 </select>
-
+<a href="#" title="Ejecutar acci&oacute;n por lote" onclick="if ($('#batch').val().length <= 0) { return false; } else { window[$('#batch').val()](); return false;}" style="margin-left: 10px;font-size: 10px;">[ Ejecutar ]</a>
 <div class="clear"></div><br />
-
 <div class="pagination"><?php echo $pagination; ?></div>
 <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
     <table id="list">
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><?php echo $column_image; ?></th>
                 <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'cd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_name; ?></a></th>
-                <th><?php echo $column_qty; ?></th>
-                <th><?php echo $column_orders; ?></th>
-                <th><?php echo $column_invoices; ?></th>
-                <th><?php echo $column_joins; ?></th>
-                <th><?php echo $column_comments; ?></th>
+                <th><?php echo $column_qty_customers; ?></th>
+                <th><?php echo $column_qty_orders; ?></th>
+                <th><?php echo $column_qty_invoices; ?></th>
+                <th><?php echo $column_qty_reviews; ?></th>
+                <th><?php echo $column_qty_references; ?></th>
                 <th><?php echo $column_action; ?></th>
             </tr>
         </thead>
@@ -33,11 +30,11 @@
             <tr id="tr_<?php echo $customer_group['customer_group_id']; ?>">
                 <td><input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $customer_group['customer_group_id']; ?>" <?php if ($customer_group['selected']) { ?>checked="checked"<?php } ?>/></td>
                 <td><?php echo $customer_group['name']; ?></td>
-                <td><?php echo $customer_group['cant_customers']; ?></td>
-                <td><?php echo $customer_group['cant_orders']; ?> - <?php echo $customer_group['total_orders']; ?></td>
-                <td><?php echo $customer_group['cant_invoices']; ?> - <?php echo $customer_group['total_invoices']; ?></td>
-                <td><?php echo $customer_group['cant_references']; ?> - <?php echo $customer_group['total_references']; ?></td>
-                <td><?php echo $customer_group['cant_reviews']; ?> - <?php echo $customer_group['total_reviews']; ?></td>
+                <td><?php echo $customer_group['qty_customers']; ?></td>
+                <td><?php echo $customer_group['params']['qty_orders']; ?></td>
+                <td><?php echo $customer_group['params']['qty_invoices']; ?></td>
+                <td><?php echo $customer_group['params']['qty_reviews']; ?></td>
+                <td><?php echo $customer_group['params']['qty_references']; ?></td>
                 <td>
                 <?php foreach ($customer_group['action'] as $action) { ?>
                 <?php 
@@ -61,7 +58,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="9" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="4" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

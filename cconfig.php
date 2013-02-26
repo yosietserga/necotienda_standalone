@@ -18,4 +18,4 @@ define('DB_HOSTNAME',   'localhost');
 define('DB_USERNAME',   'root');
 define('DB_PASSWORD',   '');
 define('DB_DATABASE',   'nt_shop');
-define('DB_PREFIX',     'main_'); 
+define('DB_PREFIX',     'nts_'); 

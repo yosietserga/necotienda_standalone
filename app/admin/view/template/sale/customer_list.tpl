@@ -4,9 +4,7 @@
         <div class="header">
             <h1><?php echo $heading_title; ?></h1>
             <div class="buttons">
-                <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Producto</a>
-                <a onclick="location = '<?php echo $import; ?>'" class="button">Importar</a>
-                <a onclick="location = '<?php echo $export; ?>'" class="button">Exportar</a>
+                <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Nuevo</a>
             </div>
         </div>    
           
@@ -22,7 +20,7 @@
                     
                 <div class="row">
                     <label>Email del Cliente:</label>
-                    <input type="email" name="filter_email" value="" />
+                    <input type="text" name="filter_email" value="" />
                 </div>
                 
                 <div class="row">
@@ -58,7 +56,14 @@
                 
                 <div class="row">
                     <label>Mostrar:</label>
-                    <input type="number" name="limit" value="" />
+                    <select name="limit">
+                        <option value="">Selecciona una cantidad</option>
+                        <option value="10">10 Resultados por p&aacute;gina</option>
+                        <option value="25">25 Resultados por p&aacute;gina</option>
+                        <option value="50">50 Resultados por p&aacute;gina</option>
+                        <option value="100">100 Resultados por p&aacute;gina</option>
+                        <option value="150">150 Resultados por p&aacute;gina</option>
+                    </select>
                 </div>
             </div>
                         

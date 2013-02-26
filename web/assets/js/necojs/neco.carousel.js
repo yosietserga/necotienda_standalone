@@ -30,16 +30,6 @@
             pager:      {
                 classname:'neco-carousel-pager'
             },
-            addButton:  {
-                show: false,
-                classname: '',
-                text: 'Comprar'
-            },
-            seeButton:  {
-                show: false,
-                classname: '',
-                text: 'Ver Detalles'
-            },
             loading:    {
                 title:'Cargando...',
                 image:'../loader.gif',
@@ -47,7 +37,7 @@
             },
             error:      {
                 classname:'neco-carousel-error',
-                text:'Lo sentimos pero no se pudo cargar esta informaci\u00F3n'
+                text:'Lo sentimos pero no se pudo cargar esta informaci\u00F3n',
             },
             options:    {},
             create:     function(){},
@@ -149,54 +139,45 @@
                         var path = "";
                         name = (item.name.length > 14) ? item.name.substring(0,14) + "..." : name = item.name;
                         data.output+="<li id='neco-carousel-item-" + data.count + i + "'>";
+                        data.output+="<article>";
                         data.output+="<div>";
-                        data.output+="<a href='" + settings.baseUrl + "index.php?r=store/product&amp;product_id=" + item.product_id + "' title='" + item.name + "'>";
-                        data.output+="<b>" + name + "</b>";
-                        data.output+="</a>";
-                        data.output+="<div class='clear'></div>";
                         data.output+="<a href='" + settings.baseUrl + "index.php?r=store/product&amp;product_id=" + item.product_id + "' title='" + item.name + "'>";
                         data.output+="<img class='" + settings.image.classname + "' src='" + item.thumb + "' alt='" + item.name + "' title='" + item.name + "' width='" + settings.image.width + "' height='" + settings.image.height + "' />";
                         data.output+="</a>";
-                        
-                        if (settings.seeButton.show || settings.addButton.show) {
-                            data.output+="<div class='clear'></div>";
-                        }
-                        
-                        if (settings.seeButton.show) {
-                            data.output+="<a title='"+ item.name +"' class='button_see_small "+ settings.seeButton.classname +"' href='" + settings.baseUrl + "index.php?r=store/product&amp;product_id=" + item.product_id + "'>"+ settings.seeButton.text +"</a>";
-                        }
-                        
-                        if (settings.addButton.show) {
-                            data.output+="<a title='"+ item.name +"' class='button_add_small "+ settings.addButton.classname +"' href='" + settings.baseUrl + "index.php?r=checkout/cart&amp;product_id=" + item.product_id + "'>"+ settings.addButton.text +"</a>";
-                        }
-                        
                         data.output+="</div>";
+                        if (item.price) {
+                            data.output+="<b class=\"price\">" + item.price + "</b>";
+                        }
+                        data.output+="<br /><a href='" + settings.baseUrl + "index.php?r=store/product&amp;product_id=" + item.product_id + "' title='" + item.name + "'>";
+                        data.output+="<b>" + name + "</b>";
+                        data.output+="</a>";
+                        data.output+="</article>";
                         data.output+="</li>";
                     });
                     data.output+="</ul>";
                     data.output+="<div class='clearfix'></div>";
-                    data.output+="<a id='" + settings.prev.classname + "-" + data.count + "' class='" + settings.prev.classname + "'></a>";
-                    data.output+="<a id='" + settings.next.classname + "-" + data.count + "' class='" + settings.next.classname + "'></a>";
-                    data.output+="<div id='" + settings.pager.classname + "-" + data.count + "' class='" + settings.pager.classname + "'></div>";
+                    data.output+="<a id='" + settings.prev.classname + "-" + $(data.element).attr('id') + "' class='" + settings.prev.classname + "'></a>";
+                    data.output+="<a id='" + settings.next.classname + "-" + $(data.element).attr('id') + "' class='" + settings.next.classname + "'></a>";
+                    data.output+="<div id='" + settings.pager.classname + "-" + $(data.element).attr('id') + "' class='" + settings.pager.classname + "'></div>";
                     
                     $(data.container).html(data.output);
                     
                     if (helpers.count(settings.options)) {
                         if (!settings.options.hasOwnProperty("prev")) {
-                            settings.options.prev = "#" + settings.prev.classname + "-" + data.count;
+                            settings.options.prev = "#" + settings.prev.classname + "-" + $(data.element).attr('id');
                         }
                         if (!settings.options.hasOwnProperty("next")) {
-                            settings.options.next = "#" + settings.next.classname + "-" + data.count;
+                            settings.options.next = "#" + settings.next.classname + "-" + $(data.element).attr('id');
                         }
                         if (!settings.options.hasOwnProperty("pagination")) {
-                            settings.options.pagination = "#" + settings.pager.classname + "-" + data.count;
+                            settings.options.pagination = "#" + settings.pager.classname + "-" + $(data.element).attr('id');
                         }
                         $(data.container).find("ul").carouFredSel(settings.options);
                     } else {
                         $(data.container).find("ul").carouFredSel({
-                            prev:      "#" + settings.prev.classname + "-" + data.count,
-                            next:      "#" + settings.next.classname + "-" + data.count,
-                            pagination:"#" + settings.pager.classname + "-" + data.count
+                            prev:      "#" + settings.prev.classname + "-" + $(data.element).attr('id'),
+                            next:      "#" + settings.next.classname + "-" + $(data.element).attr('id'),
+                            pagination:"#" + settings.pager.classname + "-" + $(data.element).attr('id')
                         });  
                     }
                     

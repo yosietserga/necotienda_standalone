@@ -1,14 +1,4 @@
 <?php
-//-----------------------------------------------------------------
-// OpenCart Paymate Payment Module
-// Version: 1.0
-// Author: SuperJuice (Sam) (portions based on OpenCart GPL'd code)
-// Email: opencart@pixeldrift.net
-// Web: http://www.pixeldrift.net/opencart/
-//-----------------------------------------------------------------
-
-
-// Text
 $_['text_title'] = 'Tarjeta de Cr&eacute;dito / Tarjeta de D&eacute;bito (PayMate)';
 
 $_['text_unable'] = 'Unable to locate or update your order status';

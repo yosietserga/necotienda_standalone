@@ -375,6 +375,9 @@ class ControllerStoreManufacturer extends Controller {
   	 * @return void
   	 */
   	private function getForm() {
+  	 //TODO: condicionar el gestor de archivos para que solo permita seleccionar un (1) archivo de imagen
+     //TODO: crear funciones para seleccionar varias imagenes a la vez y asociarlas con objeto, asi no se tiene que seleccionar de una en una
+     //TODO: detectar los slugs que coincidan y agregarle un contador al final en caso de que hayan palabras claves ya creadas
     	$this->data['heading_title'] = $this->language->get('heading_title');
 
     	$this->data['text_enabled'] = $this->language->get('text_enabled');
@@ -396,7 +399,6 @@ class ControllerStoreManufacturer extends Controller {
 		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
 		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
 		$this->data['button_cancel']      = $this->language->get('button_cancel');
-    	$this->data['button_cancel'] = $this->language->get('button_cancel');
 	  
  		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
  		$this->data['error_name'] = ($this->error['name']) ? $this->error['name'] : '';

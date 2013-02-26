@@ -45,4 +45,25 @@ class ControllerModuleLatest extends Controller {
         require_once(DIR_CONTROLLER . "store/product_array.php");
         
     }
+    
+    public function carousel() {
+        $json = array();
+        $this->load->auto("store/product");
+        $this->load->auto('image');
+        $this->load->auto('json');
+        
+        $json['results'] = $this->modelProduct->getRandomProducts(40);
+        $width  = isset($_GET['width']) ? $_GET['width'] : 80;
+        $height = isset($_GET['height']) ? $_GET['height'] : 80;
+        foreach ($json['results'] as $k => $v) {
+            if (!file_exists(DIR_IMAGE . $v['image'])) $json['results'][$k]['image'] = HTTP_IMAGE ."no_image.jpg";
+            $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
+            $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+        }
+        
+        if (!count($json['results'])) $json['error'] = 1;
+        
+        $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
+    }
+    
 }

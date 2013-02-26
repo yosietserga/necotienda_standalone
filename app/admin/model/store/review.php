@@ -1,14 +1,21 @@
 <?php
 class ModelStoreReview extends Model {
 	public function addReview($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET 
+        author = '" . $this->db->escape($data['author']) . "', 
+        product_id = '" . (int)$data['product_id'] . "', 
+        text = '" . $this->db->escape(strip_tags($data['text'])) . "', 
+        rating = '" . (int)$data['rating'] . "', 
+        status = '1', 
+        date_added = NOW()");
+        return $this->db->getLastId();
 	}
 	
 	public function editReview($review_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = NOW() WHERE review_id = '" . (int)$review_id . "'");
 	}
 	
-	public function deleteReview($review_id) {
+	public function delete($review_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE review_id = '" . (int)$review_id . "'");
 	}
 	
@@ -19,7 +26,7 @@ class ModelStoreReview extends Model {
 	}
 
 	public function getReviews($data = array()) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "review r 
+		$sql = "SELECT *, r.status AS rstatus, r.date_added AS created FROM " . DB_PREFIX . "review r 
             LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.product_id = pd.product_id) 
             LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id)";																					
 			if (isset($data['filter_author'])) {

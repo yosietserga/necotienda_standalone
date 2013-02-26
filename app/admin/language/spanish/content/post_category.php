@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']     = 'Categor&iacute;as de Art&iacute;los';
+$_['heading_title']     = 'Categor&iacute;as de Art&iacute;culos';
 
 // Text
 $_['text_success']      = 'Se ha actualizado satisfactoriamente!';

@@ -4,9 +4,7 @@
         <div class="header">
             <h1><?php echo $heading_title; ?></h1>
             <div class="buttons">
-                <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Producto</a>
-                <a onclick="location = '<?php echo $import; ?>'" class="button">Importar</a>
-                <a onclick="location = '<?php echo $export; ?>'" class="button">Exportar</a>
+            <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a>
             </div>
         </div>    
           
@@ -16,13 +14,13 @@
         <form action="<?php echo $search; ?>" method="post" enctype="multipart/form-data" id="formFilter">        
             <div class="grid_11">
                 <div class="row">       
-                    <label>T&iacute;tulo de la Art&iacute;culo:</label>
+                    <label>T&iacute;tulo del Art&iacute;culo:</label>
                     <input type="text" name="filter_name" value="" />
                 </div>
                     
                 <div class="row">
-                    <label>T&iacute;tulo de la Art&iacute;culo Superior:</label>
-                    <input type="text" name="filter_product" value="" />
+                    <label>Pertenece a la Categor&iacute;a:</label>
+                    <input type="text" name="filter_category" value="" />
                 </div>
                 
                 <div class="row">

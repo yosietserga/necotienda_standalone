@@ -4,9 +4,8 @@
         <div class="header">
             <h1><?php echo $heading_title; ?></h1>
             <div class="buttons">
-                <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Producto</a>
-                <a onclick="location = '<?php echo $import; ?>'" class="button">Importar</a>
-                <a onclick="location = '<?php echo $export; ?>'" class="button">Exportar</a>
+                <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a>
+                <a onclick="location = '<?php echo $invoice; ?>'" class="button"><?php echo $button_invoices; ?></a>
             </div>
         </div>    
           

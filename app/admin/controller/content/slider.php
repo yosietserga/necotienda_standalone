@@ -217,9 +217,9 @@ class ControllerContentSlider extends Controller {
                     $('#gridWrapper').load('". Url::createAdminUrl("content/slider/grid") ."');
                 });
             } 
-            function eliminar(e) {    
-                $('#tr_' + e).hide();
+            function eliminar(e) {
                 if (confirm('¿Desea eliminar este objeto?')) {
+                $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("content/slider/eliminar") ."',{
                             id:e
                         },

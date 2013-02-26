@@ -43,8 +43,8 @@ final class Customer {
 			
 			if ($customer_query->num_rows) {
 				$this->customer_id   = $customer_query->row['customer_id'];
-				$this->firstname     = $customer_query->row['nombres'];
-				$this->lastname      = $customer_query->row['apellidos'];
+				$this->firstname     = $customer_query->row['firstname'];
+				$this->lastname      = $customer_query->row['lastname'];
 				$this->email         = $customer_query->row['email'];
 				$this->cedula        = $customer_query->row['cedula'];
 				$this->telefono      = $customer_query->row['telefono'];

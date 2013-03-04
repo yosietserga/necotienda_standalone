@@ -5,8 +5,8 @@ $_['heading_title']    = 'Popular';
 // Text
 $_['text_module']      = 'M&oacute;dulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
-$_['text_left']        = 'Izquierda';
-$_['text_right']       = 'Derecha';
+$_['text_left']        = 'Columna Izquierda';
+$_['text_right']       = 'Columna Derecha';
 
 // Entry
 $_['entry_limit']      = 'Limite:';

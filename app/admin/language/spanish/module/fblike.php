@@ -5,8 +5,8 @@ $_['heading_title']    = 'Facebook Box';
 // Text
 $_['text_module']      = 'M&oacute;dulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
-$_['text_left']        = 'Izquierda';
-$_['text_right']       = 'Derecha';
+$_['text_left']        = 'Columna Izquierda';
+$_['text_right']       = 'Columna Derecha';
 $_['text_true']        = 'Si';
 $_['text_false']       = 'No';
 

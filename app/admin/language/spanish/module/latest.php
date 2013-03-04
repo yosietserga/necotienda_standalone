@@ -5,14 +5,14 @@ $_['heading_title']    = 'Latest';
 // Text
 $_['text_module']      = 'Modules';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
-$_['text_left']        = 'Left';
-$_['text_right']       = 'Right';
+$_['text_left']        = 'Columna Izquierda';
+$_['text_right']       = 'Columna Derecha';
 
 // Entry
-$_['entry_limit']      = 'Limit:';
+$_['entry_limit']      = 'L&iacute;mite:';
 $_['entry_position']   = 'Ubicaci&oacute;n:';
-$_['entry_status']     = 'Status:';
-$_['entry_sort_order'] = 'Sort Order:';
+$_['entry_status']     = 'Estado:';
+$_['entry_sort_order'] = 'Posici&oacute;n:';
 
 // Help
 $_['help_limit']      = 'Ingrese el l&iacute;mite de productos que se mostrar&aacute;n en el m&oacute;dulo';

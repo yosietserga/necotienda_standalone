@@ -1,5 +1,4 @@
 <?php
-echo __LINE__;
 define('PACKAGE','standalone');
 define('VERSION','1.0.0');
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app/admin/config.php');
@@ -50,7 +49,7 @@ foreach ($query->rows as $result) {
 $config->set('config_language_id', $languages[$config->get('config_admin_language')]['language_id']);
 $language = new Language($languages[$config->get('config_admin_language')]['directory']);
 $language->load($languages[$config->get('config_admin_language')]['filename']);	
-
+/*
 // Log 
 $log = new Log($config->get('config_error_filename'));
 $registry->set('log', $log);
@@ -83,7 +82,7 @@ function error_handler($errno, $errstr, $errfile, $errline) {
 	
 // Error Handler
 set_error_handler('error_handler');
-
+*/
 // Application Map
 require_once(DIR_APPLICATION.'map.php');
 

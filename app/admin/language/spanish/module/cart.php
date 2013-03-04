@@ -1,12 +1,12 @@
 <?php
 // Heading
-$_['heading_title']    = 'Cesta';
+$_['heading_title']    = 'Carrito de Compra';
 
 // Text
 $_['text_module']      = 'Modulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
-$_['text_left']        = 'Izquierda';
-$_['text_right']       = 'Derecha';
+$_['text_left']        = 'Columna Izquierda';
+$_['text_right']       = 'Columna Derecha';
 
 // Entry
 $_['entry_ajax']       = 'AJAX Añade a la Cesta:';

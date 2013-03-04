@@ -29,6 +29,12 @@ class ControllerExtensionModule extends Controller {
 		 
 		$this->document->title = $this->data['heading_title'] = $this->language->get('heading_title'); 
 
+		$this->data['button_insert'] = $this->language->get('button_insert');
+		$this->data['button_import'] = $this->language->get('button_import');
+        
+		$this->data['insert'] = Url::createAdminUrl("extension/module/insert");
+		$this->data['import'] = Url::createAdminUrl("extension/module/import");
+        
   		$this->document->breadcrumbs = array();
 
    		$this->document->breadcrumbs[] = array(
@@ -129,6 +135,9 @@ class ControllerExtensionModule extends Controller {
     public function grid() {
 		$this->load->language('extension/module');
 		 
+		$filter_name = !empty($this->request->get['filter_name']) ? $this->request->get['filter_name'] : "";
+        
+        
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 		$this->data['text_confirm'] = $this->language->get('text_confirm');
 
@@ -141,8 +150,8 @@ class ControllerExtensionModule extends Controller {
 		$extensions = $this->modelExtension->getInstalled('module');
 		
 		$this->data['extensions'] = array();
-						
-		$files = glob(DIR_APPLICATION . 'controller/module/*.php');
+		
+		$files = glob(DIR_APPLICATION . "controller/module/$filter_name*.php");
 		
 		if ($files) {
 			foreach ($files as $file) {

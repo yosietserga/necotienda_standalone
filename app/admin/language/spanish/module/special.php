@@ -1,15 +1,15 @@
 <?php
 // Heading
-$_['heading_title']    = 'Specials';
+$_['heading_title']    = 'Ofertas';
 
 // Text
 $_['text_module']      = 'Modules';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
-$_['text_left']        = 'Left';
-$_['text_right']       = 'Right';
+$_['text_left']        = 'Columna Izquierda';
+$_['text_right']       = 'Columna Derecha';
 
 // Entry
-$_['entry_limit']      = 'Limit:';
+$_['entry_limit']      = 'L&iacute;mite:';
 $_['entry_position']   = 'Ubicaci&oacute;n:';
 $_['entry_status']     = 'Estado:';
 $_['entry_sort_order'] = 'Posici&oacute;n:';

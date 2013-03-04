@@ -5,8 +5,8 @@ $_['heading_title']    = 'Categoria';
 // Text
 $_['text_module']      = 'Modulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
-$_['text_left']        = 'Izquierda';
-$_['text_right']       = 'Derecha';
+$_['text_left']        = 'Columna Izquierda';
+$_['text_right']       = 'Columna Derecha';
 
 // Entry
 $_['entry_position']   = 'Ubicaci&oacute;n:';

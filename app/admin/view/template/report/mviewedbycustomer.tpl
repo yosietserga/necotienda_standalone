@@ -38,7 +38,7 @@
             <td><input  type="text" name="filter_email" value="<?php echo $filter_email; ?>"></td>
             <td><input  type="text" name="filter_name" value="<?php echo $filter_name; ?>"></td>
             <td></td>
-            <td align="right"><a  onclick="filter();" class="button"><span><?php echo $button_filter; ?></span></a></td>
+            <td align="right"><a onclick="filter();" class="button"><span><?php echo $button_filter; ?></span></a></td>
           </tr>
         <?php if ($manufacturers) { ?>
         <?php foreach ($manufacturers as $manufacturer) { ?>

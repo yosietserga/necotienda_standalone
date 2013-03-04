@@ -42,7 +42,7 @@ class ControllerContentPage extends Controller {
 		$this->document->title = $this->language->get('heading_title');
 	
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
-            
+            //TODO: colocar validaciones
             foreach ($this->request->post['page_description'] as $language_id => $description) {
                 $dom = new DOMDocument;
                 $dom->preserveWhiteSpace = false;
@@ -76,7 +76,17 @@ class ControllerContentPage extends Controller {
                 $description['description'] = htmlentities($dom->saveHTML());
                 $this->request->post['page_description'][$language_id] = $description;
             }
-              
+            
+            if (empty($this->request->post['date_publish_end'])) {
+                $this->request->post['date_publish_end'] = '0000-00-00 00:00:00';
+            } else {
+                $dpe = explode("/",$this->request->post['date_publish_end']);
+                $this->request->post['date_publish_end'] = date('Y-m-d h:i:s',strtotime($dpe[2] ."-". $dpe[1] ."-". $dpe[0]));
+            }
+            
+            $dps = explode("/",$this->request->post['date_publish_start']);
+            $this->request->post['date_publish_start'] = date('Y-m-d h:i:s',strtotime($dps[2] ."-". $dps[1] ."-". $dps[0]));
+            
 			$post_id = $this->modelPage->addPage($this->request->post);
         
 			
@@ -144,6 +154,16 @@ class ControllerContentPage extends Controller {
                 $this->request->post['page_description'][$language_id] = $description;
             }
               
+            if (empty($this->request->post['date_publish_end'])) {
+                $this->request->post['date_publish_end'] = '0000-00-00 00:00:00';
+            } else {
+                $dpe = explode("/",$this->request->post['date_publish_end']);
+                $this->request->post['date_publish_end'] = date('Y-m-d h:i:s',strtotime($dpe[2] ."-". $dpe[1] ."-". $dpe[0]));
+            }
+            
+            $dps = explode("/",$this->request->post['date_publish_start']);
+            $this->request->post['date_publish_start'] = date('Y-m-d h:i:s',strtotime($dps[2] ."-". $dps[1] ."-". $dps[0]));
+            
 			$post_id = $this->modelPage->editPage($this->request->get['page_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
@@ -386,7 +406,7 @@ class ControllerContentPage extends Controller {
 			'filter_date_end' => $filter_date_end,
 			'sort'  => $sort,
 			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
+			'start' => ($page - 1) * $limit,
 			'limit' => $limit
 		);
 		

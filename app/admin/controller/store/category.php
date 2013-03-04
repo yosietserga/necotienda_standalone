@@ -601,7 +601,7 @@ class ControllerStoreCategory extends Controller {
                             'category_id':'".$this->request->getQuery('category_id')."'
                         }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
                             
                             $.each(data, function(i,item){
                                 $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');

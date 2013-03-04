@@ -10,7 +10,7 @@
   <div class="right"></div>
   <div class="heading">
     <h1 style="background-image: url('image/backup.png');"><?php echo $heading_title; ?></h1>
-    <div class="buttons"><a  onclick="$('#restore').submit();" class="button"><span><?php echo $button_restore; ?></span></a></div>
+    <div class="buttons"><a onclick="$('#restore').submit();" class="button"><span><?php echo $button_restore; ?></span></a></div>
   </div>
   <div class="content">
     <form action="<?php echo $restore; ?>" method="post" enctype="multipart/form-data" id="restore">

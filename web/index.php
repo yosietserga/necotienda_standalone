@@ -156,6 +156,11 @@ set_error_handler('error_handler');
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app/shop/map.php');
 $session->set("config", serialize($config));
 
+// Template Preview
+if (!empty($_GET['template']) && file_exists(DIR_TEMPLATE . $_GET['template'] . '/common/header.tpl')) {
+    $config->set('config_template',$_GET['template']);
+}
+
 // Front Controller 
 $controller = new Front($registry);
 

@@ -1,2 +1,273 @@
-<?php /* WARNING: This file is protected by copyright law. To reverse engineer or decode this file is strictly prohibited. */
-$o="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";eval(base64_decode("JGxsbD0wO2V2YWwoYmFzZTY0X2RlY29kZSgiSkd4c2JHeHNiR3hzYkd4c1BTZGlZWE5sTmpSZlpHVmpiMlJsSnpzPSIpKTskbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd3OUoyOXlaQ2M3IikpOyRsbGxsPTA7JGxsbGxsPTM7ZXZhbCgkbGxsbGxsbGxsbGwoIkpHdzlKR3hzYkd4c2JHeHNiR3hzS0NSdktUcz0iKSk7JGxsbGxsbGw9MDskbGxsbGxsPSgkbGxsbGxsbGxsbCgkbFsxXSk8PDgpKyRsbGxsbGxsbGxsKCRsWzJdKTtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JHdzlKM04wY214bGJpYzciKSk7JGxsbGxsbGxsbD0xNjskbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGxsbGxsbGwoJGwpOyl7aWYoJGxsbGxsbGxsbD09MCl7JGxsbGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsbGxsbCs9JGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTskbGxsbGxsbGxsPTE2O31pZigkbGxsbGxsJjB4ODAwMCl7JGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8NCk7JGxsbCs9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbF0pPj40KTtpZigkbGxsKXskbGw9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSkmMHgwZikrMztmb3IoJGxsbGw9MDskbGxsbDwkbGw7JGxsbGwrKykkbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGxdPSRsbGxsbGxsbFskbGxsbGxsbC0kbGxsKyRsbGxsXTskbGxsbGxsbCs9JGxsO31lbHNleyRsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsKz0kbGxsbGxsbGxsbCgkbFskbGxsbGwrK10pKzE2O2ZvcigkbGxsbD0wOyRsbGxsPCRsbDskbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGwrK109JGxsbGxsbGxsbGwoJGxbJGxsbGxsXSkpOyRsbGxsbCsrOyRsbGxsbGxsKz0kbGw7fX1lbHNlJGxsbGxsbGxsWyRsbGxsbGxsKytdPSRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSk7JGxsbGxsbDw8PTE7JGxsbGxsbGxsbC0tO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JEMG5ZMmh5SnpzPSIpKTskbGxsbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkQwaVB5SXVKR3hzYkd4c2JHeHNiR3hzYkNnMk1pazciKSk7JGxsbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGw7KXskbGxsbGxsbGxsbC49JGxsbGxsbGxsbGxsbCgkbGxsbGxsbGxbJGxsbGxsKytdXjB4MDcpO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkM0OUpHeHNiR3hzYkd4c2JHd3VKR3hzYkd4c2JHeHNiR3hzYkNnMk1Da3VJajhpT3c9PSIpKTtldmFsKCRsbGxsbGxsbGwpOw=="));return;
+<?php
+/**
+ * ControllerModuleFBLike
+ * 
+ * @package NecoTienda powered by opencart
+ * @author Yosiet Serga
+ * @copyright Inversiones Necoyoad, C.A.
+ * @version 1.0.0
+ * @access public
+ * @see Controller
+ */
+class ControllerModuleFBLike extends Controller {
+	private $error = array(); 
+	
+	/**
+	 * ControllerModuleFBLike::index()
+	 * 
+	 * @return
+	 */
+	public function index() {   
+		$this->load->language('module/fblike');
+
+		$this->document->title = $this->language->get('heading_title');
+		
+		$this->load->auto('setting/setting');
+				
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			$this->modelSetting->editSetting('fblike', $this->request->post);		
+					
+			$this->session->set('success',$this->language->get('text_success'));
+								
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('module/fblike')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('extension/module')); 
+            }
+		}
+				
+		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_enabled'] = $this->language->get('text_enabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_left'] = $this->language->get('text_left');
+		$this->data['text_right'] = $this->language->get('text_right');
+        $this->data['text_true'] = $this->language->get('text_true');
+		$this->data['text_false'] = $this->language->get('text_false');
+        
+		$this->data['entry_pageid'] = $this->language->get('entry_pageid');
+        $this->data['entry_totalconnection'] = $this->language->get('entry_totalconnection');
+		$this->data['entry_width'] = $this->language->get('entry_width');
+        $this->data['entry_height'] = $this->language->get('entry_height');
+        $this->data['entry_stream'] = $this->language->get('entry_stream');
+        $this->data['entry_header'] = $this->language->get('entry_header');
+        $this->data['entry_position'] = $this->language->get('entry_position');
+		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        
+		$this->data['help_pageid'] = $this->language->get('help_pageid');
+        $this->data['help_totalconnection'] = $this->language->get('help_totalconnection');
+		$this->data['help_width'] = $this->language->get('help_width');
+        $this->data['help_height'] = $this->language->get('help_height');
+        $this->data['help_stream'] = $this->language->get('help_stream');
+        $this->data['help_header'] = $this->language->get('help_header');
+        $this->data['help_position'] = $this->language->get('help_position');
+		$this->data['help_status'] = $this->language->get('help_status');
+		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
+		
+		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+ 		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+		
+ 		if (isset($this->error['pageid'])) {
+			$this->data['error_pageid'] = $this->error['pageid'];
+		} else {
+			$this->data['error_pageid'] = '';
+		}
+		
+      	if (isset($this->error['totalconnection'])) {
+			$this->data['error_totalconnection'] = $this->error['totalconnection'];
+		} else {
+			$this->data['error_totalconnection'] = '';
+		}
+        
+        if (isset($this->error['width'])) {
+			$this->data['error_width'] = $this->error['width'];
+		} else {
+			$this->data['error_width'] = '';
+		}
+        
+        if (isset($this->error['height'])) {
+			$this->data['error_height'] = $this->error['height'];
+		} else {
+			$this->data['error_height'] = '';
+		}
+        
+  		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('common/home'),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('extension/module'),
+       		'text'      => $this->language->get('text_module'),
+      		'separator' => ' :: '
+   		);
+		
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('module/fblike'),
+       		'text'      => $this->language->get('heading_title'),
+      		'separator' => ' :: '
+   		);
+		
+		$this->data['action'] = Url::createAdminUrl('module/fblike');
+		
+		$this->data['cancel'] = Url::createAdminUrl('extension/module');
+
+		if (isset($this->request->post['fblike_pageid'])) {
+			$this->data['fblike_pageid'] = $this->request->post['fblike_pageid'];
+		} else {
+			$this->data['fblike_pageid'] = $this->config->get('fblike_pageid');
+		}
+        
+        
+		if (isset($this->request->post['fblike_totalconnection'])) {
+			$this->data['fblike_totalconnection'] = $this->request->post['fblike_totalconnection'];
+		} else {
+			$this->data['fblike_totalconnection'] = $this->config->get('fblike_totalconnection');
+		}
+        
+        if (isset($this->request->post['fblike_width'])) {
+			$this->data['fblike_width'] = $this->request->post['fblike_width'];
+		} else {
+			$this->data['fblike_width'] = $this->config->get('fblike_width');
+		}
+        
+        if (isset($this->request->post['fblike_height'])) {
+			$this->data['fblike_height'] = $this->request->post['fblike_height'];
+		} else {
+			$this->data['fblike_height'] = $this->config->get('fblike_height');
+		}
+        
+       if (isset($this->request->post['fblike_stream'])) {
+			$this->data['fblike_stream'] = $this->request->post['fblike_stream'];
+		} else {
+			$this->data['fblike_stream'] = $this->config->get('fblike_stream');
+		}
+        
+        if (isset($this->request->post['fblike_header'])) {
+			$this->data['fblike_header'] = $this->request->post['fblike_header'];
+		} else {
+			$this->data['fblike_header'] = $this->config->get('fblike_header');
+		}
+		
+		
+		if (isset($this->request->post['fblike_position'])) {
+			$this->data['fblike_position'] = $this->request->post['fblike_position'];
+		} else {
+			$this->data['fblike_position'] = $this->config->get('fblike_position');
+		}
+		
+		if (isset($this->request->post['fblike_status'])) {
+			$this->data['fblike_status'] = $this->request->post['fblike_status'];
+		} else {
+			$this->data['fblike_status'] = $this->config->get('fblike_status');
+		}
+		
+		if (isset($this->request->post['fblike_sort_order'])) {
+			$this->data['fblike_sort_order'] = $this->request->post['fblike_sort_order'];
+		} else {
+			$this->data['fblike_sort_order'] = $this->config->get('fblike_sort_order');
+		}				
+		
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'featuredForm','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'featuredFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+		$this->template = 'module/fblike.tpl';
+		$this->children = array(
+			'common/header',	
+			'common/footer'	
+		);
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+	}
+	
+	/**
+	 * ControllerModuleFBLike::validate()
+	 * 
+	 * @return
+	 */
+	private function validate() {
+		if (!$this->user->hasPermission('modify', 'module/fblike')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+		
+		if (!$this->request->post['fblike_pageid']) {
+			$this->error['pageid'] = $this->language->get('error_pageid');
+		}
+       	
+        if (!$this->request->post['fblike_totalconnection']) {
+			$this->error['totalconnection'] = $this->language->get('error_totalconnection');
+		}
+        
+       	if (!$this->request->post['fblike_width']) {
+			$this->error['width'] = $this->language->get('error_width');
+		}
+		
+        if (!$this->request->post['fblike_height']) {
+			$this->error['height'] = $this->language->get('error_height');
+		}
+       
+
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
+}

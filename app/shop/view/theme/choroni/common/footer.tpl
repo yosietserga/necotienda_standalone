@@ -83,13 +83,15 @@ $(function() {
 });
 </script>
 
+<?php if ($google_analytics_code) { ?>
 <script>
-    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+    var _gaq=[['_setAccount','<?php echo $google_analytics_code; ?>'],['_trackPageview']];
     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
     g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
     s.parentNode.insertBefore(g,s)}(document,'script'));
 </script>
-  
+<?php } ?>
+
 <script>
 /* TODO: indicio para reconocer todas los shortcodes y reemplazarlos por el codigo correspondiente al estilo de wordpress */
 $(function(){

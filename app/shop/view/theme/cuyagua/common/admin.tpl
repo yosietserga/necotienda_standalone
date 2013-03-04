@@ -20,13 +20,15 @@
             </ul>
     </div>
     
+    <?php if ($is_admin && $_GET['theme_editor']) { ?>
+    <form id="formStyle">
     <input type="hidden" id="selector" name="selector" value="" />
     <input type="hidden" id="mainselector" name="mainselector" value="" />
 
     <div class="panel-lateral" id="style">
         <a class="label style" onclick="slidePanel('style')"></a>
-        <a class="style-icons nuevo" onclick="newStyle()"></a>
-        <a class="style-icons save" onclick="saveStyle()"></a>
+        <a class="style-icons nuevo" href="'<?php echo $new_theme; ?>'"></a>
+        <a class="style-icons save" onclick="saveStyle('<?php echo $save_theme; ?>')"></a>
         <a class="style-icons clean" onclick="cleanStyle()"></a>
         <a class="style-icons copy" onclick="copyStyle()"></a>
         <a class="style-icons paste" onclick="pasteStyle()"></a>
@@ -638,24 +640,5 @@
             
         </div>
     </div>
-    
-    <div class="panel-lateral" id="tools">
-        <a class="label tools" onclick="slidePanel('tools')"></a>
-        <div class="panelWrapper">
-            
-            
-            <h3>CSS</h3>
-            <div>
-                <p>Pasos para generar degradados:</p>
-                <ol>
-                    <li>Ingresa a <a href="http://csstypeset.com/" target="_blank">CSS Type Set</a>.</li>
-                    <li>Crea las combinaciones de colores y efectos que desees.</li>
-                    <li>Copia el c&oacute;digo CSS generado.</li>
-                    <li>P&eacute;galo en campo de texto y listo.</li>
-                </ol>
-                <textarea id="cssFont" name="Font[css]"></textarea>
-            </div>
-        </div>
-    </div>
-    
-    <div id="admin-bottom-menu">BOTTOM</div>
+    </form>
+    <?php } ?>

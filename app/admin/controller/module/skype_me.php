@@ -1,2 +1,235 @@
-<?php /* WARNING: This file is protected by copyright law. To reverse engineer or decode this file is strictly prohibited. */
-$o="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";eval(base64_decode("JGxsbD0wO2V2YWwoYmFzZTY0X2RlY29kZSgiSkd4c2JHeHNiR3hzYkd4c1BTZGlZWE5sTmpSZlpHVmpiMlJsSnpzPSIpKTskbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd3OUoyOXlaQ2M3IikpOyRsbGxsPTA7JGxsbGxsPTM7ZXZhbCgkbGxsbGxsbGxsbGwoIkpHdzlKR3hzYkd4c2JHeHNiR3hzS0NSdktUcz0iKSk7JGxsbGxsbGw9MDskbGxsbGxsPSgkbGxsbGxsbGxsbCgkbFsxXSk8PDgpKyRsbGxsbGxsbGxsKCRsWzJdKTtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JHdzlKM04wY214bGJpYzciKSk7JGxsbGxsbGxsbD0xNjskbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGxsbGxsbGwoJGwpOyl7aWYoJGxsbGxsbGxsbD09MCl7JGxsbGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsbGxsbCs9JGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTskbGxsbGxsbGxsPTE2O31pZigkbGxsbGxsJjB4ODAwMCl7JGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8NCk7JGxsbCs9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbF0pPj40KTtpZigkbGxsKXskbGw9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSkmMHgwZikrMztmb3IoJGxsbGw9MDskbGxsbDwkbGw7JGxsbGwrKykkbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGxdPSRsbGxsbGxsbFskbGxsbGxsbC0kbGxsKyRsbGxsXTskbGxsbGxsbCs9JGxsO31lbHNleyRsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsKz0kbGxsbGxsbGxsbCgkbFskbGxsbGwrK10pKzE2O2ZvcigkbGxsbD0wOyRsbGxsPCRsbDskbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGwrK109JGxsbGxsbGxsbGwoJGxbJGxsbGxsXSkpOyRsbGxsbCsrOyRsbGxsbGxsKz0kbGw7fX1lbHNlJGxsbGxsbGxsWyRsbGxsbGxsKytdPSRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSk7JGxsbGxsbDw8PTE7JGxsbGxsbGxsbC0tO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JEMG5ZMmh5SnpzPSIpKTskbGxsbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkQwaVB5SXVKR3hzYkd4c2JHeHNiR3hzYkNnMk1pazciKSk7JGxsbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGw7KXskbGxsbGxsbGxsbC49JGxsbGxsbGxsbGxsbCgkbGxsbGxsbGxbJGxsbGxsKytdXjB4MDcpO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkM0OUpHeHNiR3hzYkd4c2JHd3VKR3hzYkd4c2JHeHNiR3hzYkNnMk1Da3VJajhpT3c9PSIpKTtldmFsKCRsbGxsbGxsbGwpOw=="));return;
+<?php
+/**
+ * ControllerModuleSkypeMe
+ * 
+ * @package NecoTienda powered by opencart
+ * @author Yosiet Serga
+ * @copyright Inversiones Necoyoad, C.A.
+ * @version 1.0.0
+ * @access public
+ * @see Controller
+ */
+class ControllerModuleSkypeMe extends Controller {
+	private $error = array(); 
+	
+	/**
+	 * ControllerModuleSkypeMe::index()
+	 * 
+	 * @return
+	 */
+	public function index() {   
+		
+        $this->load->language('module/skype_me');
+
+		$this->document->title = $this->language->get('heading_title');
+		
+		$this->load->auto('setting/setting');
+				
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			$this->modelSetting->editSetting('skype_me', $this->request->post);		
+					
+			$this->session->set('success',$this->language->get('text_success'));
+						
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('module/skype_me')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('extension/module')); 
+            }
+		}
+				
+		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_enabled'] = $this->language->get('text_enabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		
+		$this->data['entry_code'] = $this->language->get('entry_code');
+		$this->data['entry_nota'] = $this->language->get('entry_nota');
+		$this->data['entry_limit'] = $this->language->get('entry_limit');
+		$this->data['entry_position'] = $this->language->get('entry_position');
+		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		
+		$this->data['help_code'] = $this->language->get('help_code');
+		$this->data['help_nota'] = $this->language->get('help_nota');
+		$this->data['help_position'] = $this->language->get('help_position');
+		$this->data['help_status'] = $this->language->get('help_status');
+		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
+		
+		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+ 		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+		
+ 		if (isset($this->error['code'])) {
+			$this->data['error_code'] = $this->error['code'];
+		} else {
+			$this->data['error_code'] = '';
+		}
+		
+  		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('common/home'),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('extension/module'),
+       		'text'      => $this->language->get('text_module'),
+      		'separator' => ' :: '
+   		);
+		
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('module/skype_me'),
+       		'text'      => $this->language->get('heading_title'),
+      		'separator' => ' :: '
+   		);
+		
+		
+		$this->data['action'] = Url::createAdminUrl('module/skype_me');
+		
+		$this->data['cancel'] = Url::createAdminUrl('extension/module');
+
+		if (isset($this->request->post['skype_me_code'])) {
+			$this->data['skype_me_code'] = $this->request->post['skype_me_code'];
+		} else {
+			$this->data['skype_me_code'] = $this->config->get('skype_me_code');
+		}	
+		
+		if (isset($this->request->post['skype_me_status'])) {
+			$this->data['skype_me_status'] = $this->request->post['skype_me_status'];
+		} else {
+			$this->data['skype_me_status'] = $this->config->get('skype_me_status');
+		}
+        
+		$this->data['positions'] = array();
+		
+		$this->data['positions'][] = array(
+			'position' => 'left',
+			'title'    => $this->language->get('text_left'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'right',
+			'title'    => $this->language->get('text_right'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'home',
+			'title'    => $this->language->get('text_home'),
+		);
+		
+		if (isset($this->request->post['skype_me_position'])) {
+			$this->data['skype_me_position'] = $this->request->post['skype_me_position'];
+		} else {
+			$this->data['skype_me_position'] = $this->config->get('skype_me_position');
+		}
+		
+		if (isset($this->request->post['skype_me_sort_order'])) {
+			$this->data['skype_me_sort_order'] = $this->request->post['skype_me_sort_order'];
+		} else {
+			$this->data['skype_me_sort_order'] = $this->config->get('skype_me_sort_order');
+		}
+		
+		$this->data['positions'] = array();
+		
+		$this->data['positions'][] = array(
+			'position' => 'left',
+			'title'    => $this->language->get('text_left'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'right',
+			'title'    => $this->language->get('text_right'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'home',
+			'title'    => $this->language->get('text_home'),
+		);
+		
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'featuredForm','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'featuredFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+		$this->template = 'module/skype_me.tpl';
+		$this->children = array(
+			'common/header',	
+			'common/footer'	
+		);
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+	}
+	
+	/**
+	 * ControllerModuleSkypeMe::validate()
+	 * 
+	 * @return
+	 */
+	private function validate() {
+		if (!$this->user->hasPermission('modify', 'module/skype_me')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+		
+		if (!$this->request->post['skype_me_code']) {
+			$this->error['code'] = $this->language->get('error_code');
+		}
+		
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
+}

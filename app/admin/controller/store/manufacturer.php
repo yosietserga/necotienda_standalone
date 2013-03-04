@@ -1,4 +1,4 @@
-<?php    
+<?php
 /**
  * ControllerStoreManufacturer
  * 
@@ -274,7 +274,7 @@ class ControllerStoreManufacturer extends Controller {
 			'filter_date_end' => $filter_date_end, 
 			'sort'  => $sort,
 			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
+			'start' => ($page - 1) * $limit,
 			'limit' => $limit
 		);
 		
@@ -340,9 +340,11 @@ class ControllerStoreManufacturer extends Controller {
 		}
 
 		$pagination = new Pagination();
+		$pagination->ajax = true;
+		$pagination->ajaxTarget = "gridWrapper";
 		$pagination->total = $manufacturer_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = Url::createAdminUrl('store/manufacturer/grid') . $url . '&page={page}';
 			
@@ -464,7 +466,7 @@ class ControllerStoreManufacturer extends Controller {
                             'manufacturer_id':'".$this->request->getQuery('manufacturer_id')."'
                         }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
                             
                             $.each(data, function(i,item){
                                 $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');

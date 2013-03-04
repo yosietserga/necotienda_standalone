@@ -34,7 +34,7 @@ function addImage() {
     html  = '<tbody id="image_row' + image_row + '">';
 	html += '<tr>';
 	html += '<td class="left"><input  type="hidden" name="product_image[' + image_row + ']" value="" id="image' + image_row + '"><img src="<?php echo $no_image; ?>" id="preview' + image_row + '" class="image" onclick="image_upload(\'image' + image_row + '\', \'preview' + image_row + '\');"></td>';
-	html += '<td class="left"><a  onclick="$(\'#image_row' + image_row  + '\').remove();" class="button"><span><?php echo $button_remove; ?></span></a></td>';
+	html += '<td class="left"><a onclick="$(\'#image_row' + image_row  + '\').remove();" class="button"><span><?php echo $button_remove; ?></span></a></td>';
 	html += '</tr>';
 	html += '</tbody>';
 	

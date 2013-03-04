@@ -1,6 +1,6 @@
 <?php
 define('CATALOG', 'shop');
-define('ADMIN', 'servitecpc');
+define('ADMIN', 'admin');
 
 $publictPath    = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR;
 $privatePath    = dirname(__FILE__) . DIRECTORY_SEPARATOR;

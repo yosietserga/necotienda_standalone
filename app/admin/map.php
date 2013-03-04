@@ -461,6 +461,20 @@ switch ($route) {
         $loader->auto('image');
 		$loader->auto('style/style');
         break;
+    case 'style/theme':
+    case 'style/theme/grid':
+    case 'style/theme/delete':
+        $language->load('style/theme');
+        $loader->auto('style/theme');
+        $loader->auto('pagination');
+        break;
+    case 'style/theme/insert':
+    case 'style/theme/update':
+    case 'style/theme/save':
+        $language->load('style/theme');
+        $loader->auto('style/theme');
+        $loader->auto('image');
+        break;
     case 'tool/backup':
     case 'tool/backup':
     case 'tool/backup/backup':

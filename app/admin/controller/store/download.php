@@ -327,6 +327,7 @@ class ControllerStoreDownload extends Controller {
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
 		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
 		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
+		$limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
 		
         $url = array();
         
@@ -347,7 +348,7 @@ class ControllerStoreDownload extends Controller {
 			'filter_date_end' => $filter_date_end, 
 			'sort'  => $sort,
 			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
+			'start' => ($page - 1) * $limit,
 			'limit' => $this->config->get('config_admin_limit')
 		);
 		
@@ -395,9 +396,11 @@ class ControllerStoreDownload extends Controller {
 		$this->data['sort_remaining'] = Url::createAdminUrl('store/download/grid',array_merge(array('sort'=>'d.remaining'),$url));
 
 		$pagination = new Pagination();
+		$pagination->ajax = true;
+		$pagination->ajaxTarget = "gridWrapper";
 		$pagination->total = $download_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = Url::createAdminUrl('store/download/grid',array_merge($url,array('page'=>'{page}')));
 

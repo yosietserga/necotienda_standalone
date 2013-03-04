@@ -134,7 +134,7 @@ class ControllerSaleCumpleanos extends Controller {
 			'filter_date_end' => $filter_date_end, 
 			'sort'  => $sort,
 			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
+			'start' => ($page - 1) * $limit,
 			'limit' => $limit
 		);
 		
@@ -187,7 +187,7 @@ class ControllerSaleCumpleanos extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $customer_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = Url::createAdminUrl('sale/customer') . $url . '&page={page}';
 			

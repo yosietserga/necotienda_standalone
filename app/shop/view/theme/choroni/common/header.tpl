@@ -47,7 +47,7 @@
     
         <div class="grid_8">
             <ul id="links" class="nt-editable">
-                <li><a href="<?php $Url::createUrl('common/home'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_home; ?></a></li>
+                <li><a href="<?php HTTP_HOME; ?>" title="<?php echo $text_home; ?>"><?php echo $text_home; ?></a></li>
                 <li><a href="<?php $Url::createUrl('store/special'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_special; ?></a></li>
                 <li><a href="<?php $Url::createUrl('checkout/cart'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_cart; ?></a></li>
                 <li><a href="<?php $Url::createUrl('content/sitemap'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_sitemap; ?></a></li>
@@ -146,9 +146,9 @@
         <div class="grid_5">
             <div id="logo" class="nt-editable">
                 <?php if ($logo) { ?>
-                    <a title="<?php echo $store; ?>" href="<?php echo str_replace('&', '&amp;', $home); ?>"><img src="<?php echo $logo; ?>" title="<?php echo $store; ?>" alt="<?php echo $store; ?>" /></a>
+                    <a title="<?php echo $store; ?>" href="<?php echo HTTP_HOME; ?>"><img src="<?php echo $logo; ?>" title="<?php echo $store; ?>" alt="<?php echo $store; ?>" /></a>
                 <?php } else { ?>
-                    <a title="<?php echo $store; ?>" href="<?php echo str_replace('&', '&amp;', $home); ?>"><?php echo $text_store; ?></a>
+                    <a title="<?php echo $store; ?>" href="<?php echo HTTP_HOME; ?>"><?php echo $text_store; ?></a>
                 <?php } ?>
             </div>
         </div>

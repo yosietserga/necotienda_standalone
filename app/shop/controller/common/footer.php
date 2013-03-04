@@ -56,10 +56,14 @@
         $javascripts[] = $jspath."main.js";
         
         if ($this->user->getId()) {
-            $javascripts[] = $jspath."vendor/jquery-ui.min.js";
-            $javascripts[] = $jspath."vendor/farbtastic/farbtastic.js";
-            $javascripts[] = $jspath."necojs/neco.colorpicker.js";
             $javascripts[] = $jspath."admin.js";
+            
+            if ($this->request->hasQuery('theme_editor')) {
+                $javascripts[] = $jspath."vendor/jquery-ui.min.js";
+                $javascripts[] = $jspath."vendor/farbtastic/farbtastic.js";
+                $javascripts[] = $jspath."necojs/neco.colorpicker.js";
+                $javascripts[] = $jspath."theme_editor.js";
+            }
         }
         
         $this->data['javascripts'] = $this->javascripts = array_merge($this->javascripts, $javascripts);

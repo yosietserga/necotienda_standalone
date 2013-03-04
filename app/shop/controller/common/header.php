@@ -12,6 +12,31 @@
 			}
     	}		
 		
+        $query = $this->db->query("SELECT * 
+        FROM ".DB_PREFIX."information i 
+        LEFT JOIN ".DB_PREFIX."information_description id ON (i.information_id=id.information_id)");
+        foreach ($query->rows as $information) {
+            $this->db->query("INSERT INTO ".DB_PREFIX."post SET
+            date_publish_start = NOW(),
+            date_publish_end = '0000-00-00 00:00',
+            publish = 1, 
+            status = 1,
+            post_type = 'page',
+            date_added = NOW()");
+            
+            $page_id = $this->db->getLastId();
+            
+            $this->db->query("INSERT INTO ".DB_PREFIX."post_description SET
+            post_id = '$page_id',
+            language_id = '". intval($information['language_id']) ."',
+            `title` = '". $this->db->escape($information['title']) ."',
+            `description` = '". $this->db->escape($information['description']) ."'");
+            
+            
+        }
+        $this->db->query("DELETE FROM ". DB_PREFIX ."information");
+        $this->db->query("DELETE FROM ". DB_PREFIX ."information_description");
+        
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['currency_code'])) {
       		$this->currency->set($this->request->post['currency_code']);
 			$this->session->clear('shipping_methods');
@@ -68,10 +93,19 @@
         $this->load->library('user');
         if ($this->user->getId()) {
             $this->data['is_admin'] = true;
-            $styles[] = array('media'=>'screen','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
-            $styles[] = array('media'=>'screen','href'=>$csspath.'neco.colorpicker.css');
             $styles[] = array('media'=>'screen','href'=>$csspath.'admin.css');
             
+            if ($this->request->hasQuery('theme_editor')) {
+                $this->data['theme_editor'] = true;
+                
+                if ($this->request->hasQuery('template') && file_exists(DIR_TEMPLATE . $this->request->getQuery('template') . '/common/header.tpl')) {
+                    $styles[] = array('media'=>'screen','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
+                    $styles[] = array('media'=>'screen','href'=>$csspath.'neco.colorpicker.css');
+                    $this->config->set('config_template',$this->request->getQuery('template'));
+                    $this->data['new_theme']= Url::createAdminUrl('style/theme/insert',array(),'NONSSL',HTTP_ADMIN);
+                    $this->data['save_theme']= Url::createAdminUrl('style/theme/save',array('theme_id'=>$this->request->getQuery('theme_id'),'template'=>$this->request->getQuery('template')),'NONSSL',HTTP_ADMIN);
+                }
+            }
             
             $this->data['create_product']= Url::createAdminUrl('store/product/insert',array(),'NONSSL',HTTP_ADMIN);
             $this->data['create_page']= Url::createAdminUrl('content/page/insert',array(),'NONSSL',HTTP_ADMIN);
@@ -80,12 +114,11 @@
             $this->data['create_product_category']= Url::createAdminUrl('store/category/insert',array(),'NONSSL',HTTP_ADMIN);
             $this->data['create_post_category']= Url::createAdminUrl('content/post_category/insert',array(),'NONSSL',HTTP_ADMIN);
         }
-        $this->data['styles'] = $this->styles = array_merge($styles,$this->styles);
 
-        if (is_file($csspath."custom.css")) {
-            $styles[] = array('media'=>'all','href'=>$csspath.'custom.css');
-            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        if (is_file(DIR_CSS."custom-". $this->config->get('config_theme_id') ."-". $this->config->get('config_template') .".css")) {
+            $styles[] = array('media'=>'all','href'=>$csspath."custom-". $this->config->get('config_theme_id') ."-". $this->config->get('config_template') .".css");
         }
+        $this->data['styles'] = $this->styles = array_merge($styles,$this->styles);
         
 		$this->data['store'] = $this->config->get('config_name');
 		

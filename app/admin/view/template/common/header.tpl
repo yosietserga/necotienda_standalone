@@ -178,18 +178,22 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <!--
                                     <a title="<?php echo $text_menu; ?>" href="<?php echo $menu; ?>">
                                         <img src="image/menu/menu.png" alt="<?php echo $text_menu; ?>" />
                                         <br /><span><?php echo $text_menu; ?></span>
                                     </a>
+                                    -->
                                     <a title="<?php echo $text_banner; ?>" href="<?php echo $banner; ?>">
                                         <img src="image/menu/banner.png" alt="<?php echo $text_banner; ?>" />
                                         <br /><span><?php echo $text_banner; ?></span>
                                     </a>
+                                    <!--
                                     <a title="<?php echo $text_form; ?>" href="<?php echo $form; ?>">
                                         <img src="image/menu/forms.png" alt="<?php echo $text_form; ?>" />
                                         <br /><span><?php echo $text_form; ?></span>
                                     </a>
+                                    -->
                                 </li>
                             </ul>
                         </li>
@@ -314,7 +318,7 @@
                         <li id="apariencia" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/bigBrush.png" alt="Apariencia" /><span><?php echo $tab_style; ?></span></a>
                             <ul>
                                 <li>
-                                    <a href="<?php echo $style_backgrounds; ?>" title="Crear una nueva lista de emails">
+                                    <a href="<?php echo $style_backgrounds; ?>">
                                         <img src="image/menu/background.png" alt="Fondos" />
                                         <br /><span>Fondos</span>
                                     </a>
@@ -322,29 +326,25 @@
                                         <img src="image/menu/fonts.png" alt="Fuentes" />
                                         <br /><span>Fuentes</span>
                                     </a>
-                                    <a href="<?php echo $style_links; ?>" title="Crear una nueva campa&ntilde;a">
+                                    <a href="<?php echo $style_links; ?>">
                                         <img src="image/menu/enlaces.png" alt="Enlaces" />
                                         <br /><span>Enlaces</span>
                                     </a>
-                                    <a href="<?php echo $style_borders; ?>" title="Crear una nueva campa&ntilde;a">
-                                        <img src="image/menu/bordes.png" alt="Bordes" />
-                                        <br /><span>Bordes</span>
-                                    </a>
-                                    <a href="<?php echo $style_buttons; ?>" title="Crear una nueva campa&ntilde;a">
+                                    <a href="<?php echo $style_buttons; ?>">
                                         <img src="image/menu/botones.png" alt="Botones" />
                                         <br /><span>Botones</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo $style_layouts; ?>" title="Crear una nueva lista de emails">
-                                        <img src="image/menu/templates.png" alt="Fondos" />
+                                    <a href="<?php echo Url::createAdminUrl("style/theme"); ?>">
+                                        <img src="image/menu/theme.png" alt="Fondos" />
                                         <br /><span>Temas</span>
                                     </a>
-                                    <a href="<?php echo $style_layouts; ?>" title="Crear una nueva lista de emails">
-                                        <img src="image/menu/layouts.png" alt="Fondos" />
+                                    <a href="<?php echo $style_layouts; ?>">
+                                        <img src="image/menu/template.png" alt="Fondos" />
                                         <br /><span>Plantillas</span>
                                     </a>
-                                    <a href="<?php echo $editor; ?>" title="Crear una nueva lista de emails">
+                                    <a href="<?php echo $editor; ?>">
                                         <img src="image/menu/editor.png" alt="Fondos" />
                                         <br /><span>Editor HTML</span>
                                     </a>

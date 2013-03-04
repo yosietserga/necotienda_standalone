@@ -854,39 +854,54 @@ $url = '';
             $('#accordion').accordion({
                 collapsible: true
             });
+            $('#addProductsWrapper').hide();
             
-            $('#relatedTrash').droppable({
-                accept: '#relatedTarget > li',
-                activeClass: 'ui-state-highlight',
-                drop: function( event, ui ) {
-                    deleteImage( ui.draggable );
+            $('#addProductsPanel').on('click',function(e){
+                var products = $('#addProductsWrapper').find('.row');
+                
+                if (products.length == 0) {
+                    $.getJSON('".Url::createAdminUrl("store/product/products")."', {
+                        product_id: '". (int)$this->request->getQuery('product_id') ."'
+                    }, function(data) {
+                            
+                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            
+                            $.each(data, function(i,item){
+                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"product_related[' + item.product_id + ']\" value=\"' + item.product_id + '\" /></li>');
+                                
+                            });
+                            
+                            $('#q').on('change',function(e){
+                                var that = this;
+                                var valor = $(that).val().toLowerCase();
+                                if (valor.length <= 0) {
+                                    $('#addProducts li').show();
+                                } else {
+                                    $('#addProducts li b').each(function(){
+                                        if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
+                                            $(this).closest('li').show();
+                                        } else {
+                                            $(this).closest('li').hide();
+                                        }
+                                    });
+                                }
+                            }); 
+                            
+                            $('li').on('click',function() {
+                                var b = $(this).find('b');
+                                if (b.hasClass('added')) {
+                                    b.removeClass('added').addClass('add');
+                                    $(this).find('input').val(0);
+                                } else {
+                                    b.removeClass('add').addClass('added');
+                                    $(this).find('input').val(1);
+                                }
+                            });
+                    });
                 }
             });
-            
-            $('#relatedTarget').droppable({
-                accept: '#relatedSourge > li',
-                activeClass: 'ui-state-highlight',
-                drop: function( event, ui ) {
-                    var item = ui.draggable.clone();
-                    $('#relatedTarget')
-                        .preppend(item)
-                        .append('<input type=\"hidden\" name=\"\" value=\"\" />');
-                }
-            });
-            
-            $('#relatedTarget li').draggable({
-                cancel: 'a.ui-icon',
-                revert: 'invalid', 
-                containment: 'document',
-                helper: 'clone'
-            });
-            
-            $('#related li').draggable({
-                cancel: 'a.ui-icon',
-                revert: 'invalid',
-                containment: 'document',
-                helper: 'clone'
-            });
+                
+            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
             
             $('.trends').fancybox({
         		maxWidth	: 640,
@@ -955,7 +970,10 @@ $url = '';
                     }
                 }, 600);
                 $(this).data('timeoutId', timeoutId); 
-            });");
+            });
+            
+            $('.vtabs_page').hide();
+            $('.vtabs_page:first-child').show();");
             
         foreach ($this->data['languages'] as $language) {
             $scripts[] = array('id'=>'Language$language["language_id"]','method'=>'ready','script'=>
@@ -983,6 +1001,12 @@ $url = '';
             function saveAndNew() { 
                 window.onbeforeunload = null;
                 $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }
+            
+            function showTab(a) {
+                $('.vtabs_page').hide();
+                $($(a).attr('data-target')).show();
+                console.log(a);
             }
             
             function deleteImage( item ) {
@@ -1049,6 +1073,58 @@ $url = '';
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
   	} 
 	
+     public function products() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+        header("Cache-Control: no-cache, must-revalidate"); 
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        
+        $this->load->auto('store/product');
+        $this->load->auto('image');
+        $this->load->auto('url');
+        if ($this->request->hasQuery('product_id') > 0) {
+            $products_related = $this->modelProduct->getProductRelated($this->request->getQuery('product_id'));
+        }
+        
+        $cache = $this->cache->get("products.for.product.form");
+        if ($cache) {
+            $products = unserialize($cache);
+        } else {
+            $model = $this->modelProduct->getAll();
+            $products = $model->obj;
+            $this->cache->set("products.for.product.form",serialize($products));
+        }
+        
+        $this->data['Image'] = new NTImage();
+        $this->data['Url'] = new Url;
+        
+        $output = array();
+        
+        foreach ($products as $product) {
+            if (!empty($products_related) && in_array($product->product_id,$products_related)) {
+                $output[] = array(
+                    'product_id'=>$product->product_id,
+                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
+                    'pname'     =>$product->pname,
+                    'class'     =>'added',
+                    'value'     =>$product->product_id
+                );
+            } else {
+                $output[] = array(
+                    'product_id'=>$product->product_id,
+                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
+                    'pname'     =>$product->pname,
+                    'class'     =>'add',
+                    'value'     =>$product->product_id
+                );
+            }
+        }
+        $this->load->auto('json');
+        $this->response->setOutput(Json::encode($output), $this->config->get('config_compression'));
+            
+     }
+     
   	/**
   	 * ControllerStoreProduct::validateForm()
   	 * 

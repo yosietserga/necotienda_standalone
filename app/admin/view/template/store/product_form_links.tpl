@@ -55,28 +55,13 @@
                     
                     <div class="row">
                         <label><?php echo $entry_related; ?></label>
-                        <table>
-                            <tr>
-                                <td style="padding: 0;" colspan="3">
-                                    <select id="category" style="margin-bottom: 5px;" onchange="getProducts();">
-                                    <?php foreach ($categories as $category) { ?>
-                                        <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
-                                    <?php } ?>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="relatedSourge">
-                                    <ul id="product" style="width: 350px;height:200px"></ul>
-                                </td>
-                              <td id="relatedTarget">
-                                    <select multiple="multiple" id="related" size="10" style="width: 350px;;height:200px"></select>
-                              </td>
-                              <td id="relatedTrash">
-                                    <img src="image/trash_empty.png" alt="Papelera" />
-                              </td>
-                            </tr>
-                        </table>
+                        <div class="clear"></div><br />
+                            
+                        <div id="addProductsPanel"><b>Agregar / Eliminar Productos Relacionados</b></div>
+                        <div id="addProductsWrapper"><div id="gridPreloader"></div></div>
+                            
+                        <div class="clear"></div><br />
+            
                         <div id="product_related">
                         <?php foreach ($product_related as $related_id) { ?>
                             <input type="hidden" name="product_related[]" value="<?php echo $related_id; ?>" showquick="off" />

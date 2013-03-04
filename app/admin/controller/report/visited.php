@@ -254,7 +254,7 @@ class ControllerReportVisited extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $customer_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = Url::createAdminUrl('report/visited') . '&page={page}';
 			

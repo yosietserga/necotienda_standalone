@@ -1,2 +1,273 @@
-<?php /* WARNING: This file is protected by copyright law. To reverse engineer or decode this file is strictly prohibited. */
-$o="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";eval(base64_decode("JGxsbD0wO2V2YWwoYmFzZTY0X2RlY29kZSgiSkd4c2JHeHNiR3hzYkd4c1BTZGlZWE5sTmpSZlpHVmpiMlJsSnpzPSIpKTskbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd3OUoyOXlaQ2M3IikpOyRsbGxsPTA7JGxsbGxsPTM7ZXZhbCgkbGxsbGxsbGxsbGwoIkpHdzlKR3hzYkd4c2JHeHNiR3hzS0NSdktUcz0iKSk7JGxsbGxsbGw9MDskbGxsbGxsPSgkbGxsbGxsbGxsbCgkbFsxXSk8PDgpKyRsbGxsbGxsbGxsKCRsWzJdKTtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JHdzlKM04wY214bGJpYzciKSk7JGxsbGxsbGxsbD0xNjskbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGxsbGxsbGwoJGwpOyl7aWYoJGxsbGxsbGxsbD09MCl7JGxsbGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsbGxsbCs9JGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTskbGxsbGxsbGxsPTE2O31pZigkbGxsbGxsJjB4ODAwMCl7JGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8NCk7JGxsbCs9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbF0pPj40KTtpZigkbGxsKXskbGw9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSkmMHgwZikrMztmb3IoJGxsbGw9MDskbGxsbDwkbGw7JGxsbGwrKykkbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGxdPSRsbGxsbGxsbFskbGxsbGxsbC0kbGxsKyRsbGxsXTskbGxsbGxsbCs9JGxsO31lbHNleyRsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsKz0kbGxsbGxsbGxsbCgkbFskbGxsbGwrK10pKzE2O2ZvcigkbGxsbD0wOyRsbGxsPCRsbDskbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGwrK109JGxsbGxsbGxsbGwoJGxbJGxsbGxsXSkpOyRsbGxsbCsrOyRsbGxsbGxsKz0kbGw7fX1lbHNlJGxsbGxsbGxsWyRsbGxsbGxsKytdPSRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSk7JGxsbGxsbDw8PTE7JGxsbGxsbGxsbC0tO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JEMG5ZMmh5SnpzPSIpKTskbGxsbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkQwaVB5SXVKR3hzYkd4c2JHeHNiR3hzYkNnMk1pazciKSk7JGxsbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGw7KXskbGxsbGxsbGxsbC49JGxsbGxsbGxsbGxsbCgkbGxsbGxsbGxbJGxsbGxsKytdXjB4MDcpO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkM0OUpHeHNiR3hzYkd4c2JHd3VKR3hzYkd4c2JHeHNiR3hzYkNnMk1Da3VJajhpT3c9PSIpKTtldmFsKCRsbGxsbGxsbGwpOw=="));return;
+<?php
+/**
+ * ControllerModuleLatest
+ * 
+ * @package NecoTienda powered by opencart
+ * @author Yosiet Serga
+ * @copyright Inversiones Necoyoad, C.A.
+ * @version 1.0.0
+ * @access public
+ * @see Controller
+ */
+class ControllerModuleLatest extends Controller {
+	private $error = array(); 
+	
+	/**
+	 * ControllerModuleLatest::index()
+	 * 
+	 * @return
+	 */
+	public function index() {   
+		$this->load->language('module/latest');
+
+		$this->document->title = $this->language->get('heading_title');
+		
+		$this->load->auto('setting/setting');
+				
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			$this->modelSetting->editSetting('latest', $this->request->post);		
+			
+			$this->cache->delete('product');
+			
+			$this->session->set('success',$this->language->get('text_success'));
+							
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('module/latest')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('extension/module')); 
+            }
+		}
+				
+		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_enabled'] = $this->language->get('text_enabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_left'] = $this->language->get('text_left');
+		$this->data['text_right'] = $this->language->get('text_right');
+		$this->data['text_home'] = $this->language->get('text_home');
+		
+		$this->data['entry_limit'] = $this->language->get('entry_limit');
+		$this->data['entry_position'] = $this->language->get('entry_position');
+		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		
+		$this->data['help_limit'] = $this->language->get('help_limit');
+		$this->data['help_position'] = $this->language->get('help_position');
+		$this->data['help_status'] = $this->language->get('help_status');
+		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
+		
+		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+ 		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
+  		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('common/home'),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('extension/module'),
+       		'text'      => $this->language->get('text_module'),
+      		'separator' => ' :: '
+   		);
+		
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('module/latest'),
+       		'text'      => $this->language->get('heading_title'),
+      		'separator' => ' :: '
+   		);
+		
+		$this->data['action'] = Url::createAdminUrl('module/latest');
+		
+		$this->data['cancel'] = Url::createAdminUrl('extension/module');
+
+		if (isset($this->request->post['latest_limit'])) {
+			$this->data['latest_limit'] = $this->request->post['latest_limit'];
+		} else {
+			$this->data['latest_limit'] = $this->config->get('latest_limit');
+		}
+		
+		$this->data['positions'] = array();
+		
+		$this->data['positions'][] = array(
+			'position' => 'left',
+			'title'    => $this->language->get('text_left'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'right',
+			'title'    => $this->language->get('text_right'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'home',
+			'title'    => $this->language->get('text_home'),
+		);
+		
+		if (isset($this->request->post['latest_position'])) {
+			$this->data['latest_position'] = $this->request->post['latest_position'];
+		} else {
+			$this->data['latest_position'] = $this->config->get('latest_position');
+		}
+		
+		if (isset($this->request->post['latest_status'])) {
+			$this->data['latest_status'] = $this->request->post['latest_status'];
+		} else {
+			$this->data['latest_status'] = $this->config->get('latest_status');
+		}
+		
+		if (isset($this->request->post['latest_sort_order'])) {
+			$this->data['latest_sort_order'] = $this->request->post['latest_sort_order'];
+		} else {
+			$this->data['latest_sort_order'] = $this->config->get('latest_sort_order');
+		}				
+		
+		$this->data['positions'] = array();
+		
+		$this->data['positions'][] = array(
+			'position' => 'left',
+			'title'    => $this->language->get('text_left'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'right',
+			'title'    => $this->language->get('text_right'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'home',
+			'title'    => $this->language->get('text_home'),
+		);
+		
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'featuredForm','method'=>'ready','script'=>
+            "
+            $('#addProductsWrapper').hide();
+            
+            $('#addProductsPanel').on('click',function(e){
+                var products = $('#addProductsWrapper').find('.row');
+                
+                if (products.length == 0) {
+                    $.getJSON('".Url::createAdminUrl("module/featured/products")."', function(data) {
+                            
+                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            
+                            $.each(data, function(i,item){
+                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"featured_product[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                
+                            });
+                            
+                            $('#q').on('change',function(e){
+                                var that = this;
+                                var valor = $(that).val().toLowerCase();
+                                if (valor.length <= 0) {
+                                    $('#addProducts li').show();
+                                } else {
+                                    $('#addProducts li b').each(function(){
+                                        if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
+                                            $(this).closest('li').show();
+                                        } else {
+                                            $(this).closest('li').hide();
+                                        }
+                                    });
+                                }
+                            }); 
+                            
+                            $('li').on('click',function() {
+                                var b = $(this).find('b');
+                                if (b.hasClass('added')) {
+                                    b.removeClass('added').addClass('add');
+                                    $(this).find('input').val(0);
+                                } else {
+                                    b.removeClass('add').addClass('added');
+                                    $(this).find('input').val(1);
+                                }
+                            });
+                    });
+                }
+            });
+                
+            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
+            
+            $('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'featuredFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+		$this->template = 'module/latest.tpl';
+		$this->children = array(
+			'common/header',	
+			'common/footer'	
+		);
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+	}
+	
+	/**
+	 * ControllerModuleLatest::validate()
+	 * 
+	 * @return
+	 */
+	private function validate() {
+		if (!$this->user->hasPermission('modify', 'module/latest')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+		
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
+}

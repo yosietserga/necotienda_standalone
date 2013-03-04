@@ -1,2 +1,197 @@
-<?php /* WARNING: This file is protected by copyright law. To reverse engineer or decode this file is strictly prohibited. */
-$o="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";eval(base64_decode("JGxsbD0wO2V2YWwoYmFzZTY0X2RlY29kZSgiSkd4c2JHeHNiR3hzYkd4c1BTZGlZWE5sTmpSZlpHVmpiMlJsSnpzPSIpKTskbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd3OUoyOXlaQ2M3IikpOyRsbGxsPTA7JGxsbGxsPTM7ZXZhbCgkbGxsbGxsbGxsbGwoIkpHdzlKR3hzYkd4c2JHeHNiR3hzS0NSdktUcz0iKSk7JGxsbGxsbGw9MDskbGxsbGxsPSgkbGxsbGxsbGxsbCgkbFsxXSk8PDgpKyRsbGxsbGxsbGxsKCRsWzJdKTtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JHdzlKM04wY214bGJpYzciKSk7JGxsbGxsbGxsbD0xNjskbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGxsbGxsbGwoJGwpOyl7aWYoJGxsbGxsbGxsbD09MCl7JGxsbGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsbGxsbCs9JGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTskbGxsbGxsbGxsPTE2O31pZigkbGxsbGxsJjB4ODAwMCl7JGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8NCk7JGxsbCs9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbF0pPj40KTtpZigkbGxsKXskbGw9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSkmMHgwZikrMztmb3IoJGxsbGw9MDskbGxsbDwkbGw7JGxsbGwrKykkbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGxdPSRsbGxsbGxsbFskbGxsbGxsbC0kbGxsKyRsbGxsXTskbGxsbGxsbCs9JGxsO31lbHNleyRsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsKz0kbGxsbGxsbGxsbCgkbFskbGxsbGwrK10pKzE2O2ZvcigkbGxsbD0wOyRsbGxsPCRsbDskbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGwrK109JGxsbGxsbGxsbGwoJGxbJGxsbGxsXSkpOyRsbGxsbCsrOyRsbGxsbGxsKz0kbGw7fX1lbHNlJGxsbGxsbGxsWyRsbGxsbGxsKytdPSRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSk7JGxsbGxsbDw8PTE7JGxsbGxsbGxsbC0tO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JEMG5ZMmh5SnpzPSIpKTskbGxsbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkQwaVB5SXVKR3hzYkd4c2JHeHNiR3hzYkNnMk1pazciKSk7JGxsbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGw7KXskbGxsbGxsbGxsbC49JGxsbGxsbGxsbGxsbCgkbGxsbGxsbGxbJGxsbGxsKytdXjB4MDcpO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkM0OUpHeHNiR3hzYkd4c2JHd3VKR3hzYkd4c2JHeHNiR3hzYkNnMk1Da3VJajhpT3c9PSIpKTtldmFsKCRsbGxsbGxsbGwpOw=="));return;
+<?php
+/**
+ * ControllerModuleCategory
+ * 
+ * @package NecoTienda powered by opencart
+ * @author Yosiet Serga
+ * @copyright Inversiones Necoyoad, C.A.
+ * @version 1.0.0
+ * @access public
+ * @see Controller
+ */
+class ControllerModuleCategory extends Controller {
+	private $error = array(); 
+	
+	/**
+	 * ControllerModuleCategory::index()
+	 * 
+	 * @return
+	 */
+	public function index() {   
+		$this->load->language('module/category');
+
+		$this->document->title = $this->language->get('heading_title');
+		
+		$this->load->auto('setting/setting');
+				
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			$this->modelSetting->editSetting('category', $this->request->post);		
+					
+			$this->session->set('success',$this->language->get('text_success'));
+						
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('module/category')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('extension/module')); 
+            }
+		}
+				
+		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_enabled'] = $this->language->get('text_enabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_left'] = $this->language->get('text_left');
+		$this->data['text_right'] = $this->language->get('text_right');
+		
+		$this->data['entry_position'] = $this->language->get('entry_position');
+		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		
+		$this->data['help_position'] = $this->language->get('help_position');
+		$this->data['help_status'] = $this->language->get('help_status');
+		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
+		
+		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+ 		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
+  		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('common/home'),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('extension/module'),
+       		'text'      => $this->language->get('text_module'),
+      		'separator' => ' :: '
+   		);
+		
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('module/category'),
+       		'text'      => $this->language->get('heading_title'),
+      		'separator' => ' :: '
+   		);
+		
+		$this->data['action'] = Url::createAdminUrl('module/category');
+		
+		$this->data['cancel'] = Url::createAdminUrl('extension/module');
+
+		if (isset($this->request->post['category_position'])) {
+			$this->data['category_position'] = $this->request->post['category_position'];
+		} else {
+			$this->data['category_position'] = $this->config->get('category_position');
+		}
+		
+		$this->data['positions'] = array();
+		
+		$this->data['positions'][] = array(
+			'position' => 'left',
+			'title'    => $this->language->get('text_left'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'right',
+			'title'    => $this->language->get('text_right'),
+		);
+		/*
+		$this->data['positions'][] = array(
+			'position' => 'home',
+			'title'    => $this->language->get('text_home'),
+		);
+		*/
+		if (isset($this->request->post['category_status'])) {
+			$this->data['category_status'] = $this->request->post['category_status'];
+		} else {
+			$this->data['category_status'] = $this->config->get('category_status');
+		}
+		
+		if (isset($this->request->post['category_sort_order'])) {
+			$this->data['category_sort_order'] = $this->request->post['category_sort_order'];
+		} else {
+			$this->data['category_sort_order'] = $this->config->get('category_sort_order');
+		}				
+		
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'jsForm','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'jsFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+		$this->template = 'module/category.tpl';
+		$this->children = array(
+			'common/header',	
+			'common/footer'	
+		);
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+	}
+	
+	/**
+	 * ControllerModuleCategory::validate()
+	 * 
+	 * @return
+	 */
+	private function validate() {
+		if (!$this->user->hasPermission('modify', 'module/category')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+		
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
+}

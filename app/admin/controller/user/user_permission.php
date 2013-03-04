@@ -212,7 +212,7 @@ class ControllerUserUserPermission extends Controller {
 		$data = array(
 			'sort'  => $sort,
 			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_admin_limit'),
+			'start' => ($page - 1) * $limit,
 			'limit' => $limit
 		);
 		

@@ -53,11 +53,11 @@ function addSpecial() {
     html += '<option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>';
     <?php } ?>
     html += '</select></td>';		
-    html += '<td class="left"><input  type="text" name="product_special[' + special_row + '][priority]" value="" size="2"></td>';
-	html += '<td class="left"><input  type="text" name="product_special[' + special_row + '][price]" value=""></td>';
-    html += '<td class="left"><input  type="text" name="product_special[' + special_row + '][date_start]" value="" class="date"></td>';
-	html += '<td class="left"><input  type="text" name="product_special[' + special_row + '][date_end]" value="" class="date"></td>';
-	html += '<td class="left"><a  onclick="$(\'#special_row' + special_row + '\').remove();" class="button"><span><?php echo $button_remove; ?></span></a></td>';
+    html += '<td class="left"><input type="number" name="product_special[' + special_row + '][priority]" value="" size="2" style="width:40px"></td>';
+	html += '<td class="left"><input type="text" name="product_special[' + special_row + '][price]" value=""></td>';
+    html += '<td class="left"><input type="text" name="product_special[' + special_row + '][date_start]" value="" class="date"></td>';
+	html += '<td class="left"><input type="text" name="product_special[' + special_row + '][date_end]" value="" class="date"></td>';
+	html += '<td class="left"><a onclick="$(\'#special_row' + special_row + '\').remove();" class="button"><span><?php echo $button_remove; ?></span></a></td>';
 	html += '</tr>';
     html += '</tbody>';
 	

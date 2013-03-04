@@ -253,7 +253,7 @@ class ControllerReportViewedByCustomer extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $product_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
+		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = Url::createAdminUrl('report/viewedbycustomer&product_id='.$this->request->get['product_id'].'') . '&page={page}';
 			

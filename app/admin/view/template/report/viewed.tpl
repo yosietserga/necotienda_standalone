@@ -7,7 +7,7 @@
   <div class="right"></div>
   <div class="heading">
     <h1 style="background-image: url('image/report.png');"><?php echo $heading_title; ?></h1>
-    <div class="buttons"><a  onclick=" if (confirm('Se borrará toda la información. ¿Desea continuar?')) {location = '<?php echo $reset; ?>';}" class="button"><span><?php echo $button_reset; ?></span></a></div>  
+    <div class="buttons"><a onclick=" if (confirm('Se borrará toda la información. ¿Desea continuar?')) {location = '<?php echo $reset; ?>';}" class="button"><span><?php echo $button_reset; ?></span></a></div>  
   </div>
   <div class="content">  
             <label>Fecha Inicial:</label><input  type="date" name="filter_sdate" value="<?php echo $filter_sdate; ?>" id="sdate">
@@ -40,7 +40,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td align="right"><a  onclick="filter();" class="button"><span><?php echo $button_filter; ?></span></a></td>
+            <td align="right"><a onclick="filter();" class="button"><span><?php echo $button_filter; ?></span></a></td>
           </tr>
         <?php if ($products) { ?>
         <?php foreach ($products as $product) { ?>

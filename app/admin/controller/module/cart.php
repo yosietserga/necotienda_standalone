@@ -1,2 +1,194 @@
-<?php /* WARNING: This file is protected by copyright law. To reverse engineer or decode this file is strictly prohibited. */
-$o="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";eval(base64_decode("JGxsbD0wO2V2YWwoYmFzZTY0X2RlY29kZSgiSkd4c2JHeHNiR3hzYkd4c1BTZGlZWE5sTmpSZlpHVmpiMlJsSnpzPSIpKTskbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd3OUoyOXlaQ2M3IikpOyRsbGxsPTA7JGxsbGxsPTM7ZXZhbCgkbGxsbGxsbGxsbGwoIkpHdzlKR3hzYkd4c2JHeHNiR3hzS0NSdktUcz0iKSk7JGxsbGxsbGw9MDskbGxsbGxsPSgkbGxsbGxsbGxsbCgkbFsxXSk8PDgpKyRsbGxsbGxsbGxsKCRsWzJdKTtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JHdzlKM04wY214bGJpYzciKSk7JGxsbGxsbGxsbD0xNjskbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGxsbGxsbGwoJGwpOyl7aWYoJGxsbGxsbGxsbD09MCl7JGxsbGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsbGxsbCs9JGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTskbGxsbGxsbGxsPTE2O31pZigkbGxsbGxsJjB4ODAwMCl7JGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8NCk7JGxsbCs9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbF0pPj40KTtpZigkbGxsKXskbGw9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSkmMHgwZikrMztmb3IoJGxsbGw9MDskbGxsbDwkbGw7JGxsbGwrKykkbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGxdPSRsbGxsbGxsbFskbGxsbGxsbC0kbGxsKyRsbGxsXTskbGxsbGxsbCs9JGxsO31lbHNleyRsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsKz0kbGxsbGxsbGxsbCgkbFskbGxsbGwrK10pKzE2O2ZvcigkbGxsbD0wOyRsbGxsPCRsbDskbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGwrK109JGxsbGxsbGxsbGwoJGxbJGxsbGxsXSkpOyRsbGxsbCsrOyRsbGxsbGxsKz0kbGw7fX1lbHNlJGxsbGxsbGxsWyRsbGxsbGxsKytdPSRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSk7JGxsbGxsbDw8PTE7JGxsbGxsbGxsbC0tO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JEMG5ZMmh5SnpzPSIpKTskbGxsbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkQwaVB5SXVKR3hzYkd4c2JHeHNiR3hzYkNnMk1pazciKSk7JGxsbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGw7KXskbGxsbGxsbGxsbC49JGxsbGxsbGxsbGxsbCgkbGxsbGxsbGxbJGxsbGxsKytdXjB4MDcpO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkM0OUpHeHNiR3hzYkd4c2JHd3VKR3hzYkd4c2JHeHNiR3hzYkNnMk1Da3VJajhpT3c9PSIpKTtldmFsKCRsbGxsbGxsbGwpOw=="));return;
+<?php
+/**
+ * ControllerModuleCart
+ * 
+ * @package   
+ * @author NecoTienda
+ * @copyright Inversiones Necoyoad, C.A.
+ * @version 2010
+ * @access public
+ */
+class ControllerModuleCart extends Controller {
+	private $error = array(); 
+	
+	/**
+	 * ControllerModuleCart::index()
+	 * 
+	 * @return
+	 */
+	public function index() {   
+		$this->load->language('module/cart');
+
+		$this->document->title = $this->language->get('heading_title');
+		
+		$this->load->auto('setting/setting');
+				
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			$this->modelSetting->editSetting('cart', $this->request->post);		
+					
+			$this->session->set('success',$this->language->get('text_success'));
+						
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('module/cart')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('extension/module')); 
+            }
+		}
+				
+		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_enabled'] = $this->language->get('text_enabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		$this->data['text_left'] = $this->language->get('text_left');
+		$this->data['text_right'] = $this->language->get('text_right');
+		
+		$this->data['entry_ajax'] = $this->language->get('entry_ajax');
+		$this->data['entry_position'] = $this->language->get('entry_position');
+		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		
+		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+ 		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
+  		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('common/home'),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('extension/module'),
+       		'text'      => $this->language->get('text_module'),
+      		'separator' => ' :: '
+   		);
+		
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('module/cart'),
+       		'text'      => $this->language->get('heading_title'),
+      		'separator' => ' :: '
+   		);
+		
+		$this->data['action'] = Url::createAdminUrl('module/cart');
+		
+		$this->data['cancel'] = Url::createAdminUrl('extension/module');
+
+		if (isset($this->request->post['cart_ajax'])) {
+			$this->data['cart_ajax'] = $this->request->post['cart_ajax'];
+		} else {
+			$this->data['cart_ajax'] = $this->config->get('cart_ajax');
+		}
+		
+		if (isset($this->request->post['cart_position'])) {
+			$this->data['cart_position'] = $this->request->post['cart_position'];
+		} else {
+			$this->data['cart_position'] = $this->config->get('cart_position');
+		}
+		
+		if (isset($this->request->post['cart_status'])) {
+			$this->data['cart_status'] = $this->request->post['cart_status'];
+		} else {
+			$this->data['cart_status'] = $this->config->get('cart_status');
+		}
+		
+		if (isset($this->request->post['cart_sort_order'])) {
+			$this->data['cart_sort_order'] = $this->request->post['cart_sort_order'];
+		} else {
+			$this->data['cart_sort_order'] = $this->config->get('cart_sort_order');
+		}				
+		
+		$this->data['positions'] = array();
+		
+		$this->data['positions'][] = array(
+			'position' => 'left',
+			'title'    => $this->language->get('text_left'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'right',
+			'title'    => $this->language->get('text_right'),
+		);
+		
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'jsForm','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'jsFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+		$this->template = 'module/cart.tpl';
+		$this->children = array(
+			'common/header',	
+			'common/footer'	
+		);
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+	}
+	
+	/**
+	 * ControllerModuleCart::validate()
+	 * 
+	 * @return
+	 */
+	private function validate() {
+		if (!$this->user->hasPermission('modify', 'module/cart')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+		
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
+}

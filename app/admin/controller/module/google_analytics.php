@@ -1,2 +1,197 @@
-<?php /* WARNING: This file is protected by copyright law. To reverse engineer or decode this file is strictly prohibited. */
-$o="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";eval(base64_decode("JGxsbD0wO2V2YWwoYmFzZTY0X2RlY29kZSgiSkd4c2JHeHNiR3hzYkd4c1BTZGlZWE5sTmpSZlpHVmpiMlJsSnpzPSIpKTskbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd3OUoyOXlaQ2M3IikpOyRsbGxsPTA7JGxsbGxsPTM7ZXZhbCgkbGxsbGxsbGxsbGwoIkpHdzlKR3hzYkd4c2JHeHNiR3hzS0NSdktUcz0iKSk7JGxsbGxsbGw9MDskbGxsbGxsPSgkbGxsbGxsbGxsbCgkbFsxXSk8PDgpKyRsbGxsbGxsbGxsKCRsWzJdKTtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JHdzlKM04wY214bGJpYzciKSk7JGxsbGxsbGxsbD0xNjskbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGxsbGxsbGwoJGwpOyl7aWYoJGxsbGxsbGxsbD09MCl7JGxsbGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsbGxsbCs9JGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTskbGxsbGxsbGxsPTE2O31pZigkbGxsbGxsJjB4ODAwMCl7JGxsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8NCk7JGxsbCs9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbF0pPj40KTtpZigkbGxsKXskbGw9KCRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSkmMHgwZikrMztmb3IoJGxsbGw9MDskbGxsbDwkbGw7JGxsbGwrKykkbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGxdPSRsbGxsbGxsbFskbGxsbGxsbC0kbGxsKyRsbGxsXTskbGxsbGxsbCs9JGxsO31lbHNleyRsbD0oJGxsbGxsbGxsbGwoJGxbJGxsbGxsKytdKTw8OCk7JGxsKz0kbGxsbGxsbGxsbCgkbFskbGxsbGwrK10pKzE2O2ZvcigkbGxsbD0wOyRsbGxsPCRsbDskbGxsbGxsbGxbJGxsbGxsbGwrJGxsbGwrK109JGxsbGxsbGxsbGwoJGxbJGxsbGxsXSkpOyRsbGxsbCsrOyRsbGxsbGxsKz0kbGw7fX1lbHNlJGxsbGxsbGxsWyRsbGxsbGxsKytdPSRsbGxsbGxsbGxsKCRsWyRsbGxsbCsrXSk7JGxsbGxsbDw8PTE7JGxsbGxsbGxsbC0tO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkd4c2JEMG5ZMmh5SnpzPSIpKTskbGxsbGw9MDtldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkQwaVB5SXVKR3hzYkd4c2JHeHNiR3hzYkNnMk1pazciKSk7JGxsbGxsbGxsbGw9IiI7Zm9yKDskbGxsbGw8JGxsbGxsbGw7KXskbGxsbGxsbGxsbC49JGxsbGxsbGxsbGxsbCgkbGxsbGxsbGxbJGxsbGxsKytdXjB4MDcpO31ldmFsKCRsbGxsbGxsbGxsbCgiSkd4c2JHeHNiR3hzYkM0OUpHeHNiR3hzYkd4c2JHd3VKR3hzYkd4c2JHeHNiR3hzYkNnMk1Da3VJajhpT3c9PSIpKTtldmFsKCRsbGxsbGxsbGwpOw=="));return;
+<?php
+/**
+ * ControllerModuleGoogleanalytics
+ * 
+ * @package NecoTienda powered by opencart
+ * @author Yosiet Serga
+ * @copyright Inversiones Necoyoad, C.A.
+ * @version 1.0.0
+ * @access public
+ * @see Controller
+ */
+class ControllerModuleGoogleanalytics extends Controller {
+	private $error = array(); 
+	
+	/**
+	 * ControllerModuleGoogleanalytics::index()
+	 * 
+	 * @return
+	 */
+	public function index() {   
+		$this->load->language('module/google_analytics');
+
+		$this->document->title = $this->language->get('heading_title');
+		
+		$this->load->auto('setting/setting');
+				
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+			$this->modelSetting->editSetting('google_analytics', $this->request->post);		
+					
+			$this->session->set('success',$this->language->get('text_success'));
+							
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('module/google_analytics')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('extension/module')); 
+            }
+		}
+				
+		$this->data['heading_title'] = $this->language->get('heading_title');
+
+		$this->data['text_enabled'] = $this->language->get('text_enabled');
+		$this->data['text_disabled'] = $this->language->get('text_disabled');
+		
+		$this->data['entry_code'] = $this->language->get('entry_code');
+		$this->data['entry_status'] = $this->language->get('entry_status');
+		
+		$this->data['help_code'] = $this->language->get('help_code');
+		$this->data['help_status'] = $this->language->get('help_status');
+		
+		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel'] = $this->language->get('button_cancel');
+
+ 		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+		
+ 		if (isset($this->error['code'])) {
+			$this->data['error_code'] = $this->error['code'];
+		} else {
+			$this->data['error_code'] = '';
+		}
+		
+  		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('common/home'),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('extension/module'),
+       		'text'      => $this->language->get('text_module'),
+      		'separator' => ' :: '
+   		);
+		
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('module/google_analytics'),
+       		'text'      => $this->language->get('heading_title'),
+      		'separator' => ' :: '
+   		);
+		
+		$this->data['action'] = Url::createAdminUrl('module/google_analytics');
+		
+		$this->data['cancel'] = Url::createAdminUrl('extension/module');
+
+		if (isset($this->request->post['google_analytics_code'])) {
+			$this->data['google_analytics_code'] = $this->request->post['google_analytics_code'];
+		} else {
+			$this->data['google_analytics_code'] = $this->config->get('google_analytics_code');
+		}	
+		
+		if (isset($this->request->post['google_analytics_status'])) {
+			$this->data['google_analytics_status'] = $this->request->post['google_analytics_status'];
+		} else {
+			$this->data['google_analytics_status'] = $this->config->get('google_analytics_status');
+		}
+		
+		$this->data['positions'] = array();
+		
+		$this->data['positions'][] = array(
+			'position' => 'left',
+			'title'    => $this->language->get('text_left'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'right',
+			'title'    => $this->language->get('text_right'),
+		);
+		
+		$this->data['positions'][] = array(
+			'position' => 'home',
+			'title'    => $this->language->get('text_home'),
+		);
+		
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'featuredForm','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'featuredFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+		$this->template = 'module/google_analytics.tpl';
+		$this->children = array(
+			'common/header',	
+			'common/footer'	
+		);
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+	}
+	
+	/**
+	 * ControllerModuleGoogleanalytics::validate()
+	 * 
+	 * @return
+	 */
+	private function validate() {
+		if (!$this->user->hasPermission('modify', 'module/google_analytics')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+		
+		if (!$this->request->post['google_analytics_code']) {
+			$this->error['code'] = $this->language->get('error_code');
+		}
+		
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
+}

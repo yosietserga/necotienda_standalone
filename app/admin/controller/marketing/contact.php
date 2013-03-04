@@ -15,7 +15,7 @@ class ControllerMarketingContact extends Controller {
 		
 		$this->load->auto('marketing/contact');
 		
-    	$this->getExportList();
+    	$this->getList();
   	}
     
     public function export() {
@@ -25,7 +25,7 @@ class ControllerMarketingContact extends Controller {
 		
 		$this->load->auto('marketing/contact');
 		
-    	$this->getExportList();
+    	$this->gettList();
   	}
     
     public function import() {

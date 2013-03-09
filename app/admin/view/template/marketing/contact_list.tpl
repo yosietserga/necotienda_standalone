@@ -6,7 +6,7 @@
             <div class="buttons">
                 <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a>
                 <a onclick="location = '<?php echo $import; ?>'" class="button"><?php echo $button_import; ?></a>
-                <a onclick="location = '<?php echo $export; ?>'" class="button"><?php echo $button_export; ?></a>
+                <!-- <a onclick="location = '<?php echo $export; ?>'" class="button"><?php echo $button_export; ?></a> -->
             </div>
         </div>    
           
@@ -22,7 +22,7 @@
                     
                 <div class="row">
                     <label>Email del Contacto:</label>
-                    <input type="email" name="filter_email" value="" />
+                    <input type="text" name="filter_email" value="" />
                 </div>
                 
                 <div class="row">

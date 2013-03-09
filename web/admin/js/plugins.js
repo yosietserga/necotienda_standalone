@@ -9532,3 +9532,85 @@ if (typeof exports !== "undefined") exports.css_beautify = css_beautify;
 * Copyright 2012 Brad Dougherty; Apache 2.0 License
 */
 (function(e,t,n){"use strict";function s(e,t,n){var r;return function(){var i=this,s=arguments,o=function(){r=null,n||e.apply(i,s)},u=n&&!r;clearTimeout(r),r=setTimeout(o,t),u&&e.apply(i,s)}}function o(e){var t=null;if(e.tagName==="VIDEO")t=e;else{var n=e.getElementsByTagName("video");n[0]&&(t=n[0])}return t}function f(e){var t=o(e);if(t&&t.webkitEnterFullscreen){try{t.readyState<t.HAVE_METADATA?(t.addEventListener("loadedmetadata",function r(){t.removeEventListener("loadedmetadata",r,!1),t.webkitEnterFullscreen(),a=!!t.getAttribute("controls")},!1),t.load()):(t.webkitEnterFullscreen(),a=!!t.getAttribute("controls")),u=t,t.play(),d(),setTimeout(l,500)}catch(n){m.onerror.call(t)}return}m.onerror.call(e)}function l(){if(u){if(u.webkitDisplayingFullscreen===!0)return setTimeout(l,500);v()}}function c(){m.element||(v(),p())}function h(){n&&i.change==="webkitfullscreenchange"&&e.addEventListener("resize",c,!1)}function p(){n&&i.change==="webkitfullscreenchange"&&e.removeEventListener("resize",c,!1)}var r=typeof Element!="undefined"&&"ALLOW_KEYBOARD_INPUT"in Element,i=function(){var e=[{request:"requestFullscreen",exit:"exitFullscreen",enabled:"fullscreenEnabled",element:"fullscreenElement",change:"fullscreenchange",error:"fullscreenerror"},{request:"webkitRequestFullscreen",exit:"webkitExitFullscreen",enabled:"webkitFullscreenEnabled",element:"webkitFullscreenElement",change:"webkitfullscreenchange",error:"webkitfullscreenerror"},{request:"webkitRequestFullScreen",exit:"webkitCancelFullScreen",element:"webkitCurrentFullScreenElement",change:"webkitfullscreenchange",error:"webkitfullscreenerror"},{request:"mozRequestFullScreen",exit:"mozCancelFullScreen",enabled:"mozFullScreenEnabled",element:"mozFullScreenElement",change:"mozfullscreenchange",error:"mozfullscreenerror"}],n=!1,r=t.createElement("video");for(var i=0;i<e.length;i++)if(e[i].request in r){n=e[i];for(var s in n)!("on"+n[s]in t)&&!(n[s]in t)&&!(n[s]in r)&&delete n[s];break}return r=null,n}(),u=null,a=null,d=s(function(){m.onenter.call(m)},100,!0),v=s(function(){u&&!a&&(u.setAttribute("controls","controls"),u.removeAttribute("controls")),u=null,a=null,m.onexit.call(m)},200,!0),m={request:function(e){e=e||t.documentElement;if(i.request===undefined)return f(e);if(n&&t[i.enabled]===!1)return f(e);if(n&&i.enabled===undefined){i.enabled="webkitFullscreenEnabled",e[i.request](),setTimeout(function(){t[i.element]?t[i.enabled]=!0:(t[i.enabled]=!1,f(e))},250);return}try{e[i.request](r&&Element.ALLOW_KEYBOARD_INPUT),t[i.element]||e[i.request]()}catch(s){m.onerror.call(e)}},exit:function(){p(),t[i.exit]()},toggle:function(e){m.element?m.exit():m.request(e)},videoEnabled:function(e){if(m.enabled)return!0;var t=o(e);return!t||t.webkitSupportsFullscreen===undefined?!1:t.readyState<t.HAVE_METADATA?"maybe":t.webkitSupportsFullscreen},onenter:function(){},onexit:function(){},onerror:function(){}};try{Object.defineProperties(m,{element:{enumerable:!0,get:function(){return u&&u.webkitDisplayingFullscreen?u:t[i.element]||null}},enabled:{enumerable:!0,get:function(){return i.exit==="webkitCancelFullScreen"&&!n?!0:t[i.enabled]||!1}}})}catch(g){m.element=null,m.enabled=!1}i.change&&t.addEventListener(i.change,function(e){m.element?(d(),h()):v()},!1),i.error&&t.addEventListener(i.error,function(e){m.onerror.call(e.target)},!1),e.BigScreen=m})(window,document,self!==top);
+
+/* jQuery Widget Combobox */
+(function($) {
+	$.widget("ui.emailCombobox", {
+		_create: function() {
+			var input, that = this,
+				select = this.element.hide(),
+				selected = select.children(":selected"),
+				value = selected.val() ? selected.text() : "",
+				wrapper = this.wrapper = $("<span>").addClass("ui-combobox").insertAfter(select);
+			function removeIfInvalid(element) {
+				var value = $(element).val(),
+					matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(value) + "$", "i"),
+					valid = false;
+				select.children("option").each(function() {
+					if ($(this).text().match(matcher)) {
+						this.selected = valid = true;
+						return false;
+					}
+				});
+				if (!valid) {
+					$(element).val("").attr("title", value + " no coincide con ningun valor").tooltip("open");
+					select.val("");
+					setTimeout(function() {
+						input.tooltip("close").attr("title", "");
+					}, 2500);
+					input.data("autocomplete").term = "";
+					return false;
+				}
+			}
+			input = $("<input>").appendTo(wrapper).val(value).addClass("ui-combobox-input").autocomplete({
+				delay: 0,
+				minLength: 0,
+				source: function(request, response) {
+					var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+					response(select.children("option").map(function() {
+						var text = $(this).text();
+						if (this.value && (!request.term || matcher.test(text))) return {
+							label: text.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + $.ui.autocomplete.escapeRegex(request.term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"),
+							value: text,
+							option: this
+						};
+					}));
+				},
+				select: function(event, ui) {
+					ui.item.option.selected = true;
+					that._trigger("selected", event, {
+						item: ui.item.option
+					});
+                    
+					$('#customer_id').val( ui.item.option.value );
+                    $('#email').val( $(ui.item.option).text() );
+                    $('#name').val( $(ui.item.option).attr('data-customer') );
+				}
+			}).addClass("ui-widget ui-widget-content ui-corner-left");
+			input.data("autocomplete")._renderItem = function(ul, item) {
+				return $("<li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);
+			};
+			$("<a>").attr("tabIndex", -1).attr("title", "Mostrar todas las categorias").tooltip().appendTo(wrapper).button({
+				icons: {
+					primary: "ui-icon-triangle-1-s"
+				},
+				text: false
+			}).removeClass("ui-corner-all").addClass("ui-corner-right ui-combobox-toggle").click(function() {
+				if (input.autocomplete("widget").is(":visible")) {
+					input.autocomplete("close");
+					removeIfInvalid(input);
+					return;
+				}
+				$(this).blur();
+				input.autocomplete("search", "");
+				input.focus();
+			});
+			input.tooltip({
+				position: {
+					of: this.button
+				},
+				tooltipClass: "ui-state-highlight"
+			});
+		}
+	});
+})(jQuery);

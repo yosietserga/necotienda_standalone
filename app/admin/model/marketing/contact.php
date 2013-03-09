@@ -1,23 +1,44 @@
 <?php
 class ModelMarketingContact extends Model {
-	public function addContact($data) {
+	public function add($data) {
       	$this->db->query("INSERT INTO " . DB_PREFIX . "contact SET 
-          name = '" . $this->db->escape($data['name']) . "',
-          email = '" . $this->db->escape($data['email']) . "', 
-          telephone = '" . $this->db->escape($data['telephone']) . "',
-          newsletter = '" . (int)$data['newsletter'] . "', 
-          customer_id = '" . (int)$data['customer_id'] . "',
-          date_added = NOW()");
+          name          = '" . $this->db->escape($data['name']) . "',
+          email         = '" . $this->db->escape($data['email']) . "', 
+          customer_id   = '" . (int)$data['customer_id'] . "',
+          date_added    = NOW()");
+          
+       $contact_id = $this->db->getLastId();
+       
+       if (!empty($data['contact_list'])) {
+            foreach ($data['contact_list'] as $id) {
+                $this->db->query("INSERT INTO ". DB_PREFIX ."contact_to_list SET 
+                contact_list_id = '". (int)$id ."',
+                contact_id      = '". (int)$contact_id ."',
+                date_added      = NOW()");
+            }
+       }
+       
+       return $contact_id;
 	}
 	
-	public function editContact($contact_id, $data) {
+	public function update($contact_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "contact SET 
           name = '" . $this->db->escape($data['name']) . "',
           email = '" . $this->db->escape($data['email']) . "', 
-          telephone = '" . $this->db->escape($data['telephone']) . "',
-          newsletter = '" . (int)$data['newsletter'] . "', 
           customer_id = '" . (int)$data['customer_id'] . "',
+          date_modified = NOW()
         WHERE contact_id = '" . (int)$contact_id . "'");
+        
+        if (!empty($data['contact_list'])) {
+            $this->db->query("DELETE FROM ". DB_PREFIX ."contact_to_list WHERE contact_id = '". (int)$contact_id ."'");
+            foreach ($data['contact_list'] as $id) {
+                $this->db->query("INSERT INTO ". DB_PREFIX ."contact_to_list SET 
+                contact_list_id = '". (int)$id ."',
+                contact_id      = '". (int)$contact_id ."',
+                date_added      = NOW()");
+            }
+       }
+       
 	}
 	
 	public function getContact($contact_id) {
@@ -48,23 +69,34 @@ class ModelMarketingContact extends Model {
         return $data;
     }	
     
+    public function getListsByContactId($id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "contact_list l 
+        LEFT JOIN " . DB_PREFIX . "contact_to_list c2l ON (l.contact_list_id=c2l.contact_list_id) 
+        WHERE c2l.contact_id = ". (int)$id);
+        
+        $data = array();
+        foreach ($query->rows as $row) {
+            $data[] = $row['contact_list_id'];
+        }
+        return $data;
+    }	
+    
 	public function getContacts($data = array()) {
 		$sql = "SELECT *, co.email AS mail, co.date_added AS created
         FROM " . DB_PREFIX . "contact co 
-        LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = co.customer_id) 
-        LEFT JOIN " . DB_PREFIX . "address a ON (a.address_id = c.address_id) ";
+        LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = co.customer_id) ";
 
 		$implode = array();
 		
-		if ($data['filter_name']) {
+		if (!empty($data['filter_name'])) {
 			$implode[] = "co.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
 		}
 		
-		if ($data['filter_email']) {
+		if (!empty($data['filter_email'])) {
 			$implode[] = "co.email LIKE '%" . $this->db->escape($data['filter_email']) . "%'";
 		}
         
-		if ($data['filter_date_start'] && $data['filter_date_end']) {
+		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
             $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
 		} elseif (!empty($data['filter_date_start'])) {
             $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
@@ -114,15 +146,15 @@ class ModelMarketingContact extends Model {
 		
 		$implode = array();
 		
-		if ($data['filter_name']) {
+		if (!empty($data['filter_name'])) {
 			$implode[] = "co.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
 		}
 		
-		if ($data['filter_email']) {
+		if (!empty($data['filter_email'])) {
 			$implode[] = "co.email LIKE '%" . $this->db->escape($data['filter_email']) . "%'";
 		}
         
-		if ($data['filter_date_start'] && $data['filter_date_end']) {
+		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
             $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
 		} elseif (!empty($data['filter_date_start'])) {
             $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";

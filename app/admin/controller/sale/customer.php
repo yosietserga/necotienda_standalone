@@ -1081,6 +1081,33 @@ class ControllerSaleCustomer extends Controller {
 		}  
   	} 	
     
+    public function callback() {
+		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
+		header('Cache-Control: no-cache, must-revalidate');
+		header("Pragma: no-cache");
+		header("Content-type: application/json");
+
+		$this->load->model('sale/customer');
+        $name = $this->request->get['term'];
+        
+        $results = $this->modelCustomer->getCustomers();
+        if (!$results) {
+    		 $data['error'] = 1; 
+		} else {
+		  foreach ($results as $key => $value) {
+		      $data[] = array(
+                'id' => $value['cid'],
+                'label' => $value['email'],
+                'value' => $value['name'],
+              );
+		  }
+		      
+		}
+		$this->load->library('json');
+		$this->response->setOutput(Json::encode($data), $this->config->get('config_compression'));
+    }
+    
     /**
      * ControllerSaleCategory::activate()
      * activar o desactivar un objeto accedido por ajax

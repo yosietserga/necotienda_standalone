@@ -13,327 +13,43 @@ class ControllerMarketingContact extends Controller {
 		 
 		$this->document->title = $this->language->get('heading_title');
 		
-		$this->load->auto('marketing/contact');
-		
-    	$this->getList();
-  	}
-    
-    public function export() {
-		$this->load->language('marketing/contact');
-		 
-		$this->document->title = $this->language->get('heading_title');
-		
-		$this->load->auto('marketing/contact');
-		
-    	$this->gettList();
-  	}
-    
-    public function import() {
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		  
+			$contact_id = $this->modelContact->add($this->request->post);
+			$this->session->set('success',$this->language->get('text_success'));
+            
+            if ($this->request->post['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('marketing/contact/update',array('contact_id'=>$contact_id,'menu'=>'mercadeo'))); 
+            } elseif ($this->request->post['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('marketing/contact/insert',array('menu'=>'mercadeo'))); 
+            } else {
+                $this->redirect(Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo'))); 
+            }
+		}
         
-        $error = false;
-        $errormsg = '';
-		$this->load->auto('marketing/contact');
-		$member_info = $this->modelemail_member->getContactExport($this->request->get['member_id']);
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if (!empty($_FILES)) {
-                $temp_file = $_FILES['file_import']['tmp_name'];
-                $filename = basename($_FILES['file_import']['name']);
-                $fileinfo = pathinfo($filename);
-                if ($fileinfo['extension'] !== 'csv') {
-                    $errormsg .= "- El formato del archivo es incorrecto\\n";
-                    $error = true;
-                }
-                if ($_FILES['file_import']['type'] !== 'application/vnd.ms-excel') {
-                    $errormsg .= "- El archivo posee un tipo de dato ilegible\\n";
-                    $error = true;
-                }
-                $filecontent = file($temp_file);
-                if (empty($filecontent)) {                    
-                    $errormsg .= "- El archivo esta vacio\\n";
-                    $error = true;
-                }
-                if ($_FILES['file_import']['size'] > 2097152) {
-                    $errormsg .= "- El archivo es muy grande, solo se permiten hasta 2MB\\n";
-                    $error = true;
-                }
-                if (!isset($this->request->post['format']) || $this->request->post['format'] == 'false') {
-                    $errormsg .= "- Debe seleccionar una estructura para el archivo\\n";
-                    $error = true;                    
-                }
-                if (!$error) {
-                $data = array();         
-                foreach ($filecontent as $line) {
-                    $data[] = explode(',',$line);
-                }   
-                $csv = array();
-                $csv['header'] = $data[0];
-                array_shift($data);
-                $csv['body'] = $data;
-                switch($this->request->post['format']) {
-                    case 'hotmail':  
-                        array_splice($csv['header'],0,1); 
-                        array_splice($csv['header'],1,1); 
-                        array_splice($csv['header'],2,9); 
-                        array_splice($csv['header'],7,6); 
-                        array_splice($csv['header'],9,2); 
-                        array_splice($csv['header'],10,11); 
-                        array_splice($csv['header'],11,5); 
-                        array_splice($csv['header'],12,2); 
-                        array_splice($csv['header'],13,2); 
-                        array_splice($csv['header'],14,27); 
-                        foreach($csv['body'] as $k => $content) {
-                            array_splice($content,0,1); 
-                            array_splice($content,1,1); 
-                            array_splice($content,2,9); 
-                            array_splice($content,7,6); 
-                            array_splice($content,9,2); 
-                            array_splice($content,10,11); 
-                            array_splice($content,11,5); 
-                            array_splice($content,12,2); 
-                            array_splice($content,13,2); 
-                            array_splice($content,14,27); 
-                            $csv['body'][$k] = $content;
-                        }
-                        foreach($csv['body'] as $k => $content) {  
-                            $chars = array('"','\'',"[","]","[","!","#","$","%","&","/","(",")","=","?","\\","¡","¿");
-                            $content = str_replace($chars,"",$content);
-                            $content = str_replace("-"," ",$content);
-                            $content = str_replace("_"," ",$content);
-                            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `email` = '".$this->db->escape($content[11])."'");
-                            if ((sizeof($query->row) > 0) || empty($content[11]) || empty($content[0]) || empty($content[1])) {
-                                continue;
-                            } else {
-                                $sql = "INSERT INTO " . DB_PREFIX . "customer SET 
-                                `firstname` = '".$content[0]."',
-                                `lastname` = '".$content[1]."',
-                                `fax` = '".$content[7]."',";
-                                if (!empty($content[9])) {
-                                    $sql .= "`telephone` = '".$content[9]."',";
-                                } else {
-                                    $sql .= "`telephone` = '".$content[8]."',";                                
-                                }
-                                $sql .= "`nacimiento` = '".$content[10]."',
-                                `email` = '".$content[11]."',
-                                `msn` = '".$content[11]."',
-                                `website` = '".$content[14]."',
-                                `ip` = '".$_SERVER['SERVER_ADDR']."',
-                                `newsletter` = '1',
-                                `date_added` = NOW()";
-                                $this->db->query($sql);                                
-                            }
-                            //TODO: Limpiar el string del telefono y del fax para pasarlo a formato internacional
-                            //TODO: Crear sentencia sql para guardar la dirección en el formato correcto
-                            //TODO: Detectar los dominios de los emails alternos para guardarlos donde deben (msn, gmail, yahoo)
-                        }
-                        break;
-                    case 'gmail':
-                        array_splice($csv['header'],1,2); 
-                        array_splice($csv['header'],2,10);
-                        array_splice($csv['header'],3,13); 
-                        array_splice($csv['header'],4,1); 
-                        array_splice($csv['header'],5,1); 
-                        foreach($csv['body'] as $k => $content) {
-                        array_splice($content,1,2); 
-                        array_splice($content,2,10);
-                        array_splice($content,3,13); 
-                        array_splice($content,4,1); 
-                        array_splice($content,5,1); 
-                            $csv['body'][$k] = $content;
-                        }                        
-                        foreach($csv['body'] as $k => $content) {  
-                            $chars = array('"','\'',"[","]","[","!","#","$","%","&","/","(",")","=","?","\\","¡","¿");
-                            $content = str_replace($chars,"",$content);
-                            $content = str_replace("-"," ",$content);
-                            $content = str_replace("_"," ",$content);
-                            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `email` = '".$this->db->escape($content[3])."'");
-                            if ((sizeof($query->row) > 0) || empty($content[3]) || empty($content[0]) || empty($content[1])) {
-                                continue;
-                            } else {
-                                $sql = "INSERT INTO " . DB_PREFIX . "customer SET 
-                                `firstname` = '".$content[0]."',
-                                `lastname` = '".$content[1]."',
-                                `telephone` = '".$content[5]."',
-                                `nacimiento` = '".$content[2]."',
-                                `email` = '".$content[3]."',
-                                `gmail` = '".$content[3]."',
-                                `website` = '".$content[14]."',
-                                `ip` = '".$_SERVER['SERVER_ADDR']."',
-                                `newsletter` = '1',
-                                `date_added` = NOW()";
-                                $this->db->query($sql);                                
-                            }
-                            //TODO: Limpiar el string del telefono y del fax para pasarlo a formato internacional
-                            //TODO: Crear sentencia sql para guardar la dirección en el formato correcto
-                            //TODO: Detectar los dominios de los emails alternos para guardarlos donde deben (msn, gmail, yahoo)
-                            //TODO: Limpiar y acomodar formato de la fecha
-                        }
-                        break;
-                    case 'yahoo':                        
-                        array_splice($csv['header'],1,1); 
-                        array_splice($csv['header'],2,1);
-                        array_splice($csv['header'],3,3); 
-                        array_splice($csv['header'],5,1); 
-                        array_splice($csv['header'],7,3); 
-                        array_splice($csv['header'],11,1); 
-                        array_splice($csv['header'],12,5); 
-                        array_splice($csv['header'],18,15); 
-                        array_splice($csv['header'],19,2);
-                        array_splice($csv['header'],21,2); 
-                        foreach($csv['body'] as $k => $content) {
-                        array_splice($content,1,1); 
-                        array_splice($content,2,1);
-                        array_splice($content,3,3); 
-                        array_splice($content,5,1); 
-                        array_splice($content,7,3); 
-                        array_splice($content,11,1); 
-                        array_splice($content,12,5); 
-                        array_splice($content,18,15); 
-                        array_splice($content,19,2);
-                        array_splice($content,21,2); 
-                            $csv['body'][$k] = $content;
-                        }   
-                        foreach($csv['body'] as $k => $content) {  
-                            $chars = array('"','\'',"[","]","[","!","#","$","%","&","/","(",")","=","?","\\","¡","¿");
-                            $content = str_replace($chars,"",$content);
-                            $content = str_replace("-"," ",$content);
-                            $content = str_replace("_"," ",$content);
-                            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `email` = '".$this->db->escape($content[2])."'");
-                            if ((sizeof($query->row) > 0) || empty($content[2]) || empty($content[0]) || empty($content[1])) {
-                                continue;
-                            } else {
-                                $sql = "INSERT INTO " . DB_PREFIX . "customer SET 
-                                `firstname` = '".$content[0]."',
-                                `lastname` = '".$content[1]."',
-                                `fax` = '".$content[5]."',";
-                                if (!empty($content[6])) {
-                                    $sql .= "`telephone` = '".$content[6]."',";
-                                } else {
-                                    $sql .= "`telephone` = '".$content[3]."',";                                
-                                }
-                                $sql .= "`nacimiento` = '".$content[17]."',
-                                `email` = '".$content[2]."',
-                                `yahoo` = '".$content[2]."',
-                                `website` = '".$content[9]."',
-                                `skype` = '".$content[18]."',
-                                `gmail` = '".$content[19]."',
-                                `msn` = '".$content[20]."',
-                                `ip` = '".$_SERVER['SERVER_ADDR']."',
-                                `newsletter` = '1',
-                                `date_added` = NOW()";
-                                $this->db->query($sql);                                
-                            }
-                            //TODO: Limpiar el string del telefono y del fax para pasarlo a formato internacional
-                            //TODO: Crear sentencia sql para guardar la dirección en el formato correcto
-                            //TODO: Detectar los dominios de los emails alternos para guardarlos donde deben (msn, gmail, yahoo)
-                            //TODO: Limpiar y acomodar formato de la fecha
-                        }
-                        break;  
-                    /* // Para cuando haya la posibilidad de exportar en formato CSV los contactos de facebook                      
-                    case 'facebook':                        
-                        array_splice($csv['header'],0,1); 
-                        array_splice($csv['header'],2,2); 
-                        array_splice($csv['header'],3,1); 
-                        array_splice($csv['header'],7,4); 
-                        array_splice($csv['header'],8,1); 
-                        foreach($csv['body'] as $k => $content) {
-                        array_splice($content,0,1); 
-                        array_splice($content,2,2); 
-                        array_splice($content,3,1); 
-                        array_splice($content,7,4); 
-                        array_splice($content,8,1); 
-                            $csv['body'][$k] = $content;
-                        }                         
-                        foreach($csv['body'] as $k => $content) {  
-                            $chars = array('"','\'',"[","]","[","!","#","$","%","&","/","(",")","=","?","\\","¡","¿");
-                            $content = str_replace($chars,"",$content);
-                            $content = str_replace("-"," ",$content);
-                            $content = str_replace("_"," ",$content);
-                            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `facebook` = '".$this->db->escape($content[7])."'");
-                            if ((sizeof($query->row) > 0) || empty($content[7]) || empty($content[0]) || empty($content[1])) {
-                                continue;
-                            } else {
-                                $sql = "INSERT INTO " . DB_PREFIX . "customer SET 
-                                `firstname` = '".$content[0]."',
-                                `lastname` = '".$content[1]."',
-                                `nacimiento` = '".$content[2]."',
-                                `facebook` = '".$content[7]."',
-                                `ip` = '".$_SERVER['SERVER_ADDR']."',
-                                `newsletter` = '1',
-                                `date_added` = NOW()";
-                                $this->db->query($sql);                                
-                            }
-                            //TODO: Limpiar el string del telefono y del fax para pasarlo a formato internacional
-                            //TODO: Crear sentencia sql para guardar la dirección en el formato correcto
-                            //TODO: Detectar los dominios de los emails alternos para guardarlos donde deben (msn, gmail, yahoo)
-                            //TODO: Limpiar y acomodar formato de la fecha
-                        }     
-                        break;
-                        */
-                    default:                        
-                        foreach($csv['body'] as $k => $content) {  
-                            $chars = array('"','\'',"[","]","[","!","#","$","%","&","/","(",")","=","?","\\","¡","¿");
-                            $content = str_replace($chars,"",$content);
-                            $content = str_replace("-"," ",$content);
-                            $content = str_replace("_"," ",$content);
-                            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `email` = '".$this->db->escape($content[2])."'");
-                            if ((sizeof($query->row) > 0) || empty($content[2]) || empty($content[0]) || empty($content[1])) {
-                                continue;
-                            } else {
-                                $sql = "INSERT INTO " . DB_PREFIX . "customer SET 
-                                `firstname` = '".$content[0]."',
-                                `lastname` = '".$content[1]."',
-                                `email` = '".$content[2]."',
-                                `telephone` = '".$content[3]."',
-                                `fax` = '".$content[4]."',
-                                `company` = '".$content[5]."',
-                                `rif` = '".$content[6]."',
-                                `website` = '".$content[8]."',
-                                `blog` = '".$content[9]."',
-                                `msn` = '".$content[10]."',
-                                `gmail` = '".$content[1]."',
-                                `yahoo` = '".$content[12]."',
-                                `facebook` = '".$content[13]."',
-                                `twitter` = '".$content[14]."',
-                                `skype` = '".$content[15]."',
-                                `titulo` = '".$content[16]."',
-                                `profesion` = '".$content[17]."',
-                                `ip` = '".$_SERVER['SERVER_ADDR']."',
-                                `newsletter` = '1',
-                                `date_added` = NOW()";
-                                $this->db->query($sql);                                
-                            }
-                            //TODO: Limpiar el string del telefono y del fax para pasarlo a formato internacional
-                            //TODO: Crear sentencia sql para guardar la dirección en el formato correcto
-                            //TODO: Detectar los dominios de los emails alternos para guardarlos donde deben (msn, gmail, yahoo)
-                            //TODO: Limpiar y acomodar formato de la fecha
-                            }
-                        break;        
-                } 
-          } else { 
-            echo "<script>alert('$errormsg');</script>";
-        }
-        } 
-  	  }
+    	$this->getForm();
+  	}
+    
+    public function update() {
 		$this->load->language('marketing/contact');
 		 
 		$this->document->title = $this->language->get('heading_title');
 		
-		$this->load->auto('marketing/contact');
-		
-    	$this->getImportList();
-  	}
-    
-    public function addContactToList() {	
-		$this->load->auto('marketing/lists');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelemail_lists->addContactToList($this->request->post);
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		  
+			$contact_id = $this->modelContact->update($this->request->getQuery('contact_id'),$this->request->post);
+			$this->session->set('success',$this->language->get('text_success'));
+            
+            if ($this->request->post['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('marketing/contact/update',array('contact_id'=>$contact_id,'menu'=>'mercadeo'))); 
+            } elseif ($this->request->post['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('marketing/contact/insert',array('menu'=>'mercadeo'))); 
+            } else {
+                $this->redirect(Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo'))); 
+            }
 		}
-  	}
-    public function addContactToAllLists() {	
-		$this->load->auto('marketing/lists');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelemail_lists->addContactToAllLists($this->request->post);
-		}
+        
+    	$this->getForm();
   	}
     
     /**
@@ -342,7 +58,6 @@ class ControllerMarketingContact extends Controller {
      * @return boolean
      * */
      public function delete() {
-        $this->load->auto('marketing/contact');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelContact->delete($id);
@@ -353,7 +68,6 @@ class ControllerMarketingContact extends Controller {
      }
     
     public function exportThis() {	
-		$this->load->auto('marketing/contact');
         $dir_vcards = opendir($_SERVER['DOCUMENT_ROOT']);
         while ($file_vcf = readdir($dir_vcards) !== false) {
             if (!is_dir($_SERVER['DOCUMENT_ROOT'].$file_vcf)) {
@@ -363,38 +77,38 @@ class ControllerMarketingContact extends Controller {
                 }
             }
         }
-		$member_info = $this->modelemail_member->getContactExport($this->request->get['member_id']);
-        if ($member_info) {
+		$contact_info = $this->modelemail_contact->getContactExport($this->request->get['contact_id']);
+        if ($contact_info) {
             $rand = rand();
             $this->vcard->vCard($this->config,$_SERVER['DOCUMENT_ROOT']);
             $this->vcard->deleteOldFiles();
-                $this->vcard->card_filename = $member_info['firstname'].'_'.$member_info['lastname'].'_'.$rand.'.vcf';
-                $this->vcard->setFirstName($member_info['firstname']);
-                $this->vcard->setLastName($member_info['lastname']);
-                $this->vcard->setNickname($member_info['firstname'].'_'.$member_info['lastname']);
-                $this->vcard->setCompany($member_info['company']);
-                $this->vcard->setOrganisation($member_info['company']);
-                $this->vcard->setDepartment($member_info['profesion']);
-                $this->vcard->setJobTitle($member_info['titulo']);
-                $this->vcard->setTelephoneWork1($member_info['telephone']);
-                $this->vcard->setTelephoneWork2($member_info['telephone']);
-                $this->vcard->setTelephoneHome1($member_info['telephone']);
-                $this->vcard->setTelephoneHome2($member_info['telephone']);
-                $this->vcard->setCellphone($member_info['telephone']);
-                $this->vcard->setCarphone($member_info['telephone']);
-                $this->vcard->setPager($member_info['telephone']);
-                $this->vcard->setAdditionalTelephone($member_info['telephone']);
-                $this->vcard->setFaxWork($member_info['fax']);
-                $this->vcard->setFaxHome($member_info['fax']);
-                $this->vcard->setPreferredTelephone($member_info['telephone']);
-                $this->vcard->setTelex($member_info['telephone']);
-                $this->vcard->setWorkStreet($member_info['address_1'].', '.$member_info['city']);
-                $this->vcard->setHomeStreet($member_info['address_1'].', '.$member_info['city']);
-                $this->vcard->setPostalStreet($member_info['address_1'].', '.$member_info['city']);
-                $this->vcard->setURLWork($member_info['website']);
-                $this->vcard->setEMail($member_info['email']);
+                $this->vcard->card_filename = $contact_info['firstname'].'_'.$contact_info['lastname'].'_'.$rand.'.vcf';
+                $this->vcard->setFirstName($contact_info['firstname']);
+                $this->vcard->setLastName($contact_info['lastname']);
+                $this->vcard->setNickname($contact_info['firstname'].'_'.$contact_info['lastname']);
+                $this->vcard->setCompany($contact_info['company']);
+                $this->vcard->setOrganisation($contact_info['company']);
+                $this->vcard->setDepartment($contact_info['profesion']);
+                $this->vcard->setJobTitle($contact_info['titulo']);
+                $this->vcard->setTelephoneWork1($contact_info['telephone']);
+                $this->vcard->setTelephoneWork2($contact_info['telephone']);
+                $this->vcard->setTelephoneHome1($contact_info['telephone']);
+                $this->vcard->setTelephoneHome2($contact_info['telephone']);
+                $this->vcard->setCellphone($contact_info['telephone']);
+                $this->vcard->setCarphone($contact_info['telephone']);
+                $this->vcard->setPager($contact_info['telephone']);
+                $this->vcard->setAdditionalTelephone($contact_info['telephone']);
+                $this->vcard->setFaxWork($contact_info['fax']);
+                $this->vcard->setFaxHome($contact_info['fax']);
+                $this->vcard->setPreferredTelephone($contact_info['telephone']);
+                $this->vcard->setTelex($contact_info['telephone']);
+                $this->vcard->setWorkStreet($contact_info['address_1'].', '.$contact_info['city']);
+                $this->vcard->setHomeStreet($contact_info['address_1'].', '.$contact_info['city']);
+                $this->vcard->setPostalStreet($contact_info['address_1'].', '.$contact_info['city']);
+                $this->vcard->setURLWork($contact_info['website']);
+                $this->vcard->setEMail($contact_info['email']);
                 $this->vcard->writeCardFile();                  
-                header('Location: http://'.$_SERVER['SERVER_NAME'].'/'.$member_info['firstname'].'_'.$member_info['lastname'].'_'.$rand.'.vcf');   
+                header('Location: http://'.$_SERVER['SERVER_NAME'].'/'.$contact_info['firstname'].'_'.$contact_info['lastname'].'_'.$rand.'.vcf');   
             }
         $dir_vcards = opendir($_SERVER['DOCUMENT_ROOT']);
         while ($file_vcf = readdir($dir_vcards) !== false) {
@@ -406,54 +120,6 @@ class ControllerMarketingContact extends Controller {
             }
         }
   	}
-    
-  	public function update() {
-		$this->load->language('marketing/contact');
-
-    	$this->document->title = $this->language->get('heading_title');
-		
-		$this->load->auto('marketing/contact');
-		
-    	if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelCustomer->editContact($this->request->get['member_id'], $this->request->post);
-	  		
-			$this->session->set('success',$this->language->get('text_success'));
-	  
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . $this->request->get['filter_name'];
-			}
-			
-			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . $this->request->get['filter_email'];
-			}
-			
-			if (isset($this->request->get['filter_newsletter'])) {
-				$url .= '&filter_newsletter=' . $this->request->get['filter_newsletter'];
-			}
-		
-			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-			}
-						
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('marketing/contact') . $url);
-		}
-    
-    	$this->getForm();
-  	}    
     
   	private function getList() {
   		$this->document->breadcrumbs = array();
@@ -465,14 +131,14 @@ class ControllerMarketingContact extends Controller {
    		);
 
    		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('marketing/contact') . $url,
+       		'href'      => Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo')) . $url,
        		'text'      => $this->language->get('heading_title'),
       		'separator' => ' :: '
    		);
 		
-        $this->data['insert'] = Url::createAdminUrl('marketing/contact/insert') . $url;
-        $this->data['import'] = Url::createAdminUrl('marketing/contact/import');
-        $this->data['export'] = Url::createAdminUrl('marketing/contact/export');
+        $this->data['insert'] = Url::createAdminUrl('marketing/contact/insert',array('menu'=>'mercadeo')) . $url;
+        $this->data['import'] = Url::createAdminUrl('marketing/contact/import',array('menu'=>'mercadeo'));
+        $this->data['export'] = Url::createAdminUrl('marketing/contact/export',array('menu'=>'mercadeo'));
 		
 		$this->data['heading_title'] = $this->document->title = $this->language->get('heading_title');
 
@@ -582,8 +248,6 @@ class ControllerMarketingContact extends Controller {
 		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
 		if (!empty($this->request->get['limit'])) { $url .= '&limit=' . $this->request->get['limit']; } 
 
-		$this->data['members'] = array();
-
 		$data = array(
 			'filter_name'              => $filter_name, 
 			'filter_email'             => $filter_email,  
@@ -595,7 +259,7 @@ class ControllerMarketingContact extends Controller {
 			'limit'                    => $limit
 		);
 		
-		$member_total = $this->modelContact->getTotalContacts($data);
+		$contact_total = $this->modelContact->getTotalContacts($data);
 	
 		$results = $this->modelContact->getContacts($data);
  
@@ -605,15 +269,15 @@ class ControllerMarketingContact extends Controller {
 		    $action['edit'] = array(
                 'action'  => 'edit',
                 'text'  => $this->language->get('text_edit'),
-                'href'  =>Url::createAdminUrl('marketing/contact/update') . '&newsletter_id=' . $result['newsletter_id'] . $url,
+                'href'  =>Url::createAdminUrl('marketing/contact/update',array('menu'=>'mercadeo')) . '&contact_id=' . $result['contact_id'] . $url,
                 'img'   => 'edit.png'
    			);
             
 		    $action['delete'] = array(
-                        'action'  => 'delete',
-                        'text'  => $this->language->get('text_delete'),
-                        'href'  =>'',
-                        'img'   => 'delete.png'
+                'action'  => 'delete',
+                'text'  => $this->language->get('text_delete'),
+                'href'  =>'',
+                'img'   => 'delete.png'
    			);
             
 			$this->data['contacts'][] = array(
@@ -706,7 +370,7 @@ class ControllerMarketingContact extends Controller {
 		$pagination = new Pagination();
 		$pagination->ajax = true;
 		$pagination->ajaxTarget = "gridWrapper";
-		$pagination->total = $member_total;
+		$pagination->total = $contact_total;
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
@@ -726,502 +390,452 @@ class ControllerMarketingContact extends Controller {
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
   	}
     
-    private function getExportList() {
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-		
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'name'; 
-		}
-		
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-		
-		if (isset($this->request->get['filter_name'])) {
-			$filter_name = $this->request->get['filter_name'];
-		} else {
-			$filter_name = NULL;
-		}
-
-		if (isset($this->request->get['filter_email'])) {
-			$filter_email = $this->request->get['filter_email'];
-		} else {
-			$filter_email = NULL;
-		}
-
-		if (isset($this->request->get['filter_newsletter'])) {
-			$filter_newsletter = $this->request->get['filter_newsletter'];
-		} else {
-			$filter_newsletter= NULL;
-		}
-		
-		if (isset($this->request->get['filter_date_added'])) {
-			$filter_date_added = $this->request->get['filter_date_added'];
-		} else {
-			$filter_date_added = NULL;
-		}		
-		
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . $this->request->get['filter_name'];
-		}
-		
-		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . $this->request->get['filter_email'];
-		}
-			
-		if (isset($this->request->get['filter_newsletter'])) {
-			$url .= '&filter_newsletter=' . $this->request->get['filter_newsletter'];
-		}
-        
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-						
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-  		$this->document->breadcrumbs = array();
-
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
-
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('marketing/contact') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('marketing/contact/export') . $url,
-       		'text'      => $this->language->get('heading_export'),
-      		'separator' => ' :: '
-   		);
-		
-		$this->data['members'] = array();
-
-		$data = array(
-			'filter_name'              => $filter_name, 
-			'filter_email'             => $filter_email,  
-			'filter_newsletter'        => $filter_newsletter, 
-			'filter_date_added'        => $filter_date_added,
-			'sort'                     => $sort,
-			'order'                    => $order
-		);
-		
-		$member_total = $this->modelemail_member->getTotalContacts($data);
-	
-		$results = $this->modelemail_member->getContacts($data);
- 
-    	foreach ($results as $result) {
-			$action = array();
-		
-			$action[] = array(
-				'text' => $this->language->get('text_export'),
-				'href' => Url::createAdminUrl('marketing/contact/exportThis') . '&member_id=' . $result['customer_id'] . $url
-			);
-			$totalByList = $this->modelemail_member->getTotalContactsByList($result['customer_id']);
-			$this->data['members'][] = array(
-				'customer_id'    => $result['customer_id'],
-				'name'           => $result['name'],
-				'firstname'      => $result['firstname'],
-				'lastname'       => $result['lastname'],
-				'telephone'      => $result['telephone'],
-				'fax'            => $result['fax'],
-				'rif'            => $result['rif'],
-				'company'        => $result['company'],
-				'blog'           => $result['blog'],
-				'website'        => $result['website'],
-				'profesion'      => $result['profesion'],
-				'titulo'         => $result['titulo'],
-				'msn'            => $result['msn'],
-				'city'           => $result['city'],
-				'address_1'      => $result['address_1'],
-				'twitter'        => $result['twitter'],
-				'facebook'       => $result['facebook'],
-				'skype'          => $result['skype'],
-				'yahoo'          => $result['yahoo'],
-				'gmail'          => $result['gmail'],
-				'email'          => $result['email'],
-				'total'          => $totalByList['total'],
-				'newsletter'     => ($result['newsletter'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-				'approved'       => ($result['approved'] ? $this->language->get('text_yes') : $this->language->get('text_no')),
-				'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-				'selected'       => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']),
-				'action'         => $action
-			);
-		}          
-        $this->data['content_excel'] = "Nombre\tApellido\tEmail\tTelefono\tFax\tCompany\tRIF\tDireccion\tWebsite\tBlog\tMSN\tGmail\tYahoo\tFacebook\tTwitter\Skype\tTitulo\tProfesion\tCreado\t\n";
-        $this->data['content_csv']   ="Nombre,Apellido,Email,Telefono,Fax,Company,RIF,Direccion,Website,Blog,MSN,Gmail,Yahoo,Facebook,Twitter,Skype,Titulo,Profesion,Creado\n";
-        foreach ($this->data['members'] as $member) { 
-                $this->data['content_excel'] .= $member['firstname']."\t".$member['lastname']."\t".$member['email']."\t".$member['telephone']."\t".$member['fax']."\t".$member['company']."\t".$member['rif']."\t".$member['address_1'].", ".$member['city']."\t".$member['website']."\t".$member['blog']."\t".$member['msn']."\t".$member['gmail']."\t".$member['yahoo']."\t".$member['facebook']."\t".$member['twitter']."\t".$member['skype']."\t".$member['titulo']."\t".$member['profesion']."\t".$member['date_added']."\t\n";
-                $this->data['content_csv'] .= $member['firstname'].",".$member['lastname'].",".$member['email'].",".$member['telephone'].",".$member['fax'].",".$member['company'].",".$member['rif'].",".$member['address_1'].", ".$member['city'].",".$member['website'].",".$member['blog'].",".$member['msn'].",".$member['gmail'].",".$member['yahoo'].",".$member['facebook'].",".$member['twitter'].",".$member['skype'].",".$member['titulo'].",".$member['profesion'].",".$member['date_added'].",\n";
-                $this->data['content_vcard'] = 
-                    "BEGIN:VCARD
-                    VERSION:2.1
-                    N;ENCODING=QUOTED-PRINTABLE:".$member['lastname'].";".$member['firstname'].";;
-                    FN;ENCODING=QUOTED-PRINTABLE:".$member['firstname']."  ".$member['lastname']." 
-                    NICKNAME;ENCODING=QUOTED-PRINTABLE:".$member['firstname']."_".$member['lastname']."
-                    ORG;LANGUAGE=es;ENCODING=QUOTED-PRINTABLE:".$member['company'].";".$member['profesion']."
-                    TITLE;LANGUAGE=es;ENCODING=QUOTED-PRINTABLE:".$member['titulo']."
-                    TEL;WORK;VOICE:".$member['telephone']."
-                    TEL;WORK;VOICE:".$member['telephone']."
-                    TEL;HOME;VOICE:".$member['telephone']."
-                    TEL;CELL;VOICE:".$member['telephone']."
-                    TEL;CAR;VOICE:".$member['telephone']."
-                    TEL;VOICE:".$member['telephone']."
-                    TEL;PAGER;VOICE:".$member['telephone']."
-                    TEL;WORK;FAX:".$member['fax']."
-                    TEL;HOME:".$member['telephone']."
-                    TEL;PREF:".$member['telephone']."
-                    ADR;WORK:;".$member['address_1'].", ".$member['city'].";;;;
-                    LABEL;WORK;ENCODING=QUOTED-PRINTABLE:".$member['company']."=0D=0A".$member['address_1'].", ".$member['city']." =0D=0A,  =0D=0A
-                    ADR;HOME;;".$member['address_1'].", ".$member['city']." ;;;;
-                    LABEL;WORK;ENCODING=QUOTED-PRINTABLE:".$member['address_1'].", ".$member['city']." =0D=0A,  =0D=0A
-                    ADR;POSTAL;;".$member['address_1'].", ".$member['city']." ;;;;
-                    LABEL;POSTAL;ENCODING=QUOTED-PRINTABLE:".$member['address_1'].", ".$member['city']." =0D=0A,  =0D=0A
-                    URL;WORK:".$member['website']."
-                    EMAIL;PREF;INTERNET:".$member['email']."
-                    EMAIL;TLX:+581234567890
-                    REV:08102010T103800Z
-                    END:VCARD";
-        }			
-		$this->data['heading_title'] = $this->language->get('heading_export');
-
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_yes'] = $this->language->get('text_yes');
-		$this->data['text_no'] = $this->language->get('text_no');		
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-
-		$this->data['column_name'] = $this->language->get('column_name');
-		$this->data['column_email'] = $this->language->get('column_email');
-		$this->data['column_total'] = $this->language->get('column_total');
-		$this->data['column_newsletter'] = $this->language->get('column_newsletter');
-		$this->data['column_date_added'] = $this->language->get('column_date_added');
-		$this->data['column_action'] = $this->language->get('column_action');		
-		
-		$this->data['button_approve'] = $this->language->get('button_approve');
-		$this->data['button_insert'] = $this->language->get('button_insert');
-		$this->data['button_delete'] = $this->language->get('button_delete');
-		$this->data['button_filter'] = $this->language->get('button_filter');
-
-		$this->data['token'] = $this->session->get('ukey');
-
-		if ($this->session->has('error')) {
-			$this->data['error_warning'] = $this->session->get('error');
-			
-			$this->session->clear('error');
-		} elseif (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-		
-		if ($this->session->has('success')) {
-			$this->data['success'] = $this->session->get('success');
-		
-			$this->session->clear('success');
-		} else {
-			$this->data['success'] = '';
-		}
-		
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . $this->request->get['filter_name'];
-		}
-		
-		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . $this->request->get['filter_email'];
-		}
-			
-		if (isset($this->request->get['filter_newsletter'])) {
-			$url .= '&filter_newsletter=' . $this->request->get['filter_newsletter'];
-		}
-		
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-			
-		if ($order == 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
-		}
-		$this->data['sort_name'] = Url::createAdminUrl('marketing/contact/export') . '&sort=name' . $url;
-		$this->data['sort_email'] = Url::createAdminUrl('marketing/contact/export') . '&sort=email' . $url;
-		$this->data['sort_newsletter'] = Url::createAdminUrl('marketing/contact/export') . '&sort=newsletter' . $url;
-		$this->data['sort_date_added'] = Url::createAdminUrl('marketing/contact/export') . '&sort=date_added' . $url;
-		
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . $this->request->get['filter_name'];
-		}
-		
-		if (isset($this->request->get['filter_email'])) {
-			$url .= '&filter_email=' . $this->request->get['filter_email'];
-		}
-
-		if (isset($this->request->get['filter_newsletter'])) {
-			$url .= '&filter_newsletter=' . $this->request->get['filter_newsletter'];
-		}
-		
-		if (isset($this->request->get['filter_date_added'])) {
-			$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-		}
-			
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-												
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		$this->data['filter_name'] = $filter_name;
-		$this->data['filter_email'] = $filter_email;
-		$this->data['filter_newsletter'] = $filter_newsletter;
-		$this->data['filter_date_added'] = $filter_date_added;
-		
-		
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
-		
-		$this->template = 'marketing/contact_export.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-  	}
-    
-    private function getImportList() {
-  		$this->document->breadcrumbs = array();
-
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
-
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('marketing/contact') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('marketing/contact/import') . $url,
-       		'text'      => $this->language->get('heading_import'),
-      		'separator' => ' :: '
-   		);
-					
-		$this->data['heading_title'] = $this->language->get('heading_import');
-
-		$this->data['token'] = $this->session->get('ukey');
-
-		if ($this->session->has('error')) {
-			$this->data['error_warning'] = $this->session->get('error');
-			
-			$this->session->clear('error');
-		} elseif (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-		
-		if ($this->session->has('success')) {
-			$this->data['success'] = $this->session->get('success');
-		
-			$this->session->clear('success');
-		} else {
-			$this->data['success'] = '';
-		}
-        
-        $this->data['action'] = Url::createAdminUrl('marketing/contact/import');
-		
-		$this->template = 'marketing/contact_import.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-  	}
-  	
   	public function getForm() {
-		$this->load->auto('marketing/lists');
-        $this->load->auto('marketing/contact');
-        $this->load->auto('sale/customer');
-		if (isset($this->request->get['member_id'])) {
-             $member_info = $this->modelemail_member->getContact($this->request->get['member_id']);
-             $this->data['listsByContact'] = $this->modelemail_lists->getListByContact($this->request->get['member_id']);
-             $lists = $this->modelemail_lists->getAllLists();
-             $customer_info = $this->modelCustomer->getCustomer($this->request->get['member_id']);
-        }
-        $this->data['lists'] = array();
-        foreach ($this->data['listsByContact'] as $list) {
-            $this->data['lists'][] = $this->modelemail_lists->getFullLists($list['list_id'],1);
-        }
-        
-        $this->data['other_list_a'] = array();
-        $this->data['other_list_b'] = array();
-        $this->data['other_lists'] = array();
-        foreach($lists as $list) {
-            $this->data['other_list_a'][] = $list['list_id'];
-        }
-        foreach ($this->data['listsByContact'] as $list) {
-            $this->data['other_list_b'][] = $list['list_id'];
-        }
-        $lists = array_diff($this->data['other_list_a'],$this->data['other_list_b']);
-        foreach ($lists as $list) {
-            $this->data['other_lists'][] = $this->modelemail_lists->getFullLists($list['list_id'],1);
-        }
-        
-			$this->load->language('marketing/contact');
+		$this->load->language('marketing/contact');
 		 
-			$this->document->title = $this->language->get('heading_title');
-			
-			$this->data['heading_title'] = $this->language->get('heading_title');
+		$this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
             
-			$this->data['entry_list_id'] = $this->language->get('entry_list_id');
-			$this->data['entry_customer_id'] = $this->language->get('entry_customer_id');
-    		$this->data['entry_name'] = $this->language->get('entry_name');
-        	$this->data['entry_facebook'] = $this->language->get('entry_facebook');
-        	$this->data['entry_twitter'] = $this->language->get('entry_twitter');
-        	$this->data['entry_msn'] = $this->language->get('entry_msn');
-        	$this->data['entry_yahoo'] = $this->language->get('entry_yahoo');
-        	$this->data['entry_gmail'] = $this->language->get('entry_gmail');
-        	$this->data['entry_skype'] = $this->language->get('entry_skype');
-        	$this->data['entry_blog'] = $this->language->get('entry_blog');
-    		$this->data['entry_website'] = $this->language->get('entry_website');
-        	$this->data['entry_email'] = $this->language->get('entry_email');
-        	$this->data['entry_telephone'] = $this->language->get('entry_telephone');
-        	$this->data['entry_fax'] = $this->language->get('entry_fax');
-			$this->data['entry_notify'] = $this->language->get('entry_notify');	
-			$this->data['entry_true'] = $this->language->get('entry_true');	
-			$this->data['entry_false'] = $this->language->get('entry_false');
-			$this->data['entry_category'] = $this->language->get('entry_category');	
-			$this->data['entry_member'] = $this->language->get('entry_member');	
+		$this->data['entry_customer_id'] = $this->language->get('entry_customer_id');
+    	$this->data['entry_name'] = $this->language->get('entry_name');
+		$this->data['entry_email'] = $this->language->get('entry_email');
             
-			$this->data['button_cancel'] = $this->language->get('button_cancel');
+		$this->data['button_save']        = $this->language->get('button_save');
+		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
+		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+		$this->data['button_cancel']      = $this->language->get('button_cancel');
             
-			$this->data['token'] = $this->session->get('ukey');
-			
-			$this->document->breadcrumbs = array();
+		$this->document->breadcrumbs = array();
 	
-			$this->document->breadcrumbs[] = array(
+		$this->document->breadcrumbs[] = array(
 				'href'      => Url::createAdminUrl('common/home'),
 				'text'      => $this->language->get('text_home'),
 				'separator' => false
-			);
+		);
 	
-			$this->document->breadcrumbs[] = array(
-				'href'      => Url::createAdminUrl('marketing/contact'),
+		$this->document->breadcrumbs[] = array(
+				'href'      => Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo')),
 				'text'      => $this->language->get('heading_title'),
 				'separator' => ' :: '
-			);
+		);
             
-            if (isset($this->error['warning'])) {
-    			$this->data['error_warning'] = $this->error['warning'];
-    		} else {
-    			$this->data['error_warning'] = '';
-    		}
-            $this->data['lista'] =  Url::createAdminUrl('marketing/lists/update'). '&list_id=';
-			$this->data['categoria'] =  Url::createAdminUrl('store/category/update'). '&category_id=';
-			$this->data['cancel'] = Url::createAdminUrl('marketing/contact');
+        
+        $this->data['error_email'] = isset($this->error['email']) ? $this->error['email'] : '';
+        $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
+        
+		$this->data['cancel'] = Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo'));
+
+        $contact_info = array();
+		if ($this->request->hasQuery('contact_id')) {
+            $contact_info = $this->modelContact->getContact($this->request->getQuery('contact_id'));
+            $this->data['contact_lists'] = $this->modelContact->getListsByContactId($this->request->getQuery('contact_id'));
+		}
+        
+        $this->setvar('name',$contact_info,"");
+        $this->setvar('email',$contact_info,"");
+        $this->setvar('customer_id',$contact_info,"");
             
-			if (isset($this->request->get['member_id'])) {
-      			$member_info = $this->modelemail_member->getContact($this->request->get['member_id']);
-    		} else {
-    			$member_info = array();
-			}
-
-			if (isset($customer_info['firstname'])) {
-				$this->data['name'] = ucwords($customer_info['firstname']. ' ' .$customer_info['lastname']);
-			} else {
-				$this->data['name'] = '';
-			}
-
-			if (isset($customer_info['email'])) {
-				$this->data['email'] = $customer_info['email'];
-			} else {
-				$this->data['email'] = '';
-			}
-
-			 $this->data['customer'] = Url::createAdminUrl('sale/customer/update') . '&customer_id='.$this->request->get['member_id'];
-
-			if (isset($customer_info['telephone'])) {
-				$this->data['telephone'] = $customer_info['telephone'];
-			} else {
-				$this->data['telephone'] = '';
-			}
-
-			if (isset($this->request->post['date_added'])) {
-				$this->data['date_added'] = $this->request->post['date_added'];
-			} elseif (isset($list_info['date_added'])) {
-				$this->data['date_added'] = date($this->language->get('date_format_short'), strtotime($list_info['date_added'])); 
-			} else {
-				$this->data['date_added'] = date($this->language->get('date_format_short'), time()); 
-			}
+        $this->data['lists'] = $this->modelList->getLists();
+        
+        $scripts[] = array('id'=>'form','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
             
-            $this->load->auto('sale/customer');
-    				
-    		$this->data['customers'] = $this->modelCustomer->getCustomerBySubscribe();
-    		
-    		if (isset($this->request->post['customer_id'])) {
-    			$this->data['customer_id'] = $this->request->post['customer_id'];
-    		} elseif (isset($list_info)) {
-    			$this->data['customer_id'] = $this->modelemail_lists->getContacts($this->request->get['list_id']);
-    		} else {
-    			$this->data['customer_id'] = array();
-    		}
+            var form_clean = $('#form').serialize();  
             
-			$this->data['token'] = $this->session->get('ukey');
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+             var cache = {};
+            $.getJSON( '" .Url::createAdminUrl("sale/customer/callback"). "', function( data ) {
+                $.each(data,function(i,item){
+                    $(document.createElement('option'))
+                    .val( item.id )
+                    .text( item.label )
+                    .attr( 'data-customer',item.value )
+                    .appendTo('#_email');
+                });
+            });
+            
+            /* custom widget */
+            $('#_email').emailCombobox();
+            $('#q').on('keyup',function(e){
+                var that = this;
+                var valor = $(that).val().toLowerCase();
+                if (valor.length <= 0) {
+                    $('#contactsWrapper li').show();
+                } else {
+                    $('#contactsWrapper li b').each(function(){
+                        var texto = $(this).text().toLowerCase();
+                        if (texto.indexOf( valor ) != -1) {
+                            $(this).closest('li').show();
+                        } else {
+                            $(this).closest('li').hide();
+                        }
+                    });
+                }
+            }); 
+            
+            $('#contactsWrapper li').on('click',function(e){
+                var \$checkbox = $(this).find(':checkbox');
+                \$checkbox.attr('checked', !\$checkbox.attr('checked'));
+                $(this).toggleClass('selected');
+            });
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            if ($contact_info) {
+                $scripts[] = array('id'=>'contactScritps2','method'=>'ready','script'=>
+                "$('.ui-combobox-input').val('". $this->data['email'] ."');");
+            }
+        
+        $scripts[] = array('id'=>'functions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+        $this->data['Url'] = new Url;
+        
+        $this->template = 'marketing/contact_form.tpl';
+        $this->children = array(
+		  'common/header',	
+		  'common/footer'
+		);
 			
-			$this->template = 'marketing/contact_form.tpl';
-			$this->children = array(
-				'common/header',	
-				'common/footer'
-			);
-			
-			$this->response->setOutput($this->render(true), $this->config->get('config_compression')); 
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression')); 
 		
   	}
 	 
-  	private function validateForm() {
+  	private function validate() {
     	if (!$this->user->hasPermission('modify', 'sale/customer')) {
       		$this->error['warning'] = $this->language->get('error_permission');
     	}
-
+        
+        if (empty($this->request->post['email'])) {
+            $this->error['email'] = $this->language->get('error_email');
+        }
+        
 		if (!$this->error) {
 	  		return true;
 		} else {
 	  		return false;
 		}
-  	}    
+  	} 
+    
+    public function import() {
+         $this->document->title = $this->data['heading_title'] = "Importar Contactos";
+         
+   		$this->document->breadcrumbs = array();
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl("common/home"),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl("marketing/contact",array('menu'=>'mercadeo')),
+       		'text'      => "Contactos",
+      		'separator' => ' :: '
+   		);
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl("marketing/contact/import",array('menu'=>'mercadeo')),
+       		'text'      => "Importar Contactos",
+      		'separator' => ' :: '
+   		);
+        
+         $scripts[] = array('id'=>'form','method'=>'ready','script'=>
+            "$('#gridWrapper').load('". Url::createAdminUrl("marketing/contact/importwizard",array('step'=>1)) ."',function(e){
+                $('#gridPreloader').hide();
+                $('#q').on('keyup',function(e){
+                    var that = this;
+                    var valor = $(that).val().toLowerCase();
+                    if (valor.length <= 0) {
+                        $('#listsWrapper li').show();
+                    } else {
+                        $('#listsWrapper li b').each(function(){
+                            if ($(this).text().toLowerCase().indexOf( valor ) != -1) {
+                                $(this).closest('li').show();
+                            } else {
+                                $(this).closest('li').hide();
+                            }
+                        });
+                    }
+                }); 
+                
+            });");
+                    
+         $scripts[] = array('id'=>'importFunctions','method'=>'function','script'=>
+            "function file_delete(field, preview) {
+                $('#' + field).val('');
+                $('#' + preview).parent('.row').find('.clear').remove();
+                $('#' + preview).replaceWith('<a class=\"button\" id=\"'+ preview +'\" onclick=\"file_upload(\\'file_to_import\\', \\'preview\\');\">Seleccionar Archivo</a>');
+            }
+            
+            function file_upload(field, preview) {
+                var height = $(window).height() * 0.8;
+                var width = $(window).width() * 0.8;
+            	$('#dialog').remove();
+            	$('#form').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+                
+                $('#dialog').dialog({
+            		title: '".$this->data['text_image_manager']."',
+            		close: function (event, ui) {
+            			var csv = $('#' + field).val();
+            			if (csv) {
+            				$('#' + preview).replaceWith('<input type=\"text\" value=\"' + csv.replace('data/','') + '\" id=\"' + preview + '\" disabled=\"disabled\" /><div class=\"clear\"></div>');
+            			}
+            		},	
+            		bgiframe: false,
+            		width: width,
+            		height: height,
+            		resizable: false,
+            		modal: false
+            	});}");
+                    
+        $this->scripts = array_merge($this->scripts,$scripts);
+         
+        $this->template = 'marketing/contact_import.tpl';
+        $this->children = array(
+            'common/header',	
+        	'common/footer'	
+        );
+        		
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression')); 
+    }
+	
+    public function importwizard() {
+         $this->data['Url'] = new Url;
+         switch((int)$_GET['step']) {
+            case 1:
+            default:
+                $this->load->auto("marketing/list");
+                $this->data['lists'] = $this->modelList->getLists(0);
+        		$this->template = 'marketing/contact_import_1.tpl';
+        		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+                break;
+            case 2:
+                $data    = unserialize(file_get_contents(DIR_CACHE . "temp_contact_data.csv"));
+                
+                $handle  = fopen(DIR_IMAGE . $data['file'], "r+");
+                $this->data['header'] = fgetcsv($handle, 1000, $data['separator'], $data['enclosure']);
+                $this->data['fields']['Contacto'] = array(
+                        'name'          =>'Nombre Completo',
+                        'email'         =>'Email'
+                    );
+                    /* TODO: agregar clientes si no existen
+                $this->data['fields']['Clientes'] = array(
+                        'customer_id'   =>'Cliente ID',
+                        'firstname'     =>'Primer Nombre',
+                        'lastname'      =>'Apellidos',
+                        'telephone'     =>'Tel&eacut;fono'
+                    );
+                    */
+        		$this->template = 'marketing/contact_import_2.tpl';
+        		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+                break;
+            case 3:
+        		$this->template = 'marketing/contact_import_3.tpl';
+        		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+                break;
+         } 
+    }
+	
+    public function importprocess() {
+         switch($_GET['step']) {
+            case 2:
+                $data = array();
+                if (isset($this->request->post['contact_lists'])) {
+                    $data['contact_lists'] = serialize($this->request->post['contact_lists']);
+                }
+                $data['file']       = ($this->request->post['file']) ? $this->request->post['file'] : '';
+                $data['separator']  = ($this->request->post['separator']) ? $this->request->post['separator'] : ";";
+                $data['enclosure']  = ($this->request->post['enclosure'] && $this->request->post['enclosure'] != '&quote;') ? $this->request->post['enclosure'] : '"';
+                $data['escape']     = ($this->request->post['escape']) ? $this->request->post['escape'] : '\\';
+                $data['update']     = (int)$this->request->post['update'];
+                $data['header']     = (int)$this->request->post['header'];
+                
+                $handle     = fopen(DIR_IMAGE . $data['file'], "r+");
+                $handle2    = fopen(DIR_CACHE . "temp_contact_data.csv", "w+");
+                $handle3    = fopen(DIR_CACHE . "temp_contact_header.csv", "w+");
+                fputcsv($handle3,(fgetcsv($handle, 1000, $data['separator'], $data['enclosure'])), $data['separator'], $data['enclosure']);
+                fclose($handle3);
+                
+                fputs($handle2,serialize($data));
+                fclose($handle2);
+                
+                fclose($handle);
+                unset($handle,$handle2,$handle3);
+                break;
+            case 3:
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+                header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+                header("Cache-Control: no-cache, must-revalidate"); 
+                header("Pragma: no-cache");
+                header("Content-type: application/json");
+        
+                $return     = array();
+                $data       = unserialize(file_get_contents(DIR_CACHE . "temp_contact_data.csv"));
+                $handle     = fopen(DIR_IMAGE . $data['file'], "r+");
+                $handle2    = fopen(DIR_CACHE . "temp_contact_header.csv", "r+");
+                
+                if ($data['header']) $header = fgetcsv($handle2, 1000, $data['separator'], $data['enclosure']);
+                
+                $keys   = array();
+                if (!in_array('email',$this->request->post['Header'])) {
+                    $return['error'] = 1;
+                    $return['msg'] = "Debe seleccionar el campo correspondiente al email del contacto, de lo contrario no se podr&aacute;n cargar los contactos";
+                }
+                
+                if (!$return['error']) {
+                    $contact = array(
+                        'name',
+                        'email'
+                    );
+                    //TODO: agregar array para importar clientes también
+                    
+                    $d = $data;
+                    $new = $updated = $bad = $total = 1;
+                    $headers = $this->request->post['Header'];
+                    while ($data = fgetcsv($handle, 1000, $d['separator'], $d['enclosure'])) {
+                        $contact_id = $model = $forceUpdate = null;
+                        if ($data == $header && $d['header']) continue;
+                        $return['total'] = $total++;
+                        
+                        if ($d['update']) {
+                            $sql        = "UPDATE ". DB_PREFIX ."contact SET ";
+                            //$sql_customer   = "UPDATE ". DB_PREFIX ."customer SET ";
+                            //$sql_address = "UPDATE ". DB_PREFIX ."address SET ";
+                        } else {
+                            $sql        = "INSERT INTO ". DB_PREFIX ."contact SET ";
+                            //$sql_customer   = "INSERT INTO ". DB_PREFIX ."customer SET ";
+                            //$sql_address = "INSERT INTO ". DB_PREFIX ."address SET ";
+                        }
+                
+                        foreach ($header as $key=>$col) { //$key = 0; $col = 'Nombre'
+                            $data[$key] = preg_replace('/<\s*html.*?>/','',$data[$key]);
+                            $data[$key] = preg_replace('/<\s*\/\s*html\s*.*?>/','',$data[$key]);
+                            $data[$key] = preg_replace('@<head[^>]*?>.*?</head>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<style[^>]*?>.*?</style>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<script[^>]*?.*?</script>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<object[^>]*?.*?</object>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<embed[^>]*?.*?</embed>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<applet[^>]*?.*?</applet>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<iframe[^>]*?.*?</iframe>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<noframes[^>]*?.*?</noframes>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<noscript[^>]*?.*?</noscript>@siu', '', $data[$key]);
+                            $data[$key] = preg_replace('@<noembed[^>]*?.*?</noembed>@siu', '', $data[$key]);
+                            foreach ($headers as $column => $field) {//$column = 'Nombre'; $field = 'name'; <select name="Header[name]">
+                                $col = str_replace(" ","_",$col);
+                                
+                                //TODO: validar cada campo de acuerdo a su tipo y longitud para evitar la insercion de datos basura
+                                if (!empty($field) && $col == $column) {
+                                    if (in_array($field,$contact)) {
+                                        $keys[$key] = $field;
+                                        $sql .= "`$field`='". $this->db->escape($data[$key]) ."',";
+                                    }
+                                }
+                            }
+                        } 
+                    
+                        $idx = array_search('email',$keys);
+                        
+                        if (!array_search('date_added',$keys)) $sql .= "`date_added`=NOW(),";
+                        
+                        if (!$idx) {
+                            $return['error'] = 1;
+                            $return['msg'] = "Debe especificar el email del contacto";
+                            break;
+                        }
+                        
+                        if ($idx) { $email = $data[$idx]; }
+                        
+                        $forceUpdate = false; 
+                        if (!empty($email)) {
+                            $res = $this->db->query("SELECT * FROM ".DB_PREFIX."contact WHERE email='". $this->db->escape($email) ."'");
+                            if ($res->num_rows && !$d['update']) {
+                                continue;
+                            } elseif ($res->num_rows && $d['update']) {
+                                $forceUpdate = true;
+                            }
+                        }
+                        
+                        $sql = substr($sql,0,(strlen($sql)-1));
+                        
+                        if ($d['update']) {
+                            if (!$forceUpdate) {
+                                $sql = str_replace("UPDATE","INSERT INTO",$sql);
+                                $insert = true;
+                            } else {
+                                $sql = str_replace("INSERT INTO","UPDATE",$sql) . " WHERE `email` = '". $this->db->escape($email) ."'";
+                            }
+                            $result = $this->db->query($sql);
+                            if (!$forceUpdate) $contact_id = $this->db->getLastId();
+                            
+                            if ($result && isset($insert)) {
+                                $return['nuevo'] = $new++;
+                            } elseif ($result && !isset($insert)) {
+                                $return['updated'] = $updated++;
+                            } else {
+                                $return['bad'] = $bad++;
+                            }
+                        } else {
+                            $result = $this->db->query($sql);
+                            $contact_id = $this->db->getLastId();
+                                
+                            if ($result) {
+                                $return['nuevo'] = $new++;
+                            } else {
+                                $return['bad'] = $bad++;
+                            }
+                        }
+                        
+                        $customer_info = $this->db->query("SELECT DISTINCT * FROM ". DB_PREFIX ."customer WHERE email = '". $this->db->escape($email) ."'");
+                        if ($customer_info->row) {
+                            $this->db->query("UPDATE ". DB_PREFIX ."contact SET customer_id = '". (int)$customer_info->row['customer_id'] ."' WHERE contact_id = '". (int)$contact_id ."'");
+                        }
+                        
+                        //TODO: asociar las listas a cada contacto
+                    }
+                }
+                unlink(DIR_CACHE . "temp_contact_header.csv");
+                unlink(DIR_CACHE . "temp_contact_data.csv");
+                unlink(DIR_CACHE . "temp_contact_lists.csv");
+                $this->load->library('json');
+        		$this->response->setOutput(Json::encode($return), $this->config->get('config_compression'));
+                break;
+         } 
+    }
+	
 }

@@ -74,6 +74,7 @@ class ControllerCommonFooter extends Controller {
         $this->data['scripts'] .= ($f_output) ? "<script>".$f_output."</script>" : "";
         
         // javascript files
+        
         $javascripts[] = "js/plugins.js";
         $javascripts[] = "js/main.js";
         $javascripts[] = "js/necojs/neco.form.js";

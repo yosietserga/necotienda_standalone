@@ -410,7 +410,8 @@ switch ($route) {
     case 'marketing/contact/update':
         $language->load('marketing/contact');
         $loader->auto('marketing/contact');
-        $loader->auto('marketing/lists');
+        $loader->auto('marketing/list');
+        $loader->auto('sale/customer');
         $loader->library('url');
         break;
     case 'marketing/list':

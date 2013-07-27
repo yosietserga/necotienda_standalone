@@ -1,18 +1,21 @@
 <!DOCTYPE html><html lang="es"><head>
     <title><?php echo $title; ?></title>
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <base href="<?php echo $base; ?>" />
     <link rel="stylesheet" type="text/css" href="css/filemanager.css" />
     <link rel="stylesheet" type="text/css" href="css/screen.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="css/filemanager.css" />
-    <script type="text/javascript" src="js/vendor/modernizr-2.6.1.min.js"></script>
+    
+    <script src="js/vendor/modernizr-2.6.1.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script>window.$ || document.write('<script src="js/vendor/jquery.min-1.8.1.js"><\/script>')</script>
     <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>
-    <div class="container_24">
+    <div class="container_24" style="z-index: 10000;">
     
         <div id="tabs" class="grid_24">
             <ul>
@@ -24,13 +27,13 @@
         
         <div class="tabs grid_24" id="tabbrowser">
             <div id="menu">
-                <a id="create" class="button" style="background-image: url('image/filemanager/folder.png');"><?php echo $button_folder; ?></a>
-                <a id="delete" class="button" style="background-image: url('image/filemanager/edit-delete.png');"><?php echo $button_delete; ?></a>
-                <a id="move" class="button" style="background-image: url('image/filemanager/edit-cut.png');"><?php echo $button_move; ?></a>
-                <a id="copy" class="button" style="background-image: url('image/filemanager/edit-copy.png');"><?php echo $button_copy; ?></a>
-                <a id="rename" class="button" style="background-image: url('image/filemanager/edit-rename.png');"><?php echo $button_rename; ?></a>
-                <a onclick="$('.tabs').hide();$('#tabfrompc').show();" class="button" style="background-image: url('image/filemanager/upload.png');"><?php echo $button_upload; ?></a>
-                <a id="refresh" class="button" style="background-image: url('image/filemanager/refresh.png');"><?php echo $button_refresh; ?></a>
+                <a id="create" class="button" style="background-image: url('image/filemanager/folder.png');"><?php echo $Language->get('button_folder'); ?></a>
+                <a id="delete" class="button" style="background-image: url('image/filemanager/edit-delete.png');"><?php echo $Language->get('button_delete'); ?></a>
+                <a id="move" class="button" style="background-image: url('image/filemanager/edit-cut.png');"><?php echo $Language->get('button_move'); ?></a>
+                <a id="copy" class="button" style="background-image: url('image/filemanager/edit-copy.png');"><?php echo $Language->get('button_copy'); ?></a>
+                <a id="rename" class="button" style="background-image: url('image/filemanager/edit-rename.png');"><?php echo $Language->get('button_rename'); ?></a>
+                <a onclick="$('.tabs').hide();$('#tabfrompc').show();" class="button" style="background-image: url('image/filemanager/upload.png');"><?php echo $Language->get('button_upload'); ?></a>
+                <a id="refresh" class="button" style="background-image: url('image/filemanager/refresh.png');"><?php echo $Language->get('button_refresh'); ?></a>
             </div>
             
             <div class="clear"></div>
@@ -60,28 +63,27 @@
         </div>
         -->
     </div>
-<script type="text/javascript" src="js/vendor/jquery.min-1.8.1.js"></script>
+<script type="text/javascript" src="js/vendor/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/plugins.js"></script>
 <script type="text/javascript" src="js/vendor/jstree/jquery.tree.min.js"></script>
 <script type="text/javascript" src="js/vendor/fileUploader/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="js/vendor/fileUploader/jquery.fileupload.js"></script>
 <!--[if gte IE 8]><script src="js/cors/jquery.xdr-transport.js"></script><![endif]-->
-
-<script>
-$(function(){
-    $(".tabs").hide();
-    $("#tabbrowser").show();
-    $("#tabs li").click(function(){
-        $(".tabs").hide();
-        $("#tab" + this.id).show();  
+<script type="text/javascript">
+jQuery(function(){
+    jQuery(".tabs").hide();
+    jQuery("#tabbrowser").show();
+    jQuery("#tabs li").click(function(){
+        jQuery(".tabs").hide();
+        jQuery("#tab" + this.id).show();  
     });
     
-    var windowHeight = $(window).height();
-    $("#dropHere").css({
+    var windowHeight = jQuery(window).height();
+    jQuery("#dropHere").css({
         height:(windowHeight * 60 / 100) + 'px'
     });
     
-	$('#column_left').tree({
+	jQuery('#column_left').tree({
 		data: { 
 			type: 'json',
 			async: true, 
@@ -122,16 +124,16 @@ $(function(){
 					return { 'directory': '' } 
 				} else {
 					TREE_OBJ.settings.data.opts.static = false;
-                    $("#directoryForUpload").val( $(NODE).attr('directory') );
-					return { 'directory': $(NODE).attr('directory') } 
+                    jQuery("#directoryForUpload").val( jQuery(NODE).attr('directory') );
+					return { 'directory': jQuery(NODE).attr('directory') } 
 				}
 			},		
 			onselect: function (NODE, TREE_OBJ) {
-			    $("#directoryForUpload").val( $(NODE).attr('directory') );
-				$.ajax({
+			    jQuery("#directoryForUpload").val( jQuery(NODE).attr('directory') );
+				jQuery.ajax({
 					url: '<?php echo $Url::createAdminUrl("common/filemanager/files"); ?>',
 					type: 'POST',
-					data: 'directory=' + encodeURIComponent($(NODE).attr('directory')),
+					data: 'directory=' + encodeURIComponent(jQuery(NODE).attr('directory')),
 					dataType: 'json',
 					success: function(json) {
 						html = '<ul>';
@@ -153,24 +155,24 @@ $(function(){
 								html += '<a class="copy" onclick="copy(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
 								html += '<a class="rename" onclick="rename(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
 								html += '<a class="move"></a>';
-								html += '<a class="delete" onclick="delete(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
+								html += '<a class="delete" onclick="eliminar(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
 						        html += '</li>';
 							}
 						}
 						html += '</ul>';
-						$('#column_right').html(html);
+						jQuery('#column_right').html(html);
                         
-                    	$('#column_right li').on('click', function (e) {
+                    	jQuery('#column_right li').on('click', function (e) {
                     	   if(e.shiftKey) {
-                                var firstLi = ($('#column_right .liSelected:first-child').index()) ? $('#column_right .liSelected:first-child').index() : $('#column_right li:first-child').index();
-                                var lastLi = $(this).index();
-                                $('#column_right li').each(function(){
-                                    if ($(this).index() >= firstLi && $(this).index() <= lastLi) {
-                                        $(this).addClass('liSelected').find('.selected').show();
-                                        $(this).find('input').attr('checked','checked');
+                                var firstLi = (jQuery('#column_right .liSelected:first-child').index()) ? jQuery('#column_right .liSelected:first-child').index() : jQuery('#column_right li:first-child').index();
+                                var lastLi = jQuery(this).index();
+                                jQuery('#column_right li').each(function(){
+                                    if (jQuery(this).index() >= firstLi && jQuery(this).index() <= lastLi) {
+                                        jQuery(this).addClass('liSelected').find('.selected').show();
+                                        jQuery(this).find('input').attr('checked','checked');
                                     } else {
-                                        $(this).removeClass('liSelected').find('.selected').hide();
-                                        $(this).find('input').removeAttr('checked');
+                                        jQuery(this).removeClass('liSelected').find('.selected').hide();
+                                        jQuery(this).find('input').removeAttr('checked');
                                     }
                                 });
                            } else {
@@ -197,7 +199,7 @@ $(function(){
                     		<?php } ?>
                     	});
                         
-                        function delete(path) {
+                        function eliminar(path) {
                             $.post('<?php echo $Url::createAdminUrl("common/filemanager/delete"); ?>',{'path':path},function(json) {
                                 if (json.success) {
                 				    var tree = $.tree.focused();
@@ -404,11 +406,11 @@ $(function(){
 		if (tree.selected) {
 			$('#dialog').remove();
 			html  = '<div id="dialog">';
-			html += '<?php echo $entry_folder; ?> <input type="text" name="name" value="" /> <input type="button" value="Submit" />';
+			html += '<?php echo $Language->get('entry_folder'); ?> <input type="text" name="name" value="" /> <input type="button" value="Submit" />';
 			html += '</div>';
 			$('#column_right').prepend(html);
 			$('#dialog').dialog({
-				title: '<?php echo $button_folder; ?>',
+				title: '<?php echo $Language->get('button_folder'); ?>',
 				resizable: false
 			});	
 			
@@ -483,13 +485,13 @@ $(function(){
 		$('#dialog').remove();
 		
 		html  = '<div id="dialog">';
-		html += '<?php echo $entry_move; ?> <select name="to"></select> <input type="button" value="Submit" />';
+		html += '<?php echo $Language->get('entry_move'); ?> <select name="to"></select> <input type="button" value="Submit" />';
 		html += '</div>';
 
 		$('#column_right').prepend(html);
 		
 		$('#dialog').dialog({
-			title: '<?php echo $button_move; ?>',
+			title: '<?php echo $Language->get('button_move'); ?>',
 			resizable: false
 		});
 
@@ -552,13 +554,13 @@ $(function(){
 		$('#dialog').remove();
 		
 		html  = '<div id="dialog">';
-		html += '<?php echo $entry_copy; ?> <input  type="text" name="name" value=""> <input  type="button" value="Submit">';
+		html += '<?php echo $Language->get('entry_copy'); ?> <input type="text" name="name" value=""> <input type="button" value="Submit">';
 		html += '</div>';
 
 		$('#column_right').prepend(html);
 		
 		$('#dialog').dialog({
-			title: '<?php echo $button_copy; ?>',
+			title: '<?php echo $Language->get('button_copy'); ?>',
 			resizable: false
 		});
 		
@@ -621,13 +623,13 @@ $(function(){
 		$('#dialog').remove();
 		
 		html  = '<div id="dialog">';
-		html += '<?php echo $entry_rename; ?> <input  type="text" name="name" value=""> <input  type="button" value="Submit">';
+		html += '<?php echo $Language->get('entry_rename'); ?> <input type="text" name="name" value=""> <input type="button" value="Submit">';
 		html += '</div>';
 
 		$('#column_right').prepend(html);
 		
 		$('#dialog').dialog({
-			title: '<?php echo $button_rename; ?>',
+			title: '<?php echo $Language->get('button_rename'); ?>',
 			resizable: false
 		});
 		

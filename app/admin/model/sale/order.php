@@ -2,7 +2,7 @@
 /**
  * ModelSaleOrder
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -10,7 +10,7 @@
  */
 class ModelSaleOrder extends Model {
 	
-	public function addOrder($data) {
+	public function add($data) {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET 
         store_name = '" . $this->db->escape($data['store_name']) . "', 
         store_url = '" . $this->db->escape($data['store_url']) . "', 
@@ -66,7 +66,7 @@ class ModelSaleOrder extends Model {
 		}
 	}
 	
-	public function editOrder($order_id, $data) {
+	public function update($order_id, $data) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET 
         telephone = '" . $this->db->escape($data['telephone']) . "', 
         email = '" . $this->db->escape($data['email']) . "', 
@@ -123,11 +123,11 @@ class ModelSaleOrder extends Model {
 		}
 	}
 	
-	public function deleteOrder($order_id) {
+	public function delete($order_id) {
 		if ($this->config->get('config_stock_subtract')) {
 			$order_query = $this->db->query("SELECT * 
             FROM `" . DB_PREFIX . "order` 
-            WHERE order_status_id> '0' 
+            WHERE order_status_id > '0' 
             AND order_id = '" . (int)$order_id . "'");
 			
 			if ($order_query->num_rows) {
@@ -163,7 +163,7 @@ class ModelSaleOrder extends Model {
       	$this->db->query("DELETE FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "'");
 	}
 	
-	public function addOrderHistory($order_id, $data) {
+	public function addHistory($order_id, $data) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET 
         order_status_id = '" . (int)$data['order_status_id'] . "', 
         date_modified = NOW() 
@@ -337,7 +337,7 @@ class ModelSaleOrder extends Model {
 		}
 	}
 	
-	public function getOrders($data = array()) {
+	public function getAll($data = array()) {
 		$sql = "SELECT *, CONCAT(o.firstname, ' ', o.lastname) AS name, os.name AS status
                 FROM `" . DB_PREFIX . "order` o
                 LEFT JOIN `" . DB_PREFIX . "order_status` os ON (os.order_status_id = o.order_status_id)";
@@ -427,37 +427,37 @@ class ModelSaleOrder extends Model {
 		return $this->config->get('config_invoice_prefix') . $invoice_id;
 	}
 	
-	public function getOrderProducts($order_id) {
+	public function getProducts($order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
 	
 		return $query->rows;
 	}
 
-	public function getOrderOptions($order_id, $order_product_id) {
+	public function getOptions($order_id, $order_product_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$order_product_id . "'");
 	
 		return $query->rows;
 	}
 	
-	public function getOrderTotals($order_id) {
+	public function getTotals($order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
 	
 		return $query->rows;
 	}	
 
-	public function getOrderHistory($order_id) { 
+	public function getHistory($order_id) { 
 		$query = $this->db->query("SELECT oh.date_added, os.name AS status, oh.comment, oh.notify FROM " . DB_PREFIX . "order_history oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
 	
 		return $query->rows;
 	}	
 
-	public function getOrderDownloads($order_id) {
+	public function getDownloads($order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_download WHERE order_id = '" . (int)$order_id . "' ORDER BY name");
 	
 		return $query->rows; 
 	}	
 				
-	public function getTotalOrders($data = array()) {
+	public function getAllTotal($data = array()) {
       	$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o";
 
 		$implode = array();
@@ -495,31 +495,31 @@ class ModelSaleOrder extends Model {
 		return $query->row['total'];
 	} 
 	
-	public function getOrderHistoryTotalByOrderStatusId($order_status_id) {
+	public function getHistoryTotalByOrderStatusId($order_status_id) {
 	  	$query = $this->db->query("SELECT oh.order_id FROM " . DB_PREFIX . "order_history oh LEFT JOIN `" . DB_PREFIX . "order` o ON (oh.order_id = o.order_id) WHERE oh.order_status_id = '" . (int)$order_status_id . "' AND o.order_status_id> '0' GROUP BY order_id");
 
 		return $query->num_rows;
 	}
 
-	public function getTotalOrdersWithoutInvoice() {
+	public function getAllTotalWithoutInvoice() {
 	  	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order WHERE invoice_id < 0");
 
 		return $query->row['total'];
 	}
 
-	public function getTotalOrdersByOrderStatusId($order_status_id) {
+	public function getAllTotalByOrderStatusId($order_status_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE order_status_id = '" . (int)$order_status_id . "' AND order_status_id> '0'");
 		
 		return $query->row['total'];
 	}
 	
-	public function getTotalOrdersByLanguageId($language_id) {
+	public function getAllTotalByLanguageId($language_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE language_id = '" . (int)$language_id . "' AND order_status_id> '0'");
 		
 		return $query->row['total'];
 	}	
 	
-	public function getTotalOrdersByCurrencyId($currency_id) {
+	public function getAllTotalByCurrencyId($currency_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE currency_id = '" . (int)$currency_id . "' AND order_status_id> '0'");
 		
 		return $query->row['total'];

@@ -1,4 +1,6 @@
 <?php
+// Heading
+$_['heading_title']      = 'Categor&iacute;as';
 // Text
 $_['text_product']      = 'Productos';
 $_['text_error']        = 'Categor&iacute;a no encontrada!';

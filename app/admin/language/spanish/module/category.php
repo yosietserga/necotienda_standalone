@@ -1,17 +1,22 @@
 <?php
 // Heading
-$_['heading_title']    = 'Categoria';
+$_['heading_title']    = 'Categor&iacute;as de Productos';
 
 // Text
 $_['text_module']      = 'Modulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 $_['text_left']        = 'Columna Izquierda';
 $_['text_right']       = 'Columna Derecha';
+$_['text_category']       = 'Categor&iacute;as de Productos';
 
 // Entry
 $_['entry_position']   = 'Ubicaci&oacute;n:';
 $_['entry_status']     = 'Estado:';
 $_['entry_sort_order'] = 'Posici&oacute;n:';
+$_['entry_load']       = 'Auto Cargar:';
+$_['entry_title']      = 'T&iacute;tulo:';
+$_['entry_landing_page'] = 'Mostrar en las siguientes p&aacute;ginas:';
+$_['entry_class']      = 'Clase (CSS):';
 
 // Help
 $_['help_limit']      = 'Ingrese el l&iacute;mite de productos que se mostrar&aacute;n en el m&oacute;dulo';

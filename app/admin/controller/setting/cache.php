@@ -21,7 +21,13 @@ class ControllerSettingCache extends Controller
     {
         $this->load->library('url');
         $res = $this->rrmdir(DIR_CACHE);
+        $this->load->model('store/store');
+        $stores = $this->modelStore->getAll();
+        foreach ($stores as $store) {
+            $this->session->clear('ntConfig_'.(int)$store['store_id']);
+        }
         
+        $this->session->clear('ntconfig');
         $this->session->clear('config');
         $this->session->clear('language');
         $this->session->clear('fkey');
@@ -32,7 +38,9 @@ class ControllerSettingCache extends Controller
             $this->session->set('error','Error: No se pudieron eliminar los archivos del cache');
         }
         
-        if ($this->session->has('redirect')) {
+        if ($_SERVER['HTTP_REFERER']) {
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        } elseif ($this->session->has('redirect')) {
             $this->redirect($this->session->get('redirect'));
             $this->session->clear('redirect');
         } else {

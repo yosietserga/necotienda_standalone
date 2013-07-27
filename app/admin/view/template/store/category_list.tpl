@@ -2,9 +2,9 @@
 <div class="grid_24">
     <div class="box">
         <div class="header">
-            <h1><?php echo $heading_title; ?></h1>
+            <h1><?php echo $Language->get('heading_title'); ?></h1>
             <div class="buttons">
-                <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a>
+                <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $Language->get('button_insert'); ?></a>
             </div>
         </div>      
         <div class="clear"></div><br />

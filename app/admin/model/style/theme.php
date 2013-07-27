@@ -2,7 +2,7 @@
 /**
  * ModelStoreTheme
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -11,7 +11,7 @@
  */
 class ModelStyleTheme extends Model {
 	/**
-	 * ModelStoreTheme::addTheme()
+	 * ModelStoreTheme::add()
 	 * 
 	 * @param mixed $data
      * @see DB
@@ -34,6 +34,14 @@ class ModelStyleTheme extends Model {
           
 		$theme_id = $this->db->getLastId();
 
+		if (!empty($data['stores'])) {
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "theme_to_store SET 
+                store_id  = '". intval($store['store_id']) ."', 
+                theme_id = '". intval($theme_id) ."'");
+            }
+        }
+        
         foreach ($data['style'] as $k => $value) {
             if ($value == 0) continue;
     		$this->db->query("INSERT INTO " . DB_PREFIX . "theme_style SET 
@@ -72,6 +80,15 @@ class ModelStyleTheme extends Model {
           date_added    = NOW()
           WHERE theme_id = '" . intval($theme_id) . "' ");
           
+		if (!empty($data['stores'])) {
+            $this->db->query("DELETE FROM " . DB_PREFIX . "theme_to_store WHERE theme_id = '". (int)$theme_id ."'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "theme_to_store SET 
+                store_id  = '". intval($store['store_id']) ."', 
+                theme_id = '". intval($theme_id) ."'");
+            }
+        }
+        
         foreach ($data['style'] as $k => $value) {
             if ($value == 0) continue;
             $this->db->query("DELETE " . DB_PREFIX . "theme_style WHERE theme_id = '" . intval($theme_id) . "'");
@@ -95,7 +112,7 @@ class ModelStyleTheme extends Model {
 	 * @return void 
 	 */
 	public function saveStyle($theme_id, $data) {
-	   if (!$theme_id) return false;
+	   if (!$theme_id && empty($data)) return false;
 	   $this->db->query("DELETE FROM " . DB_PREFIX . "theme_style WHERE theme_id = '" . intval($theme_id) . "'");
        $sql = "INSERT INTO " . DB_PREFIX . "theme_style (theme_id, selector, `property`, `value`) VALUES ";
         foreach ($data as $selector => $properties) {
@@ -108,6 +125,18 @@ class ModelStyleTheme extends Model {
         $this->db->query($sql);
 	}
 	
+	public function copy($id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "theme WHERE theme_id = '" . (int)$id . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['name'] = $data['name'] ." - copia";
+			$data = array_merge($data, array('style' => $this->getStyles($id)));
+			$this->add($data);
+		}
+	}
+	
 	/**
 	 * ModelStoreTheme::deleteTheme()
 	 * 
@@ -118,9 +147,33 @@ class ModelStyleTheme extends Model {
 	 */
 	public function delete($theme_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "theme WHERE theme_id = '" . (int)$theme_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "theme_to_store WHERE theme_id = '" . (int)$theme_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "theme_style WHERE theme_id = '" . (int)$theme_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "setting WHERE `key` = 'theme_default_id'");
 		$this->cache->delete('theme');
 	}	
+	
+	public function getStores($id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "theme_to_store WHERE theme_id = '" . (int)$id . "'");
+		foreach ($query->rows as $result) {
+            $data[] = $result['store_id'];
+		}
+		return $data;
+	}	
+	
+	/**
+	 * ModelContentPost::getDescriptions()
+	 * 
+	 * @param int $post_id
+     * @see DB
+     * @see Cache
+	 * @return array sql records
+	 */
+	public function getStyles($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "theme_style WHERE theme_id = '" . (int)$id . "'");
+		return $query->rows;
+	}
 	
 	/**
 	 * ModelStoreTheme::getTheme()

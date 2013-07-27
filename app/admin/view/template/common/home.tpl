@@ -7,39 +7,39 @@
 <div class="grid_12">
     <div class="box">
         <div class="header">
-            <hgroup><h1><?php echo $heading_title; ?></h1></hgroup>
+            <hgroup><h1><?php echo $Language->get('heading_title'); ?></h1></hgroup>
         </div>
         <div class="clear"></div><br />
         <table style="width: 100%;">
             <tr>
-              <td style="width: 80%;"><?php echo $text_total_sale; ?></td>
+              <td style="width: 80%;"><?php echo $Language->get('text_total_sale'); ?></td>
               <td><?php echo $total_sale; ?></td>
             <tr>
-              <td><?php echo $text_total_sale_year; ?></td>
+              <td><?php echo $Language->get('text_total_sale_year'); ?></td>
               <td><?php echo $total_sale_year; ?></td>
             </tr>
             <tr>
-              <td><?php echo $text_total_order; ?></td>
+              <td><?php echo $Language->get('text_total_order'); ?></td>
               <td><?php echo $total_order; ?></td>
             </tr>
             <tr>
-              <td><?php echo $text_total_customer; ?></td>
+              <td><?php echo $Language->get('text_total_customer'); ?></td>
               <td><?php echo $total_customer; ?></td>
             </tr>
             <tr>
-              <td><?php echo $text_total_customer_approval; ?></td>
+              <td><?php echo $Language->get('text_total_customer_approval'); ?></td>
               <td><?php echo $total_customer_approval; ?></td>
             </tr>
             <tr>
-              <td><?php echo $text_total_product; ?></td>
+              <td><?php echo $Language->get('text_total_product'); ?></td>
               <td><?php echo $total_product; ?></td>
             </tr>
             <tr>
-              <td><?php echo $text_total_review; ?></td>
+              <td><?php echo $Language->get('text_total_review'); ?></td>
               <td><?php echo $total_review; ?></td>
             </tr>
             <tr>
-              <td><?php echo $text_total_review_approval; ?></td>
+              <td><?php echo $Language->get('text_total_review_approval'); ?></td>
               <td><?php echo $total_review_approval; ?></td>
             </tr>
           </table>
@@ -54,18 +54,18 @@
 <div class="grid_12">
     <div class="box">
         <div class="header">
-            <hgroup><h1><?php echo $text_latest_10_orders; ?></h1></hgroup>
+            <hgroup><h1><?php echo $Language->get('text_latest_10_orders'); ?></h1></hgroup>
         </div>
         <div class="clear"></div><br />
         <table class="list resize">
             <thead>
                 <tr>
-                    <th><?php echo $column_order; ?></th>
-                    <th><?php echo $column_name; ?></th>
-                    <th class="left"><?php echo $column_status; ?></th>
-                    <th class="left"><?php echo $column_date_added; ?></th>
-                    <th class="right"><?php echo $column_total; ?></th>
-                    <th class="right"><?php echo $column_action; ?></th>
+                    <th><?php echo $Language->get('column_order'); ?></th>
+                    <th><?php echo $Language->get('column_name'); ?></th>
+                    <th class="left"><?php echo $Language->get('column_status'); ?></th>
+                    <th class="left"><?php echo $Language->get('column_date_added'); ?></th>
+                    <th class="right"><?php echo $Language->get('column_total'); ?></th>
+                    <th class="right"><?php echo $Language->get('column_action'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -85,7 +85,7 @@
                 </tr>
                 <?php } ?>
             <?php } else { ?>
-                <tr><td class="center" colspan="6"><?php echo $text_no_results; ?></td></tr>
+                <tr><td class="center" colspan="6"><?php echo $Language->get('text_no_results'); ?></td></tr>
             <?php } ?>
             </tbody>
         </table>

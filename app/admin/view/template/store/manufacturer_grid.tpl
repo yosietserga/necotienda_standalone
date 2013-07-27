@@ -14,10 +14,10 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><?php echo $column_image; ?></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_name; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"<?php if ($sort == 'p.sort_order') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $column_sort_order; ?></a></th>
-                <th><?php echo $column_action; ?></th>
+                <th><?php echo $Language->get('column_image'); ?></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_name'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"<?php if ($sort == 'p.sort_order') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $Language->get('column_sort_order'); ?></a></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

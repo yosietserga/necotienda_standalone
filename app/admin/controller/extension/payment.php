@@ -2,7 +2,7 @@
 /**
  * ControllerExtensionPayment
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -236,7 +236,7 @@ class ControllerExtensionPayment extends Controller {
 		} else {		
 			$this->modelExtension->uninstall('payment', $this->request->get['extension']);
 		
-			$this->modelSetting->deleteSetting($this->request->get['extension']);
+			$this->modelSetting->delete($this->request->get['extension']);
 		
 			$this->redirect(Url::createAdminUrl('extension/payment'));	
 		}			

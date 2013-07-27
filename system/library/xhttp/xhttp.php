@@ -34,6 +34,7 @@ class xhttp {
 
 		$requestData['curl'][CURLOPT_HEADER] = true;
 		$requestData['curl'][CURLOPT_RETURNTRANSFER] = true;
+		//$requestData['curl'][CURLOPT_FILE] = true;
 		self::addHookToRequest($requestData, 'return-response', array(__CLASS__, 'response_decode'), 2);
 
 		$method = (isset($requestData['method'])) ? $requestData['method']: ((isset($requestData['post'])) ? 'post': 'get');

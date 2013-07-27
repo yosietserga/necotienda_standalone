@@ -2,7 +2,7 @@
 /**
  * ControllerStoreCategory
  * 
- * @package  NecoTienda powered by Opencart
+ * @package  NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.1.0
@@ -68,7 +68,7 @@ class ControllerStoreCategory extends Controller {
                 $description['description'] = htmlentities($dom->saveHTML());
                 $this->request->post['category_description'][$language_id] = $description;
               }
-			$category_id = $this->modelCategory->addCategory($this->request->post);
+			$category_id = $this->modelCategory->add($this->request->post);
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -132,7 +132,7 @@ class ControllerStoreCategory extends Controller {
                 $this->request->post['category_description'][$language_id] = $description;
             }
               
-            $this->modelCategory->editCategory($this->request->get['category_id'], $this->request->post);
+            $this->modelCategory->update($this->request->get['category_id'], $this->request->post);
     		$this->session->set('success',$this->language->get('text_success'));
     		if ($this->request->post['to'] == "saveAndKeep") {
                 $this->redirect(Url::createAdminUrl('store/category/update',array('category_id'=>$this->request->get['category_id']))); 
@@ -162,7 +162,7 @@ class ControllerStoreCategory extends Controller {
      }
     
 	/**
-	 * ControllerStoreCategory::getList()
+	 * ControllerStoreCategory::getById()
 	 * 
      * @see Load
      * @see Model
@@ -221,7 +221,7 @@ class ControllerStoreCategory extends Controller {
                 return false;
             } 
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("store/category/delete") ."',$('#form').serialize(),function(){
@@ -234,7 +234,7 @@ class ControllerStoreCategory extends Controller {
                 return false;
             }
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('li#' + e).remove();
                 	$.getJSON('". Url::createAdminUrl("store/category/delete") ."',{
                         id:e
@@ -497,48 +497,15 @@ class ControllerStoreCategory extends Controller {
 	 * @return void
 	 */
 	private function getForm() {
-		$this->data['heading_title']      = $this->language->get('heading_title');
-		$this->data['text_none']          = $this->language->get('text_none');
-		$this->data['text_default']       = $this->language->get('text_default');
-		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
-		$this->data['text_enabled']       = $this->language->get('text_enabled');
-    	$this->data['text_disabled']      = $this->language->get('text_disabled');
-		$this->data['entry_name']         = $this->language->get('entry_name');
-		$this->data['entry_meta_keywords']= $this->language->get('entry_meta_keywords');
-		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
-		$this->data['entry_description']  = $this->language->get('entry_description');
-		$this->data['entry_keyword']      = $this->language->get('entry_keyword');
-		$this->data['entry_category']     = $this->language->get('entry_category');
-		$this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
-		$this->data['entry_image']        = $this->language->get('entry_image');
-		$this->data['entry_status']       = $this->language->get('entry_status');
-		$this->data['help_name']          = $this->language->get('help_name');
-		$this->data['help_meta_keywords'] = $this->language->get('help_meta_keywords');
-		$this->data['help_meta_description'] = $this->language->get('help_meta_description');
-		$this->data['help_description']   = $this->language->get('help_description');
-		$this->data['help_keyword']       = $this->language->get('help_keyword');
-		$this->data['help_category']      = $this->language->get('help_category');
-		$this->data['help_sort_order']    = $this->language->get('help_sort_order');
-		$this->data['help_image']         = $this->language->get('help_image');
-		$this->data['help_status']        = $this->language->get('help_status');
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-    	$this->data['tab_general']        = $this->language->get('tab_general');
-    	$this->data['tab_data']           = $this->language->get('tab_data');
-		
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_name'] = isset($this->error['name']) ? $this->error['name'] : '';
 
   		$this->document->breadcrumbs = array();
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => Url::createAdminUrl('common/home'),
        		'text'      => $this->language->get('text_home'),
       		'separator' => false
    		);
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => Url::createAdminUrl('store/category'),
        		'text'      => $this->language->get('heading_title'),
@@ -554,15 +521,17 @@ class ControllerStoreCategory extends Controller {
 		$this->data['cancel'] = Url::createAdminUrl('store/category');
 
 		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$category_info = $this->modelCategory->getCategory($this->request->get['category_id']);
+      		$category_info = $this->modelCategory->getById($this->request->get['category_id']);
     	}
 		
-		$this->data['languages'] = $this->modelLanguage->getLanguages();
+		$this->data['languages'] = $this->modelLanguage->getAll();
+		$this->data['stores'] = $this->modelStore->getAll();
+		$this->data['_stores'] = $this->modelCategory->getStores($this->request->get['category_id']);
         
 		if (isset($this->request->post['category_description'])) {
 			$this->data['category_description'] = $this->request->post['category_description'];
 		} elseif (isset($category_info)) {
-			$this->data['category_description'] = $this->modelCategory->getCategoryDescriptions($this->request->get['category_id']);
+			$this->data['category_description'] = $this->modelCategory->getDescriptions($this->request->get['category_id']);
 		} else {
 			$this->data['category_description'] = array();
 		}
@@ -573,7 +542,7 @@ class ControllerStoreCategory extends Controller {
         $this->setvar('image',$category_info);
         $this->setvar('sort_order',$category_info,0);
         
-		$this->data['categories'] = $this->modelCategory->getCategories(0);
+		$this->data['categories'] = $this->modelCategory->getAll();
 
 		if (!empty($category_info['image']) && file_exists(DIR_IMAGE . $category_info['image'])) {
 			$this->data['preview'] = NTImage::resizeAndSave($category_info['image'], 100, 100);
@@ -581,19 +550,11 @@ class ControllerStoreCategory extends Controller {
 			$this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
 		}
         
-        $this->data['Url'] = new Url;
-        
         $scripts[] = array('id'=>'categoryForm','method'=>'ready','script'=>
-            "$('#category_description_1_name').blur(function(e){
-                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',{ slug : $(this).val() },function(data){
-                        $('#slug').val(data.slug);
-                });
-            });
+            "$('#addsWrapper').hide();
             
-            $('#addProductsWrapper').hide();
-            
-            $('#addProductsPanel').on('click',function(e){
-                var products = $('#addProductsWrapper').find('.row');
+            $('#addsPanel').on('click',function(e){
+                var products = $('#addsWrapper').find('.row');
                 
                 if (products.length == 0) {
                     $.getJSON('".Url::createAdminUrl("store/category/products")."',
@@ -601,10 +562,10 @@ class ControllerStoreCategory extends Controller {
                             'category_id':'".$this->request->getQuery('category_id')."'
                         }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\"></ul>');
                             
                             $.each(data, function(i,item){
-                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"checkbox\" name=\"Products[' + item.product_id + ']\" value=\"' + item.product_id + '\" style=\"display:none\" /></li>');
                                 
                             });
                             
@@ -612,9 +573,9 @@ class ControllerStoreCategory extends Controller {
                                 var that = this;
                                 var valor = $(that).val().toLowerCase();
                                 if (valor.length <= 0) {
-                                    $('#addProducts li').show();
+                                    $('#adds li').show();
                                 } else {
-                                    $('#addProducts li b').each(function(){
+                                    $('#adds li b').each(function(){
                                         if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
                                             $(this).closest('li').show();
                                         } else {
@@ -628,68 +589,17 @@ class ControllerStoreCategory extends Controller {
                                 var b = $(this).find('b');
                                 if (b.hasClass('added')) {
                                     b.removeClass('added').addClass('add');
-                                    $(this).find('input').val(0);
+                                    $(this).find('input[type=checkbox]').removeAttr('checked');
                                 } else {
                                     b.removeClass('add').addClass('added');
-                                    $(this).find('input').val(1);
+                                    $(this).find('input[type=checkbox]').attr('checked','checked');
                                 }
                             });
                     });
                 }
             });
                 
-            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
-            
-            $('.trends').fancybox({
-        		maxWidth	: 640,
-        		maxHeight	: 600,
-        		fitToView	: false,
-        		width		: '70%',
-        		height		: '70%',
-        		autoSize	: false,
-        		closeClick	: false,
-        		openEffect	: 'none',
-        		closeEffect	: 'none'
-        	});
-            
-            $('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           }); 
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
+            $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });");
             
         foreach ($this->data['languages'] as $language) {
             $scripts[] = array('id'=>'categoryLanguage'.$language["language_id"],'method'=>'ready','script'=>
@@ -701,26 +611,21 @@ class ControllerStoreCategory extends Controller {
                 	filebrowserImageUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserFlashUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
                     height:600
+                });
+                $('#description_". $language["language_id"] ."_name').change(function(e){
+                    $.getJSON('". Url::createAdminUrl('common/home/slug') ."',
+                    { 
+                        slug : $(this).val(),
+                        query : 'path=". $this->request->getQuery('category_id') ."',
+                    },
+                    function(data){
+                        $('#description_". $language["language_id"] ."_keyword').val(data.slug);
+                    });
                 });");
         }
         
         $scripts[] = array('id'=>'categoryFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }
-            
-            function image_delete(field, preview) {
+            "function image_delete(field, preview) {
                 $('#' + field).val('');
                 $('#' + preview).attr('src','". HTTP_IMAGE ."cache/no_image-100x100.jpg');
             }
@@ -730,7 +635,7 @@ class ControllerStoreCategory extends Controller {
                 var width = $(window).width() * 0.8;
                 
             	$('#dialog').remove();
-            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
             		title: '".$this->data['text_image_manager']."',
@@ -795,7 +700,7 @@ class ControllerStoreCategory extends Controller {
         //TODO: agregar funciones de validación propias
 
 		foreach ($this->request->post['category_description'] as $language_id => $value) {
-			if ((strlen(utf8_decode($value['name'])) < 2) || (strlen(utf8_decode($value['name']))> 32)) {
+			if (empty($value['name'])) {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 		}
@@ -839,7 +744,7 @@ class ControllerStoreCategory extends Controller {
      public function activate() {
         if (!isset($_GET['id'])) return false;
         $this->load->auto('store/category');
-        $status = $this->modelCategory->getCategory($_GET['id']);
+        $status = $this->modelCategory->getById($_GET['id']);
         if ($status) {
             if ($status['status'] == 0) {
                 $this->modelCategory->activate($_GET['id']);
@@ -877,7 +782,7 @@ class ControllerStoreCategory extends Controller {
         header("Content-type: application/json");
         
         if ($this->request->hasQuery('category_id')) {
-            $rows = $this->modelProduct->getProductsByCategoryId($this->request->getQuery('category_id'));
+            $rows = $this->modelProduct->getAllByCategoryId($this->request->getQuery('category_id'));
             $products_by_category = array();
             foreach ($rows as $row) {
                 $products_by_category[] = $row['product_id'];
@@ -885,32 +790,28 @@ class ControllerStoreCategory extends Controller {
         }
         $cache = $this->cache->get("products.for.category.form");
         if ($cache) {
-            $products = unserialize($cache);
+            $products = $cache;
         } else {
-            $model = $this->modelProduct->getAll();
-            $products = $model->obj;
-            $this->cache->set("products.for.category.form",serialize($products));
+            $products = $this->modelProduct->getAll();
+            $this->cache->set("products.for.category.form",$products);
         }
-        
-        $this->data['Image'] = new NTImage();
-        $this->data['Url'] = new Url;
         
         $output = array();
         
         foreach ($products as $product) {
-            if (!empty($products_by_category) && in_array($product->product_id,$products_by_category)) {
+            if (!empty($products_by_category) && in_array($product['product_id'],$products_by_category)) {
                 $output[] = array(
-                    'product_id'=>$product->product_id,
-                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
-                    'pname'     =>$product->pname,
+                    'product_id'=>$product['product_id'],
+                    'pimage'    =>NTImage::resizeAndSave($product['image'],50,50),
+                    'pname'     =>$product['name'],
                     'class'     =>'added',
                     'value'     =>1
                 );
             } else {
                 $output[] = array(
-                    'product_id'=>$product->product_id,
-                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
-                    'pname'     =>$product->pname,
+                    'product_id'=>$product['product_id'],
+                    'pimage'    =>NTImage::resizeAndSave($product['image'],50,50),
+                    'pname'     =>$product['name'],
                     'class'     =>'add',
                     'value'     =>0
                 );
@@ -918,6 +819,5 @@ class ControllerStoreCategory extends Controller {
         }
         $this->load->auto('json');
         $this->response->setOutput(Json::encode($output), $this->config->get('config_compression'));
-            
      }
 }

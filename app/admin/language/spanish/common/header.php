@@ -1,7 +1,4 @@
 <?php
-// Heading
-$_['heading_title']       = 'Administraci&oacute;n';
-
 // Menu Tabs
 $_['tab_home']            = 'Inicio';
 $_['tab_admon']           = 'Administraci&oacute;n';
@@ -71,3 +68,5 @@ $_['text_menu']              = 'Men&uacute;es';
 $_['text_banner']            = 'Banners';
 $_['text_showslider']        = 'Showsliders';
 $_['text_links']             = 'Enlaces';
+$_['text_bank']             = 'Bancos';
+$_['text_bank_account']             = 'Cuentas Bancarias';

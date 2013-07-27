@@ -13,14 +13,14 @@
 <body>
 <?php foreach ($orders as $order) { ?>
     <div style="page-break-after: always;">
-        <h1><?php echo $text_invoice; ?></h1>
+        <h1><?php echo $Language->get('text_invoice; ')?></h1>
         <div class="div1">
             <table>
                 <tr>
 				    <td>
                         <?php echo $order['store_name']; ?><br />
                         <?php echo $order['address']; ?><br />
-                        <?php echo $text_telephone; ?>
+                        <?php echo $Language->get('text_telephone'); ?>
 						<?php echo $order['telephone']; ?><br />
 						<?php echo $order['email']; ?><br />
 						<?php echo $order['store_url']; ?>
@@ -28,11 +28,11 @@
 					<td>
                         <table>
                             <tr>
-                                <td><b><?php echo $text_invoice_date; ?></b></td>
+                                <td><b><?php echo $Language->get('text_invoice_date'); ?></b></td>
                                 <td><?php echo $order['date_added']; ?></td>
                             </tr>
 							<tr>
-                                <td><b><?php echo $text_invoice_no; ?></b></td>
+                                <td><b><?php echo $Language->get('text_invoice_no'); ?></b></td>
                                 <td><?php echo $order['order_id']; ?></td>
                             </tr>
 					   </table>
@@ -42,8 +42,8 @@
         </div>
 		<table class="address">
             <tr class="heading">
-                <td><b><?php echo $text_to; ?></b></td>
-                <td><b><?php echo $text_ship_to; ?></b></td>
+                <td><b><?php echo $Language->get('text_to'); ?></b></td>
+                <td><b><?php echo $Language->get('text_ship_to'); ?></b></td>
             </tr>
 			<tr>
                 <td><?php echo $order['payment_address']; ?><br /><?php echo $order['customer_email']; ?></td>
@@ -52,11 +52,11 @@
 		</table>
 		<table class="product">
             <tr class="heading">
-                <td><b><?php echo $column_product; ?></b></td>
-                <td><b><?php echo $column_model; ?></b></td>
-                <td><b><?php echo $column_quantity; ?></b></td>
-                <td><b><?php echo $column_price; ?></b></td>
-                <td><b><?php echo $column_total; ?></b></td>
+                <td><b><?php echo $Language->get('column_product'); ?></b></td>
+                <td><b><?php echo $Language->get('column_model'); ?></b></td>
+                <td><b><?php echo $Language->get('column_quantity'); ?></b></td>
+                <td><b><?php echo $Language->get('column_price'); ?></b></td>
+                <td><b><?php echo $Language->get('column_total'); ?></b></td>
             </tr>
 			<?php foreach ($order['product'] as $product) { ?>
 			<tr>

@@ -2,7 +2,7 @@
 /**
  * ControllerContentPostCategory
  * 
- * @package  NecoTienda powered by Opencart
+ * @package  NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.1.0
@@ -72,7 +72,7 @@ class ControllerContentPostCategory extends Controller {
                 $this->request->post['category_description'][$language_id] = $description;
             }
               
-			$category_id = $this->modelPost_category->addCategory($this->request->post);
+			$category_id = $this->modelPost_category->add($this->request->post);
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -137,7 +137,7 @@ class ControllerContentPostCategory extends Controller {
                 $this->request->post['category_description'][$language_id] = $description;
             }
               
-			$this->modelPost_category->editCategory($this->request->get['category_id'], $this->request->post);
+			$this->modelPost_category->update($this->request->get['category_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -152,35 +152,24 @@ class ControllerContentPostCategory extends Controller {
 		$this->getForm();
 	}
 
-	/**
-	 * ControllerContentPostCategory::delete()
-	 * 
-     * @see Load
-     * @see Model
-     * @see Request
-     * @see Document
-     * @see Session
-     * @see Redirect
-     * @see getList
-	 * @return void
-	 */
-	public function delete() {
-		$this->document->title = $this->language->get('heading_title');
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $category_id) {
-				$this->modelPost_category->deleteCategory($category_id);
-			}
-
-			$this->session->set('success',$this->language->get('text_success'));
-
-			$this->redirect(Url::createAdminUrl('content/post_category'));
+    /**
+     * ControllerContentPostCategory::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        $this->load->auto('content/post_category');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelPost_category->delete($id);
+            }
+		} else {
+            $this->modelPost_category->delete($_GET['id']);
 		}
-
-		$this->getList();
-	}
-
+     }
+    
 	/**
-	 * ControllerContentPostCategory::getList()
+	 * ControllerContentPostCategory::getById()
 	 * 
      * @see Load
      * @see Model
@@ -241,7 +230,7 @@ class ControllerContentPostCategory extends Controller {
                 
             } 
             function eliminar(e) {    
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                 	$.ajax({
                 	   'type':'get',
                        'dataType':'json',
@@ -516,39 +505,6 @@ class ControllerContentPostCategory extends Controller {
 	 * @return void
 	 */
 	private function getForm() {
-	   $this->load->library('image');
-		$this->data['heading_title']      = $this->language->get('heading_title');
-		$this->data['text_none']          = $this->language->get('text_none');
-		$this->data['text_default']       = $this->language->get('text_default');
-		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
-		$this->data['text_enabled']       = $this->language->get('text_enabled');
-    	$this->data['text_disabled']      = $this->language->get('text_disabled');
-		$this->data['entry_name']         = $this->language->get('entry_name');
-		$this->data['entry_meta_keywords']= $this->language->get('entry_meta_keywords');
-		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
-		$this->data['entry_description']  = $this->language->get('entry_description');
-		$this->data['entry_keyword']      = $this->language->get('entry_keyword');
-		$this->data['entry_category']     = $this->language->get('entry_category');
-		$this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
-		$this->data['entry_image']        = $this->language->get('entry_image');
-		$this->data['entry_status']       = $this->language->get('entry_status');
-		$this->data['help_name']          = $this->language->get('help_name');
-		$this->data['help_meta_keywords'] = $this->language->get('help_meta_keywords');
-		$this->data['help_meta_description'] = $this->language->get('help_meta_description');
-		$this->data['help_description']   = $this->language->get('help_description');
-		$this->data['help_keyword']       = $this->language->get('help_keyword');
-		$this->data['help_category']      = $this->language->get('help_category');
-		$this->data['help_sort_order']    = $this->language->get('help_sort_order');
-		$this->data['help_image']         = $this->language->get('help_image');
-		$this->data['help_status']        = $this->language->get('help_status');
-		$this->data['button_save']        = $this->language->get('button_save');
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-    	$this->data['tab_general']        = $this->language->get('tab_general');
-    	$this->data['tab_data']           = $this->language->get('tab_data');
-		
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_name'] = isset($this->error['name']) ? $this->error['name'] : '';
 
@@ -575,15 +531,15 @@ class ControllerContentPostCategory extends Controller {
 		$this->data['cancel'] = Url::createAdminUrl('content/post_category');
 
 		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$category_info = $this->modelPost_category->getCategory($this->request->get['category_id']);
+      		$category_info = $this->modelPost_category->getById($this->request->get['category_id']);
     	}
 		
-		$this->data['languages'] = $this->modelLanguage->getLanguages();
+		$this->data['languages'] = $this->modelLanguage->getAll();
         
 		if (isset($this->request->post['category_description'])) {
 			$this->data['category_description'] = $this->request->post['category_description'];
 		} elseif (isset($category_info)) {
-			$this->data['category_description'] = $this->modelPost_category->getCategoryDescriptions($this->request->get['category_id']);
+			$this->data['category_description'] = $this->modelPost_category->getDescriptions($this->request->get['category_id']);
 		} else {
 			$this->data['category_description'] = array();
 		}
@@ -594,7 +550,10 @@ class ControllerContentPostCategory extends Controller {
         $this->setvar('image',$category_info);
         $this->setvar('sort_order',$category_info,0);
         
-		$this->data['categories'] = $this->modelPost_category->getCategories(0);
+		$this->data['categories'] = $this->modelPost_category->getAll();
+		$this->data['stores'] = $this->modelStore->getAll();
+		$this->data['_stores'] = $this->modelPost_category->getStores($this->request->get['category_id']);
+        
 
 		if (!empty($category_info['image']) && file_exists(DIR_IMAGE . $category_info['image'])) {
 			$this->data['preview'] = NTImage::resizeAndSave($category_info['image'], 100, 100);
@@ -602,19 +561,10 @@ class ControllerContentPostCategory extends Controller {
 			$this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
 		}
         
-        $this->data['Url'] = new Url;
-        
         $scripts[] = array('id'=>'categoryForm','method'=>'ready','script'=>
-            "$('#category_description_1_name').blur(function(e){
-                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',{ slug : $(this).val() },function(data){
-                        $('#slug').val(data.slug);
-                });
-            });
-            
-            $('#addPostsWrapper').hide();
-            
-            $('#addPostsPanel').on('click',function(e){
-                var posts = $('#addPostsWrapper').find('.row');
+            "$('#addsWrapper').hide();
+            $('#addsPanel').on('click',function(e){
+                var posts = $('#addsWrapper').find('.row');
                 
                 if (posts.length == 0) {
                     $.getJSON('".Url::createAdminUrl("content/post_category/posts")."',
@@ -622,14 +572,14 @@ class ControllerContentPostCategory extends Controller {
                             'category_id':'".$this->request->getQuery('category_id')."'
                         }, function(data) {
                             
-                            $('#addPostsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addPosts\">');
+                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\">');
                             
                             $.each(data, function(i,item){
-                                $('#addPosts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Posts[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Posts[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
                                 
                             });
                             
-                            $('#q').liveUpdate('#addPosts').focus();
+                            $('#q').liveUpdate('#adds').focus();
                             
                             $('li').on('click',function() {
                                 var b = $(this).find('b');
@@ -644,59 +594,7 @@ class ControllerContentPostCategory extends Controller {
                     });
                 }
             });
-                
-            $('#addPostsPanel').on('click',function(){ $('#addPostsWrapper').slideToggle() });
-            
-            $('.trends').fancybox({
-        		maxWidth	: 640,
-        		maxHeight	: 600,
-        		fitToView	: false,
-        		width		: '70%',
-        		height		: '70%',
-        		autoSize	: false,
-        		closeClick	: false,
-        		openEffect	: 'none',
-        		closeEffect	: 'none'
-        	});
-            
-            $('#form').ntForm({
-                lockButton:false,
-                cancelButton:false,
-                submitButton:false,
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           }); 
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
+            $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });");
             
         foreach ($this->data['languages'] as $language) {
             $scripts[] = array('id'=>'categoryLanguage'.$language["language_id"],'method'=>'ready','script'=>
@@ -707,28 +605,23 @@ class ControllerContentPostCategory extends Controller {
                 	filebrowserUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserImageUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserFlashUploadUrl: '". Url::createAdminUrl("common/filemanager") ."'
+                });
+                $('#description_". $language["language_id"] ."_name').blur(function(e){
+                    $.getJSON('". Url::createAdminUrl('common/home/slug') ."',
+                    { 
+                        slug : $(this).val(),
+                        query : 'post_category_id=". $this->request->getQuery('post_category_id') ."',
+                    },
+                    function(data){
+                        $('#description_". $language["language_id"] ."_keyword').val(data.slug);
+                    });
                 });");
         }
         
         $scripts[] = array('id'=>'categoryFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }
-            
-            function image_upload(field, preview) {
+            "function image_upload(field, preview) {
             	$('#dialog').remove();
-            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
             		title: '".$this->data['text_image_manager']."',
@@ -837,7 +730,7 @@ class ControllerContentPostCategory extends Controller {
      public function activate() {
         if (!isset($_GET['id'])) return false;
         $this->load->auto('content/post_category');
-        $status = $this->modelPost_category->getCategory($_GET['id']);
+        $status = $this->modelPost_category->getById($_GET['id']);
         if ($status) {
             if ($status['status'] == 0) {
                 $this->modelPost_category->activate($_GET['id']);
@@ -860,7 +753,7 @@ class ControllerContentPostCategory extends Controller {
      public function eliminar() {
         if (!isset($_GET['id'])) return false;
         $this->load->auto('content/post_category');
-        $result = $this->modelPost_category->getCategory($_GET['id']);
+        $result = $this->modelPost_category->getById($_GET['id']);
         if ($result) {
             $this->modelPost_category->deleteCategory($_GET['id']);
             echo 1;

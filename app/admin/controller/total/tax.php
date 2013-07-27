@@ -10,11 +10,15 @@ class ControllerTotalTax extends Controller {
 		$this->load->auto('setting/setting');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
-			$this->modelSetting->editSetting('tax', $this->request->post);
+			$this->modelSetting->update('tax', $this->request->post);
 		
 			$this->session->set('success',$this->language->get('text_success'));
 			
-			$this->redirect(Url::createAdminUrl('extension/total'));
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('total/tax')); 
+            } else {
+                $this->redirect(Url::createAdminUrl('extension/total')); 
+            }
 		}
 		
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -26,6 +30,8 @@ class ControllerTotalTax extends Controller {
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 					
 		$this->data['button_save'] = $this->language->get('button_save');
+        $this->data['button_save_and_keep'] = $this->language->get('button_save_and_keep');
+        $this->data['button_save_and_exit'] = $this->language->get('button_save_and_exit');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
  
 		$this->data['tab_general'] = $this->language->get('tab_general');
@@ -71,7 +77,54 @@ class ControllerTotalTax extends Controller {
 		} else {
 			$this->data['tax_sort_order'] = $this->config->get('tax_sort_order');
 		}
-																				
+					
+        $this->data['Url'] = new Url;
+        
+        $scripts[] = array('id'=>'scriptForm','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'scriptFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        															
 		$this->template = 'total/tax.tpl';
 		$this->children = array(
 			'common/header',	

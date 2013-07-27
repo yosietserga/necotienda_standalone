@@ -15,33 +15,33 @@
         <thead>
           <tr>
             <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);"></th>
-            <th><?php echo $column_image; ?></th>
+            <th><?php echo $Language->get('column_image'); ?></th>
             <th><?php if ($sort == 'pd.name') { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_name'); ?></a>
               <?php } else { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"><?php echo $column_name; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"><?php echo $Language->get('column_name'); ?></a>
               <?php } ?></th>
             <th><?php if ($sort == 'p.model') { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_model; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_model; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_model'); ?></a>
               <?php } else { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_model; ?>')"><?php echo $column_model; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_model; ?>')"><?php echo $Language->get('column_model'); ?></a>
               <?php } ?></th>
             <th><?php if ($sort == 'p.quantity') { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_quantity; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $column_quantity; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_quantity; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_quantity'); ?></a>
               <?php } else { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_quantity; ?>')"><?php echo $column_quantity; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_quantity; ?>')"><?php echo $Language->get('column_quantity'); ?></a>
               <?php } ?></th>
             <th><?php if ($sort == 'p.status') { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_status'); ?></a>
               <?php } else { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"><?php echo $column_status; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"><?php echo $Language->get('column_status'); ?></a>
               <?php } ?></th>
             <th><?php if ($sort == 'p.sort_order') { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $column_sort_order; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_sort_order'); ?></a>
               <?php } else { ?>
-              <a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"><?php echo $column_sort_order; ?></a>
+              <a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"><?php echo $Language->get('column_sort_order'); ?></a>
               <?php } ?></th>
-            <th><?php echo $column_action; ?></th>
+            <th><?php echo $Language->get('column_action'); ?></th>
           </tr>
         </thead>
         <tbody>
@@ -85,7 +85,7 @@
           <?php } ?>
           <?php } else { ?>
           <tr>
-            <td colspan="8"><?php echo $text_no_results; ?></td>
+            <td colspan="8"><?php echo $Language->get('text_no_results'); ?></td>
           </tr>
           <?php } ?>
         </tbody>

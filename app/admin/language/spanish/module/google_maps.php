@@ -5,10 +5,15 @@ $_['heading_title']    = 'Google Maps';
 // Text
 $_['text_module']      = 'Modules';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
+$_['text_google_maps']     = 'Google Maps';
 
 // Entry
 $_['entry_code']       = 'Google Maps Code (<a onclick="window.open(\'http://maps.google.es/maps?ct=reset\');">Google Maps</a>)';
 $_['entry_status']     = 'Status:';
+$_['entry_load']       = 'Auto Cargar:';
+$_['entry_title']      = 'T&iacute;tulo:';
+$_['entry_landing_page'] = 'Mostrar en las siguientes p&aacute;ginas:';
+$_['entry_class']      = 'Clase (CSS):';
 
 
 // Help

@@ -1,11 +1,11 @@
 <?php echo $header; ?>
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
-        <h1><?php echo $heading_title; ?></h1>
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
-            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $button_save_and_exit; ?></a>
-            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $button_save_and_keep; ?></a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
+            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
         <div class="clear"></div>
@@ -13,17 +13,17 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 
             <div class="row">
-                <label><?php echo $entry_code; ?></label>
-                <input title="<?php echo $help_sort_order; ?>" type="number" name="google_analytics_code" value="<?php echo $google_analytics_code; ?>" />
+                <label><?php echo $Language->get('entry_code'); ?></label>
+                <input title="<?php echo $Language->get('help_sort_order'); ?>" type="text" name="google_analytics_code" value="<?php echo $google_analytics_code; ?>" />
             </div>
                       
             <div class="clear"></div>
                             
             <div class="row">
-                <label><?php echo $entry_status; ?></label>
-                <select title="<?php echo $help_status; ?>" name="category_status">
-                    <option value="1"<?php if ($category_status) { ?> selected="selected"<?php } ?>><?php echo $text_enabled; ?></option>
-                    <option value="0"<?php if (!$category_status) { ?> selected="selected"<?php } ?>><?php echo $text_disabled; ?></option>
+                <label><?php echo $Language->get('entry_status'); ?></label>
+                <select title="<?php echo $Language->get('help_status'); ?>" name="google_analytics_status">
+                    <option value="1"<?php if ($google_analytics_status) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_enabled'); ?></option>
+                    <option value="0"<?php if (!$google_analytics_status) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_disabled'); ?></option>
                 </select>
             </div>
             
@@ -53,7 +53,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>

@@ -13,14 +13,14 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><?php echo $column_name; ?></th>
-                <th><?php echo $column_action; ?></th>
+                <th><?php echo $Language->get('column_name'); ?></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
     </table>
     <?php if ($categories) { ?>
         <?php echo $categories; ?>
     <?php } else { ?>
-        <?php echo $text_no_results; ?>
+        <?php echo $Language->get('text_no_results'); ?>
     <?php } ?>
 </form>

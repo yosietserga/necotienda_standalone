@@ -15,13 +15,13 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'cd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_name; ?></a></th>
-                <th><?php echo $column_qty_customers; ?></th>
-                <th><?php echo $column_qty_orders; ?></th>
-                <th><?php echo $column_qty_invoices; ?></th>
-                <th><?php echo $column_qty_reviews; ?></th>
-                <th><?php echo $column_qty_references; ?></th>
-                <th><?php echo $column_action; ?></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'cd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_name'); ?></a></th>
+                <th><?php echo $Language->get('column_qty_customers'); ?></th>
+                <th><?php echo $Language->get('column_qty_orders'); ?></th>
+                <th><?php echo $Language->get('column_qty_invoices'); ?></th>
+                <th><?php echo $Language->get('column_qty_reviews'); ?></th>
+                <th><?php echo $Language->get('column_qty_references'); ?></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -58,7 +58,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="4" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="4" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

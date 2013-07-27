@@ -10,7 +10,7 @@ $_['thousand_point']    = '.';
 
 // Text
 $_['text_success']            = 'Se ha actualizado satisfactoriamente!';
-$_['text_permission']            = 'No tiene permisos para acceder a este m&oacute;dulo';
+$_['text_permission']         = 'No tiene permisos para acceder a este m&oacute;dulo';
 $_['text_confirm']            = '¿Esta seguro que desea continuar?';
 $_['text_time']               = 'P&aacute;gina creada en %s segundos';
 $_['text_yes']                = 'Si';
@@ -32,14 +32,41 @@ $_['text_copy']               = 'Copiar';
 $_['text_delete']             = 'Borrar';
 $_['text_activate']           = 'Activar';
 $_['text_desactivate']        = 'Desactivar';
-$_['text_export']        = 'Exportar';
-$_['text_import']        = 'Importar';
+$_['text_export']             = 'Exportar';
+$_['text_import']             = 'Importar';
 $_['text_view']               = 'Ver';
 $_['text_home']               = 'Inicio';
-$_['text_edit_store']               = 'Editar Sucursal';
+$_['text_edit_store']         = 'Editar Sucursal';
+$_['text_wait']               = 'Por favor espere un momento, esto pueder tardar algunos minutos';
+
+$_['text_category']           = 'Categor&iacute;a de Productos';
+$_['text_categories']         = 'Todas Las Categor&iacute;as de Productos';
+$_['text_product']            = 'Producto';
+$_['text_products']           = 'Todos Los Productos';
+$_['text_manufacturer']       = 'Fabricante';
+$_['text_page']               = 'P&aacute;gina';
+$_['text_pages']              = 'Todas Las P&aacute;ginas';
+$_['text_post']               = 'Art&iacute;culo';
+$_['text_post_category']      = 'Categor&iacute;a de Art&iacute;culos';
+$_['text_post_categories']    = 'Todas Las Categor&iacute;as de Art&iacute;culos';
+$_['text_search']             = 'B&uacute;squeda';
+$_['text_account_login']      = 'Inicio de Sesi&oacute;n';
+$_['text_account_register']   = 'Registro del Cliente';
+$_['text_account_forgotten']  = 'Contrase&ntilde;a Olvidada';
+$_['text_account_success']    = 'Felicitaciones Cliente';
+$_['text_cart_success']       = 'Felicitaciones Carrito de Compra';
+$_['text_cart']               = 'Carrito de Compra';
+$_['text_bestseller']         = 'Productos M&aacute;s Vendidos';
+$_['text_manufacturers']      = 'Todos Los Fabricantes';
+$_['text_special']            = 'Productos En Ofertas';
+$_['text_posts']              = 'Todos Los Art&iacute;culos';
+$_['text_sitemap']            = 'Mapa del Sitio';
+$_['text_contact']            = 'P&aacute;gina de Contacto';
+$_['text_shops']              = 'Tiendas';
 
 // Button
 $_['button_save_and_send']    = 'Guardar y Enviar';
+$_['button_submit']           = 'Enviar';
 $_['button_insert']           = 'Agregar Nuevo';
 $_['button_reset']            = 'Reiniciar';
 $_['button_generate']         = 'Generar';
@@ -103,6 +130,10 @@ $_['tab_history']             = 'Historia del Pedido';
 $_['tab_content']             = 'Contenido';
 $_['tab_send']                = 'Enviar';
 $_['tab_check']               = 'Datos de Env&iacute;o';
+$_['tab_pages']               = 'P&aacute;ginas';
+$_['tab_newsletters']         = 'Newsletters';
+
+$_['entry_store']         = 'Tienda:';
 
 
 

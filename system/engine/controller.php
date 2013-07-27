@@ -3,9 +3,10 @@
 	protected $id;
 	protected $template;
 	protected $children = array();
-	protected $data = array();
+	protected $data     = array();
+	protected $widget   = array();
 	protected $output;
-    protected $cacheId = null;
+    protected $cacheId  = null;
 	
 	public function __construct($registry) {
 		$this->registry = $registry;
@@ -27,14 +28,15 @@
      * @return mixed $varname
      * */
 	public function setvar($varname, $model = null,$default=null) {
+	   $config = $this->registry->get('config');
 		if (isset($this->request->post[$varname])) {
 			$this->data[$varname] = $this->request->post[$varname];
 		} elseif (isset($model)) {
 			$this->data[$varname] = $model[$varname];
 		} elseif (isset($this->request->get[$varname])) {
 			$this->data[$varname] = $this->request->get[$varname];
-        } elseif (isset($this->config) && $this->config->get('config_'.$varname)) {
-            $this->data[$varname] = $this->config->get('config_'.$varname);
+        } elseif (isset($config) && $config->get($varname)) {
+            $this->data[$varname] = $config->get($varname);
 		} elseif (isset($default)) {
 			$this->data[$varname] = $default;
 		} else {
@@ -51,15 +53,15 @@
      * @return void
      * */
     public function setImageVar($varname,$group) {
-        $this->load->model("tool/image");
+        $this->load->model("image");
         $this->load->model("style/style");
         $model = $this->model_style_style->getStyles($group);
         
 		if (!empty($model['background-image']) && file_exists(DIR_IMAGE . $model['background-image'])) {
-			$this->data[$varname] = $this->model_tool_image->resize($model['background-image'], 100, 100);
+			$this->data[$varname] = NTImage::resizeAndSave($model['background-image'], 100, 100);
             $this->data["_".$varname] = $model['background-image'];
 		} else {
-			$this->data[$varname] = $this->model_tool_image->resize('sin_fondo.jpg', 100, 100);
+			$this->data[$varname] = NTImage::resizeAndSave('sin_fondo.jpg', 100, 100);
             $this->data["_".$varname] = "";
 		}
     }
@@ -104,9 +106,14 @@
 	}
 	
 	protected function render($return = false) {
-	   $cache = $this->registry->get('cache');
-       $cached = $cache->get($this->cacheId);
-       if (!$cached || !$this->cacheId) {
+        $cache = $this->registry->get('cache');
+        $user = $this->registry->get('user');
+       
+        if (isset($this->cacheId) && !empty($this->cacheId) && isset($user) && !$user->islogged()) {
+            $cached = $cache->get($this->cacheId);
+        }
+       
+       if (!isset($cached)) {
     		foreach ($this->children as $key => $child) {
     			$action = new Action($child);
     			$file   = $action->getFile();
@@ -117,10 +124,10 @@
     			if (file_exists($file)) {
     				require_once($file);
     				$controller = new $class($this->registry);
-    				$controller->index();
+    				$controller->index($this->widget[$key]);
     				if (!is_numeric($key)) {
     				    $this->data[$key."_hook"] = $key;
-                        $this->data[$key."_code"] = $controller->output;
+    				    $this->data[$key."_code"] = $controller->output;
     				} else {
     				    $this->data[$controller->id] = $controller->output;
     				}
@@ -130,8 +137,10 @@
     		}
     		
             if ($return) {
-                $r = $this->fetch($this->template); 
-                $cache->set($this->cacheId,$r);
+                $r = $this->fetch($this->template);
+                if (isset($this->cacheId) && !empty($this->cacheId)) {
+                    $cache->set($this->cacheId,$r);
+                }
     			return $r;
     		} else {
     			$this->output = $this->fetch($this->template);
@@ -148,25 +157,25 @@
 	protected function fetch($filename) {
 		$file = DIR_TEMPLATE . $filename;
 		if (file_exists($file)) {
+            $this->data['Config'] = $this->registry->get('config');
+            $this->data['Language'] = $this->registry->get('language');
+            $this->data['Url']      = new Url($this->registry);
+            
 			extract($this->data);
-			
       		ob_start();
-      
 	  		require($file);
-            
 	  		$content = ob_get_contents();
-            
       		ob_end_clean();
             
             foreach ($this->children as $key => $child) {
-                if (!is_numeric($key)) $content = str_replace($this->data[$key."_hook"],$this->data[$key."_code"],$content);
+                if (!is_numeric($key)) $content = str_replace('{%'. $this->data[$key."_hook"] .'%}',$this->data[$key."_code"],$content);
             }
             
             $content = str_replace("\n","",$content);
             $content = str_replace("\r","",$content);
             $content = preg_replace('/\s{2,}/', "",$content);
-            $content = preg_replace('!/\*.*?\*/!s', '', $content);
             $content = preg_replace('/\n\s*\n/', "\n", $content);
+            
       		return $content;
     	} else {
       		exit('Error: Could not load template ' . $file . '!');

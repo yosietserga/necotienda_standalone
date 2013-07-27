@@ -2,7 +2,7 @@
 /**
  * ModelStoreDownload
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -10,23 +10,37 @@
  */
 class ModelStoreDownload extends Model {
 	/**
-	 * ModelStoreDownload::addDownload()
+	 * ModelStoreDownload::add()
 	 * 
 	 * @param mixed $data
 	 * @return void
 	 */
-	public function addDownload($data) {
+	public function add($data) {
       	$this->db->query("INSERT INTO " . DB_PREFIX . "download SET remaining = '" . (int)$data['remaining'] . "', date_added = NOW()");
 
       	$download_id = $this->db->getLastId(); 
 
       	if (isset($data['download'])) {
-        	$this->db->query("UPDATE " . DB_PREFIX . "download SET filename = '" . $this->db->escape($data['download']) . "', mask = '" . $this->db->escape($data['mask']) . "' WHERE download_id = '" . (int)$download_id . "'");
+        	$this->db->query("UPDATE " . DB_PREFIX . "download SET 
+            filename = '" . $this->db->escape($data['download']) . "', 
+            mask = '" . $this->db->escape($data['mask']) . "' 
+            WHERE download_id = '" . (int)$download_id . "'");
       	}
 
       	foreach ($data['download_description'] as $language_id => $value) {
-        	$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+        	$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET 
+            download_id = '" . (int)$download_id . "', 
+            language_id = '" . (int)$language_id . "', 
+            name = '" . $this->db->escape($value['name']) . "'");
       	}
+        
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "download_to_store SET 
+                store_id  = '". intval($store) ."', 
+                download_id = '". intval($download_id) ."'");
+            }
+        
+        
         return $download_id;
 	}
 	
@@ -37,7 +51,7 @@ class ModelStoreDownload extends Model {
 	 * @param mixed $data
 	 * @return void
 	 */
-	public function editDownload($download_id, $data) {
+	public function update($download_id, $data) {
         $this->db->query("UPDATE " . DB_PREFIX . "download SET remaining = '" . (int)$data['remaining'] . "' WHERE download_id = '" . (int)$download_id . "'");
       	
 		if (isset($data['download'])) {
@@ -54,20 +68,66 @@ class ModelStoreDownload extends Model {
 
       	foreach ($data['download_description'] as $language_id => $value) {
         	$this->db->query("INSERT INTO " . DB_PREFIX . "download_description SET download_id = '" . (int)$download_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
-      	}	
+      	}
+        
+            $this->db->query("DELETE FROM " . DB_PREFIX . "download_to_store WHERE download_id = '". (int)$download_id ."'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "download_to_store SET 
+                store_id  = '". intval($store) ."', 
+                download_id = '". intval($download_id) ."'");
+            }
+        
+        
 	}
 	
 	/**
-	 * ModelStoreDownload::deleteDownload()
+	 * ModelStoreProduct::copy()
 	 * 
-	 * @param int $download_id
+	 * @param int $product_id
+     * @see DB
+     * @see Cache
 	 * @return void
 	 */
-	public function deleteDownload($download_id) {
-      	$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id = '" . (int)$download_id . "'");
-	  	$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");	
+	public function copy($download_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "download d 
+        LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) 
+        WHERE d.download_id = '" . (int)$download_id . "' 
+        AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['download'] = $data['filename'];
+			$data = array_merge($data, array('download_description' => $this->getDescriptions($download_id)));
+			$this->add($data);
+		}
+	}
+	
+	/**
+	 * ModelContentPost::delete()
+	 * 
+	 * @param int $post_id
+     * @see DB
+     * @see Cache
+	 * @return void
+	 */
+	public function delete($download_id) {
+		$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id = '" . (int)$download_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "download_to_store WHERE download_id = '" . (int)$download_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE object_id='" . (int)$download_id. "' AND object_type = 'download'");
+		$this->cache->delete("download");
 	}	
 
+	public function getStores($id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "download_to_store WHERE download_id = '" . (int)$id . "'");
+		foreach ($query->rows as $result) {
+            $data[] = $result['store_id'];
+		}
+		return $data;
+	}	
+	
 	/**
 	 * ModelStoreDownload::getDownload()
 	 * 
@@ -81,12 +141,12 @@ class ModelStoreDownload extends Model {
 	}
 
 	/**
-	 * ModelStoreDownload::getDownloads()
+	 * ModelStoreDownload::getAll()
 	 * 
 	 * @param mixed $data
 	 * @return array sql records
 	 */
-	public function getDownloads($data = array()) {
+	public function getAll($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 	
 		$sort_data = array(
@@ -124,12 +184,12 @@ class ModelStoreDownload extends Model {
 	}
 	
 	/**
-	 * ModelStoreDownload::getDownloadDescriptions()
+	 * ModelStoreDownload::getDescriptions()
 	 * 
 	 * @param int $download_id
 	 * @return array sql records
 	 */
-	public function getDownloadDescriptions($download_id) {
+	public function getDescriptions($download_id) {
 		$download_description_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
@@ -142,13 +202,35 @@ class ModelStoreDownload extends Model {
 	}
 	
 	/**
-	 * ModelStoreDownload::getTotalDownloads()
+	 * ModelStoreDownload::getAllTotal()
 	 * 
 	 * @return int Count sql records
 	 */
-	public function getTotalDownloads() {
+	public function getAllTotal() {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "download");
 		
 		return $query->row['total'];
 	}	
+    
+    /**
+     * ModelStoreDownload::activate()
+     * activar un objeto
+     * @param integer $id del objeto
+     * @return boolean
+     * */
+     public function activate($id) {
+        $query = $this->db->query("UPDATE `" . DB_PREFIX . "download` SET `status` = '1' WHERE `download_id` = '" . (int)$id . "'");
+        return $query;
+     }
+    
+    /**
+     * ModelStoreDownload::desactivate()
+     * desactivar un objeto
+     * @param integer $id del objeto
+     * @return boolean
+     * */
+     public function desactivate($id) {
+        $query = $this->db->query("UPDATE `" . DB_PREFIX . "download` SET `status` = '0' WHERE `download_id` = '" . (int)$id . "'");
+        return $query;
+     }
 }

@@ -1,62 +1,101 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?>
-<div class="warning"><?php echo $error_warning; ?></div>
-<?php } ?>
+<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
-  <div class="left"></div>
-  <div class="right"></div>
-  <div class="heading">
-    <h1 style="background-image: url('image/user_group.png');"><?php echo $heading_title; ?></h1>
-    <div class="buttons"><a onclick="$('#form').submit();" class="button"><span><?php echo $button_save; ?></span></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a></div>
-  </div>
-  <div class="content">
-    <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-      <table class="form">
-        <tr>
-          <td><span class="required">*</span> <?php echo $entry_name; ?><a title="Ingrese el nombre del grupo de usuarios"> (?)</a></td>
-          <td><input type="text" name="name" value="<?php echo $name; ?>">
-            <?php if ($error_name) { ?>
-            <span class="error"><?php echo $error_name; ?></span>
-            <?php  } ?></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_access; ?><a title="Seleccione los m&oacute;dulos y las p&aacute;ginas a los que podr&aacute;n acceder los usuarios de este grupo"> (?)</a></td>
-          <td><div class="scrollbox">
-              <?php $class = 'odd'; ?>
-              <?php foreach ($permissions as $permission) { ?>
-              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-              <div class="<?php echo $class; ?>">
-                <?php if (in_array($permission, $access)) { ?>
-                <input type="checkbox" name="permission[access][]" value="<?php echo $permission; ?>" checked="checked">
-                <?php echo $permission; ?>
-                <?php } else { ?>
-                <input type="checkbox" name="permission[access][]" value="<?php echo $permission; ?>">
-                <?php echo $permission; ?>
-                <?php } ?>
-              </div>
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
+        <div class="buttons">
+            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
+            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
+        </div>
+        
+        <div class="clear"></div>
+                                
+        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+            
+            <div class="row">
+                <label><?php echo $Language->get('entry_name'); ?></label>
+                <input id="name" name="name" value="<?php echo isset($name) ? $name : ''; ?>" required="true" style="width:40%" />
+            </div>
+                        
+            <div class="clear"></div><br />
+            
+            <a onclick="$('td input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a onclick="$('td input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
+            <div class="clear"></div><br />
+                        
+            <table class="list">
+            
+                <thead>
+                    <tr>
+                        <th><?php echo $Language->get('column_module'); ?></th>
+                        <th><?php echo $Language->get('column_access'); ?></th>
+                        <th><?php echo $Language->get('column_create') ." / ". $Language->get('column_modidy'); ?></th>
+                        <th><?php echo $Language->get('column_delete'); ?></th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                <?php foreach ($permissions as $permission) { ?>
+                    <tr>
+                        <td><?php echo $permission; ?></td>
+                        <td style="text-align: center;"><input type="checkbox" name="permission[access][]" value="<?php echo $permission; ?>"<?php if (in_array($permission, $access)) { ?> checked="checked"<?php } ?> showquick="off" /></td>
+                        <td style="text-align: center;"><input type="checkbox" name="permission[modify][]" value="<?php echo $permission; ?>"<?php if (in_array($permission, $modify)) { ?> checked="checked"<?php } ?> showquick="off" /></td>
+                        <td style="text-align: center;"><input type="checkbox" name="permission[delete][]" value="<?php echo $permission; ?>"<?php if (in_array($permission, $delete)) { ?> checked="checked"<?php } ?> showquick="off" /></td>
+                    </tr>
               <?php } ?>
-            </div></td>
-        </tr>
-        <tr>
-          <td><?php echo $entry_modify; ?><a title="Seleccione los m&oacute;dulos y las p&aacute;ginas que podr&aacute;n modificar los usuarios de este grupo"> (?)</a></td>
-          <td><div class="scrollbox">
-              <?php $class = 'odd'; ?>
-              <?php foreach ($permissions as $permission) { ?>
-              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-              <div class="<?php echo $class; ?>">
-                <?php if (in_array($permission, $modify)) { ?>
-                <input type="checkbox" name="permission[modify][]" value="<?php echo $permission; ?>" checked="checked">
-                <?php echo $permission; ?>
-                <?php } else { ?>
-                <input type="checkbox" name="permission[modify][]" value="<?php echo $permission; ?>">
-                <?php echo $permission; ?>
-                <?php } ?>
-              </div>
-              <?php } ?>
-            </div></td>
-        </tr>
-      </table>
-    </form>
-  </div>
+                </tbody>
+                
+            </table>
+                
+        </form>
+</div>
+<div class="sidebar" id="feedbackPanel">
+    <div class="tab"></div>
+    <div class="content">
+        <h2>Sugerencias</h2>
+        <p style="margin: -10px auto 0px auto;">Tu opini&oacute;n es muy importante, dinos que quieres cambiar.</p>
+        <form id="feedbackForm">
+            <textarea name="feedback" id="feedback" cols="60" rows="10"></textarea>
+            <input type="hidden" name="account_id" id="account_id" value="<?php echo C_CODE; ?>" />
+            <input type="hidden" name="domain" id="domain" value="<?php echo HTTP_DOMAIN; ?>" />
+            <input type="hidden" name="server_ip" id="server_ip" value="<?php echo $_SERVER['SERVER_ADDR']; ?>" />
+            <input type="hidden" name="remote_ip" id="remote_ip" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" />
+            <input type="hidden" name="server" id="server" value="<?php echo serialize($_SERVER); ?>" />
+            <div class="clear"></div>
+            <br />
+            <div class="buttons"><a class="button" onclick="sendFeedback()">Enviar Sugerencia</a></div>
+        </form>
+    </div>
+</div>
+<div class="sidebar" id="toolPanel">
+    <div class="tab"></div>
+    <div class="content">
+        <h2>Herramientas</h2>
+        <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
+        <ul>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
+            <li><a>Eliminar Esta Categor&iacute;a</a></li>
+        </ul>
+        <div class="toolWrapper"></div>
+    </div>
+</div>
+<div class="sidebar" id="helpPanel">
+    <div class="tab"></div>
+    <div class="content">
+        <h2>Ayuda</h2>
+        <p>No entres en p&aacute;nico, todo tiene una soluci&oacute;n.</p>
+        <ul>
+            <li><a>&iquest;C&oacute;mo se come esto?</a></li>
+            <li><a>&iquest;C&oacute;mo relleno este formulario?</a></li>
+            <li><a>&iquest;Qu&eacute; significan las figuritas al lado de los campos?</a></li>
+            <li><a>&iquest;C&oacute;mo me desplazo a trav&eacute;s de las pesta&ntilde;as?</a></li>
+            <li><a>&iquest;Pierdo la informaci&oacute;n si me cambio de pesta&ntilde;a?</a></li>
+            <li><a>Preguntas Frecuentes</a></li>
+            <li><a>Manual de Usuario</a></li>
+            <li><a>Videos Tutoriales</a></li>
+            <li><a>Auxilio, por favor ay&uacute;denme!</a></li>
+        </ul>
+    </div>
 </div>
 <?php echo $footer; ?>

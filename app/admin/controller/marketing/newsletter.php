@@ -264,7 +264,7 @@ class ControllerMarketingNewsletter extends Controller {
                 return false;
             } 
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("marketing/newsletter/delete") ."',$('#form').serialize(),function(){
@@ -298,7 +298,7 @@ class ControllerMarketingNewsletter extends Controller {
                 });
             }
             function eliminar(e) {    
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
                 	$.getJSON('". Url::createAdminUrl("marketing/newsletter/eliminar") ."',{ id:e });
                 }
@@ -552,46 +552,10 @@ class ControllerMarketingNewsletter extends Controller {
         $this->setvar('textbody',$newsletter_info,'Para poder ver este email, debes utilizar un cliente de correo compatible con vistas HTML.');
 
         $this->data['templates'] = $this->email_template->getPremadeTemplateList(DIR_EMAIL_TEMPLATE,true);
-        $this->data['categories'] = $this->modelCategory->getCategories(0);
+        $this->data['categories'] = $this->modelCategory->getAll();
             
         $scripts[] = array('id'=>'form','method'=>'ready','script'=>
-            "$('#form').ntForm({lockButton:false});
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           });
-           
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });
-            
-            CKEDITOR.replace('htmlbody', {
+            "CKEDITOR.replace('htmlbody', {
            	    filebrowserBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 filebrowserImageBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 filebrowserFlashBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
@@ -602,22 +566,7 @@ class ControllerMarketingNewsletter extends Controller {
             });");
             
         $scripts[] = array('id'=>'functions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }
-            
-            function readPremadeTemplate() {
+            "function readPremadeTemplate() {
             	$.ajax({
             		type: 'GET',
             		url: '". Url::createAdminUrl("marketing/newsletter/readPremadeTemplate") ."&template=' + encodeURIComponent($('select[name=\'email_template\']').val()),
@@ -629,7 +578,7 @@ class ControllerMarketingNewsletter extends Controller {
             		}
             	});	
             }
-            function getProducts() {
+            function getAll() {
             	$('#products').load('". Url::createAdminUrl("marketing/newsletter/products") ."&category_id=' + encodeURIComponent($('select[name=\'category\']').val()));
             }");
             
@@ -674,7 +623,7 @@ class ControllerMarketingNewsletter extends Controller {
 		$category_id = $this->request->get['category_id'];
 		$this->load->auto('store/product');
         $strProducts = '<div class="clear"></div>';
-        $products = $this->modelProduct->getProductsByCategoryId($category_id);
+        $products = $this->modelProduct->getAllByCategoryId($category_id);
         if ($products) {
 		$this->load->auto('image');
             foreach ($products as $product) {
@@ -747,7 +696,7 @@ class ControllerMarketingNewsletter extends Controller {
 		$this->response->setOutput('<img src="' . $image . '" style="border: 2px solid #EEE;" />');
 	}
     
-    public function getProduct() {
+    public function getById() {
 		$product_id = $this->request->get['product_id'];
 		$this->load->auto('store/product');
 		$this->load->auto('image');
@@ -756,8 +705,8 @@ class ControllerMarketingNewsletter extends Controller {
         $tax = new Tax($this->registry);
         $currency = new Currency($this->registry);
         $strProducts = '';
-        $product = $this->modelProduct->getProduct($product_id);
-        $tags = $this->modelProduct->getProductTags($product_id);
+        $product = $this->modelProduct->getById($product_id);
+        $tags = $this->modelProduct->getTags($product_id);
         if (isset($this->request->get['format']) && !empty($this->request->get['format'])) {
             $strProducts .= "Producto: ".$product['name']."\n";
             $strProducts .= "Precio: ". $currency->format($tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'))) ."\n"; //TODO: cureency format

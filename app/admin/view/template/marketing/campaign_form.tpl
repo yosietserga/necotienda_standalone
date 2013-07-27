@@ -5,7 +5,7 @@
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button">Guardar y Enviar</a>
             <a onclick="saveAndNew();$('#form').submit();" class="button">Enviar Prueba</a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
         <div class="clear"></div>
@@ -210,7 +210,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>

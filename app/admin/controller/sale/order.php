@@ -2,7 +2,7 @@
 /**
  * ControllerSaleOrder
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -25,7 +25,7 @@ class ControllerSaleOrder extends Controller {
 				$this->request->post['firstname'] = $customer_info['firstname'];
 				$this->request->post['lastname'] = $customer_info['lastname'];
 			}
-			$this->modelOrder->addOrder($this->request->post);
+			$this->modelOrder->add($this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -38,7 +38,7 @@ class ControllerSaleOrder extends Controller {
   	public function update() {	
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelOrder->editOrder($this->request->get['order_id'], $this->request->post);
+			$this->modelOrder->update($this->request->get['order_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -48,55 +48,22 @@ class ControllerSaleOrder extends Controller {
     	$this->getForm();
   	}
 	  
-  	public function delete() {
-		$this->document->title = $this->language->get('heading_title');
-		if (isset($this->request->post['selected']) && ($this->validateDelete())) {
-			foreach ($this->request->post['selected'] as $order_id) {
-				$this->modelOrder->deleteOrder($order_id);
-			}	
-						
-			$this->session->set('success',$this->language->get('text_success'));
-	  		
-			$url = '';
-				
-			if (isset($this->request->get['filter_order_id'])) {
-				$url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
-			}
-		
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . $this->request->get['filter_name'];
-			}
-
-			if (isset($this->request->get['filter_order_status_id'])) {
-				$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
-			}
-
-			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-			}
-
-			if (isset($this->request->get['filter_total'])) {
-				$url .= '&filter_total=' . $this->request->get['filter_total'];
-			}
-														
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('sale/order') . $url);
-    	}
+    /**
+     * ControllerMarketingNewsletter::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        $this->load->auto('sale/order');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelOrder->delete($id);
+            }
+		} else {
+            $this->modelOrder->delete($_GET['id']);
+		}
+     }
     
-    	$this->getList();
-  	}
-		
   	private function getList() {
   		$this->document->breadcrumbs = array();
 
@@ -139,28 +106,28 @@ class ControllerSaleOrder extends Controller {
 
         // SCRIPTS
         $scripts[] = array('id'=>'orderList','method'=>'function','script'=>
-            "function borrar() {
-                $('#gridWrapper').html('<img src=\"image/nt_loader.gif\" alt=\"Cargando...\" />');
-                $.post('". Url::createAdminUrl("sale/order/delete") ."',$('#formGrid').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("sale/order/grid") ."');
-                });
-            } 
-            function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                $('#tr_' + e).hide();
-                	$.getJSON('". Url::createAdminUrl("sale/order/eliminar") ."',{
-                            id:e
-                        },
-                        function(data) {
-                            if (data > 0) {
-                                $('#tr_' + e).remove();
-                            } else {
-                                alert('No se pudo eliminar el objeto, posiblemente tenga otros objetos relacionados');
-                                $('#tr_' + e).show().effect('shake', { times:3 }, 300);;
-                            }
-                	});
+            "function eliminar(e) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("sale/order/delete") ."',{
+                        id:e
+                    });
                 }
-             }");
+                return false;
+             }
+            function deleteAll() {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("sale/order/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("sale/order/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("sale/order/grid") ."',function(){
                 $('#gridPreloader').hide();
@@ -233,9 +200,9 @@ class ControllerSaleOrder extends Controller {
 			'limit'                  => $limit
 		);
 		
-		$order_total = $this->modelOrder->getTotalOrders($data);
-		$results = $this->modelOrder->getOrders($data);
-    	$this->data['order_statuses'] = $this->modelOrderstatus->getOrderStatuses();
+		$order_total = $this->modelOrder->getAllTotal($data);
+		$results = $this->modelOrder->getAll($data);
+    	$this->data['order_statuses'] = $this->modelOrderstatus->getAll();
 				
     	foreach ($results as $result) {
 			
@@ -355,13 +322,19 @@ class ControllerSaleOrder extends Controller {
   	}
 	
   	public function getForm() {
+			
 		$order_id = isset($this->request->get['order_id']) ? $this->request->get['order_id'] : 0;
         
+			
         if ($order_id) {
+			
             $order_info = $this->modelOrder->getOrder($order_id);
+			
         }
 		
+			
 		if ($order_info) {
+			
 			$this->document->title = $this->language->get('heading_title');
 			
 			$this->data['heading_title'] = $this->language->get('heading_title');
@@ -444,13 +417,12 @@ class ControllerSaleOrder extends Controller {
 				'separator' => ' :: '
 			);			
 			
-			if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      			$order_info = $this->modelOrder->getOrder($this->request->get['order_id']);
-    		} else {
-    			$order_info = array();
+			if (!$this->request->hasQuery('order_id') && ($this->request->server['REQUEST_METHOD'] == 'POST')) {
+      			$order_info = array();
 			}
 			
-			if (isset($this->request->get['order_id'])) {
+			
+			if ($this->request->hasQuery('order_id')) {
 				$this->data['invoice'] = Url::createAdminUrl('sale/order/invoice') . '&order_id=' . (int)$this->request->get['order_id'];
 				$this->data['order_id'] = $this->request->get['order_id'];
 				$this->data['action'] = Url::createAdminUrl('sale/order/update') . '&order_id=' . $this->request->get['order_id'] . $url;
@@ -486,8 +458,7 @@ class ControllerSaleOrder extends Controller {
 			} else {
 				$this->data['customer'] = '';
 			}
-			
-			$customer_group_info = $this->modelCustomergroup->getCustomerGroup($order_info['customer_group_id']);
+			$customer_group_info = $this->modelCustomergroup->getById($order_info['customer_group_id']);
 			
 			if ($customer_group_info) {
 				$this->data['customer_group'] = $customer_group_info['name'];
@@ -545,7 +516,7 @@ class ControllerSaleOrder extends Controller {
 				$this->data['value'] = '1.0000';
 			}
 		
-			$order_status_info = $this->modelOrderstatus->getOrderStatus($order_info['order_status_id']);
+			$order_status_info = $this->modelOrderstatus->getById($order_info['order_status_id']);
 			
 			if ($order_status_info) {
 				$this->data['order_status'] = $order_status_info['name'];
@@ -561,13 +532,13 @@ class ControllerSaleOrder extends Controller {
 				$this->data['total'] = '';
 			}
 			
-			$this->data['countries']     = $this->modelCountry->getCountries();
-			$this->data['categories']    = $this->modelCategory->getCategories(0);
-			$this->data['products']      = $this->modelProduct->getProducts();
+			$this->data['countries']     = $this->modelCountry->getAll();
+			$this->data['categories']    = $this->modelCategory->getAll();
+			$this->data['products']      = $this->modelProduct->getAll();
 			$this->data['order_products']= array();
 			
 			if (isset($this->request->get['order_id'])) {
-				$order_products = $this->modelOrder->getOrderProducts($this->request->get['order_id']);
+				$order_products = $this->modelOrder->getProducts($this->request->get['order_id']);
 			} else {
 				$order_products = array();
 			}
@@ -575,7 +546,7 @@ class ControllerSaleOrder extends Controller {
 			foreach ($order_products as $order_product) {
 				$option_data = array();
 				
-				$options = $this->modelOrder->getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
+				$options = $this->modelOrder->getOptions($this->request->get['order_id'], $order_product['order_product_id']);
 	
 				foreach ($options as $option) {
 					$option_data[] = array(
@@ -597,7 +568,7 @@ class ControllerSaleOrder extends Controller {
 			}
 		
 			if (isset($this->request->get['order_id'])) {
-				$this->data['totals'] = $this->modelOrder->getOrderTotals($this->request->get['order_id']);
+				$this->data['totals'] = $this->modelOrder->getTotals($this->request->get['order_id']);
 			} else {
 				$this->data['totals'] = array();
 			}
@@ -605,7 +576,7 @@ class ControllerSaleOrder extends Controller {
 			$this->data['histories'] = array();
 	
 			if (isset($this->request->get['order_id'])) {
-				$results = $this->modelOrder->getOrderHistory($this->request->get['order_id']);
+				$results = $this->modelOrder->getHistory($this->request->get['order_id']);
 			} else {
 				$results = array();
 			}
@@ -622,7 +593,7 @@ class ControllerSaleOrder extends Controller {
 			$this->data['downloads'] = array();
 	  
 			if (isset($this->request->get['order_id'])) {
-				$results = $this->modelOrder->getOrderDownloads($this->request->get['order_id']);
+				$results = $this->modelOrder->getDownloads($this->request->get['order_id']);
 			} else {
 				$results = array();
 			}
@@ -635,7 +606,7 @@ class ControllerSaleOrder extends Controller {
 				);
 			}
 	
-			$this->data['order_statuses'] = $this->modelOrderstatus->getOrderStatuses();
+			$this->data['order_statuses'] = $this->modelOrderstatus->getAll();
 			
 			if (isset($order_info['order_status_id'])) {
 				$this->data['order_status_id'] = $order_info['order_status_id'];
@@ -664,12 +635,12 @@ class ControllerSaleOrder extends Controller {
 			}
 			
         $this->data['Url'] = new Url;
-		//TODO: cambiar la manera en la que se agregan productos al pedido #addProductsPanel
+		//TODO: cambiar la manera en la que se agregan productos al pedido #addsPanel
         $scripts[] = array('id'=>'orderScripts','method'=>'ready','script'=>
-            "$('#addProductsWrapper').hide();
+            "$('#addsWrapper').hide();
             
-            $('#addProductsPanel').on('click',function(e){
-                var products = $('#addProductsWrapper').find('.row');
+            $('#addsPanel').on('click',function(e){
+                var products = $('#addsWrapper').find('.row');
                 
                 if (products.length == 0) {
                     $.getJSON('".Url::createAdminUrl("sale/order/products")."',
@@ -677,10 +648,10 @@ class ControllerSaleOrder extends Controller {
                             'order_id':'".$this->request->getQuery('order_id')."'
                         }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\"></ul>');
                             
                             $.each(data, function(i,item){
-                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
                                 
                             });
                             
@@ -688,9 +659,9 @@ class ControllerSaleOrder extends Controller {
                                 var that = this;
                                 var valor = $(that).val().toLowerCase();
                                 if (valor.length <= 0) {
-                                    $('#addProducts li').show();
+                                    $('#adds li').show();
                                 } else {
-                                    $('#addProducts li b').each(function(){
+                                    $('#adds li b').each(function(){
                                         if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
                                             $(this).closest('li').show();
                                         } else {
@@ -714,7 +685,7 @@ class ControllerSaleOrder extends Controller {
                 }
             });
                 
-            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
+            $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });
             
             $('#form').ntForm({
                 submitButton:false,
@@ -827,14 +798,14 @@ class ControllerSaleOrder extends Controller {
 		if (!$this->user->hasPermission('modify', 'sale/order')) {
       		$json['error'] = $this->language->get('error_permission'); 
     	} else {
-			$this->modelOrder->addOrderHistory($this->request->get['order_id'], $this->request->post);
+			$this->modelOrder->addHistory($this->request->get['order_id'], $this->request->post);
 			
 			$json['success']     = $this->language->get('text_success');
 			$json['date_added']  = date($this->language->get('date_format_short'));
 
 			$this->load->auto('localisation/orderstatus');
 			
-			$order_status_info = $this->modelOrderstatus->getOrderStatus($this->request->post['order_status_id']);
+			$order_status_info = $this->modelOrderstatus->getById($this->request->post['order_status_id']);
 			
 			$json['order_status'] = ($order_status_info) ? $order_status_info['name'] : '';
 			$json['notify'] = ($this->request->post['notify']) ? $this->language->get('text_yes') :  $this->language->get('text_no');
@@ -990,12 +961,12 @@ class ControllerSaleOrder extends Controller {
 				
 				$product_data = array();
 				
-				$products = $this->modelOrder->getOrderProducts($order_id);
+				$products = $this->modelOrder->getProducts($order_id);
 		
 				foreach ($products as $product) {
 					$option_data = array();
 					
-					$options = $this->modelOrder->getOrderOptions($order_id, $product['order_product_id']);
+					$options = $this->modelOrder->getOptions($order_id, $product['order_product_id']);
 		
 					foreach ($options as $option) {
 						$option_data[] = array(
@@ -1014,7 +985,7 @@ class ControllerSaleOrder extends Controller {
 					);
 				}			 		
 				
-				$total_data = $this->modelOrder->getOrderTotals($order_id);
+				$total_data = $this->modelOrder->getTotals($order_id);
 				
 				$this->data['orders'][] = array(
 					'order_id'	       	=> $order_id,
@@ -1054,7 +1025,7 @@ class ControllerSaleOrder extends Controller {
 		
 		$product_data = array();
 		
-		$results = $this->modelProduct->getProductsByCategoryId($category_id);
+		$results = $this->modelProduct->getAllByCategoryId($category_id);
 		
 		foreach ($results as $result) {
 			$product_data[] = array(
@@ -1074,7 +1045,7 @@ class ControllerSaleOrder extends Controller {
 		
 		$this->load->auto('localisation/zone');
 		
-		$results = $this->modelZone->getZonesByCountryId($this->request->get['country_id']);
+		$results = $this->modelZone->getAllByCountryId($this->request->get['country_id']);
 		
 		$selected_name = '';
 		
@@ -1109,7 +1080,7 @@ class ControllerSaleOrder extends Controller {
         $this->load->auto('sale/order');
         $result = $this->modelOrder->getOrder($_GET['id']);
         if ($result) {
-            $this->modelOrder->deleteOrder($_GET['id']);
+            $this->modelOrder->delete($_GET['id']);
             echo 1;
         } else {
             echo 0;

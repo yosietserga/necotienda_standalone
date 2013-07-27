@@ -1,7 +1,1 @@
-<div id="column_left">
-    <ul class="aside">
-    <?php foreach ($modules as $module) { ?>
-        <?php echo ${$module['code']}; ?>
-    <?php } ?>
-    </ul>
-</div>
+<ul class="aside widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul>

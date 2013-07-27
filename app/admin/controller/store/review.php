@@ -10,7 +10,8 @@ class ControllerStoreReview extends Controller {
 	public function insert() {
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
-			$review_id = $this->modelReview->addReview($this->request->post);
+            $this->request->post['object_type'] = $this->request->getQuery('object_type');
+			$review_id = $this->modelReview->add($this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 		
@@ -29,7 +30,8 @@ class ControllerStoreReview extends Controller {
 	public function update() {
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelReview->editReview($this->request->get['review_id'], $this->request->post);
+            $this->request->post['object_type'] = $this->request->getQuery('object_type');
+			$this->modelReview->update($this->request->get['review_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
@@ -46,12 +48,12 @@ class ControllerStoreReview extends Controller {
 	}
 
     /**
-     * ControllerStoreCategory::delete()
+     * ControllerStoreReview::delete()
      * elimina un objeto
      * @return boolean
      * */
      public function delete() {
-        $this->load->auto('store/category');
+        $this->load->auto('store/review');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelReview->delete($id);
@@ -111,11 +113,11 @@ class ControllerStoreReview extends Controller {
                 });
             }
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
-                    $.post('". Url::createAdminUrl("store/category/delete") ."',$('#form').serialize(),function(){
-                        $('#gridWrapper').load('". Url::createAdminUrl("store/category/grid") ."',function(){
+                    $.post('". Url::createAdminUrl("store/review/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("store/review/grid") ."',function(){
                             $('#gridWrapper').show();
                             $('#gridPreloader').hide();
                         });
@@ -124,20 +126,13 @@ class ControllerStoreReview extends Controller {
                 return false;
             }
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                    $('#tr_' + e).hide();
-                	$.getJSON('". Url::createAdminUrl("store/review/eliminar") ."',{
-                            id:e
-                        },
-                        function(data) {
-                            if (data > 0) {
-                                $('#tr_' + e).remove();
-                            } else {
-                                alert('No se pudo eliminar el objeto, posiblemente tenga otros objetos relacionados');
-                                $('#tr_' + e).show().effect('shake', { times:3 }, 300);;
-                            }
-                	});
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("store/review/delete") ."',{
+                        id:e
+                    });
                 }
+                return false;
              }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("store/review/grid") ."',function(e){
@@ -228,45 +223,46 @@ class ControllerStoreReview extends Controller {
 			'limit' => $limit
 		);
 		
-		$review_total = $this->modelReview->getTotalReviews();
-	
-		$results = $this->modelReview->getReviews($data);
- 
-    	foreach ($results as $result) {
-				$action = array(
-                'activate'  => array(
-                        'action'  => 'activate',
-                        'text'  => $this->language->get('text_activate'),
-                        'href'  =>'',
-                        'img'   => 'good.png'
-                ),
-                'edit'      => array(
-                        'action'  => 'edit',
-                        'text'  => $this->language->get('text_edit'),
-                        'href'  =>Url::createAdminUrl('store/review/update') . '&review_id=' . $result['review_id'] . $url,
-                        'img'   => 'edit.png'
-                ),
-                'delete'    => array(
-                        'action'  => 'delete',
-                        'text'  => $this->language->get('text_delete'),
-                        'href'  =>'',
-                        'img'   => 'delete.png'
-                )
-            );	
-			$this->data['reviews'][] = array(
-				'review_id'  => $result['review_id'],
-				'product_url'=> HTTP_CATALOG . '/index.php?r=store/product&amp;product_id=' . $result['product_id'],
-				'name'       => $result['name'],
-				'author'     => $result['author'],
-				'rating'     => $result['rating'],       
-				'text'       => $result['text'],
-				'status'     => ($result['rstatus']==1) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'date_added' => date('d-m-Y h:i:s', strtotime($result['created'])),
-				'selected'   => isset($this->request->post['selected']) && in_array($result['review_id'], $this->request->post['selected']),
-				'action'     => $action
-			);
-		}	
+		$review_total = $this->modelReview->getAllTotal();
         
+        if ($review_total) {
+            $results = $this->modelReview->getAll($data);
+        	foreach ($results as $result) {
+    				$action = array(
+                    'activate'  => array(
+                            'action'  => 'activate',
+                            'text'  => $this->language->get('text_activate'),
+                            'href'  =>'',
+                            'img'   => 'good.png'
+                    ),
+                    'edit'      => array(
+                            'action'  => 'edit',
+                            'text'  => $this->language->get('text_edit'),
+                            'href'  =>Url::createAdminUrl('store/review/update') . '&review_id=' . $result['rid'] . '&amp;object_type=' . $result['object_type'] . $url,
+                            'img'   => 'edit.png'
+                    ),
+                    'delete'    => array(
+                            'action'  => 'delete',
+                            'text'  => $this->language->get('text_delete'),
+                            'href'  =>'',
+                            'img'   => 'delete.png'
+                    )
+                );	
+    			$this->data['reviews'][] = array(
+    				'review_id'  => $result['rid'],
+    				'product_url'=> Url::createAdminUrl('store/product/see') . '&amp;product_id=' . $result['product_id'],
+    				'object_type'=> $result['object_type'],
+    				'name'       => $result['name'],
+    				'author'     => $result['author'],
+    				'rating'     => $result['rating'],       
+    				'text'       => $result['text'],
+    				'status'     => ($result['rstatus']==1) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+    				'date_added' => date('d-m-Y h:i:s', strtotime($result['created'])),
+    				'selected'   => isset($this->request->post['selected']) && in_array($result['rid'], $this->request->post['selected']),
+    				'action'     => $action
+    			);
+    		}	
+        }
 		$this->data['text_no_results'] = $this->language->get('text_no_results');
 
 		$this->data['column_product'] = $this->language->get('column_product');
@@ -369,70 +365,25 @@ class ControllerStoreReview extends Controller {
 		$this->data['cancel'] = Url::createAdminUrl('store/review') . $url;
 
 		if (isset($this->request->get['review_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$review_info = $this->modelReview->getReview($this->request->get['review_id']);
+			$review_info = $this->modelReview->getById($this->request->get['review_id']);
 		}
-		
+        
         $this->setvar('author',$review_info,'');
         $this->setvar('text',$review_info,'');
         $this->setvar('rating',$review_info,'');
         $this->setvar('status',$review_info,'');
-        $this->setvar('product_id',$review_info,'');
+        $this->setvar('parent_id',$review_info,'');
+        $this->setvar('pid',$review_info,'');
+        $this->setvar('product',$review_info,'');
+        $this->data['review_id'] = $this->request->get['review_id'];
         
-        $product_info = ($this->data['product_id']) ? $this->modelProduct->getProduct($this->data['product_id']) : '';
-		$this->data['product'] = ($product_info) ? $product_info['name'] : '';
-		
+        if ($this->request->hasQuery('review_id') && $this->request->getQuery('review_id') > 0)
+            $this->data['replies'] = $this->modelReview->getReplies($this->request->get['review_id']);
+        
         $this->data['Url'] = new Url;
-        //TODO: mostrar los productos al scrolldown para no colapsar el navegador cuando se listan todos los productos
-        //TODO: crear cache del layout de los productos y luego detetar los seleccionados con jquery
+        
         $scripts[] = array('id'=>'reviewScripts','method'=>'ready','script'=>
-            "$('#addProductsWrapper').hide();
-            
-            $('#addProductsPanel').on('click',function(e){
-                var products = $('#addProductsWrapper').find('.row');
-                
-                if (products.length == 0) {
-                    $.getJSON('".Url::createAdminUrl("store/review/products")."',
-                        {
-                            'review_id':'".$this->request->getQuery('review_id')."'
-                        }, function(data) {
-                            
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
-                            
-                            $.each(data, function(i,item){
-                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.product_id + '\" /></li>');
-                                
-                            });
-                            
-                            $('#q').on('change',function(e){
-                                var that = this;
-                                var valor = $(that).val().toLowerCase();
-                                if (valor.length <= 0) {
-                                    $('#addProducts li').show();
-                                } else {
-                                    $('#addProducts li b').each(function(){
-                                        if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
-                                            $(this).closest('li').show();
-                                        } else {
-                                            $(this).closest('li').hide();
-                                        }
-                                    });
-                                }
-                            }); 
-                            
-                            $('li').on('click',function() {
-                                $('li b').removeClass('added');
-                                $(this).find('b').addClass('added');
-                                $('#product_id').val( $(this).find('input').val() );
-                                $('#product_name').text( $(this).find('img').attr('alt') );
-                                
-                            });
-                    });
-                }
-            });
-                
-            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
-            
-            $('#form').ntForm({
+            "$('#form').ntForm({
                 submitButton:false,
                 cancelButton:false,
                 lockButton:false
@@ -490,43 +441,118 @@ class ControllerStoreReview extends Controller {
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 	}
 
-     public function products() {
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
-        header("Cache-Control: no-cache, must-revalidate"); 
-        header("Pragma: no-cache");
-        header("Content-type: application/json");
-        $this->load->auto("store/product");
-        $this->load->auto("image");
-        $this->load->auto("url");
+	public function reply() {
+        //Languages
+        $this->language->load('store/review');
         
-        $cache = $this->cache->get("products.for.reviews.form");
-        if ($cache) {
-            $products = unserialize($cache);
-        } else {
-            $model = $this->modelProduct->getAll();
-            $products = $model->obj;
-            $this->cache->set("products.for.reviews.form",serialize($products));
-        }
+        //Models
+		$this->load->auto('store/review');
         
-        $this->data['Image'] = new NTImage();
-        $this->data['Url'] = new Url;
-        
-        $output = array();
-        
-        foreach ($products as $product) {
-            $output[] = array(
-                'product_id'=>$product->product_id,
-                'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
-                'pname'     =>$product->pname,
-                'class'     =>'add',
-                'value'     =>0
-            );
-        }
-        $this->load->auto('json');
-        $this->response->setOutput(Json::encode($output), $this->config->get('config_compression'));
+		$this->request->post['product_id'] = $this->request->getPost('product_id') ? $this->request->getPost('product_id') : $this->request->getQuery('product_id');
+		$this->request->post['review_id'] = $this->request->getPost('review_id') ? $this->request->getPost('review_id') : $this->request->getQuery('review_id');
+		$json = array();
+		$json['success'] = 0;
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateReply()) {
+		  
+            $text = strip_tags($this->request->post['text']);
+            $text = urldecode($text);
+            $text = html_entity_decode($text);
+            $text = preg_replace('/<head\b[^>]*>(.*?)<\/head>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<object\b[^>]*>(.*?)<\/object>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<embed\b[^>]*>(.*?)<\/embed>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<applet\b[^>]*>(.*?)<\/applet>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<frame\b[^>]*>(.*?)<\/frame>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<noembed\b[^>]*>(.*?)<\/noembed>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$this->request->post['text'] = htmlentities($text);
+    		$this->modelReview->addReply($this->request->post);
             
-     }
+            $json['review_id']  =
+            $json['author']     =
+            $json['product_id'] =
+            $json['text']       =
+            $json['date_added'] = '';
+            if ($this->config->get('config_review_approve')) {
+                $json['review_id']  = $this->request->post['review_id'];
+                $json['author']     = $this->user->getUserName();
+                $json['product_id'] = $this->request->post['product_id'];
+                $json['text']       = $this->request->post['text'];
+                $json['date_added'] = date('d-m-Y');
+            }
+            
+            $this->notifyReview($this->request->post['product_id']);
+            
+    		$json['success'] = $this->language->get('text_success');
+		}
+		$this->load->library('json');
+		$this->response->setOutput(Json::encode($json));
+	}
+	
+    protected function notifyReview($product_id) {
+        if (!$product_id) return false;
+        $this->load->auto('email/mailer');
+        $this->load->auto('store/product');
+        $this->load->auto('store/review');
+        $this->load->auto('content/page');
+        
+        $product_info = $this->modelProduct->getById($product_id);
+        if ($product_info) {
+            $page = $this->modelPage->getPage($this->config->get('config_email_new_comment'));
+            if ($page->num_rows) {
+                $subject = $page['title'];
+                $message = str_replace("{%product_url%}",Url::createUrl('store/product',array('product_id'=>$product_id)),$page['description']);
+                $message = str_replace("{%product_name%}",$product_info['name'],$message);
+                
+                $mailer = new Mailer;
+                $reps = $this->modelReview->getAllByProductId($product_id);
+                foreach ($reps as $k => $v) {
+                    $mailer->AddBCC($v['email'],$v['author']);
+                }
+                
+                if ($this->config->get('config_smtp_method')=='smtp') {
+                    $mailer->IsSMTP();
+                    $mailer->Hostname = $this->config->get('config_smtp_host');
+                    $mailer->Username = $this->config->get('config_smtp_username');
+                    $mailer->Password = base64_decode($this->config->get('config_smtp_password'));
+                    $mailer->Port     = $this->config->get('config_smtp_port');
+                    $mailer->Timeout  = $this->config->get('config_smtp_timeout');
+                    $mailer->SMTPSecure = $this->config->get('config_smtp_ssl');
+                    $mailer->SMTPAuth = ($this->config->get('config_smtp_auth')) ? true : false;
+                } elseif ($this->config->get('config_smtp_method')=='sendmail') {
+                    $mailer->IsSendmail();
+                } else {
+                    $mailer->IsMail();
+                }
+                $mailer->IsHTML();
+                $mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+                $mailer->Subject = $subject;
+                $mailer->Body = $message;
+                $mailer->Send();
+            }
+        }
+    }
+    
+	private function validateReply() {
+		if (!$this->request->hasPost('product_id') && !$this->request->hasQuery('product_id')) {
+			$this->error['message'] = $this->language->get('error_product');
+		}
+		
+		if (!$this->request->hasPost('review_id') && !$this->request->hasQuery('review_id')) {
+			$this->error['message'] = $this->language->get('error_review');
+		}
+		
+		if (empty($this->request->post['text'])) {
+			$this->error['message'] = $this->language->get('error_text');
+		}
+        
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
 	private function validateForm() {
 		if (!$this->user->hasPermission('modify', 'store/review')) {
 			$this->error['warning'] = $this->language->get('error_permission');
@@ -575,7 +601,7 @@ class ControllerStoreReview extends Controller {
      public function activate() {
         if (!isset($_GET['id'])) return false;
         $this->load->auto('store/review');
-        $status = $this->modelReview->getReview($_GET['id']);
+        $status = $this->modelReview->getById($_GET['id']);
         if ($status) {
             if ($status['status'] == 0) {
                 $this->modelReview->activate($_GET['id']);
@@ -585,23 +611,6 @@ class ControllerStoreReview extends Controller {
                 echo -1;
             }
             
-        } else {
-            echo 0;
-        }
-     }
-    
-    /**
-     * ControllerStoreReview::activate()
-     * activar o desactivar un objeto accedido por ajax
-     * @return boolean
-     * */
-     public function eliminar() {
-        if (!isset($_GET['id'])) return false;
-        $this->load->auto('store/review');
-        $result = $this->modelReview->getReview($_GET['id']);
-        if ($result) {
-            $this->modelReview->deleteReview($_GET['id']);
-            echo 1;
         } else {
             echo 0;
         }

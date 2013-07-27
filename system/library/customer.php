@@ -84,11 +84,14 @@ final class Customer {
         return true;
     }
 		
-  	public function login($email, $password) {
+  	public function login($email, $password, $hash=true) {
+  	     if ($hash) {
+  	         $password = md5($password);
+  	     }
 		if (!$this->config->get('config_customer_approval')) {
-			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "' AND password = '" . $this->db->escape(md5($password)) . "' AND status = '1'");
+			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "' AND password = '" . $this->db->escape($password) . "' AND status = '1'");
 		} else {
-			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "' AND password = '" . $this->db->escape(md5($password)) . "' AND status = '1' AND approved = '1'");
+			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "' AND password = '" . $this->db->escape($password) . "' AND status = '1' AND approved = '1'");
 		}
 		
 		if ($customer_query->num_rows) {
@@ -98,13 +101,180 @@ final class Customer {
 			$this->skey = md5($this->session->get('token')).$this->key."_".$customer_query->row['customer_id'];	
 			$this->session->set('skey',$this->skey);	
             
-            //insertamos un registro del usuario para saber cuando ingresó, desde que ip, etc
-		    $this->db->query("INSERT INTO " . DB_PREFIX . "customer_stats SET 
-            customer_id = '".$customer_query->row['customer_id']."',
-            ip = '".$_SERVER['REMOTE_ADDR']."',
-            date_added = NOW()");
-            $this->db->query("UPDATE " . DB_PREFIX . "customer SET visits = visits + 1 WHERE customer_id = '" . (int)$customer_query->row['customer_id'] . "'");
-    		
+			if (($customer_query->row['cart']) && (is_string($customer_query->row['cart']))) {
+				$cart = unserialize($customer_query->row['cart']);
+				
+				foreach ($cart as $key => $value) {
+					if (!array_key_exists($key, $this->session->get('cart'))) {
+						$this->session->data['cart'][$key] = $value;
+					} else {
+						$this->session->data['cart'][$key] += $value;
+					}
+				}			
+			}
+			
+			$this->customer_id   = $customer_query->row['customer_id'];
+			$this->firstname     = $customer_query->row['firstname'];
+			$this->lastname      = $customer_query->row['lastname'];
+			$this->email         = $customer_query->row['email'];
+			$this->rif           = $customer_query->row['rif'];
+			$this->company       = $customer_query->row['company'];
+			$this->foto          = $customer_query->row['foto'];
+			$this->nacimiento    = $customer_query->row['nacimiento'];
+			$this->blog          = $customer_query->row['blog'];
+			$this->website       = $customer_query->row['website'];
+			$this->profesion     = $customer_query->row['profesion'];
+			$this->titulo        = $customer_query->row['titulo'];
+			$this->msn           = $customer_query->row['msn'];
+			$this->gmail         = $customer_query->row['gmail'];
+			$this->yahoo         = $customer_query->row['yahoo'];
+			$this->skype         = $customer_query->row['skype'];
+			$this->facebook      = $customer_query->row['facebook'];
+			$this->twitter       = $customer_query->row['twitter'];
+			$this->complete      = $customer_query->row['complete'];
+            $this->telephone     = $customer_query->row['telephone'];
+			$this->fax           = $customer_query->row['fax'];
+			$this->sexo          = $customer_query->row['sexo'];
+			$this->newsletter    = $customer_query->row['newsletter'];
+			$this->customer_group_id = $customer_query->row['customer_group_id'];
+			$this->address_id    = $customer_query->row['address_id'];
+      
+	  		return true;
+    	} else {
+      		return false;
+    	}
+  	}
+  
+  	public function loginWithGoogle($data) {
+		$customer_query = $this->db->query("SELECT * 
+        FROM " . DB_PREFIX . "customer 
+        WHERE google_oauth_id = '" . $this->db->escape($data['oauth_id']) . "' 
+        AND company = '" . $this->db->escape($data['company']) . "' 
+        AND status = '1'");
+		
+		if ($customer_query->num_rows) {
+			$this->session->set('customer_id',$customer_query->row['customer_id']);
+            $tk = $this->session->has('token') ? $this->session->get('token') : strtotime(date('d-m-Y h:i:s')) . mt_rand(1000000000,9999999999);
+            $this->session->set('token',$tk);
+			$this->skey = md5($this->session->get('token')).$this->key."_".$customer_query->row['customer_id'];	
+			$this->session->set('skey',$this->skey);	
+            
+			if (($customer_query->row['cart']) && (is_string($customer_query->row['cart']))) {
+				$cart = unserialize($customer_query->row['cart']);
+				
+				foreach ($cart as $key => $value) {
+					if (!array_key_exists($key, $this->session->get('cart'))) {
+						$this->session->data['cart'][$key] = $value;
+					} else {
+						$this->session->data['cart'][$key] += $value;
+					}
+				}			
+			}
+			
+			$this->customer_id   = $customer_query->row['customer_id'];
+			$this->firstname     = $customer_query->row['firstname'];
+			$this->lastname      = $customer_query->row['lastname'];
+			$this->email         = $customer_query->row['email'];
+			$this->rif           = $customer_query->row['rif'];
+			$this->company       = $customer_query->row['company'];
+			$this->foto          = $customer_query->row['foto'];
+			$this->nacimiento    = $customer_query->row['nacimiento'];
+			$this->blog          = $customer_query->row['blog'];
+			$this->website       = $customer_query->row['website'];
+			$this->profesion     = $customer_query->row['profesion'];
+			$this->titulo        = $customer_query->row['titulo'];
+			$this->msn           = $customer_query->row['msn'];
+			$this->gmail         = $customer_query->row['gmail'];
+			$this->yahoo         = $customer_query->row['yahoo'];
+			$this->skype         = $customer_query->row['skype'];
+			$this->facebook      = $customer_query->row['facebook'];
+			$this->twitter       = $customer_query->row['twitter'];
+			$this->complete      = $customer_query->row['complete'];
+            $this->telephone     = $customer_query->row['telephone'];
+			$this->fax           = $customer_query->row['fax'];
+			$this->sexo          = $customer_query->row['sexo'];
+			$this->newsletter    = $customer_query->row['newsletter'];
+			$this->customer_group_id = $customer_query->row['customer_group_id'];
+			$this->address_id    = $customer_query->row['address_id'];
+      
+	  		return true;
+    	} else {
+      		return false;
+    	}
+  	}
+  
+  	public function loginWithTwitter($data) {
+		$customer_query = $this->db->query("SELECT * 
+        FROM " . DB_PREFIX . "customer 
+        WHERE twitter_oauth_id = '" . $this->db->escape($data['oauth_id']) . "' 
+        AND twitter_oauth_token_secret = '" . $this->db->escape($data['oauth_token_secret']) . "' 
+        AND company = '" . $this->db->escape($data['company']) . "' 
+        AND status = '1'");
+		
+		if ($customer_query->num_rows) {
+			$this->session->set('customer_id',$customer_query->row['customer_id']);
+            $tk = $this->session->has('token') ? $this->session->get('token') : strtotime(date('d-m-Y h:i:s')) . mt_rand(1000000000,9999999999);
+            $this->session->set('token',$tk);
+			$this->skey = md5($this->session->get('token')).$this->key."_".$customer_query->row['customer_id'];	
+			$this->session->set('skey',$this->skey);	
+            
+			if (($customer_query->row['cart']) && (is_string($customer_query->row['cart']))) {
+				$cart = unserialize($customer_query->row['cart']);
+				
+				foreach ($cart as $key => $value) {
+					if (!array_key_exists($key, $this->session->get('cart'))) {
+						$this->session->data['cart'][$key] = $value;
+					} else {
+						$this->session->data['cart'][$key] += $value;
+					}
+				}			
+			}
+			
+			$this->customer_id   = $customer_query->row['customer_id'];
+			$this->firstname     = $customer_query->row['firstname'];
+			$this->lastname      = $customer_query->row['lastname'];
+			$this->email         = $customer_query->row['email'];
+			$this->rif           = $customer_query->row['rif'];
+			$this->company       = $customer_query->row['company'];
+			$this->foto          = $customer_query->row['foto'];
+			$this->nacimiento    = $customer_query->row['nacimiento'];
+			$this->blog          = $customer_query->row['blog'];
+			$this->website       = $customer_query->row['website'];
+			$this->profesion     = $customer_query->row['profesion'];
+			$this->titulo        = $customer_query->row['titulo'];
+			$this->msn           = $customer_query->row['msn'];
+			$this->gmail         = $customer_query->row['gmail'];
+			$this->yahoo         = $customer_query->row['yahoo'];
+			$this->skype         = $customer_query->row['skype'];
+			$this->facebook      = $customer_query->row['facebook'];
+			$this->twitter       = $customer_query->row['twitter'];
+			$this->complete      = $customer_query->row['complete'];
+            $this->telephone     = $customer_query->row['telephone'];
+			$this->fax           = $customer_query->row['fax'];
+			$this->sexo          = $customer_query->row['sexo'];
+			$this->newsletter    = $customer_query->row['newsletter'];
+			$this->customer_group_id = $customer_query->row['customer_group_id'];
+			$this->address_id    = $customer_query->row['address_id'];
+      
+	  		return true;
+    	} else {
+      		return false;
+    	}
+  	}
+  
+  	public function loginWithFacebook($data) {
+		$customer_query = $this->db->query("SELECT * 
+        FROM " . DB_PREFIX . "customer 
+        WHERE facebook_oauth_id = '" . $this->db->escape($data['oauth_id']) . "' 
+        AND email = '" . $this->db->escape($data['email']) . "' 
+        AND status = '1'");
+		
+		if ($customer_query->num_rows) {
+			$this->session->set('customer_id',$customer_query->row['customer_id']);
+            $tk = $this->session->has('token') ? $this->session->get('token') : strtotime(date('d-m-Y h:i:s')) . mt_rand(1000000000,9999999999);
+            $this->session->set('token',$tk);
+			$this->skey = md5($this->session->get('token')).$this->key."_".$customer_query->row['customer_id'];	
+			$this->session->set('skey',$this->skey);	
             
 			if (($customer_query->row['cart']) && (is_string($customer_query->row['cart']))) {
 				$cart = unserialize($customer_query->row['cart']);

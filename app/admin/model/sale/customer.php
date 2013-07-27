@@ -2,7 +2,7 @@
 /**
  * ModelSaleCustomer
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -11,13 +11,13 @@
  */
 class ModelSaleCustomer extends Model {
 	/**
-	 * ModelSaleCustomer::addCustomer()
+	 * ModelSaleCustomer::add()
 	 * 
 	 * @param mixed $data
      * @see DB
 	 * @return void
 	 */
-	public function addCustomer($data) {
+	public function add($data) {
       	$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET 
           firstname = '" . $this->db->escape($data['firstname']) . "', 
           lastname = '" . $this->db->escape($data['lastname']) . "', 
@@ -61,7 +61,7 @@ class ModelSaleCustomer extends Model {
      * @see DB
 	 * @return void
 	 */
-	public function editCustomer($customer_id, $data) {
+	public function update($customer_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer SET 
             firstname = '" . $this->db->escape($data['firstname']) . "', 
             lastname = '" . $this->db->escape($data['lastname']) . "', 
@@ -101,13 +101,13 @@ class ModelSaleCustomer extends Model {
 	}
 	
 	/**
-	 * ModelSaleCustomer::getAddressesByCustomerId()
+	 * ModelSaleCustomer::getAddresses()
 	 * 
 	 * @param int $customer_id
      * @see DB
 	 * @return array sql records
 	 */
-	public function getAddressesByCustomerId($customer_id) {
+	public function getAddresses($customer_id) {
 		$address_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$customer_id . "'");
@@ -161,13 +161,13 @@ class ModelSaleCustomer extends Model {
 	}	
 	
 	/**
-	 * ModelSaleCustomer::deleteCustomer()
+	 * ModelSaleCustomer::delete()
 	 * 
 	 * @param int $customer_id
      * @see DB
 	 * @return void
 	 */
-	public function deleteCustomer($customer_id) {
+	public function delete($customer_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$customer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$customer_id . "'");
 	}
@@ -185,25 +185,14 @@ class ModelSaleCustomer extends Model {
 		return $query->row;
 	}
 	
-    /**
-     * ModelSaleCustomer::getCustomerBySubscribe()
-     * 
-     * @see DB
-	 * @return array sql records
-     */
-    public function getCustomerBySubscribe() {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE newsletter = 1");
-        return $query->rows;
-    }	
-    
 	/**
-	 * ModelSaleCustomer::getCustomers()
+	 * ModelSaleCustomer::getAll()
 	 * 
 	 * @param mixed $data
      * @see DB
 	 * @return array sql records
 	 */
-	public function getCustomers($data = array()) {
+	public function getAll($data = array()) {
 		$sql = "SELECT c.*,a.*, c.customer_id as cid, co.name as country, z.name as zone, CONCAT(c.firstname, ' ', c.lastname) AS name, cg.name AS customer_group 
         FROM " . DB_PREFIX . "customer c 
         LEFT JOIN " . DB_PREFIX . "customer_group cg 
@@ -297,72 +286,13 @@ class ModelSaleCustomer extends Model {
 	}
 	
 	/**
-	 * ModelSaleCustomer::getCustomersByNewsletter()
-	 * 
-     * @see DB
-	 * @return array sql records
-	 */
-	public function getCustomersByNewsletter() {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE newsletter = '1' ORDER BY firstname, lastname, email");
-	
-		return $query->rows;
-	}
-	
-	/**
-	 * ModelSaleCustomer::getCustomersByKeyword()
-	 * 
-	 * @param string $keyword
-     * @see DB
-	 * @return array sql records
-	 */
-	public function getCustomersByKeyword($keyword) {
-		if ($keyword) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LCASE(CONCAT(firstname, ' ', lastname)) LIKE '%" . $this->db->escape(strtolower($keyword)) . "%' ORDER BY firstname, lastname, email");
-	
-			return $query->rows;
-		} else {
-			return array();	
-		}
-	}
-	
-	/**
-	 * ModelSaleCustomer::getCustomersByProduct()
-	 * 
-	 * @param int $product_id
-     * @see DB
-	 * @return array sql records
-	 */
-	public function getCustomersByProduct($product_id) {
-		if ($product_id) {
-			$query = $this->db->query("SELECT DISTINCT `email` FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_product op ON (o.order_id = op.order_id) WHERE op.product_id = '" . (int)$product_id . "' AND o.order_status_id <> '0'");
-	
-			return $query->rows;
-		} else {
-			return array();	
-		}
-	}
-	
-	/**
-	 * ModelSaleCustomer::getAddresses()
-	 * 
-	 * @param string $keyword
-     * @see DB
-	 * @return array sql records
-	 */
-	public function getAddresses($keyword) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$customer_id . "'");
-	
-		return $query->rows;
-	}
-	
-	/**
-	 * ModelSaleCustomer::getTotalCustomers()
+	 * ModelSaleCustomer::getAllTotal()
 	 * 
 	 * @param mixed $data
      * @see DB
 	 * @return int Count sql records
 	 */
-	public function getTotalCustomers($data = array()) {
+	public function getAllTotal($data = array()) {
       	$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer c";
 		
 		$implode = array();
@@ -404,12 +334,12 @@ class ModelSaleCustomer extends Model {
 	}
 		
 	/**
-	 * ModelSaleCustomer::getTotalCustomersAwaitingApproval()
+	 * ModelSaleCustomer::getAllTotalAwaitingApproval()
 	 * 
      * @see DB
 	 * @return int Count sql records
 	 */
-	public function getTotalCustomersAwaitingApproval() {
+	public function getAllTotalAwaitingApproval() {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer WHERE status = '0' OR approved = '0'");
 
 		return $query->row['total'];
@@ -455,13 +385,13 @@ class ModelSaleCustomer extends Model {
 	}
 	
 	/**
-	 * ModelSaleCustomer::getTotalCustomersByCustomerGroupId()
+	 * ModelSaleCustomer::getAllTotalByCustomerGroupId()
 	 * 
 	 * @param int $customer_group_id
      * @see DB
 	 * @return Count sql records
 	 */
-	public function getTotalCustomersByCustomerGroupId($customer_group_id) {
+	public function getAllTotalByCustomerGroupId($customer_group_id) {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 		
 		return $query->row['total'];

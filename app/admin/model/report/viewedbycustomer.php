@@ -2,7 +2,7 @@
 /**
  * ModelReportCViewed
  * 
- * @package NecoTienda powered by opencart 
+ * @package NecoTienda 
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -165,7 +165,7 @@ class ModelReportViewedByCustomer extends Model {
      * @see DB
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByCustomerViewed($product_id) {
+	public function getAllTotalByCustomerViewed($product_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_stats cs 
           LEFT JOIN " . DB_PREFIX . "customer c ON (cs.customer_id = c.customer_id) 
           WHERE product_id = ".(int)$product_id." 

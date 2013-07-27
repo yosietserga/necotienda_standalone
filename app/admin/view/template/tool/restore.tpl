@@ -9,15 +9,15 @@
   <div class="left"></div>
   <div class="right"></div>
   <div class="heading">
-    <h1 style="background-image: url('image/backup.png');"><?php echo $heading_title; ?></h1>
-    <div class="buttons"><a onclick="$('#restore').submit();" class="button"><span><?php echo $button_restore; ?></span></a></div>
+    <h1 style="background-image: url('image/backup.png');"><?php echo $Language->get('heading_title'); ?></h1>
+    <div class="buttons"><a onclick="$('#restore').submit();" class="button"><span><?php echo $Language->get('button_restore'); ?></span></a></div>
   </div>
   <div class="content">
     <form action="<?php echo $restore; ?>" method="post" enctype="multipart/form-data" id="restore">
       <table class="form">
         <tr>
-          <td><?php echo $entry_restore; ?><a title="<?php echo $help_restore; ?>"> (?)</a></td>
-          <td><input title="<?php echo $help_restore; ?>" type="file" name="import"></td>
+          <td><?php echo $Language->get('entry_restore'); ?><a title="<?php echo $Language->get('help_restore'); ?>"> (?)</a></td>
+          <td><input title="<?php echo $Language->get('help_restore'); ?>" type="file" name="import"></td>
         </tr>
       </table>
     </form>

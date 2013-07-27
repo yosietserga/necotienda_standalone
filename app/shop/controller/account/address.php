@@ -3,11 +3,9 @@ class ControllerAccountAddress extends Controller {
 	private $error = array();
 	  
   	public function index() {
-  	 if ($this->customer->isLogged() && !$this->customer->getComplete()) {  
-      		$this->redirect(HTTP_HOME . 'index.php?r=account/complete_activation');
-    	} elseif (!$this->customer->isLogged()) {  
-      		$this->session->set('redirect',HTTP_HOME . 'index.php?r=account/address');
-	  		$this->redirect(HTTP_HOME . 'index.php?r=account/login');
+        if (!$this->customer->isLogged()) {  
+      		$this->session->set('redirect',Url::createUrl("account/address"));
+	  		$this->redirect(Url::createUrl("account/login"));
     	}
 	
     	$this->language->load('account/address');
@@ -21,41 +19,29 @@ class ControllerAccountAddress extends Controller {
 
   	public function insert() {
     	if (!$this->customer->isLogged()) {
-      		$this->session->set('redirect',HTTP_HOME . 'index.php?r=account/address');
-	  		$this->redirect(HTTP_HOME . 'index.php?r=account/login'); 
-    	} 
+      		$this->session->set('redirect',Url::createUrl("account/address"));
+	  		$this->redirect(Url::createUrl("account/login")); 
+    	}
 
     	$this->language->load('account/address');
 
 		$this->document->title = $this->language->get('heading_title');
 		
 		$this->load->model('account/address');
-        
-        // evitando ataques xsrf y xss
-        $fid = ($this->session->has('fid')) ? $this->session->get('fid') : strtotime(date('d-m-Y h:i:s'));
-        $this->session->set('fid',$fid);
-        $fkey = $this->fkey . "." . $this->session->get('fid') . "_" . str_replace('/','-',$_GET['r']);
-        $this->data['fkey'] = "<input type='hidden' name='fkey' id='fkey' value='$fkey' />";
-             
+
     	if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $route = str_replace("-","/",substr($_POST['fkey'],strrpos($_POST['fkey'],"_")+1)); // verificamos que la ruta pertenece a este formulario
-            $fid = substr($_POST['fkey'],strpos($_POST['fkey'],".")+1,10); // verificamos que id del formulario es correcto
-            $date = substr($this->fkey,strpos($this->fkey,"_")+1,10); // verificamos que la fecha es de hoy
-            if (($this->session->get('fkey')==$this->fkey) && ($route==$_GET['r']) && ($fid==$this->session->get('fid')) && ($date==strtotime(date('d-m-Y')))) { // validamos el id de sesión para evitar ataques csrf
-                $this->session->clear('fid');
-    			$this->model_account_address->addAddress($this->request->post);    			
-          		$this->session->set('success',$this->language->get('text_insert'));    
-    	  		$this->redirect(HTTP_HOME . 'index.php?r=account/address');
-            }
-    	} 
+            $this->modelAddress->addAddress($this->request->post);    			
+          	$this->session->set('success',$this->language->get('text_insert'));    
+    	  	$this->redirect(Url::createUrl("account/address"));
+    	}
 	  	
 		$this->getForm();
   	}
 
   	public function update() {
     	if (!$this->customer->isLogged()) {
-      		$this->session->set('redirect',HTTP_HOME . 'index.php?r=account/address');
-	  		$this->redirect(HTTP_HOME . 'index.php?r=account/login'); 
+      		$this->session->set('redirect',Url::createUrl("account/address"));
+	  		$this->redirect(Url::createUrl("account/login")); 
     	} 
 		
     	$this->language->load('account/address');
@@ -63,21 +49,10 @@ class ControllerAccountAddress extends Controller {
 		$this->document->title = $this->language->get('heading_title');
 		
 		$this->load->model('account/address');
-		
-        // evitando ataques xsrf y xss
-        $fid = ($this->session->has('fid')) ? $this->session->get('fid') : strtotime(date('d-m-Y h:i:s'));$this->session->set('fid',$fid);
-        $fkey = $this->fkey . "." . $this->session->get('fid') . "_" . str_replace('/','-',$_GET['r']);
-        $this->data['fkey'] = "<input type='hidden' name='fkey' id='fkey' value='$fkey' />";
-                
+		   
     	if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-    	   $route = str_replace("-","/",substr($_POST['fkey'],strrpos($_POST['fkey'],"_")+1)); // verificamos que la ruta pertenece a este formulario
-            $fid = substr($_POST['fkey'],strpos($_POST['fkey'],".")+1,10); // verificamos que id del formulario es correcto
-            $date = substr($this->fkey,strpos($this->fkey,"_")+1,10); // verificamos que la fecha es de hoy
-            
-            if (($this->session->get('fkey')==$this->fkey) && ($route==$_GET['r']) && ($fid==$this->session->get('fid')) && ($date==strtotime(date('d-m-Y')))) { // validamos el id de sesión para evitar ataques csrf
-                $this->session->clear('fid');
-    			
-       		$this->model_account_address->editAddress($this->request->get['address_id'], $this->request->post);
+
+       		$this->modelAddress->editAddress($this->request->get['address_id'], $this->request->post);
 	  		
 			if ($this->session->has('shipping_address_id') && $this->request->get['address_id']==$this->session->get('shipping_address_id')) {
 	  			$this->session->clear('shipping_methods');
@@ -91,16 +66,16 @@ class ControllerAccountAddress extends Controller {
 			}
 			
 			$this->session->set('success',$this->language->get('text_update'));
-	  		$this->redirect(HTTP_HOME . 'index.php?r=account/address');
-    	   } 
-        }	  	
+	  		$this->redirect(Url::createUrl("account/address"));
+    	   }
+        
 		$this->getForm();
   	}
 
   	public function delete() {
     	if (!$this->customer->isLogged()) {
-      		$this->session->set('redirect',HTTP_HOME . 'index.php?r=account/address');
-	  		$this->redirect(HTTP_HOME . 'index.php?r=account/login'); 
+      		$this->session->set('redirect',Url::createUrl("account/address"));
+	  		$this->redirect(Url::createUrl("account/login"));
     	} 
 			
     	$this->language->load('account/address');
@@ -110,7 +85,7 @@ class ControllerAccountAddress extends Controller {
 		$this->load->model('account/address');
 		
     	if (isset($this->request->get['address_id']) && $this->validateDelete()) {
-			$this->model_account_address->deleteAddress($this->request->get['address_id']);	
+			$this->modelAddress->deleteAddress($this->request->get['address_id']);	
 
 			if ($this->session->has('shipping_address_id') && $this->request->get['address_id'] == $this->session->get('shipping_address_id')) {
                 $this->session->clear('shipping_address_id');
@@ -124,7 +99,7 @@ class ControllerAccountAddress extends Controller {
                 $this->session->clear('payment_method');
 			}
 			$this->session->set('success',$this->language->get('text_delete'));
-	  		$this->redirect(HTTP_HOME . 'index.php?r=account/address');
+	  		$this->redirect(Url::createUrl("account/address"));
     	}
 	
 		$this->getList();	
@@ -132,19 +107,19 @@ class ControllerAccountAddress extends Controller {
 
   	private function getList() {
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=common/home',
+        	'href'      => Url::createUrl("common/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	); 
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/account',
+        	'href'      => Url::createUrl("account/account"),
         	'text'      => $this->language->get('text_account'),
         	'separator' => $this->language->get('text_separator')
       	);
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/address',
+        	'href'      => Url::createUrl("account/address"),
         	'text'      => $this->language->get('heading_title'),
         	'separator' => $this->language->get('text_separator')
       	);
@@ -173,7 +148,7 @@ class ControllerAccountAddress extends Controller {
 		
     	$this->data['addresses'] = array();
 		
-		$results = $this->model_account_address->getAddresses();
+		$results = $this->modelAddress->getAddresses();
 
     	foreach ($results as $result) {
 			if ($result['address_format']) {
@@ -208,26 +183,35 @@ class ControllerAccountAddress extends Controller {
       			'country'   => $result['country']  
 			);
 
+        	if (isset($this->request->post['default'])) {
+          		$this->data['default'] = $this->request->post['default'];
+        	} elseif (isset($this->request->get['address_id'])) {
+          		$this->data['default'] = $this->customer->getAddressId() == $this->request->get['address_id'];
+        	} else {
+    			$this->data['default'] = false;
+    		}
+
       		$this->data['addresses'][] = array(
         		'address_id' => $result['address_id'],
+        		'default' => ($this->customer->getAddressId()==$result['address_id']) ? $this->customer->getAddressId() : null,
         		'address'    => str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))),
-        		'update'     => HTTP_HOME . 'index.php?r=account/address/update&address_id=' . $result['address_id'],
-				'delete'     => HTTP_HOME . 'index.php?r=account/address/delete&address_id=' . $result['address_id']
+        		'update'     => Url::createUrl("account/address/update",array("address_id"=>$result['address_id'])),
+				'delete'     => Url::createUrl("account/address/delete",array("address_id"=>$result['address_id']))
       		);
     	}
 
-    	$this->data['insert'] = HTTP_HOME . 'index.php?r=account/address/insert';
-		$this->data['back'] = HTTP_HOME . 'index.php?r=account/account';
+    	$this->data['insert'] = Url::createUrl("account/address/insert");
+		$this->data['back'] = Url::createUrl("account/account");
 		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/addresses.tpl')) {
 			$this->template = $this->config->get('config_template') . '/account/addresses.tpl';
 		} else {
-			$this->template = 'default/account/addresses.tpl';
+			$this->template = 'cuyagua/account/addresses.tpl';
 		}
 		
 		$this->children = array(
 			'common/nav',
-			'common/column_left',
+			'account/column_left',
 			'common/footer',
 			'common/header'
 		);
@@ -239,32 +223,32 @@ class ControllerAccountAddress extends Controller {
       	$this->document->breadcrumbs = array();
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=common/home',
+        	'href'      => Url::createUrl("common/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	); 
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/account',
+        	'href'      => Url::createUrl("account/account"),
         	'text'      => $this->language->get('text_account'),
         	'separator' => $this->language->get('text_separator')
       	);
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/address',
+        	'href'      => Url::createUrl("account/address"),
         	'text'      => $this->language->get('heading_title'),
         	'separator' => $this->language->get('text_separator')
       	);
 		
 		if (!isset($this->request->get['address_id'])) {
       		$this->document->breadcrumbs[] = array(
-        		'href'      => HTTP_HOME . 'index.php?r=account/address/insert',
+        		'href'      => Url::createUrl("account/address/insert"),
         		'text'      => $this->language->get('text_edit_address'),
         		'separator' => $this->language->get('text_separator')
       		);
 		} else {
       		$this->document->breadcrumbs[] = array(
-        		'href'      => HTTP_HOME . 'index.php?r=account/address/update&address_id=' . $this->request->get['address_id'],
+        		'href'      => Url::createUrl("account/address/update",array("address_id"=>$this->request->get['address_id'])),
         		'text'      => $this->language->get('text_edit_address'),
         		'separator' => $this->language->get('text_separator')
       		);
@@ -335,13 +319,13 @@ class ControllerAccountAddress extends Controller {
 		}
 		
 		if (!isset($this->request->get['address_id'])) {
-    		$this->data['action'] = HTTP_HOME . 'index.php?r=account/address/insert';
+    		$this->data['action'] = Url::createUrl("account/address/insert");
 		} else {
-    		$this->data['action'] = HTTP_HOME . 'index.php?r=account/address/update&address_id=' . $this->request->get['address_id'];
+    		$this->data['action'] = Url::createUrl("account/address/update",array("address_id"=>$this->request->get['address_id']));
 		}
 		
     	if (isset($this->request->get['address_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$address_info = $this->model_account_address->getAddress($this->request->get['address_id']);
+			$address_info = $this->modelAddress->getAddress($this->request->get['address_id']);
 		}
 	
     	if (isset($this->request->post['firstname'])) {
@@ -424,7 +408,7 @@ class ControllerAccountAddress extends Controller {
 		
 		$this->load->model('localisation/country');
 		
-    	$this->data['countries'] = $this->model_localisation_country->getCountries();
+    	$this->data['countries'] = $this->modelCountry->getCountries();
 
     	if (isset($this->request->post['default'])) {
       		$this->data['default'] = $this->request->post['default'];
@@ -434,20 +418,35 @@ class ControllerAccountAddress extends Controller {
 			$this->data['default'] = false;
 		}
 
-    	$this->data['back'] = HTTP_HOME . 'index.php?r=account/address';
+    	$this->data['back'] = Url::createUrl("account/address");
 		
-		// configuración de seguridad de javascript         
-        $this->data['config_js_security'] = $this->config->get('config_js_security');
-        
+        // scripts
+        $scripts[] = array('id'=>'scriptsEdit','method'=>'ready','script'=>
+            "$('#form').ntForm();");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+            
+        // javascript files
+        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+        $javascripts[] = $jspath."necojs/neco.form.js";
+        $javascripts[] = $jspath."vendor/jquery-ui.min.js";
+        $this->javascripts = array_merge($this->javascripts, $javascripts);
+
+        // style files
+        $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
+        $styles[] = array('media'=>'all','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
+        $styles[] = array('media'=>'all','href'=>$csspath.'neco.form.css');
+        $this->styles = array_merge($this->styles,$styles);
+
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/address.tpl')) {
 			$this->template = $this->config->get('config_template') . '/account/address.tpl';
 		} else {
-			$this->template = 'default/account/address.tpl';
+			$this->template = 'cuyagua/account/address.tpl';
 		}
 		
 		$this->children = array(
 			'common/nav',
-			'common/column_left',
+			'account/column_left',
 			'common/footer',
 			'common/header'
 		);
@@ -456,19 +455,11 @@ class ControllerAccountAddress extends Controller {
   	}
 	
   	private function validateForm() {
-    	if (!$this->validar->longitudMinMax($this->request->post['firstname'],3,32,$this->language->get('entry_firstname')) || (!$this->validar->esSoloTexto($this->request->post['firstname'],$this->language->get('entry_firstname')) && !$this->validar->esSinCharEspeciales($this->request->post['firstname'],$this->language->get('entry_firstname')))) {
-      		$this->error['firstname'] = $this->language->get('error_firstname');
-    	}
-
-    	if (!$this->validar->longitudMinMax($this->request->post['lastname'],3,32,$this->language->get('entry_lastname')) || (!$this->validar->esSoloTexto($this->request->post['lastname'],$this->language->get('entry_lastname')) && !$this->validar->esSinCharEspeciales($this->request->post['lastname'],$this->language->get('entry_lastname')))) {
-      		$this->error['lastname'] = $this->language->get('error_lastname');
-    	}
-
-    	if (!$this->validar->longitudMinMax($this->request->post['address_1'],10,128,$this->language->get('entry_address_1'))) {
+    	if (empty($this->request->post['address_1'])) {
       		$this->error['address_1'] = $this->language->get('error_address_1');
     	}
 
-    	if (!$this->validar->longitudMinMax($this->request->post['city'],3,50,$this->language->get('entry_city')) && !$this->validar->esSinCharEspeciales($this->request->post['city'],$this->language->get('entry_city'))) {
+    	if (empty($this->request->post['city'])) {
       		$this->error['city'] = $this->language->get('error_city');
     	}
 		
@@ -480,16 +471,6 @@ class ControllerAccountAddress extends Controller {
       		$this->error['zone'] = $this->language->get('error_zone');
     	}
 		
-        if ($this->session->get('skey') != $this->customer->skey) {
-      		$this->error['skey'] = true;
-            $this->validar->custom("<li>Se ha detectado un ataque a la seguridad del sistema. Se han deshabilitado algunas funciones y se est&aacute; rastreando su direcci&oacute;n IP</li>");
-    	}
-        
-        if (!$this->session->has('captcha') || $this->session->get('captcha') != $this->request->post['captcha']) {
-      		$this->error['captcha'] = $this->language->get('error_captcha');
-            $this->validar->custom("<li>El resultado de la ecuaci&oacute;n es incorrecto</li>");
-    	}
-        
         $this->data['mostrarError'] = $this->validar->mostrarError();
         
     	if (!$this->error) {
@@ -500,12 +481,8 @@ class ControllerAccountAddress extends Controller {
   	}
 
   	private function validateDelete() {
-    	if ($this->model_account_address->getTotalAddresses() == 1) {
+    	if ($this->modelAddress->getTotalAddresses() == 1) {
       		$this->error['warning'] = $this->language->get('error_delete');
-    	}
-        
-        if ($this->session->get('skey') != $this->customer->key) {
-      		$this->error['skey'] = true;
     	}
         
     	if ($this->customer->getAddressId() == $this->request->get['address_id']) {
@@ -524,7 +501,7 @@ class ControllerAccountAddress extends Controller {
 
 		$this->load->model('localisation/zone');
 
-    	$results = $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']);
+    	$results = $this->modelZone->getZonesByCountryId($this->request->get['country_id']);
         
       	foreach ($results as $result) {
         	$output .= '<option value="' . $result['zone_id'] . '"';

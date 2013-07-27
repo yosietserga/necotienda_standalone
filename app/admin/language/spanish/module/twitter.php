@@ -7,25 +7,30 @@ $_['text_module']      = 'M&oacute;dulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 $_['text_left']        = 'Columna Izquierda';
 $_['text_right']       = 'Columna Derecha';
-$_['text_home']       = 'Columna Central';
+$_['text_home']        = 'Columna Central';
 $_['text_true']        = 'Si';
 $_['text_false']       = 'No';
-$_['text_enabled']        = 'Activar';
-$_['text_disabled']       = 'Desactivar';
+$_['text_enabled']     = 'Activar';
+$_['text_disabled']    = 'Desactivar';
+$_['text_twitter']     = 'Twitter Box';
 
 // Entry
-$_['entry_twitter_search']  = 'Palabra a buscar en Twitter';
-$_['entry_twitter_search_limit']    = 'Tweets Por P&aacute;gina:';
-$_['entry_twitter_search_rate']              = 'Intervalo de Tiempo:';
-$_['entry_twitter_time']             = 'Twitter ID:';
-$_['entry_twitter_time_limit']             = 'Tweets Por P&aacute;gina:';
-$_['entry_twitter_time_refresh']             = 'Refrescar Autom&aacute;tico:';
-$_['entry_twitter_time_mode']    = 'Modo:';
-$_['entry_width']             = 'Ancho:';
-$_['entry_height']             = 'Alto:';
-$_['entry_position']   = 'Ubicaci&oacute;n:';
-$_['entry_status']     = 'Estado:';
-$_['entry_sort_order'] = 'Posici&oacute;n:';
+$_['entry_twitter_search']      = 'Palabra a buscar en Twitter';
+$_['entry_twitter_search_limit']= 'Tweets Por P&aacute;gina:';
+$_['entry_twitter_search_rate'] = 'Intervalo de Tiempo:';
+$_['entry_twitter_time']        = 'Twitter ID:';
+$_['entry_twitter_time_limit']  = 'Tweets Por P&aacute;gina:';
+$_['entry_twitter_time_refresh']= 'Refrescar Autom&aacute;tico:';
+$_['entry_twitter_time_mode']   = 'Modo:';
+$_['entry_width']               = 'Ancho:';
+$_['entry_height']              = 'Alto:';
+$_['entry_position']            = 'Ubicaci&oacute;n:';
+$_['entry_status']              = 'Estado:';
+$_['entry_sort_order']          = 'Posici&oacute;n:';
+$_['entry_load']       = 'Auto Cargar:';
+$_['entry_title']      = 'T&iacute;tulo:';
+$_['entry_landing_page'] = 'Mostrar en las siguientes p&aacute;ginas:';
+$_['entry_class']      = 'Clase (CSS):';
 
 // Help
 $_['help_twitter_search']  = 'Ingrese una palabra para buscar publicaciones relacionadas dentro de Twitter. Por ejemplo, si coloca necotienda, el sistema buscar&Aacute; dentro de las publicaciones de Twitter todo lo relacionado con necotienda';

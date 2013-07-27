@@ -1,6 +1,6 @@
 <?php 
 class ModelMarketingList extends Model {
-	public function addList($data) {
+	public function add($data) {
 	    $total_contacts = sizeof($data['contact_list']);
         $this->db->query("INSERT INTO " . DB_PREFIX . "contact_list SET 
         `name` = '" . $this->db->escape($data['name']) . "',
@@ -21,7 +21,7 @@ class ModelMarketingList extends Model {
         return $id;
 	}
 	
-	public function editList($contact_list_id,$data) {
+	public function update($contact_list_id,$data) {
 	    $total_contacts = sizeof($data['contact_list']);
         $this->db->query("UPDATE " . DB_PREFIX . "contact_list SET 
         `name` = '" . $this->db->escape($data['name']) . "',
@@ -40,12 +40,12 @@ class ModelMarketingList extends Model {
         }
 	}
     
-    public function getList($contact_list_id){
+    public function getById($contact_list_id){
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "contact_list WHERE `contact_list_id` = ".(int)$contact_list_id);
         return $query->row;
     }
     
-    public function getLists($data = array()) {
+    public function getAll($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "contact_list cl";
         if ($data) {
     		$implode = array();
@@ -105,7 +105,7 @@ class ModelMarketingList extends Model {
 		return $query->rows;
 	}	
     
-    public function getTotalLists($data = array()) {
+    public function getAllTotal($data = array()) {
       	$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "contact_list` cl";
 		
 		$implode = array();
@@ -143,21 +143,15 @@ class ModelMarketingList extends Model {
      * @see Cache
 	 * @return void
 	 */
-	public function copy($id) {
+	public function copy($id) {		
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "contact_list WHERE contact_list_id = '" . (int)$id . "'");
 		
 		if ($query->num_rows) {
+			$data = array();
 			$data = $query->row;
-			
-            $rows = $this->db->query("SELECT * FROM ".DB_PREFIX ."contact_to_list WHERE contact_list_id = '". (int)$id ."'");
-            $contacts = array();
-			foreach ($rows->rows as $row) {
-                $contacts[] = $row['contact_id'];
-			}
-            $data['name'] .= " (copia)";
-            $data['contact_list'] = $contacts;
-            
-			$this->addList($data);
+			$data['contact_list'] = $this->getContacts(array($id));
+			$data['name'] = $data['name'] ." - copia";
+			$this->add($data);
 		}
 	}
 	

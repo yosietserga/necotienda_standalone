@@ -69,7 +69,7 @@ class ModelMarketingContact extends Model {
         return $data;
     }	
     
-    public function getListsByContactId($id) {
+    public function getAllByContactId($id) {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "contact_list l 
         LEFT JOIN " . DB_PREFIX . "contact_to_list c2l ON (l.contact_list_id=c2l.contact_list_id) 
         WHERE c2l.contact_id = ". (int)$id);
@@ -82,63 +82,71 @@ class ModelMarketingContact extends Model {
     }	
     
 	public function getContacts($data = array()) {
-		$sql = "SELECT *, co.email AS mail, co.date_added AS created
-        FROM " . DB_PREFIX . "contact co 
-        LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = co.customer_id) ";
-
-		$implode = array();
-		
-		if (!empty($data['filter_name'])) {
-			$implode[] = "co.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
-		}
-		
-		if (!empty($data['filter_email'])) {
-			$implode[] = "co.email LIKE '%" . $this->db->escape($data['filter_email']) . "%'";
-		}
-        
-		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
-            $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
-		} elseif (!empty($data['filter_date_start'])) {
-            $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
-		}
-
-		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
-		}
-		
-		$sort_data = array(
-			'co.name',
-			'co.email',
-			'co.date_added'
-		);	
-			
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];	
-		} else {
-			$sql .= " ORDER BY co.name";	
-		}
-			
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC";
-		} else {
-			$sql .= " ASC";
-		}
-		
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}			
-
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
-			}	
-			
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}		
-		
-		$query = $this->db->query($sql);
-		
-		return $query->rows;	
+	   $cache_id = "admin.contacts". implode(".",$data);
+       $cached = $this->cache->get($cache_id);
+       if (!$cached) {
+    		$sql = "SELECT *, co.email AS mail, co.date_added AS created
+            FROM " . DB_PREFIX . "contact co 
+            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = co.customer_id) ";
+    
+    		$implode = array();
+    		
+    		if (!empty($data['filter_name'])) {
+    			$implode[] = "co.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+    		}
+    		
+    		if (!empty($data['filter_email'])) {
+    			$implode[] = "co.email LIKE '%" . $this->db->escape($data['filter_email']) . "%'";
+    		}
+            
+    		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+                $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
+    		} elseif (!empty($data['filter_date_start'])) {
+                $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
+    		}
+    
+    		if ($implode) {
+    			$sql .= " WHERE " . implode(" AND ", $implode);
+    		}
+    		
+    		$sort_data = array(
+    			'co.name',
+    			'co.email',
+    			'co.date_added'
+    		);	
+    			
+    		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+    			$sql .= " ORDER BY " . $data['sort'];	
+    		} else {
+    			$sql .= " ORDER BY co.name";	
+    		}
+    			
+    		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+    			$sql .= " DESC";
+    		} else {
+    			$sql .= " ASC";
+    		}
+    		
+    		if (isset($data['start']) || isset($data['limit'])) {
+    			if ($data['start'] < 0) {
+    				$data['start'] = 0;
+    			}			
+    
+    			if ($data['limit'] < 1) {
+    				$data['limit'] = 20;
+    			}	
+    			
+    			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+    		}		
+    		
+    		$query = $this->db->query($sql);
+            
+    		$this->cache->set($cache_id,$query->rows);
+            
+    		return $query->rows;
+        } else {
+            return $cached;
+        }	
 	}
 	
 	public function getTotalContacts($data = array()) {

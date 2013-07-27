@@ -1,40 +1,38 @@
 <?php  class ControllerCommonColumnRight extends Controller {
 	protected function index() {
-		$module_data = array();
-		
-		$this->load->model('checkout/extension');
-		
-		$results = $this->model_checkout_extension->getExtensions('module');
-
-		foreach ($results as $result) {
-			if ($this->config->get($result['key'] . '_status') && ($this->config->get($result['key'] . '_position') == 'right')) {
-				$module_data[] = array(
-					'code'       => $result['key'],
-					'sort_order' => $this->config->get($result['key'] . '_sort_order')
-				);
-				
-				$this->children[] = 'module/' . $result['key'];
-			}
-		}
-
-		$sort_order = array(); 
-	  
-		foreach ($module_data as $key => $value) {
-      		$sort_order[$key] = $value['sort_order'];
-    	}
-
-    	array_multisort($sort_order, SORT_ASC, $module_data);			
-		
-		$this->data['modules'] = $module_data;
-		
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('column_right') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
 		$this->id = 'column_right';
-
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/column_right.tpl')) {
 			$this->template = $this->config->get('config_template') . '/common/column_right.tpl';
 		} else {
-			$this->template = 'default/common/column_right.tpl';
+			$this->template = 'cuyagua/common/column_right.tpl';
 		}
-		
 		$this->render();
 	}
 }

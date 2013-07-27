@@ -1,67 +1,54 @@
-<?php echo $header; ?>
-<?php if ($error_warning) { ?>
-<div class="warning"><?php echo $error_warning; ?></div>
-<?php } ?>
-<?php if ($success) { ?>
-<div class="success"><?php echo $success; ?></div>
-<?php } ?>
-<div class="box">
-  <div class="left"></div>
-  <div class="right"></div>
-  <div class="heading">
-    <h1 style="background-image: url('image/user.png');"><?php echo $heading_title; ?></h1>
-    <div class="buttons"><a onclick="location = '<?php echo $insert; ?>'" class="button"><span><?php echo $button_insert; ?></span></a><a onclick="$('form').submit();" class="button"><span><?php echo $button_delete; ?></span></a></div>
-  </div>
-  <div class="content">
-    <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
-      <table class="list">
+<select id="batch">
+    <option value="">Procesamiento en lote</option>
+    <!--
+    <option value="editAll">Editar</option>
+    <option value="addToList">Agregar a una lista</option>
+    -->
+    <option value="deleteAll">Eliminar</option>
+</select>
+<a href="#" title="Ejecutar acci&oacute;n por lote" onclick="if ($('#batch').val().length <= 0) { return false; } else { window[$('#batch').val()](); return false;}" style="margin-left: 10px;font-size: 10px;">[ Ejecutar ]</a>
+<div class="clear"></div><br />
+
+<div class="pagination"><?php echo $pagination; ?></div>
+<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
+    <table id="list">
         <thead>
-          <tr>
-            <td width="1" style="text-align: center;"><input  type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);"></td>
-            <td class="left"><?php if ($sort == 'username') { ?>
-              <a  href="<?php echo $sort_username; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_username; ?></a>
-              <?php } else { ?>
-              <a  href="<?php echo $sort_username; ?>"><?php echo $column_username; ?></a>
-              <?php } ?></td>
-            <td class="left"><?php if ($sort == 'status') { ?>
-              <a  href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
-              <?php } else { ?>
-              <a  href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
-              <?php } ?></td>
-            <td class="left"><?php if ($sort == 'date_added') { ?>
-              <a  href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
-              <?php } else { ?>
-              <a  href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
-              <?php } ?></td>
-            <td class="right"><?php echo $column_action; ?></td>
-          </tr>
+            <tr>
+                <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_name'); ?></a></th>
+                <th><?php echo $Language->get('column_status'); ?></th>
+                <th><?php echo $Language->get('column_group'); ?></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
+            </tr>
         </thead>
         <tbody>
-          <?php if ($users) { ?>
-          <?php foreach ($users as $user) { ?>
-          <tr>
-            <td style="text-align: center;"><?php if ($user['selected']) { ?>
-              <input  type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" checked="checked">
-              <?php } else { ?>
-              <input  type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>">
-              <?php } ?></td>
-            <td class="left"><?php echo $user['username']; ?></td>
-            <td class="left"><?php echo $user['status']; ?></td>
-            <td class="left"><?php echo $user['date_added']; ?></td>
-            <td class="right"><?php foreach ($user['action'] as $action) { ?>
-              [ <a  href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-              <?php } ?></td>
-          </tr>
-          <?php } ?>
-          <?php } else { ?>
-          <tr>
-            <td class="center" colspan="5"><?php echo $text_no_results; ?></td>
-          </tr>
-          <?php } ?>
+        <?php if ($users) { ?>
+            <?php foreach ($users as $user) { ?>
+            <tr id="tr_<?php echo $user['user_id']; ?>">
+                <td><input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" <?php if ($user['selected']) { ?>checked="checked"<?php } ?>/></td>
+                <td><?php echo $user['username']; ?></td>
+                <td><?php echo $user['status']; ?></td>
+                <td><?php echo $user['customer_group']; ?></td>
+                <td>
+                <?php foreach ($user['action'] as $action) { ?>
+                <?php 
+                    if ($action['action'] == "delete") {
+                        $jsfunction = "eliminar(". $user['user_id'] .")";
+                        $href = "";
+                    } elseif ($action['action'] == "edit") {
+                        $href = "href='" . $action['href'] ."'";
+                        $jsfunction = "";
+                    }
+                ?>
+                <a title="<?php echo $action['text']; ?>" <?php echo $href; ?> onclick="<?php echo $jsfunction; ?>"><img id="img_<?php echo $user['user_id']; ?>" src="image/<?php echo $action['img']; ?>" alt="<?php echo $action['text']; ?>" /></a>
+                <?php } ?>
+                </td>
+            </tr>
+            <?php } ?>
+        <?php } else { ?>
+            <tr><td colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
+        <?php } ?>
         </tbody>
-      </table>
-    </form>
-  </div>
-</div>
+    </table>
+</form>
 <div class="pagination"><?php echo $pagination; ?></div>
-<?php echo $footer; ?>

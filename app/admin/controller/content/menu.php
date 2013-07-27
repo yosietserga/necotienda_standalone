@@ -2,7 +2,7 @@
 /**
  * ControllerContentMenu
  * 
- * @package  NecoTienda powered by Opencart
+ * @package  NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.1.0
@@ -36,18 +36,6 @@ class ControllerContentMenu extends Controller {
 	 */
 	public function insert() {
 		$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$menu_id = $this->modelMenu->add($this->request->post);
-			$this->session->set('success',$this->language->get('text_success'));
-			
-            if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('content/menu/update',array('menu_id'=>$menu_id))); 
-            } elseif ($_POST['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('content/menu/insert')); 
-            } else {
-                $this->redirect(Url::createAdminUrl('content/menu')); 
-            }
-		}
 		$this->getForm();
 	}
 
@@ -65,17 +53,6 @@ class ControllerContentMenu extends Controller {
 	 */
 	public function update() {
 		$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->modelMenu->edit($this->request->get['menu_id'], $this->request->post);
-    		$this->session->set('success',$this->language->get('text_success'));
-    		if ($this->request->post['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('content/menu/update',array('menu_id'=>$this->request->get['menu_id']))); 
-            } elseif ($this->request->post['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('content/menu/insert')); 
-            } else {
-                $this->redirect(Url::createAdminUrl('content/menu')); 
-            }
-        }
         $this->getForm();
     }
 
@@ -96,7 +73,7 @@ class ControllerContentMenu extends Controller {
      }
     
 	/**
-	 * ControllerContentMenu::getList()
+	 * ControllerContentMenu::getById()
 	 * 
      * @see Load
      * @see Model
@@ -122,37 +99,43 @@ class ControllerContentMenu extends Controller {
 		$this->data['insert'] = Url::createAdminUrl("content/menu/insert");
 		$this->data['delete'] = Url::createAdminUrl("content/menu/delete");
         
-		
-		$this->data['heading_title']      = $this->language->get('heading_title');
-		$this->data['button_insert']      = $this->language->get('button_insert');
-		$this->data['button_delete']      = $this->language->get('button_delete');
-        
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['success'] = $this->session->has('success') ? $this->session->get('success') : '';
         $this->session->clear('success');
         
-        
         // SCRIPTS
         $scripts[] = array('id'=>'menuList','method'=>'function','script'=>
-            "function activate(e) {
+            "function activate(e) {    
             	$.ajax({
             	   'type':'get',
                    'dataType':'json',
-                   'url':'". Url::createAdminUrl("content/menu/activate") ."&id=' + e,
+                   'url':'".Url::createAdminUrl("content/menu/activate")."&id=' + e,
                    'success': function(data) {
                         if (data > 0) {
-                            $('#img_' + e).attr('src','image/good.png');
+                            $(\"#img_\" + e).attr('src','image/good.png');
                         } else {
-                            $('#img_' + e).attr('src','image/minus.png');
+                            $(\"#img_\" + e).attr('src','image/minus.png');
                         }
                    }
             	});
-            }
+             }
+            function eliminar(e) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("content/menu/delete") ."',{
+                        id:e
+                    });
+                }
+                return false;
+             }
             function editAll() {
                 return false;
-            }
+            } 
+            function addToList() {
+                return false;
+            } 
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("content/menu/delete") ."',$('#form').serialize(),function(){
@@ -163,61 +146,10 @@ class ControllerContentMenu extends Controller {
                     });
                 }
                 return false;
-            }
-            function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                    $('li#' + e).remove();
-                	$.getJSON('". Url::createAdminUrl("content/menu/delete") ."',{
-                        id:e
-                    });
-                }
-                return false;
-             }");
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("content/menu/grid") ."',function(e){
                 $('#gridPreloader').hide();
-                $('ol.items').nestedSortable({
-        			forcePlaceholderSize: true,
-        			handle: 'div.item',
-        			helper:	'clone',
-        			items: 'li',
-        			maxLevels: 3,
-        			opacity: .6,
-        			placeholder: 'placeholder',
-        			revert: 250,
-        			tabSize: 25,
-        			tolerance: 'pointer',
-        			toleranceElement: '> div.item',
-                    update:  function (event, ui) {
-                        var parent = ui.item.parents('li');
-                        
-                        if (parent.length > 0) {
-                            parent_id = parent.attr('id');
-                        } else {
-                            parent_id = 0;
-                        }
-                        
-                        $.getJSON('". Url::createAdminUrl("content/menu/updateparent") ."',{'parent_id':parent_id,'menu_id':ui.item.attr('id')},function(data){
-                            if (data.error) {
-                                $('#msg').fadeIn().append('<div class=\"message success\"'+ data.msg +'</div>').delay(3600).fadeOut();
-                            }
-                        });
-                        
-                        var sorts = {}; 
-                        var i = 0;
-                        $('ol.items li').each(function(){
-                            i++;
-                            sorts[i] = $(this).attr('id');
-                        }); 
-                        
-                        $.post('". Url::createAdminUrl("content/menu/sortable") ."',sorts,
-                        function(data){
-                            if (data.error) {
-                                $('#msg').fadeIn().append('<div class=\"message success\"'+ data.msg +'</div>').delay(3600).fadeOut();
-                            }
-                        });
-                    }
-        		});
             });
             
             $('#formFilter').ntForm({
@@ -291,28 +223,6 @@ class ControllerContentMenu extends Controller {
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));  
 	}
     
-    public function updateparent() {
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
-        header("Cache-Control: no-cache, must-revalidate"); 
-        header("Pragma: no-cache");
-        header("Content-type: application/json");
-        
-        if (empty($_GET['menu_id']) && !isset($_GET['parent_id'])) {
-            $data['error'] = 1;
-            $data['msg'] = "No se encontr&oacute; la categor&iacute;a que se va a actualizar";
-        } 
-        $result = $this->db->query("UPDATE ". DB_PREFIX ."menu SET parent_id = ". (int)$_GET['parent_id'] ." WHERE menu_id = ". (int)$_GET['menu_id']);
-        if ($result) {
-            $data['success'] = 1;
-        } else {
-            $data['error'] = 1;
-            $data['msg'] = "No se pudo actualizar la catego&iacute;a, por favor reporte esta falla a trav&eacute;s del formulario de sugerencias";
-        }
-        $this->load->auto('json');
-		$this->response->setOutput(Json::encode($data), $this->config->get('config_compression'));  
-    }
-    
 	/**
 	 * ControllerContentMenu::grid()
 	 * 
@@ -361,7 +271,7 @@ class ControllerContentMenu extends Controller {
                 'edit'      => array(
                         'action'  => 'edit',
                         'text'  => $this->language->get('text_edit'),
-                        'href'  =>Url::createAdminUrl('content/menu/update') . '&product_id=' . $result['product_id'] . $url,
+                        'href'  =>Url::createAdminUrl('content/menu/update') . '&menu_id=' . $result['menu_id'] . $url,
                         'img'   => 'edit.png'
                 ),
                 'delete'    => array(
@@ -382,18 +292,9 @@ class ControllerContentMenu extends Controller {
             );
         }
         
-		$this->data['text_no_results']    = $this->language->get('text_no_results');
-		$this->data['column_name']        = $this->language->get('column_name');
-		$this->data['column_position']  = $this->language->get('column_position');
-		$this->data['column_satus']  = $this->language->get('column_satus');
-		$this->data['column_route']  = $this->language->get('column_route');
-		$this->data['column_sort_order']  = $this->language->get('column_sort_order');
-		$this->data['column_action']      = $this->language->get('column_action');
-        
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_warning'] = $this->session->has('success') ? $this->session->get('success') : '';
         $this->session->clear('success');
-        $this->data['Url'] = Url;
 		$this->template = 'content/menu_grid.tpl';
         
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));  
@@ -461,37 +362,6 @@ class ControllerContentMenu extends Controller {
 	 * @return void
 	 */
 	private function getForm() {
-		$this->data['heading_title']      = $this->language->get('heading_title');
-		$this->data['text_none']          = $this->language->get('text_none');
-		$this->data['text_default']       = $this->language->get('text_default');
-		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
-		$this->data['text_enabled']       = $this->language->get('text_enabled');
-    	$this->data['text_disabled']      = $this->language->get('text_disabled');
-		$this->data['entry_name']         = $this->language->get('entry_name');
-		$this->data['entry_meta_keywords']= $this->language->get('entry_meta_keywords');
-		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
-		$this->data['entry_description']  = $this->language->get('entry_description');
-		$this->data['entry_keyword']      = $this->language->get('entry_keyword');
-		$this->data['entry_menu']     = $this->language->get('entry_menu');
-		$this->data['entry_sort_order']   = $this->language->get('entry_sort_order');
-		$this->data['entry_image']        = $this->language->get('entry_image');
-		$this->data['entry_status']       = $this->language->get('entry_status');
-		$this->data['help_name']          = $this->language->get('help_name');
-		$this->data['help_meta_keywords'] = $this->language->get('help_meta_keywords');
-		$this->data['help_meta_description'] = $this->language->get('help_meta_description');
-		$this->data['help_description']   = $this->language->get('help_description');
-		$this->data['help_keyword']       = $this->language->get('help_keyword');
-		$this->data['help_menu']      = $this->language->get('help_menu');
-		$this->data['help_sort_order']    = $this->language->get('help_sort_order');
-		$this->data['help_image']         = $this->language->get('help_image');
-		$this->data['help_status']        = $this->language->get('help_status');
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-    	$this->data['tab_general']        = $this->language->get('tab_general');
-    	$this->data['tab_data']           = $this->language->get('tab_data');
-		
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_name'] = isset($this->error['name']) ? $this->error['name'] : '';
 
@@ -510,9 +380,9 @@ class ControllerContentMenu extends Controller {
    		);
 		
 		if (!isset($this->request->get['menu_id'])) {
-			$this->data['action'] = Url::createAdminUrl('content/menu/insert');
+			$this->data['action'] = Url::createAdminUrl('content/menu/save');
 		} else {
-			$this->data['action'] = Url::createAdminUrl('content/menu/update',array('menu_id'=>$this->request->get['menu_id']));
+			$this->data['action'] = Url::createAdminUrl('content/menu/save',array('menu_id'=>$this->request->get['menu_id']));
 		}
 		
 		$this->data['cancel'] = Url::createAdminUrl('content/menu');
@@ -522,55 +392,25 @@ class ControllerContentMenu extends Controller {
       		$this->data['links'] = $this->getLinks();
     	}
         
-        $this->data['pages'] = $this->getPages();
+        $this->data['stores'] = $this->modelStore->getAll();
+        $this->data['_stores'] = $this->modelMenu->getStores($this->request->get['menu_id']);
+        $this->data['pages'] = $this->getAll();
         $this->data['post_categories'] = $this->getPostCategories();
         $this->data['categories'] = $this->getCategories();
         //$this->data['manufacturers'] = $this->modelManufacturer->getAll();
 		
+        $this->setvar('name',$menu_info,'');
+        $this->setvar('default',$menu_info,0);
         $this->setvar('status',$menu_info,1);
         $this->setvar('parent_id',$menu_info,0);
-        $this->setvar('keyword',$menu_info,'');
-        $this->setvar('image',$menu_info);
         $this->setvar('sort_order',$menu_info,0);
         
 		//$this->data['menus'] = $this->modelMenu->getMenus(0);
 
-        $this->data['Url'] = new Url;
-        
         $scripts[] = array('id'=>'menuForm','method'=>'ready','script'=>
-            "$('#menu_description_1_name').blur(function(e){
-                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',{ slug : $(this).val() },function(data){
-                        $('#slug').val(data.slug);
-                });
+            "$('#_name').on('change', function(){
+                $('#name').val($(this).val());
             });
-            
-            $('.trends').fancybox({
-        		maxWidth	: 640,
-        		maxHeight	: 600,
-        		fitToView	: false,
-        		width		: '70%',
-        		height		: '70%',
-        		autoSize	: false,
-        		closeClick	: false,
-        		openEffect	: 'none',
-        		closeEffect	: 'none'
-        	});
-            
-            $('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
             
             $('ol.items').nestedSortable({
       			forcePlaceholderSize: true,
@@ -585,70 +425,68 @@ class ControllerContentMenu extends Controller {
         		tolerance: 'pointer',
         		toleranceElement: '> div.item',
                 update:  function (event, ui) {
-                    var parent = ui.item.parents('li');
-                    
+                    $('ol.items li').each(function(){
+                        parentIndex = '';
+                        idIndex = '';
+                        parent = $(this).parents('li');
+                        if (parent.index() >= 0) {
+                            principal = $(parent).parents('li');
+                            if (principal.index() >= 0) {
+                                parent = $(this).parents('li:eq(0)');
+                                parentIndex = '['+ $(principal).index() +'.'+ $(parent).index() +'.'+ $(this).index() +']';
+                                idIndex = $(principal).index() +'.'+ $(parent).index() +'.'+ $(this).index();
+                            } else {
+                                parentIndex = '['+ $(parent).index() +'.'+ $(this).index() +']';
+                                idIndex = $(parent).index() +'.'+ $(this).index();
+                            } 
+                        } else {
+                            parentIndex = '['+ $(this).index() +']';
+                            idIndex = $(this).index();
+                        }
                         
-                    if (parent.length > 0) {
-                        var parentIndex = ui.item.parents('li')
-                            .map(function () { 
-                                      return $(this).index(); 
-                                    })
-                            .get()
-                            .join('_');
-                                
-                        parent.eq(0).find('> ol > li').each(function() {
-                            console.log(this);
-                            
-                            $(this).find('.menu_link').each(function(){
-                                $(this).attr({name:'link['+ parentIndex +'_'+ $(this).index() +'][link]'});
-                            });
-                            
-                            $(this).find('.menu_tag').each(function(){
-                                $(this).attr({name:'link['+ parentIndex +'_'+ $(this).index() +'][tag]'});
-                            });
-                            
-                            $(this).find('.menu_keyword').each(function(){
-                                $(this).attr({name:'link['+ parentIndex +'_'+ $(this).index() +'][keyword]'});
-                            });
-                            console.log(parentIndex +'_'+ $(this).index());
+                        $(this).find('.menu_link').attr({
+                            id:'link.'+ idIndex +'.link',
+                            name:'link'+ parentIndex +'[link]'
                         });
-                    } else {
-                        parent_id = 0;
-                    }
-                    
+                        $(this).find('.menu_tag').attr({
+                            id:'link.'+ idIndex +'.tag',
+                            name:'link'+ parentIndex +'[tag]'
+                        });
+                    });
                 }
-       		});
-            
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
+       		});");
             
         $scripts[] = array('id'=>'menuFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
+            "function saveAndKeep() {
+                $('#temp').remove();
+                $('#menuMsg').append('<div class=\"message success\" id=\"temp\">". $this->language->get('text_success') ."</div>');
                 window.onbeforeunload = null;
-                $('#formMenu').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+                
+                data = $.extend(true, $('#formMenu').serializeFormJSON(), $('#menuItems').serializeFormJSON(), {items:$('#menuItems').serialize()}); 
+                
+                $.post('". Url::createAdminUrl("content/menu/save") ."', data,
+                function(response){
+                    
+                });
             }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#formMenu').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#formMenu').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }");
+            (function($) {
+                $.fn.serializeFormJSON = function() {
+                
+                   var o = {};
+                   var a = this.serializeArray();
+                   $.each(a, function() {
+                       if (o[this.name]) {
+                           if (!o[this.name].push) {
+                               o[this.name] = [o[this.name]];
+                           }
+                           o[this.name].push(this.value || '');
+                       } else {
+                           o[this.name] = this.value || '';
+                       }
+                   });
+                   return o;
+                };
+                })(jQuery);");
             
         $this->scripts = array_merge($this->scripts,$scripts);
         
@@ -668,6 +506,25 @@ class ControllerContentMenu extends Controller {
 		
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 	}
+
+    public function save() {
+        $this->load->model('content/menu');
+        $this->load->library('json');
+        $json = $data = array();
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $json = $data = $_POST;
+            if ($this->request->hasQuery('menu_id')) {
+                $this->modelMenu->update($this->request->get['menu_id'], $data);
+        		$this->session->set('success',$this->language->get('text_success'));
+                $this->redirect(Url::createAdminUrl("content/menu/update",array('menu_id'=>$this->request->get['menu_id'])));
+            } else {
+    			$menu_id = $this->modelMenu->add($data);
+    			$this->session->set('success',$this->language->get('text_success'));
+                $this->redirect(Url::createAdminUrl("content/menu/update",array('menu_id'=>$menu_id)));
+			}
+		}
+		$this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
+    }
 
 	/**
 	 * ControllerContentMenu::validateForm()
@@ -748,7 +605,7 @@ class ControllerContentMenu extends Controller {
         }
      }
      
-     public function getPages($parent_id=0, $marginLeft=5) {
+     public function getAll($parent_id=0, $marginLeft=5) {
         $pages = $this->modelPage->getAll($parent_id);
         $return = '';
         if ($pages) {
@@ -760,7 +617,7 @@ class ControllerContentMenu extends Controller {
                 
                 $childrens = $this->modelPage->getAll($value['post_id']);
                 if ($childrens) {
-                    $return .= $this->getPages($value['post_id'],$marginLeft + 20);
+                    $return .= $this->getAll($value['post_id'],$marginLeft + 20);
                 }
             }
         }
@@ -774,7 +631,7 @@ class ControllerContentMenu extends Controller {
             foreach ($categories as $key => $value) {
                 $return .= '<li style="padding-left:'.$marginLeft.'px">';
                 $return .= '<input type="checkbox" name="post_categories[]" value="'. $value['post_category_id'] .'" />';
-                $return .= '<b>'. $value['title'] .'</b>';
+                $return .= '<b>'. $value['name'] .'</b>';
                 $return .= '</li>';
                 
                 $childrens = $this->modelPost_category->getAllForMenu($value['post_category_id']);
@@ -811,7 +668,7 @@ class ControllerContentMenu extends Controller {
         $links = $this->modelMenu->getLinks($this->request->get['menu_id'],$parent_id);
         if ($links) {
     		foreach ($links as $key => $result) {
-    		  $index =  ($parent_id) ? $parent_id ."_". $key : $key;
+    		    $index =  ($parent_id) ? $parent_id .".". $result['menu_link_id'] : $result['menu_link_id'];
                 $output .= '<li id="li_'. $index .'">';
                 $output .= '<div class="item">';
                 $output .= '<b>'. $result['tag'] .'</b>';
@@ -820,22 +677,15 @@ class ControllerContentMenu extends Controller {
                 $output .= '<div id="linkOptions'. $index .'" class="itemOptions">';
                 
                 $output .= '<div class="row">';
-                $output .= '<label class="neco-label" for="link_'. $index .'_link">Url:</label>';
-                $output .= '<input type="url" id="link_'. $index .'_link" name="link['. $index .'][link]" value="'. $result['link'] .'" style="width: 60%;" class="menu_link" />';
+                $output .= '<label class="neco-label" for="link.'. $index .'.link">Url:</label>';
+                $output .= '<input type="url" id="link.'. $index .'.link" name="link['. $index .'][link]" value="'. $result['link'] .'" style="width: 60%;" class="menu_link" />';
                 $output .= '</div>';
                 
                 $output .= '<div class="clear"></div>';
                 
                 $output .= '<div class="row">';
-                $output .= '<label class="neco-label" for="link_'. $index .'_tag">Etiqueta:</label>';
-                $output .= '<input type="text" id="link_'. $index .'_tag" name="link['. $index .'][tag]" value="'. $result['tag'] .'" style="width: 60%;" class="menu_link" />';
-                $output .= '</div>';
-                
-                $output .= '<div class="clear"></div>';
-                
-                $output .= '<div class="row">';
-                $output .= '<label class="neco-label" for="link_'. $index .'_keyword">Slug:</label>';
-                $output .= '<input type="text" id="link_'. $index .'_keyword" name="link['. $index .'][keyword]" value="'. $result['keyword'] .'" style="width: 60%;" class="menu_link" />';
+                $output .= '<label class="neco-label" for="link.'. $index .'.tag">Etiqueta:</label>';
+                $output .= '<input type="text" id="link.'. $index .'.tag" name="link['. $index .'][tag]" value="'. $result['tag'] .'" style="width: 60%;" class="menu_tag" />';
                 $output .= '</div>';
                 
                 $output .= '<div class="clear"></div>';
@@ -876,8 +726,7 @@ class ControllerContentMenu extends Controller {
                 $result = $this->modelPage->getPage($value);
                 if (!$result) continue;
                 $data[$key]['title'] = $result['title'];
-                $data[$key]['keyword'] = $result['keyword'];
-                $data[$key]['href'] = HTTP_CATALOG . '/index.php?r=content/page&page_id=' . $result['post_id'];
+                $data[$key]['href'] = Url::createUrl('content/page',array('page_id' => $result['post_id']),'NONSSL',HTTP_CATALOG);
             }
         } 
         
@@ -897,13 +746,12 @@ class ControllerContentMenu extends Controller {
     		$this->load->library('url');
     		$this->load->library('json');
             foreach ($this->request->post['categories'] as $key => $value) {
-                $result = $this->modelCategory->getCategory($value);
+                $result = $this->modelCategory->getById($value);
                 if (!$result) continue;
                 $path = ($result['parent_id']) ? $result['parent_id'] ."_". $result['category_id'] : $result['category_id'];
                 
                 $data[$value]['title']  = $result['name'];
-                $data[$value]['keyword']= $result['keyword'];
-                $data[$value]['href']   = HTTP_CATALOG . '/index.php?r=store/category&path=' . $path;
+                $data[$value]['href']   = Url::createUrl('store/category',array('path' => $path),'NONSSL',HTTP_CATALOG);
             }
         } 
         

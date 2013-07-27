@@ -1,17 +1,29 @@
 <?php echo $header; ?>
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
-        <h1><?php echo $heading_title; ?></h1>
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
-            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $button_save_and_exit; ?></a>
-            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $button_save_and_keep; ?></a>
-            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $button_save_and_new; ?></a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
+            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
+            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_new'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
         <div class="clear"></div>
                                 
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+            <div class="row">
+                <label><?php echo $Language->get('entry_category'); ?></label>
+                <select name="parent_id" style="width:40%">
+                    <option value="0"><?php echo $Language->get('text_none'); ?></option>
+	           <?php foreach ($categories as $category) { ?>
+					<option value="<?php echo $category['post_category_id']; ?>"<?php if ($category['post_category_id']==$parent_id) { ?> selected="selected"<?php } ?>><?php echo $category['name']; ?></option>
+               <?php } ?>
+               </select>
+            </div>
+            
+            <div class="clear"></div><br />
+            
             <div id="languages" class="htabs">
                 <?php foreach ($languages as $language) { ?>
                     <a tab="#language<?php echo $language['language_id']; ?>" class="htab"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
@@ -20,28 +32,35 @@
                     <div id="language<?php echo $language['language_id']; ?>">
                     
                         <div class="row">
-                            <label><?php echo $entry_name; ?></label>
-                            <input class="category" id="category_description_<?php echo $language['language_id']; ?>_name" name="category_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['name'] : ''; ?>" required="true" style="width:40%" />
+                            <label><?php echo $Language->get('entry_name'); ?></label>
+                            <input class="category" id="description_<?php echo $language['language_id']; ?>_name" name="category_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['name'] : ''; ?>" required="true" style="width:40%" />
                         </div>
                         
                         <div class="clear"></div>
                         
                         <div class="row">
-                            <label><?php echo $entry_meta_description; ?></label>
-                            <textarea title="<?php echo $help_meta_description; ?>" name="category_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5" style="width:40%"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'meta_description'] : ''; ?></textarea>
+                            <label><?php echo $Language->get('entry_meta_description'); ?></label>
+                            <textarea title="<?php echo $Language->get('help_meta_description'); ?>" name="category_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5" style="width:40%"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'meta_description'] : ''; ?></textarea>
                         </div>
                         
                         <div class="row">
-                            <label><?php echo $entry_meta_keywords; ?></label>
-                            <textarea title="<?php echo $help_meta_keywords; ?>" name="category_description[<?php echo $language['language_id']; ?>][meta_keywords]" cols="40" rows="5" style="width:40%"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'meta_keywords'] : ''; ?></textarea>
+                            <label><?php echo $Language->get('entry_meta_keywords'); ?></label>
+                            <textarea title="<?php echo $Language->get('help_meta_keywords'); ?>" name="category_description[<?php echo $language['language_id']; ?>][meta_keywords]" cols="40" rows="5" style="width:40%"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'meta_keywords'] : ''; ?></textarea>
                         </div>
                         
                         <div class="clear"></div>
-                                    
+                                  
                         <div class="row">
-                            <label><?php echo $entry_description; ?></label>
+                            <label>SEO Url <b style="font:normal 10px verdana;color:#999;"><?php echo HTTP_CATALOG; ?></b></label>
+                            <input type="text" id="description_<?php echo $language['language_id']; ?>_keyword" name="category_description[<?php echo $language['language_id']; ?>][keyword]" value="<?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'keyword'] : ''; ?>" style="width:40%" />
+                        </div>
+            
+                        <div class="clear"></div>
+                                 
+                        <div class="row">
+                            <label><?php echo $Language->get('entry_description'); ?></label>
                             <div class="clear"></div>
-                            <textarea title="<?php echo $help_description; ?>" name="category_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'description'] : ''; ?></textarea>
+                            <textarea title="<?php echo $Language->get('help_description'); ?>" name="category_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($category_description[$language[ 'language_id']]) ? $category_description[$language[ 'language_id']][ 'description'] : ''; ?></textarea>
                         </div>
                         
                         <div class="clear"></div>
@@ -53,26 +72,7 @@
             <div class="clear"></div>
             
             <div class="row">
-                <label>Slug (<b style="font:normal 10px verdana;color:#999;"><?php echo HTTP_CATALOG; ?>/</b>)</label>
-                <input type="text" id="slug" name="keyword" value="<?php echo $keyword; ?>" style="width:40%" />
-            </div>
-            
-            <div class="clear"></div>
-            
-            <div class="row">
-                <label><?php echo $entry_category; ?></label>
-                <select name="parent_id" style="width:40%">
-                    <option value="0"><?php echo $text_none; ?></option>
-	           <?php foreach ($categories as $category) { ?>
-					<option value="<?php echo $category['post_category_id']; ?>"<?php if ($category['post_category_id']==$parent_id) { ?> selected="selected"<?php } ?>><?php echo $category['name']; ?></option>
-               <?php } ?>
-               </select>
-            </div>
-            
-            <div class="clear"></div>
-            
-            <div class="row">
-                <label><?php echo $entry_image; ?></label>
+                <label><?php echo $Language->get('entry_image'); ?></label>
                 <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
                 <img alt="Imagen de la categor&iacute;a" src="<?php echo $preview; ?>" id="preview" class="image" onclick="image_upload('image', 'preview');" width="100" height="100" />
                 <br />
@@ -80,10 +80,38 @@
                 <a onclick="image_delete('image', 'preview');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
             </div>
                    
+            <?php if ($stores) { ?>
+            <div class="clear"></div>
+            <div class="row">
+                <label><?php echo $Language->get('entry_store'); ?></label><br />
+                <input type="text" title="Filtrar listado de tiendas y sucursales" value="" name="q" id="q" placeholder="Filtrar Tiendas" />
+                <div class="clear"></div>
+                <a onclick="$('#storesWrapper input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a onclick="$('#storesWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
+                <div class="clear"></div>
+                <ul id="storesWrapper" class="scrollbox">
+                    <li class="stores">
+                        <input type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <b><?php echo $Language->get('text_default'); ?></b>
+                        <div class="clear"></div>
+                    </li>
+                <?php foreach ($stores as $store) { ?>
+                    <li class="stores">
+                        <input type="checkbox" name="stores[]" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <b><?php echo $store['name']; ?></b>
+                        <div class="clear"></div>
+                    </li>
+                <?php } ?>
+                </ul>
+            </div> 
+            <?php } else { ?>
+                <input type="hidden" name="stores[]" value="0" />
+            <?php } ?>
+            
             <div class="clear"></div><br />
             <!--
-            <div id="addPostsPanel"><b>Agregar / Eliminar Art&iacute;culos</b></div>
-            <div id="addPostsWrapper"><div id="gridPreloader"></div></div>
+            <div id="addsPanel"><b>Agregar / Eliminar Art&iacute;culos</b></div>
+            <div id="addsWrapper"><div id="gridPreloader"></div></div>
             
             <div class="clear"></div><br />
             -->
@@ -113,7 +141,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>

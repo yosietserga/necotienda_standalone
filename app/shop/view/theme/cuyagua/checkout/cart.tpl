@@ -1,8 +1,26 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent">
-    <div class="grid_16" id="content">
+    <div id="content">
     
+        <div class="grid_16">
+            <ul id="breadcrumbs" class="nt-editable">
+            <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+                <li><a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>"><?php echo $breadcrumb['text']; ?></a></li>
+            <?php } ?>
+            </ul>
+        </div>
+        
+        <div class="clear"></div><br /><br />
+        
+        <div class="grid_16">
+            <div id="featuredContent">
+            <?php if($featuredWidgets) { ?><ul class="widgets"><?php foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
+            </div>
+        </div>
+        <div class="clear"></div>
+        
+        <div class="grid_16">
         <ul class="neco-wizard-controls">
             <li>Carrito
                 <span>Agrega y elimina productos del carrito de compra</span>
@@ -17,6 +35,9 @@
             </li>
             <li>Confirmaci&oacute;n y Pago
                 <span>Confirmar los datos del pedido y selecciona el m&eacute;todo de pago</span>
+            </li>
+            <li>Procesar Pedido
+                <span>Procesar el pedido y registrarlo en tu cuenta</span>
             </li>
         </ul>
         
@@ -77,8 +98,7 @@
                     
                     <a title="<?php echo $button_shopping; ?>" onclick="location = '<?php echo str_replace('&amp;', '&', $continue); ?>'" class="button"><?php echo $button_shopping; ?></a>
             </div>
-        
-            <?php echo isset($fkey)? $fkey : ''; ?>
+
             <?php if (!$isLogged) { ?>
             <div>
                 <div class="grid_16">
@@ -103,7 +123,7 @@
                                     <option value="E" <?php if (strtolower($rif_type) == 'e') echo 'selected="selected"'; ?>>E</option>
                                     <option value="G" <?php if (strtolower($rif_type) == 'g') echo 'selected="selected"'; ?>>G</option>
                                 </select>
-                                <input type="text" id="rif" name="rif" value="<?php echo isset($rif) ? $rif : ''; ?>" required="required" maxlength="8" title="Por favor ingresa tu RIF personal o el de la empresa. Si es persona natural y a&uacute;n no posee uno, ingresa tu n&uacute;mero de c&eacute;dula con un n&uacute;mero cero al final" quicktip="Ingresa tu número de cédula si eres una persona natural y no posees RIF. Ingresa solo números" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
+                                <input type="text" id="rif" name="rif" value="<?php echo isset($rif) ? $rif : ''; ?>" required="required" maxlength="10" title="Por favor ingresa tu RIF personal o el de la empresa. Si es persona natural y a&uacute;n no posee uno, ingresa tu n&uacute;mero de c&eacute;dula con un n&uacute;mero cero al final" quicktip="Ingresa tu número de cédula si eres una persona natural y no posees RIF. Ingresa solo números" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
                             </div>
                           
                             <div class="property">
@@ -153,16 +173,17 @@
                 </div>
             </div>
             <?php } ?>
+            
             <!-- begin shipping section -->
             <div>
                 <div class="grid_16">
-                    <?php if (!$isLogged) { ?>
+                    <?php if (!$isLogged || ($isLogged && !$shipping_country_id)) { ?>
                     <fieldset>
                         <div class="legend">Direcci&oacute;n de Entrega</div>
                         
                         <div class="property">
                             <label for="shipping_country_id"><?php echo $entry_country; ?></label>
-                            <select name="shipping_country_id" title="Selecciona el pa&iaacute;s de tu residencia" onchange="$('select[name=\'shipping_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $zone_id; ?>');">
+                            <select name="shipping_country_id" id="shipping_country_id" title="Selecciona el pa&iaacute;s de tu residencia" onchange="$('select[name=\'shipping_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $zone_id; ?>');">
                                 <option value="false">-- Por Favor Seleccione --</option>
                                 <?php foreach ($countries as $country) { ?>
                                     <?php if ($country['country_id'] == $shipping_country_id) { ?>
@@ -176,7 +197,7 @@
                       
                         <div class="property">
                             <label for="shipping_zone_id"><?php echo $entry_zone; ?></label>
-                            <select name="shipping_zone_id" title="Selecciona el pa&iaacute;s de tu residencia">
+                            <select name="shipping_zone_id" id="shipping_zone_id" title="Selecciona el pa&iaacute;s de tu residencia">
                                 <option value="false">-- Seleccione un pa&iacute;s --</option>
                             </select>
                         </div>
@@ -196,7 +217,24 @@
                             <input type="text" id="shipping_address_1" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" required="required" title="Ingrese su nombre y apellido si es persona natural sino ingrese el nombre de su organizaci&oacute;n" />
                         </div>
                   
+                        <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
+                        <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
+                        <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
+                        <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
+                        <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
                     </fieldset>
+                    <?php } else { ?>
+                        <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
+                        <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
+                        <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
+                        <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
+                        <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
+                        
+                        <input type="hidden" name="shipping_country_id" id="shipping_country_id" value="<?php echo $shipping_country_id; ?>" />
+                        <input type="hidden" name="shipping_zone_id" id="shipping_zone_id" value="<?php echo $shipping_zone_id; ?>" />
+                        <input type="hidden" name="shipping_city" id="shipping_city" value="<?php echo $shipping_city; ?>" />
+                        <input type="hidden" name="shipping_postcode" id="shipping_postcode" value="<?php echo $shipping_postcode; ?>" />
+                        <input type="hidden" name="shipping_address_1" id="shipping_address_1" value="<?php echo $shipping_address_1; ?>" />
                     <?php } ?>
                     
                     <fieldset>
@@ -282,27 +320,25 @@
                         </tbody>
                     </table>
                     
-                    <fieldset>
-                        <div class="legend">Formas de Pago</div>
-                        <table>
-                    <?php foreach ($payment_methods as $payment_method) { ?>
-                        <tr>
-                            <td><?php if ($payment_method['id'] == $payment || !$payment) { ?>
-                            <?php $payment = $payment_method['id']; ?>
-                            <input type="radio" name="payment_method" value="<?php echo $payment_method['id']; ?>" id="<?php echo $payment_method['id']; ?>" checked="checked" showquick="off" style="float: left;" />
-                            <?php } else { ?>
-                            <input type="radio" name="payment_method" value="<?php echo $payment_method['id']; ?>" id="<?php echo $payment_method['id']; ?>" showquick="off" style="float: left;" />
-                            <?php } ?></td>
-                            <td><h2 style="float: left;"><?php echo $payment_method['title']; ?></h2></td>
-                        </tr>
-                    <?php } ?>
-                        </table>
-                    </fieldset>
+                    <div class="clear"></div>
+                    
+                    <textarea name="comment" style="width: 90%;" placeholder="Ingresa tus comentarios sobre el pedido aqu&iacute;"></textarea>
+                    
                 </div>
             </div>
             <!-- end payment section -->
+            <div>
+                <div style="width:300px;margin:20% auto;text-align: center;"><img src="<?php echo HTTP_IMAGE; ?>load.gif" alt="Cargando..." /></div>
+            </div>
         </div>
         </form>
+        
+    </div>
+    
+    <div class="clear"></div>
+    <div class="grid_16">
+            <?php if($widgets) { ?><ul class="widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
+    </div>
     </div>
 </section>
 <?php echo $footer; ?> 

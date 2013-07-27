@@ -2,7 +2,7 @@
 /**
  * ControllerSaleCustomerGroup
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -39,7 +39,7 @@ class ControllerSaleCustomerGroup extends Controller {
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 		    $this->request->post['params'] = serialize($this->request->post['Params']);
-			$customer_group_id = $this->modelCustomergroup->addCustomerGroup($this->request->post);
+			$customer_group_id = $this->modelCustomergroup->add($this->request->post);
             
 			$this->session->set('success',$this->language->get('text_success'));
 
@@ -70,7 +70,7 @@ class ControllerSaleCustomerGroup extends Controller {
         
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 		    $this->request->post['params'] = serialize($this->request->post['Params']);
-			$this->modelCustomergroup->editCustomerGroup($this->request->get['customer_group_id'], $this->request->post);
+			$this->modelCustomergroup->update($this->request->get['customer_group_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -87,7 +87,7 @@ class ControllerSaleCustomerGroup extends Controller {
 	}
 
 	/**
-	 * ControllerSaleCustomerGroup::getList()
+	 * ControllerSaleCustomerGroup::getById()
 	 * 
 	 * @see Load
 	 * @see Language
@@ -143,7 +143,7 @@ class ControllerSaleCustomerGroup extends Controller {
             }
             
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                     if (e != '". $this->config->get('config_customer_group_id') ."') {
                         $('#tr_' + e).remove();
                     	$.getJSON('". Url::createAdminUrl("sale/customergroup/delete") ."',{
@@ -177,7 +177,7 @@ class ControllerSaleCustomerGroup extends Controller {
             } 
             
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("sale/customergroup/delete") ."',$('#form').serialize(),function(){
@@ -288,9 +288,9 @@ class ControllerSaleCustomerGroup extends Controller {
 			'limit' => $limit
 		);
 		
-		$customer_group_total = $this->modelCustomergroup->getTotalCustomerGroups();
+		$customer_group_total = $this->modelCustomergroup->getAllTotal();
 		
-		$results = $this->modelCustomergroup->getCustomerGroups($data);
+		$results = $this->modelCustomergroup->getAll($data);
 
 		foreach ($results as $result) {
 			
@@ -315,7 +315,7 @@ class ControllerSaleCustomerGroup extends Controller {
                 )
             );	
 		      
-            $customers = $this->modelCustomergroup->getTotalCustomersByGroup($result['customer_group_id']);
+            $customers = $this->modelCustomergroup->getAllTotalByGroup($result['customer_group_id']);
 			$this->data['customer_groups'][] = array(
 				'customer_group_id' => $result['customer_group_id'],
 				'params'            => unserialize($result['params']),
@@ -427,7 +427,7 @@ class ControllerSaleCustomerGroup extends Controller {
     	$this->data['cancel'] = Url::createAdminUrl('sale/customergroup') . $url;
 
 		if (isset($this->request->get['customer_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$customer_group_info = $this->modelCustomergroup->getCustomerGroup($this->request->get['customer_group_id']);
+			$customer_group_info = $this->modelCustomergroup->getById($this->request->get['customer_group_id']);
 		}
         
         $this->setvar('name',$customer_group_info,'');
@@ -543,7 +543,7 @@ class ControllerSaleCustomerGroup extends Controller {
 	  			$this->error['warning'] = $this->language->get('error_default');	
 			}  
 			
-			$customer_total = $this->modelCustomer->getTotalCustomersByCustomerGroupId($customer_group_id);
+			$customer_total = $this->modelCustomer->getAllTotalByCustomerGroupId($customer_group_id);
 
 			if ($customer_total) {
 				$this->error['warning'] = sprintf($this->language->get('error_customer'), $customer_total);
@@ -564,7 +564,7 @@ class ControllerSaleCustomerGroup extends Controller {
      public function activate() {
         if (!isset($_GET['id'])) return false;
         $this->load->auto('sale/customergroup');
-        $status = $this->modelCustomergroup->getCustomerGroup($_GET['id']);
+        $status = $this->modelCustomergroup->getById($_GET['id']);
         if ($status) {
             if ($status['status'] == 0) {
                 $this->modelCustomergroup->activate($_GET['id']);

@@ -1,25 +1,12 @@
-<select name="" onchange="">
-    <option value="">Procesamiento en lote, selecciona una opci&oacute;n</option>
-    <option value="">Editar los productos seleccionados</option>
-    <option value="">Agregar a una categor&iacute;a</option>
-    <option value="">Comparar los productos seleccionados</option>
-    <option value="">Duplicar los productos seleccionados</option>
-    <option value="">Activar los productos seleccionados</option>
-    <option value="">Desactivar los productos seleccionados</option>
-    <option value="">Eliminar los productos seleccionados</option>
-</select>
-
-<div class="clear"></div><br />
-
 <div class="pagination"><?php echo $pagination; ?></div>
 <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
     <table id="list">
         <thead>
             <tr>
-                <th><?php echo $column_name; ?></th>
-                <th><?php echo $column_status; ?></th>
-                <th><?php echo $column_sort_order; ?></th>
-                <th><?php echo $column_action; ?></th>
+                <th><?php echo $Language->get('column_name'); ?></th>
+                <th><?php echo $Language->get('column_status'); ?></th>
+                <th><?php echo $Language->get('column_sort_order'); ?></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -52,7 +39,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

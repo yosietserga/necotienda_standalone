@@ -172,7 +172,7 @@ class ControllerMarketingContact extends Controller {
                 return false;
             } 
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("marketing/contact/delete") ."',$('#form').serialize(),function(){
@@ -185,7 +185,7 @@ class ControllerMarketingContact extends Controller {
                 return false;
             } 
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
                 	$.getJSON('". Url::createAdminUrl("marketing/contact/delete") ."',{
                         id:e
@@ -255,43 +255,45 @@ class ControllerMarketingContact extends Controller {
 			'filter_date_end'          => $filter_date_end,
 			'sort'                     => $sort,
 			'order'                    => $order,
-			'start'                    => ($page - 1) * $this->config->get('config_admin_limit'),
+			'start'                    => ($page - 1) * $limit,
 			'limit'                    => $limit
 		);
 		
 		$contact_total = $this->modelContact->getTotalContacts($data);
-	
-		$results = $this->modelContact->getContacts($data);
- 
-    	foreach ($results as $result) {
-			$action = array();
-		
-		    $action['edit'] = array(
-                'action'  => 'edit',
-                'text'  => $this->language->get('text_edit'),
-                'href'  =>Url::createAdminUrl('marketing/contact/update',array('menu'=>'mercadeo')) . '&contact_id=' . $result['contact_id'] . $url,
-                'img'   => 'edit.png'
-   			);
+        
+        if ($contact_total) {
+    		$results = $this->modelContact->getContacts($data);
             
-		    $action['delete'] = array(
-                'action'  => 'delete',
-                'text'  => $this->language->get('text_delete'),
-                'href'  =>'',
-                'img'   => 'delete.png'
-   			);
-            
-			$this->data['contacts'][] = array(
-				'contact_id'    => $result['contact_id'],
-				'customer_id'    => $result['customer_id'],
-				'name'           => $result['name'],
-				'firstname'      => $result['firstname'],
-				'lastname'       => $result['lastname'],
-				'telephone'      => ($result['telephone']) ? $result['telephone'] : 'N/A',
-				'email'          => is_numeric($result['mail']) ? '<a href="http://www.facebook.com/'. $result['mail'] .'" tagret="_blank">Perfil Facebook</a>' : '<a href="mailto:'. $result['mail'] .'">'. $result['mail'] .'</a>',
-				'date_added'     => date('d-m-Y h:i:s', strtotime($result['created'])),
-				'selected'       => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']),
-				'action'         => $action
-			);
+        	foreach ($results as $result) {
+    			$action = array();
+    		
+    		    $action['edit'] = array(
+                    'action'  => 'edit',
+                    'text'  => $this->language->get('text_edit'),
+                    'href'  => Url::createAdminUrl('marketing/contact/update',array('menu'=>'mercadeo')) . '&contact_id=' . $result['contact_id'] . $url,
+                    'img'   => 'edit.png'
+       			);
+                
+    		    $action['delete'] = array(
+                    'action'  => 'delete',
+                    'text'  => $this->language->get('text_delete'),
+                    'href'  =>'',
+                    'img'   => 'delete.png'
+       			);
+                
+    			$this->data['contacts'][] = array(
+    				'contact_id'    => $result['contact_id'],
+    				'customer_id'    => $result['customer_id'],
+    				'name'           => $result['name'],
+    				'firstname'      => $result['firstname'],
+    				'lastname'       => $result['lastname'],
+    				'telephone'      => ($result['telephone']) ? $result['telephone'] : 'N/A',
+    				'email'          => is_numeric($result['mail']) ? '<a href="http://www.facebook.com/'. $result['mail'] .'" tagret="_blank">Perfil Facebook</a>' : '<a href="mailto:'. $result['mail'] .'">'. $result['mail'] .'</a>',
+    				'date_added'     => date('d-m-Y h:i:s', strtotime($result['created'])),
+    				'selected'       => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']),
+    				'action'         => $action
+    			);
+            }
             /* //TODO: download vcard of each contact
             $this->data['content_vcard'] = 
             "BEGIN:VCARD
@@ -324,19 +326,7 @@ class ControllerMarketingContact extends Controller {
             END:VCARD";
             */
         }	
-					
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_yes'] = $this->language->get('text_yes');
-		$this->data['text_no'] = $this->language->get('text_no');		
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-
-		$this->data['column_name'] = $this->language->get('column_name');
-		$this->data['column_email'] = $this->language->get('column_email');
-		$this->data['column_total'] = $this->language->get('column_total');
-		$this->data['column_telephone'] = $this->language->get('column_telephone');
-		$this->data['column_date_added'] = $this->language->get('column_date_added');
-		$this->data['column_action'] = $this->language->get('column_action');		
+						
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) { $url .= '&filter_name=' . $this->request->get['filter_name']; } 
@@ -366,7 +356,7 @@ class ControllerMarketingContact extends Controller {
 		if (isset($this->request->get['filter_date_end'])) { $url .= '&filter_date_end=' . $this->request->get['filter_date_end']; }
 		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
 		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
-			
+		
 		$pagination = new Pagination();
 		$pagination->ajax = true;
 		$pagination->ajaxTarget = "gridWrapper";
@@ -395,24 +385,12 @@ class ControllerMarketingContact extends Controller {
 		 
 		$this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
             
-		$this->data['entry_customer_id'] = $this->language->get('entry_customer_id');
-    	$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_email'] = $this->language->get('entry_email');
-            
-		$this->data['button_save']        = $this->language->get('button_save');
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-            
 		$this->document->breadcrumbs = array();
-	
 		$this->document->breadcrumbs[] = array(
 				'href'      => Url::createAdminUrl('common/home'),
 				'text'      => $this->language->get('text_home'),
 				'separator' => false
 		);
-	
 		$this->document->breadcrumbs[] = array(
 				'href'      => Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo')),
 				'text'      => $this->language->get('heading_title'),
@@ -428,14 +406,14 @@ class ControllerMarketingContact extends Controller {
         $contact_info = array();
 		if ($this->request->hasQuery('contact_id')) {
             $contact_info = $this->modelContact->getContact($this->request->getQuery('contact_id'));
-            $this->data['contact_lists'] = $this->modelContact->getListsByContactId($this->request->getQuery('contact_id'));
+            $this->data['contact_lists'] = $this->modelContact->getAllByContactId($this->request->getQuery('contact_id'));
 		}
         
         $this->setvar('name',$contact_info,"");
         $this->setvar('email',$contact_info,"");
         $this->setvar('customer_id',$contact_info,"");
             
-        $this->data['lists'] = $this->modelList->getLists();
+        $this->data['lists'] = $this->modelList->getAll();
         
         $scripts[] = array('id'=>'form','method'=>'ready','script'=>
             "$('#form').ntForm({
@@ -504,11 +482,6 @@ class ControllerMarketingContact extends Controller {
                 }, 600);
                 $(this).data('timeoutId', timeoutId); 
             });");
-            if ($contact_info) {
-                $scripts[] = array('id'=>'contactScritps2','method'=>'ready','script'=>
-                "$('.ui-combobox-input').val('". $this->data['email'] ."');");
-            }
-        
         $scripts[] = array('id'=>'functions','method'=>'function','script'=>
             "function saveAndExit() { 
                 window.onbeforeunload = null;
@@ -526,8 +499,6 @@ class ControllerMarketingContact extends Controller {
             }");
             
         $this->scripts = array_merge($this->scripts,$scripts);
-        
-        $this->data['Url'] = new Url;
         
         $this->template = 'marketing/contact_form.tpl';
         $this->children = array(
@@ -607,7 +578,7 @@ class ControllerMarketingContact extends Controller {
                 var height = $(window).height() * 0.8;
                 var width = $(window).width() * 0.8;
             	$('#dialog').remove();
-            	$('#form').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+            	$('#form').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
             		title: '".$this->data['text_image_manager']."',
@@ -641,7 +612,7 @@ class ControllerMarketingContact extends Controller {
             case 1:
             default:
                 $this->load->auto("marketing/list");
-                $this->data['lists'] = $this->modelList->getLists(0);
+                $this->data['lists'] = $this->modelList->getAll(0);
         		$this->template = 'marketing/contact_import_1.tpl';
         		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
                 break;

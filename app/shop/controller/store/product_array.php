@@ -6,12 +6,23 @@
  * @package NecoTienda
  */
 
-		$this->load->auto('catalog/review');
+		$this->load->auto('store/review');
       	$this->data['heading_title'] = $this->language->get('heading_title');
 		$this->data['button_see_product'] = $this->language->get('button_see_product');
 		$this->data['button_add_to_cart'] = $this->language->get('button_add_to_cart');
 		$this->data['products'] = array();
 			
+        list($dia,$mes,$ano) = explode('-',date('d-m-Y'));
+        $l = ((int)$this->config->get('config_new_days') > 30) ? 30 : $this->config->get('config_new_days');
+        if ( ($dia = $dia - $l) <= 0) {
+            $dia = $dia + 30;
+            if ($dia <= 0) $dia = 1;
+            $mes = $mes - 1;
+            if ($mes <= 0) {
+                $mes = $mes + 12;
+                $ano = $ano - 1;
+            }
+        }
 		foreach ($results as $result) {
 		    $image = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
 
@@ -37,10 +48,23 @@
 			$options = $this->modelProduct->getProductOptions($result['product_id']);
 			
 			if ($options) {
-				$add = $this->modelSeo_url->rewrite(Url::createUrl('store/product',array('product_id'=>$result['product_id'])));
+				$add = Url::createUrl('store/product',array('product_id'=>$result['product_id']));
 			} else {
 				$add = Url::createUrl('checkout/cart',array('product_id'=>$result['product_id']));
 			}
+            
+            list($pdia,$pmes,$pano) = explode('-',date('d-m-Y',strtotime($result['created'])));
+            
+            if ($special) {
+                $sticker = '<b class="oferta"></b>';
+            } elseif ($discount) {
+                $sticker = '<b class="descuento"></b>';
+            } elseif (strtotime($dia."-".$mes."-".$ano) <= strtotime($pdia."-".$pmes."-".$pano)) {
+                $sticker = '<b class="nuevo"></b>';
+            } else {
+                $sticker = "";
+            }
+            
 			$this->load->auto('image');
 			$this->data['products'][] = array(
 				'product_id'    => $result['product_id'],
@@ -50,12 +74,15 @@
 				'rating'  		=> $rating,
 				'stars'   		=> sprintf($this->language->get('text_stars'), $rating),
 				'price'   		=> $price,
+				'sticker'   	=> $sticker,
 				'options'   	=> $options,
 				'special' 		=> $special,
 				'image'   		=> NTImage::resizeAndSave($image, 38, 38),
+				'lazyImage'   		=> NTImage::resizeAndSave('no_image.jpg', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
 				'thumb'   		=> NTImage::resizeAndSave($image, $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
-				'href'    		=> $this->modelSeo_url->rewrite(Url::createUrl('store/product',array('product_id'=>$result['product_id']))),
-				'add'    		=> $add
+				'href'    		=> Url::createUrl('store/product',array('product_id'=>$result['product_id'])),
+				'add'    		=> $add,
+				'created'    	=> $result['created']
 			);
 		}
 

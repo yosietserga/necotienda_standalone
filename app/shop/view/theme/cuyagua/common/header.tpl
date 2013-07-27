@@ -27,16 +27,18 @@
     <link href="<?php echo $icon; ?>" rel="icon" />
     <?php } ?>
     
+    <?php if ($css) { ?><style><?php echo $css; ?></style><?php } ?>
+    
     <?php if (count($styles) > 0) { ?>
         <?php foreach ($styles as $style) { ?>
+        <?php if (empty($style['href'])) continue; ?>
     <link rel="stylesheet" type="text/css" media="<?php echo $style['media']; ?>" href="<?php echo $style['href']; ?>" />
         <?php } ?>
     <?php } ?>
     
     <script src="<?php echo HTTP_JS; ?>modernizr.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script>window.$ || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')</script>
-
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+    <script>window.$ || document.write('<script src="<?php echo HTTP_JS; ?>vendor/jquery.min.js"><\/script>')</script>
 </head>
 <body id="mainbody">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
@@ -47,11 +49,11 @@
     
         <div class="grid_8">
             <ul id="links" class="nt-editable">
-                <li><a href="<?php $Url::createUrl('common/home'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_home; ?></a></li>
-                <li><a href="<?php $Url::createUrl('store/special'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_special; ?></a></li>
-                <li><a href="<?php $Url::createUrl('checkout/cart'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_cart; ?></a></li>
-                <li><a href="<?php $Url::createUrl('content/sitemap'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_sitemap; ?></a></li>
-                <li><a href="<?php $Url::createUrl('content/contact'); ?>" title="<?php echo $text_home; ?>"><?php echo $text_contact; ?></a></li>
+                <li><a href="<?php echo HTTP_HOME; ?>" title="<?php echo $Language->get('text_home'); ?>"><?php echo $Language->get('text_home'); ?></a></li>
+                <li><a href="<?php echo $Url::createUrl('store/special'); ?>" title="<?php echo $Language->get('text_special'); ?>"><?php echo $Language->get('text_special'); ?></a></li>
+                <li><a href="<?php echo $Url::createUrl('checkout/cart'); ?>" title="<?php echo $Language->get('text_cart'); ?>"><?php echo $Language->get('text_cart'); ?></a></li>
+                <li><a href="<?php echo $Url::createUrl('page/sitemap'); ?>" title="<?php echo $Language->get('text_sitemap'); ?>"><?php echo $Language->get('text_sitemap'); ?></a></li>
+                <li><a href="<?php echo $Url::createUrl('page/contact'); ?>" title="<?php echo $Language->get('text_contact'); ?>"><?php echo $Language->get('text_contact'); ?></a></li>
             </ul>
         </div>
         
@@ -119,7 +121,7 @@
         <div class="grid_2">
             <div id="loginPanel" class="nt-dd1 nt-editable">
                 <p>&nbsp;</p>
-                <ul>
+                <ul class="smallSocialLogin">
                 <?php if ($isLogged) { ?>
                     <li><h2><?php echo $greetings; ?></h2></li>
                     <li><a href="<?php echo $Url::createUrl("account/account"); ?>" title=""><?php echo $text_account;?></a></li>
@@ -127,16 +129,34 @@
                     <li><a href="<?php echo $Url::createUrl("account/logout"); ?>" title=""><?php echo $text_logout;?></a></li>
                 <?php } else { ?>
                     <li><input type="text" id="loginUsername" name="username" value="" placeholder="Nombre de Usuario" /></li>
-                    <li><input type="password" id="loginPassword" name="password" value="" placeholder="password" /></li>
-                    <li><a class="button" onclick="$.post('<?php echo $Url::createUrl("account/login/header"); ?>',{ email:$('#loginUsername').val(), password:$('#loginPassword').val() }, function(response) { var data = $.parseJSON(response); if (data.success==1) { window.location = 'data.redirect'; } else { window.location = '<?php echo $Url::createUrl("account/login"); ?>&error=true' } });" title="<?php echo $text_login;?>"><?php echo $text_login;?></a></li>
+                    <li>
+                        <input type="hidden" id="tokenLogin" name="token" value="<?php echo $token; ?>" />
+                        <input type="password" id="loginPassword" name="password" value="" placeholder="password" />
+                    </li>
+                    <li>
+                        <a class="button" onclick="$(this).hide();$('#loginLoading').show();$.post('<?php echo $Url::createUrl("account/login/header"); ?>',{ email:$('#loginUsername').val(), password:$('#loginPassword').crypt({method:'md5'}), token:$('#tokenLogin').val() }, function(response) { var data = $.parseJSON(response); if (data.error==1) { window.location.href = '<?php echo $Url::createUrl("account/login"); ?>&error=true' } else if (data.success==1) { $('#loginLoading').hide();$(this).show();window.location.reload(); } });" title="<?php echo $text_login;?>"><?php echo $text_login;?></a>
+                        <a class="button" style="display:none" id="loginLoading" title="<?php echo $text_loading;?>"><?php echo $text_loading;?></a>
+                    </li>
                     <li><a href="<?php echo $Url::createUrl("account/forgotten"); ?>" title="<?php echo $text_forgotten;?>"><?php echo $text_forgotten;?></a></li>
+                    <?php if ($facebook_app_id) { ?><li><a href="<?php echo $Url::createUrl("api/facebook"); ?>" class="smallSocialLogin" title="Iniciar Sesi&oacute;n con Facebook" style="background-image: url(<?php echo HTTP_IMAGE; ?>data/small_social_login.png);background-position: left top;"></a></li><?php } ?>
+                    <?php if ($twitter_oauth_token_secret) { ?><li><a href="<?php echo $Url::createUrl("api/twitter"); ?>" class="smallSocialLogin" title="Iniciar Sesi&oacute;n con Twitter" style="background-image: url(<?php echo HTTP_IMAGE; ?>data/small_social_login.png);background-position: left center;"></a></li><?php } ?>
+                    <?php if ($google_client_id) { ?><li><a id="gSigninButton2">
+                              <span class="g-signin"
+                                data-scope="https://www.googleapis.com/auth/plus.login"
+                                data-clientid="<?php echo $google_client_id; ?>"
+                                data-redirecturi="postmessage"
+                                data-accesstype="offline"
+                                data-cookiepolicy="single_host_origin"
+                                data-width="wide"
+                                data-callback="signInCallback">
+                              </span>
+                            </a>
+                    </li><?php } ?>
                 <?php } ?>
                 </ul>
             </div>
         </div>
-        
     </div>
-    
 </section>
 
 <div class="container_16">
@@ -144,26 +164,37 @@
         <div class="grid_5">
             <div id="logo" class="nt-editable">
                 <?php if ($logo) { ?>
-                    <a title="<?php echo $store; ?>" href="<?php echo str_replace('&', '&amp;', $home); ?>"><img src="<?php echo $logo; ?>" title="<?php echo $store; ?>" alt="<?php echo $store; ?>" /></a>
+                    <a title="<?php echo $store; ?>" href="<?php echo $Url::createUrl("common/home"); ?>"><img src="<?php echo $logo; ?>" title="<?php echo $store; ?>" alt="<?php echo $store; ?>" /></a>
                 <?php } else { ?>
-                    <a title="<?php echo $store; ?>" href="<?php echo str_replace('&', '&amp;', $home); ?>"><?php echo $text_store; ?></a>
+                    <a title="<?php echo $store; ?>" href="<?php echo $Url::createUrl("common/home"); ?>"><?php echo $text_store; ?></a>
                 <?php } ?>
             </div>
         </div>
         
         <div class="grid_10" style="text-align:right;">
         
+            <?php if ($isLogged) { ?>
+            <b><?php echo $greetings; ?></b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="<?php echo $Url::createUrl("account/account"); ?>" title="<?php echo $Language->get("text_my_account"); ?>"><?php echo $Language->get("text_my_account"); ?></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="<?php echo $Url::createUrl("account/logout"); ?>" title="<?php echo $Language->get("text_logout"); ?>"><?php echo $Language->get("text_logout"); ?></a>
+            <?php } else { ?>
+            <a href="<?php echo $Url::createUrl("account/register"); ?>" title="<?php echo $Language->get("text_register"); ?>"><?php echo $Language->get("text_register"); ?></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="<?php echo $Url::createUrl("account/login"); ?>" title="<?php echo $Language->get("text_login"); ?>"><?php echo $Language->get("text_login"); ?></a>
+            <?php } ?>
+            
+            <div class="clear"></div>
+            
             <div id="accountPanel" class="nt-dd1 nt-editable">
                 <p><?php echo $text_my_account; ?>&nbsp;&nbsp;<b>&nbsp;</b></p>
                 <ul>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_my_actitivties;?>"><?php echo $text_my_actitivties;?></a></li>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_my_lists;?>"><?php echo $text_my_lists;?></a></li>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_my_orders;?>"><?php echo $text_my_orders;?></a></li>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_payments;?>"><?php echo $text_payments;?></a></li>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_credits;?>"><?php echo $text_credits;?></a></li>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_my_reviews;?>"><?php echo $text_my_reviews;?></a></li>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_my_addresses;?>"><?php echo $text_my_addresses;?></a></li>
-                    <li><a href="<?php echo $Url::createUrl(""); ?>" title="<?php echo $text_compare;?>"><?php echo $text_compare;?></a></li>
+                    <li><a href="<?php echo $Url::createUrl("account/activities"); ?>" title="<?php echo $text_my_actitivties;?>"><?php echo $text_my_actitivties;?></a></li>
+                    <li><a href="<?php echo $Url::createUrl("account/lists"); ?>" title="<?php echo $text_my_lists;?>"><?php echo $text_my_lists;?></a></li>
+                    <li><a href="<?php echo $Url::createUrl("account/order"); ?>" title="<?php echo $text_my_orders;?>"><?php echo $text_my_orders;?></a></li>
+                    <li><a href="<?php echo $Url::createUrl("account/payment"); ?>" title="<?php echo $text_payments;?>"><?php echo $text_payments;?></a></li>
+                    <li><a href="<?php echo $Url::createUrl("account/balance"); ?>" title="<?php echo $text_credits;?>"><?php echo $text_credits;?></a></li>
+                    <li><a href="<?php echo $Url::createUrl("account/review"); ?>" title="<?php echo $text_my_reviews;?>"><?php echo $text_my_reviews;?></a></li>
+                    <li><a href="<?php echo $Url::createUrl("account/address"); ?>" title="<?php echo $text_my_addresses;?>"><?php echo $text_my_addresses;?></a></li>
+                    <li><a href="#" title="<?php echo $text_compare;?>"><?php echo $text_compare;?></a></li>
                 </ul>
             </div>
         
@@ -194,6 +225,5 @@
             </div>
         
         </div>
-
     </header>
 </div>

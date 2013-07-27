@@ -9,27 +9,19 @@ final class Action {
 	public function __construct($route, $args = array()) {
 	   $this->route = $route;
 		$path = '';
-		
 		$parts = explode('/', str_replace('../', '', $route));
-		
 		foreach ($parts as $part) { 
 			$path .= $part;
-			
 			if (is_dir(DIR_APPLICATION . 'controller/' . $path)) {
 				$path .= '/';
-				
 				array_shift($parts);
-				
 				continue;
 			}
 			
 			if (is_file(DIR_APPLICATION . 'controller/' . str_replace('../', '', $path) . '.php')) {
 				$this->file = DIR_APPLICATION . 'controller/' . str_replace('../', '', $path) . '.php';
-				
 				$this->class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $path);
-
 				array_shift($parts);
-				
 				break;
 			}
 			

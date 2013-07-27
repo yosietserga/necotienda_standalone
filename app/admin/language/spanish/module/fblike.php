@@ -9,6 +9,7 @@ $_['text_left']        = 'Columna Izquierda';
 $_['text_right']       = 'Columna Derecha';
 $_['text_true']        = 'Si';
 $_['text_false']       = 'No';
+$_['text_fblike']      = 'Facebook Like Box';
 
 // Entry
 $_['entry_pageid']             = 'Facebook ID:';
@@ -20,6 +21,10 @@ $_['entry_header']             = 'Header:';
 $_['entry_position']   = 'Ubicaci&oacute;n:';
 $_['entry_status']     = 'Estado:';
 $_['entry_sort_order'] = 'Posici&oacute;n:';
+$_['entry_load']       = 'Auto Cargar:';
+$_['entry_title']      = 'T&iacute;tulo:';
+$_['entry_landing_page'] = 'Mostrar en las siguientes p&aacute;ginas:';
+$_['entry_class']      = 'Clase (CSS):';
 
 // Help
 $_['help_pageid']             = 'Ingrese el ID de su p&aacute;gina en Facebook';

@@ -110,14 +110,14 @@
             
             <div class="property">
                 <div class="availability">
-                    <p><b><?php echo $text_availability; ?></b>&nbsp;<?php echo $stock; ?></p>
+                    <p><b><?php echo $Language->get('text_availability'); ?></b>&nbsp;<?php echo $stock; ?></p>
                 </div>
             </div>
             
             <?php if ($manufacturer) { ?>
             <div class="property">
                 <div class="manufacturer">
-                    <p><b><?php echo $text_manufacturer; ?></b></p>
+                    <p><b><?php echo $Language->get('text_manufacturer'); ?></b></p>
                     <p><a title="<?php echo $manufacturer; ?>" href="<?php echo str_replace('&', '&amp;', $manufacturers); ?>"><?php echo $manufacturer; ?></a></p>
                 </div>
             </div>
@@ -127,11 +127,11 @@
             <div class="property">
                 <div class="average">
                     <p>
-                        <b><?php echo $text_average; ?></b>
+                        <b><?php echo $Language->get('text_average'); ?></b>
                         <?php if ($average) { ?>
-                        <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $average . '.png'; ?>" alt="<?php echo $text_stars; ?>" />
+                        <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $average . '.png'; ?>" alt="<?php echo $Language->get('text_stars'); ?>" />
                         <?php } else { ?>
-                        <?php echo $text_no_rating; ?>
+                        <?php echo $Language->get('text_no_rating'); ?>
                         <?php } ?>
                     </p>
                 </div>
@@ -141,7 +141,7 @@
             <?php if ($tags) { ?>
             <div class="property">
                 <div class="tags">
-                    <p><b><?php echo $text_tags; ?></b></p>
+                    <p><b><?php echo $Language->get('text_tags'); ?></b></p>
                     <ul>
                     <?php foreach ($tags as $tag) { ?>
                     <li><a title="<?php echo $tag['tag']; ?>" href="<?php echo str_replace('&', '&amp;', $tag['href']); ?>"><?php echo $tag['tag']; ?></a></li> 
@@ -155,12 +155,12 @@
             
                 <div class="property">
                     <div class="quantity">
-                        <b><?php echo $text_qty; ?></b>
+                        <b><?php echo $Language->get('text_qty'); ?></b>
                         <input type="text" id="quantity" name="quantity" size="3" value="<?php echo $minimum; ?>" />
-                        <?php if ($minimum> 1) { ?><br /><small><?php echo $text_minimum; ?></small><?php } ?>
+                        <?php if ($minimum> 1) { ?><br /><small><?php echo $Language->get('text_minimum'); ?></small><?php } ?>
                         <a class="arrow-down">&nbsp;</a>
                         <a class="arrow-up">&nbsp;</a>
-                        <a title="<?php echo $button_add_to_cart; ?>" onclick="$('#product').submit();" id="add_to_cart" class="button" style="float: none;margin-left:40px"><?php echo $button_add_to_cart; ?></a>
+                        <a title="<?php echo $Language->get('button_add_to_cart'); ?>" onclick="$('#product').submit();" id="add_to_cart" class="button" style="float: none;margin-left:40px"><?php echo $Language->get('button_add_to_cart'); ?></a>
                     </div>
                 </div>
             
@@ -171,7 +171,7 @@
                 <div class="property">
                     <div class="options">
                     <?php if ($options) { ?>
-                        <p><b><?php echo $text_options; ?></b></p>
+                        <p><b><?php echo $Language->get('text_options'); ?></b></p>
                         <ul>
                         <?php foreach ($options as $option) { ?>
                             <li>
@@ -199,9 +199,9 @@
             <?php if ($discounts) { ?>
             <div class="property">
                 <div class="discount">
-                    <p><b><?php echo $text_discount; ?></b></p>
-                    <p><b><?php echo $text_order_quantity; ?></b></p>
-                    <p><b><?php echo $text_price_per_item; ?></b></p>
+                    <p><b><?php echo $Language->get('text_discount'); ?></b></p>
+                    <p><b><?php echo $Language->get('text_order_quantity'); ?></b></p>
+                    <p><b><?php echo $Language->get('text_price_per_item'); ?></b></p>
                     <?php foreach ($discounts as $discount) { ?>
                         <p>
                             <?php echo $discount['quantity']; ?>

@@ -2,7 +2,7 @@
 /**
  * ModelSaleCustomerGroup
  * 
- * @package   NecoTienda powered by opencart
+ * @package   NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -11,13 +11,13 @@
  */
 class ModelSaleCustomerGroup extends Model {
 	/**
-	 * ModelSaleCustomerGroup::addCustomerGroup()
+	 * ModelSaleCustomerGroup::add()
 	 * 
 	 * @param mixed $data
      * @see DB
 	 * @return void
 	 */
-	public function addCustomerGroup($data) {
+	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "customer_group SET 
         `name` = '" . $this->db->escape($data['name']) . "',
         `params` = '" . $this->db->escape($data['params']) . "',
@@ -27,19 +27,39 @@ class ModelSaleCustomerGroup extends Model {
 	}
 	
 	/**
-	 * ModelSaleCustomerGroup::editCustomerGroup()
+	 * ModelSaleCustomerGroup::update()
 	 * 
 	 * @param int $customer_group_id
 	 * @param mixed $data
      * @see DB
 	 * @return void
 	 */
-	public function editCustomerGroup($customer_group_id, $data) {
+	public function update($customer_group_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer_group SET 
         `name` = '" . $this->db->escape($data['name']) . "',
         `params` = '" . $this->db->escape($data['params']) . "',
         `date_modified` = NOW()
         WHERE customer_group_id = '" . (int)$customer_group_id . "'");
+	}
+	
+	/**
+	 * ModelStoreProduct::copy()
+	 * 
+	 * @param int $product_id
+     * @see DB
+     * @see Cache
+	 * @return void
+	 */
+	public function copy($customer_group_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "customer_group 
+        WHERE customer_group_id = '" . (int)$customer_group_id . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['name'] = $data['name'] . " - copia";
+			$this->add($data);
+		}
 	}
 	
 	/**
@@ -52,29 +72,30 @@ class ModelSaleCustomerGroup extends Model {
 	public function delete($customer_group_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_group WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE customer_group_id = '" . (int)$customer_group_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "customer SET customer_group_id = 0 WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 	}
 	
 	/**
-	 * ModelSaleCustomerGroup::getCustomerGroup()
+	 * ModelSaleCustomerGroup::getById()
 	 * 
 	 * @param int $customer_group_id
      * @see DB
 	 * @return array sql record
 	 */
-	public function getCustomerGroup($customer_group_id) {
+	public function getById($customer_group_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "customer_group WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 		
 		return $query->row;
 	}
 	
 	/**
-	 * ModelSaleCustomerGroup::getCustomerGroups()
+	 * ModelSaleCustomerGroup::getAll()
 	 * 
 	 * @param mixed $data
      * @see DB
 	 * @return array sql records
 	 */
-	public function getCustomerGroups($data = array()) {
+	public function getAll($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "customer_group cg";
 		
 		$implode = array();
@@ -125,12 +146,12 @@ class ModelSaleCustomerGroup extends Model {
 	}
 	
 	/**
-	 * ModelSaleCustomerGroup::getTotalCustomerGroups()
+	 * ModelSaleCustomerGroup::getAllTotal()
 	 * 
      * @see DB
 	 * @return int Count sql records
 	 */
-	public function getTotalCustomerGroups() {
+	public function getAllTotal() {
 		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer_group cg";
 		
 		$implode = array();
@@ -161,12 +182,12 @@ class ModelSaleCustomerGroup extends Model {
 	}
 	
 	/**
-	 * ModelSaleCustomerGroup::getTotalCustomerGroups()
+	 * ModelSaleCustomerGroup::getAllTotal()
 	 * 
      * @see DB
 	 * @return int Count sql records
 	 */
-	public function getTotalCustomersByGroup($id) {
+	public function getAllTotalByGroup($id) {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer WHERE customer_group_id = '" .(int)$id. "'");
 		
 		return $query->row['total'];

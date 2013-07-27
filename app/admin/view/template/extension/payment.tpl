@@ -11,7 +11,7 @@
 <div class="grid_24">
     <div class="box">
         <div class="header">
-            <h1><?php echo $heading_title; ?></h1>
+            <h1><?php echo $Language->get('heading_title'); ?></h1>
             <div class="buttons">
                 <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Producto</a>
                 <a onclick="location = '<?php echo $import; ?>'" class="button">Importar</a>

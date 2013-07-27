@@ -4,10 +4,11 @@ final class Session {
 			
   	public function __construct() {		
 		if (!session_id()) {
+            header("Set-Cookie: cookiename=cookievalue; expires=Tue, 06-Jan-". (date('Y')+1) ." 23:39:49 GMT; path=/; domain=".substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'],"."), 100));
 			ini_set('session.use_cookies', 'On');
 			ini_set('session.use_trans_sid', 'Off');
-		
-			session_set_cookie_params(0, '/');
+            ini_set('session.cookie_domain', substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'],"."), 100));
+			session_set_cookie_params(0, '/', substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'],"."), 100), false, false);
 			session_start();
 		}
         

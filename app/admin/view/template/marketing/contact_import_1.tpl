@@ -82,7 +82,7 @@
                         <ul id="listsWrapper" class="scrollbox">
                             <?php foreach ($lists as $category) { ?>
                                 <li class="lists">
-                                    <input title="<?php echo $help_category; ?>" type="checkbox" name="product_category[]" value="<?php echo $category['category_id']; ?>"<?php if (in_array($category['category_id'], $product_category)) { ?> checked="checked"<?php } ?> showquick="off" />
+                                    <input title="<?php echo $Language->get('help_category'); ?>" type="checkbox" name="product_category[]" value="<?php echo $category['category_id']; ?>"<?php if (in_array($category['category_id'], $product_category)) { ?> checked="checked"<?php } ?> showquick="off" />
                                     <b><?php echo $category['name']; ?></b>
                                 
                                 </li>

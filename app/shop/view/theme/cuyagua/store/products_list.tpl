@@ -23,7 +23,7 @@
               <?php } ?>
           <?php } ?>
         </select>
-      <?php echo $text_sort; ?>
+      <?php echo $Language->get('text_sort'); ?>
       
           <?php if (isset($_GET['v']) && $_GET['v']=='list') { ?>
           <a class="view_style" onclick="$('#products').html('<img src=\'<?php echo HTTP_IMAGE; ?>loader.gif\' alt=\'Cargando...\' />');$('#products').load('<?php echo str_replace('&', '&amp;', $gridView); ?>')" title="Ver en Miniaturas"  style="background-position:0 -23px">&nbsp;</a>    
@@ -60,8 +60,8 @@
                         <p class="new_price"><?php echo $product['special']; ?></p>
                     <?php } ?>
                 <?php } ?>
-                <a title="<?php echo $button_see_product; ?>" class="button_see_small" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $button_see_product; ?></a>
-                <a title="<?php echo $button_add_to_cart; ?>" class="button_add_small" href="<?php echo str_replace('&', '&amp;', $product['add']); ?>"><?php echo $button_add_to_cart; ?></a>
+                <a title="<?php echo $Language->get('button_see_product'); ?>" class="button_see_small" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $Language->get('button_see_product'); ?></a>
+                <a title="<?php echo $Language->get('button_add_to_cart'); ?>" class="button_add_small" href="<?php echo str_replace('&', '&amp;', $product['add']); ?>"><?php echo $Language->get('button_add_to_cart'); ?></a>
             </div>
         </div>
         </article>
@@ -86,8 +86,8 @@
                     <p class="special"><?php echo $product['special']; ?></p>
                 <?php } ?>
             <?php } ?>
-            <a title="<?php echo $button_see_product; ?>" class="button_see_small" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $button_see_product; ?></a>
-            <a title="<?php echo $button_add_to_cart; ?>" class="button_add_small" href="<?php echo str_replace('&', '&amp;', $product['add']); ?>"><?php echo $button_add_to_cart; ?></a>
+            <a title="<?php echo $Language->get('button_see_product'); ?>" class="button_see_small" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $Language->get('button_see_product'); ?></a>
+            <a title="<?php echo $Language->get('button_add_to_cart'); ?>" class="button_add_small" href="<?php echo str_replace('&', '&amp;', $product['add']); ?>"><?php echo $Language->get('button_add_to_cart'); ?></a>
         </div>
         </article>
     <?php } ?>

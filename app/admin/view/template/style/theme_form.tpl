@@ -1,12 +1,12 @@
 <?php echo $header; ?>
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
-        <h1><?php echo $heading_title; ?></h1>
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
-            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $button_save_and_exit; ?></a>
-            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $button_save_and_keep; ?></a>
-            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $button_save_and_new; ?></a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
+            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
+            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_new'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
         <div class="clear"></div>
@@ -14,36 +14,36 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 
             <div class="row">
-                <label><?php echo $entry_name; ?></label>
-                <input type="text" id="name" name="name" value="<?php echo $name; ?>" title="<?php echo $help_name; ?>" required="true" style="width:40%" />
+                <label><?php echo $Language->get('entry_name'); ?></label>
+                <input type="text" id="name" name="name" value="<?php echo $name; ?>" title="<?php echo $Language->get('help_name'); ?>" required="true" style="width:40%" />
             </div>
                         
             <div class="clear"></div>
                        
             <div class="row">
-                <label><?php echo $entry_default; ?></label>
-                <input type="checkbox" id="default" name="default" value="1" title="<?php echo $help_default; ?>"<?php if ($default) { ?> checked="checked"<?php } ?> required="true" />
+                <label><?php echo $Language->get('entry_default'); ?></label>
+                <input type="checkbox" id="default" name="default" value="1" title="<?php echo $Language->get('help_default'); ?>"<?php if ($default) { ?> checked="checked"<?php } ?> required="true" />
             </div>
                    
             <div class="clear"></div>
                    
             <div class="row">
-                <label><?php echo $entry_date_start; ?></label>
-                <input type="date" name="date_publish_start" id="date_publish_start" value="<?php echo isset($date_publish_start) ? $date_publish_start : ''; ?>" title="<?php echo $help_date_start; ?>" style="width:40%" />
+                <label><?php echo $Language->get('entry_date_start'); ?></label>
+                <input type="date" name="date_publish_start" id="date_publish_start" value="<?php echo isset($date_publish_start) ? $date_publish_start : ''; ?>" title="<?php echo $Language->get('help_date_start'); ?>" style="width:40%" />
             </div>
             
             <div class="clear"></div>
             
             <div class="row">
-                <label><?php echo $entry_date_end; ?></label>
-                <input type="date" name="date_publish_end" id="date_publish_end" value="<?php echo isset($date_publish_end) ? $date_publish_end : ''; ?>" title="<?php echo $help_date_end; ?>" style="width:40%" />
+                <label><?php echo $Language->get('entry_date_end'); ?></label>
+                <input type="date" name="date_publish_end" id="date_publish_end" value="<?php echo isset($date_publish_end) ? $date_publish_end : ''; ?>" title="<?php echo $Language->get('help_date_end'); ?>" style="width:40%" />
             </div>
             
             <div class="clear"></div>
                    
             <div class="row">
-                <label><?php echo $entry_template; ?></label>
-                <select name="template" onchange="$('#template').load('<?php echo $Url::createAdminUrl("setting/setting/template"); ?>&template=' + encodeURIComponent(this.value));" title="<?php echo $help_template; ?>">
+                <label><?php echo $Language->get('entry_template'); ?></label>
+                <select name="template" onchange="$('#template').load('<?php echo $Url::createAdminUrl("setting/setting/template"); ?>&template=' + encodeURIComponent(this.value));" title="<?php echo $Language->get('help_template'); ?>">
                 <?php foreach ($templates as $_template) { ?>
                     
                     <option value="<?php echo $_template; ?>"<?php if ($template == $_template) { ?> selected="selected"<?php } ?>><?php echo $_template; ?></option>
@@ -57,8 +57,8 @@
                    
             <div class="row">
              <?php if ($isSaved) { ?>
-                <label><?php echo $entry_theme_editor; ?></label>
-                <a href="<?php echo  HTTP_CATALOG; ?>/index.php?theme_editor=1&theme_id=<?php echo $theme_id; ?>&template=<?php echo $template; ?>" class="button" target="_blank"><?php echo $text_open_theme_editor; ?></a>
+                <label><?php echo $Language->get('entry_theme_editor'); ?></label>
+                <a href="<?php echo  HTTP_CATALOG; ?>/index.php?theme_editor=1&theme_id=<?php echo $theme_id; ?>&template=<?php echo $template; ?>" class="button" target="_blank"><?php echo $Language->get('text_open_theme_editor'); ?></a>
              <?php }else { ?>
             <div class="warning">Debes guardar el tema primero para poder ir al editor.</div>
              <?php } ?>
@@ -90,7 +90,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>

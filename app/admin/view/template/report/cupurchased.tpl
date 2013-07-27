@@ -3,16 +3,16 @@
   <div class="left"></div>
   <div class="right"></div>
   <div class="heading">
-    <h1 style="background-image: url('image/report.png');"><?php echo $heading_title; ?></h1>
+    <h1 style="background-image: url('image/report.png');"><?php echo $Language->get('heading_title'); ?></h1>
   </div>
   <div class="content">
     <table class="list">
       <thead>
         <tr>
-          <td class="left"><?php echo $column_name; ?></td>
-          <td class="left"><?php echo $column_email; ?></td>
-          <td class="right"><?php echo $column_quantity; ?></td>
-          <td class="right"><?php echo $column_total; ?></td>
+          <td class="left"><?php echo $Language->get('column_name'); ?></td>
+          <td class="left"><?php echo $Language->get('column_email; ?></td>
+          <td class="right"><?php echo $Language->get('column_quantity; ?></td>
+          <td class="right"><?php echo $Language->get('column_total; ?></td>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +27,7 @@
         <?php } ?>
         <?php } else { ?>
         <tr>
-          <td class="center" colspan="4"><?php echo $text_no_results; ?></td>
+          <td class="center" colspan="4"><?php echo $Language->get('text_no_results'); ?></td>
         </tr>
         <?php } ?>
       </tbody>
@@ -35,10 +35,10 @@
     <div class="pagination"><?php echo $pagination; ?></div>
   </div>
 </div><form action="index.php?r=tool/excel&token=<?php echo $_GET['token']; ?>" name="excel_form" id="excel_form" method="post">
-	<input  type='hidden' value='<?php echo $content_excel; ?>' name='excel_data' id='excel_data'>
+	<input type='hidden' value='<?php echo $content_excel; ?>' name='excel_data' id='excel_data'>
 </form>
 <form action="index.php?r=tool/csv&token=<?php echo $_GET['token']; ?>" name="csv_form" id="csv_form" method="post">
-	<input  type='hidden' value='<?php echo $content_csv; ?>' name='csv_data' id='csv_data'>
+	<input type='hidden' value='<?php echo $content_csv; ?>' name='csv_data' id='csv_data'>
 </form>
 <script>
 $(function(){    

@@ -2,7 +2,7 @@
 /**
  * ModelContentMenu
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author NecoTienda
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -10,7 +10,7 @@
  */
 class ModelContentMenu extends Model {
 	/**
-	 * ModelContentMenu::addMenu()
+	 * ModelContentMenu::add()
 	 * 
 	 * @param mixed $data
      * @see DB
@@ -19,39 +19,52 @@ class ModelContentMenu extends Model {
 	 */
 	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "menu SET 
-        store_id = '" . (int)$data['store_id'] . "', 
-        name = '" . $this->db->escape($data['name']) . "', 
-        position = '" . $this->db->escape($data['position']) . "', 
-        route = '" . $this->db->escape($data['route']) . "', 
-        sort_order = '" . (int)$data['sort_order'] . "', 
-        status = '" . (int)$data['status'] . "', 
-        date_added = NOW()");
-	
+        store_id    = '" . (int)$data['store_id'] . "', 
+        name        = '" . $this->db->escape($data['name']) . "', 
+        position    = '" . $this->db->escape($data['position']) . "', 
+        route       = '" . $this->db->escape($data['route']) . "', 
+        sort_order  = '" . (int)$data['sort_order'] . "', 
+        `default`      = '" . (int)$data['default'] . "', 
+        status      = '" . (int)$data['status'] . "', 
+        date_added  = NOW()");
+
 		$menu_id = $this->db->getLastId();
-		
+        
+        if ($data['default']) {
+            $this->db->query("UPDATE " . DB_PREFIX . "menu SET `default` = 0");
+            $this->db->query("UPDATE " . DB_PREFIX . "menu SET `default` = 1 WHERE menu_id = '". (int)$menu_id ."'");
+        }
+        
+        foreach ($data['stores'] as $store) {
+    		$this->db->query("INSERT INTO " . DB_PREFIX . "menu_to_store SET 
+            store_id       = '" . intval($store) . "', 
+            menu_id        = '" . intval($menu_id) . "'");
+        }
+        
+		$parent = array();
 		foreach ($data['link'] as $key => $link) {
-            $idx = explode("_",$key);
-            if (isset($idx[2])) {
-                $parent_id = $idx[0];
-            } elseif (isset($idx[1])) {
-                $parent_id = $idx[0];
+            if (empty($link['link']) || empty($link['tag'])) continue;
+            $index = explode(".",$key);
+            if (count($index) == 2) {
+                $parent_id = $parent[$index[0]];
+                $sort_order = $index[1];
+            } elseif (count($index) == 3) {
+                $parent_id = $parent[$index[0] .".". $index[1]];
+                $sort_order = $index[2];
             } else {
+                $sort_order = $index[0];
                 $parent_id = 0;
             }
-			$this->db->query("INSERT INTO " . DB_PREFIX . "menu_link SET 
-            menu_id = '" . (int)$menu_id . "', 
-            parent_id = '" . (int)$parent_id . "', 
-            link = '" . $this->db->escape($link['link']) . "', 
-            tag = '" . $this->db->escape($link['tag']) . "', 
-            date_added = NOW()");
             
-            if ($link['keyword']) {
-    			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
-                query = '" . $this->db->escape($link['link']) . "', 
-                keyword = '" . $this->db->escape($link['keyword']) . "'");
-    		} 
+			$this->db->query("INSERT INTO " . DB_PREFIX . "menu_link SET 
+            menu_id     = '" . (int)$menu_id . "',
+            parent_id   = '" . (int)$parent_id . "',
+            link        = '" . $this->db->escape($link['link']) . "', 
+            sort_order  = '" . (int)$sort_order . "', 
+            tag         = '" . $this->db->escape($link['tag']) . "'");
+            
+            $parent[$key] = $this->db->getLastId();
 		}
-		
         return $menu_id;
 	}
 	
@@ -64,42 +77,55 @@ class ModelContentMenu extends Model {
      * @see Cache
 	 * @return void
 	 */
-	public function edit($menu_id, $data) {
+	public function update($menu_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "menu SET 
         store_id = '" . (int)$data['store_id'] . "', 
         name = '" . $this->db->escape($data['name']) . "', 
         position = '" . $this->db->escape($data['position']) . "', 
         route = '" . $this->db->escape($data['route']) . "', 
         sort_order = '" . (int)$data['sort_order'] . "', 
+        `default`      = '" . (int)$data['default'] . "', 
         status = '" . (int)$data['status'] . "', 
         date_modified = NOW() 
         WHERE menu_id = '" . (int)$menu_id . "'");
 
+        if ($data['default']) {
+            $this->db->query("UPDATE " . DB_PREFIX . "menu SET `default` = 0");
+            $this->db->query("UPDATE " . DB_PREFIX . "menu SET `default` = 1 WHERE menu_id = '". (int)$menu_id ."'");
+        }
+        
+            $this->db->query("DELETE FROM " . DB_PREFIX . "menu_to_store WHERE menu_id = '". (int)$menu_id ."'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "menu_to_store SET 
+                store_id  = '". intval($store) ."', 
+                menu_id = '". intval($menu_id) ."'");
+            }
+        
         $this->db->query("DELETE FROM " . DB_PREFIX . "menu_link WHERE menu_id = '" . (int)$menu_id . "'");
+        $parent = array();
 		foreach ($data['link'] as $key => $link) {
-            $idx = explode("_",$key);
-            
-            if (isset($idx[2])) {
-                $parent_id = $idx[0];
-            } elseif (isset($idx[1])) {
-                $parent_id = $idx[0];
+			if (empty($link['link']) || empty($link['tag'])) continue;
+            $index = explode(".",$key);
+            if (count($index) == 2) {
+                $parent_id = $parent[$index[0]];
+                $sort_order = $index[1];
+            } elseif (count($index) >= 3) {
+                $parent_id = $parent[$index[0] .".". $index[1]];
+                $sort_order = $index[2];
             } else {
+                $sort_order = $index[0];
                 $parent_id = 0;
             }
-			$this->db->query("INSERT INTO " . DB_PREFIX . "menu_link SET 
-            menu_id = '" . (int)$menu_id . "', 
-            parent_id = '" . (int)$parent_id . "', 
-            link = '" . $this->db->escape($link['link']) . "', 
-            tag = '" . $this->db->escape($link['tag']) . "', 
-            date_added = NOW()");
             
-            if ($link['keyword']) {
-    			$this->db->query("REPLACE INTO " . DB_PREFIX . "url_alias SET 
-                query = '" . $this->db->escape($link['link']) . "', 
-                keyword = '" . $this->db->escape($link['keyword']) . "'");
-    		} 
+			$this->db->query("INSERT INTO " . DB_PREFIX . "menu_link SET 
+            menu_id     = '" . (int)$menu_id . "',
+            parent_id   = '" . (int)$parent_id . "',
+            link        = '" . $this->db->escape($link['link']) . "', 
+            sort_order  = '" . (int)$sort_order . "', 
+            tag         = '" . $this->db->escape($link['tag']) . "'");
+            
+            $parent[$key] = $this->db->getLastId();
 		}
-		
 	}
 	
 	/**
@@ -132,10 +158,26 @@ class ModelContentMenu extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query IN (SELECT link FROM " . DB_PREFIX . "menu_link WHERE menu_id = '" . (int)$menu_id . "')");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_link WHERE menu_id = '" . (int)$menu_id . "'");
 		
-		$query = $this->db->query("SELECT menu_id FROM " . DB_PREFIX . "menu WHERE parent_id = '" . (int)$menu_id . "'");
-		foreach ($query->rows as $result) {
-			$this->delete($result['menu_id']);
-		}
+		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_link 
+        WHERE menu_id IN 
+            (SELECT menu_id 
+            FROM " . DB_PREFIX . "menu 
+            WHERE parent_id = '" . (int)$menu_id . "')");
+            
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias 
+        WHERE object_type = 'menu' 
+        AND object_id IN 
+            (SELECT menu_id 
+            FROM " . DB_PREFIX . "menu_link 
+            WHERE parent_id = '" . (int)$menu_id . "')");
+            
+		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_to_store WHERE menu_id = '" . (int)$menu_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_to_store WHERE menu_id IN 
+        (SELECT menu_id 
+            FROM " . DB_PREFIX . "menu_link 
+            WHERE parent_id = '" . (int)$menu_id . "')");
+            
+		$this->db->query("DELETE FROM " . DB_PREFIX . "menu_link WHERE parent_id = '" . (int)$menu_id . "'");
 	} 
 
 	/**
@@ -190,6 +232,7 @@ class ModelContentMenu extends Model {
         
         $return = array(
             'menu_id'   =>$query2->row['menu_id'],
+            'default'   =>$query2->row['default'],
             'position'  =>$query2->row['position'],
             'route'     =>$query2->row['route'],
             'name'      =>$query2->row['name'],
@@ -201,7 +244,43 @@ class ModelContentMenu extends Model {
 	} 
 	
 	/**
+	 * ModelContentCategory::getStores()
+	 * 
+	 * @param int $banner_id
+     * @see DB
+	 * @return array sql records
+	 */
+	public function getStores($menu_id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_to_store WHERE menu_id = '" . (int)$menu_id . "'");
+		foreach ($query->rows as $result) {
+            $data[] = $result['store_id'];
+		}
+		return $data;
+	}	
+	
+	/**
 	 * ModelContentMenu::getMenus()
+	 * 
+	 * @param int $parent_id
+     * @see DB
+     * @see Cache
+	 * @return array sql records
+	 */
+	public function getMenus() {
+			$sql = "SELECT * FROM ". DB_PREFIX ."menu m ";
+            $implode = array();
+			$implode[] = " `status` = '1'";
+            if ($implode) {
+                $sql .= "WHERE " . implode(" AND ",$implode);
+            }
+			$sql .= " ORDER BY m.name ASC";
+            $query = $this->db->query($sql);
+            
+		return $query->rows;
+	}
+	/**
+	 * ModelContentMenu::getAll()
 	 * 
 	 * @param int $parent_id
      * @see DB
@@ -225,6 +304,10 @@ class ModelContentMenu extends Model {
 
 			if (isset($data['filter_route'])) {
 				$implode[] = " LCASE(route) LIKE '%" . $this->db->escape(strtolower($data['filter_route'])) . "%'";
+			}
+
+			if (isset($data['status'])) {
+				$implode[] = " `status` = '" . (int)$data['status'] . "'";
 			}
 
 			if (isset($data['filter_date_start'],$data['filter_date_end'])) {
@@ -274,12 +357,12 @@ class ModelContentMenu extends Model {
 	}
 	
 	/**
-	 * ModelContentMenu::getTotalMenus()
+	 * ModelContentMenu::getAllTotal()
 	 * 
      * @see DB
 	 * @return int Count sql records
 	 */
-	public function getTotalMenus($data) {
+	public function getAllTotal($data) {
       	$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "menu ";
 		
             $implode = array();
@@ -340,16 +423,15 @@ class ModelContentMenu extends Model {
       	$query = $this->db->query($sql);
         
 		return $query->row['total'];
-	}	
-		
+	}
 		
 	/**
-	 * ModelContentMenu::getTotalMenusByImageId()
+	 * ModelContentMenu::getAllTotalByImageId()
 	 * 
 	 * @param int $image_id
 	 * @return int Count sql records
 	 */
-	public function getTotalMenusByImageId($image_id) {
+	public function getAllTotalByImageId($image_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "menu WHERE image_id = '" . (int)$image_id . "'");
 		
 		return $query->row['total'];

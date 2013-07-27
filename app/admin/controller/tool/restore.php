@@ -2,7 +2,7 @@
 /**
  * ControllerToolRestore
  * 
- * @package NecoTienda powered byopencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0

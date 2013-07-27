@@ -2,30 +2,59 @@
 	protected function index() {
 		$this->language->load('common/footer');
         $this->load->library('user');
-        
         $this->data['config_js_security'] = $this->config->get('config_js_security');
-        
-		$this->data['text_powered_by'] = sprintf($this->language->get('text_powered_by'), $this->config->get('config_name'), date('Y', time()));
-		
+		$this->data['text_powered_by'] = sprintf($this->language->get('text_powered_by'), $this->config->get('config_name'));
 		$this->id = 'footer';
         
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('footer') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
         // SCRIPTS
         $scripts[] = array('id'=>'search','method'=>'function','script'=>
         "function moduleSearch() {
        	    url = 'index.php?r=store/search';
             var filter_keyword = jQuery('#filter_keyword').attr('value');
             if (filter_keyword) {
-                url += '&keyword=' + encodeURIComponent(filter_keyword);
+                url += '&q=' + encodeURIComponent(filter_keyword);
             }
             var filter_category_id = jQuery('#filter_category_id').attr('value');
             if (filter_category_id) {
                 url += '&category_id=' + filter_category_id;
             }
             window.location = url;
+        }
+        function sort(e,a) {
+            if (a.length > 0) {
+                $('#products').html('<img src=\"". HTTP_IMAGE ."loader.gif\" alt=\"Cargando...\" />');
+                $('#products').load(a);
+            }
         }");
         
         $this->scripts = array_merge($this->scripts,$scripts);
-        
         $r_output = $w_output = $s_output = $f_output = "";
         $script_keys = array();
         foreach ($this->scripts as $k => $script) { 
@@ -43,42 +72,47 @@
                     $f_output .= $script['script'];
                     break;
             }
-        } 
+        }
         
-        $this->data['scripts'] = ($r_output) ? "<script>$(function(){".$r_output."});</script>" : "";
-        $this->data['scripts'] .= ($w_output) ? "<script>$.window({".$w_output."});</script>" : "";
-        $this->data['scripts'] .= ($f_output) ? "<script>".$f_output."</script>" : "";
+        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+        foreach ($this->javascripts as $key => $js) {
+            $f_output .= file_get_contents($js);
+            unset($this->javascripts[$key]);
+        }
+		if (file_exists(str_replace('%theme%',$this->config->get('config_template'),DIR_THEME_JS) . 'theme.js')) {
+            $f_output .= file_get_contents(str_replace('%theme%',$this->config->get('config_template'),DIR_THEME_JS) . 'theme.js');
+		}
+        
+        $this->data['scripts'] = $s_output;
+        $this->data['scripts'] .= ($r_output) ? "<script> \n $(function(){".$r_output."}); </script>" : "";
+        $this->data['scripts'] .= ($w_output) ? "<script> \n (function($){ $(window).load(function(){ ".$w_output." }); })(jQuery);</script>" : "";
+        $this->data['scripts'] .= ($f_output) ? "<script> \n ".$f_output." </script>" : "";
         
         // javascript files
-        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
-        
-        $javascripts[] = $jspath."plugins.js";
-        $javascripts[] = $jspath."main.js";
-        
         if ($this->user->getId()) {
-            $javascripts[] = $jspath."admin.js";
+            $javascripts[] = HTTP_ADMIN ."js/front/admin.js";
             
-            if ($this->request->hasQuery('theme_editor')) {
+            if ($this->request->hasQuery('theme_editor') && $this->request->hasQuery('theme_id') && (int)$this->request->getQuery('theme_id') > 0) {
                 $javascripts[] = $jspath."vendor/jquery-ui.min.js";
-                $javascripts[] = $jspath."vendor/farbtastic/farbtastic.js";
+                $javascripts[] = $jspath."necojs/neco.css.js";
                 $javascripts[] = $jspath."necojs/neco.colorpicker.js";
-                $javascripts[] = $jspath."theme_editor.js";
+                $javascripts[] = $jspath."necojs/neco.tips.js";
+                $javascripts[] = HTTP_ADMIN ."js/front/theme_editor.js";
             }
         }
         
-        $this->data['javascripts'] = $this->javascripts = array_merge($this->javascripts, $javascripts);
+        if ($javascripts) $this->data['javascripts'] = $this->javascripts = array_merge($this->javascripts, $javascripts);
         
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/footer.tpl')) {
 			$this->template = $this->config->get('config_template') . '/common/footer.tpl';
 		} else {
-			$this->template = 'default/common/footer.tpl';
+			$this->template = 'cuyagua/common/footer.tpl';
 		}
 		
-		if ($this->config->get('google_analytics_status')) {
-			$this->data['google_analytics'] = html_entity_decode($this->config->get('google_analytics_code'), ENT_QUOTES, 'UTF-8');
-		} else {
-			$this->data['google_analytics'] = '';
-		}
+        $this->data['google_analytics_code'] = $this->config->get('google_analytics_code');
+        $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
+        $this->data['google_client_id'] = $this->config->get('social_google_client_id');
+        $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
 		
 		$this->render();
 	}

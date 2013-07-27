@@ -1,10 +1,10 @@
 <table class="list">
     <thead>
         <tr>
-            <th><?php echo $column_date_start; ?></th>
-            <th><?php echo $column_date_end; ?></th>
-            <th><?php echo $column_orders; ?></th>
-            <th><?php echo $column_total; ?></th>
+            <th><?php echo $Language->get('column_date_start; ?></th>
+            <th><?php echo $Language->get('column_date_end; ?></th>
+            <th><?php echo $Language->get('column_orders; ?></th>
+            <th><?php echo $Language->get('column_total; ?></th>
         </tr>
     </thead>
     <tbody>
@@ -19,7 +19,7 @@
         <?php } ?>
     <?php } else { ?>
         <tr>
-            <td class="center" colspan="4"><?php echo $text_no_results; ?></td>
+            <td class="center" colspan="4"><?php echo $Language->get('text_no_results'); ?></td>
         </tr>
     <?php } ?>
     </tbody>

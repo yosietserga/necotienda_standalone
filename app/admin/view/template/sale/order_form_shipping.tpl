@@ -4,23 +4,23 @@
 <input type="hidden" name="shipping_company" value="<?php echo $shipping_company; ?>" />
 <table class="form">
     <tr>
-        <td><?php echo $entry_address_1; ?></td>
-        <td><input  type="text" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" /></td>
+        <td><?php echo $Language->get('entry_address_1'); ?></td>
+        <td><input type="text" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_address_2; ?></td>
-        <td><input  type="text" name="shipping_address_2" value="<?php echo $shipping_address_2; ?>" /></td>
+        <td><?php echo $Language->get('entry_address_2'); ?></td>
+        <td><input type="text" name="shipping_address_2" value="<?php echo $shipping_address_2; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_city; ?></td>
-        <td><input  type="text" name="shipping_city" value="<?php echo $shipping_city; ?>" /></td>
+        <td><?php echo $Language->get('entry_city'); ?></td>
+        <td><input type="text" name="shipping_city" value="<?php echo $shipping_city; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_postcode; ?></td>
-        <td><input  type="text" name="shipping_postcode" value="<?php echo $shipping_postcode; ?>" /></td>
+        <td><?php echo $Language->get('entry_postcode'); ?></td>
+        <td><input type="text" name="shipping_postcode" value="<?php echo $shipping_postcode; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_country; ?></td>
+        <td><?php echo $Language->get('entry_country'); ?></td>
         <td>
             <select name="shipping_country_id" id="shipping_country" onchange="$('#shipping_zone').load('<?php echo $Url::createAdminUrl("sale/order/zone",array("zone_id"=>$shipping_zone_id,"type"=>"shipping_zone")); ?>&country_id=' + this.value);">
             <?php foreach ($countries as $country) { ?>
@@ -31,7 +31,7 @@
         </td>
     </tr>
     <tr>
-        <td><?php echo $entry_zone; ?></td>
+        <td><?php echo $Language->get('entry_zone'); ?></td>
         <td id="shipping_zone"></td>
     </tr>
 </table>

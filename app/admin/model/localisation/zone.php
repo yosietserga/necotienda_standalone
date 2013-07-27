@@ -1,30 +1,30 @@
 <?php
 class ModelLocalisationZone extends Model {
-	public function addZone($data) {
+	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "zone SET status = '" . (int)$data['status'] . "', name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', country_id = '" . (int)$data['country_id'] . "'");
 			
 		$this->cache->delete('zone');
 	}
 	
-	public function editZone($zone_id, $data) {
+	public function update($zone_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "zone SET status = '" . (int)$data['status'] . "', name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', country_id = '" . (int)$data['country_id'] . "' WHERE zone_id = '" . (int)$zone_id . "'");
 
 		$this->cache->delete('zone');
 	}
 	
-	public function deleteZone($zone_id) {
+	public function delete($zone_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$zone_id . "'");
 
 		$this->cache->delete('zone');	
 	}
 	
-	public function getZone($zone_id) {
+	public function getById($zone_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$zone_id . "'");
 		
 		return $query->row;
 	}
 	
-	public function getZones($data = array()) {
+	public function getAll($data = array()) {
 		$sql = "SELECT *, z.name, c.name AS country FROM " . DB_PREFIX . "zone z LEFT JOIN " . DB_PREFIX . "country c ON (z.country_id = c.country_id)";
 			
 		$sort_data = array(
@@ -62,7 +62,7 @@ class ModelLocalisationZone extends Model {
 		return $query->rows;
 	}
 	
-	public function getZonesByCountryId($country_id) {
+	public function getAllByCountryId($country_id) {
 		$zone_data = $this->cache->get('zone.' . $country_id);
 	
 		if (!$zone_data) {

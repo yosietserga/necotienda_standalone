@@ -1,14 +1,11 @@
 <?php 
 class ControllerStoreManufacturer extends Controller {  
-	public function index() { 
+	public function index() {
 		$this->language->load('store/manufacturer');
-
-		$this->load->model('catalog/manufacturer');
-		$this->load->model('tool/seo_url'); 
+		$this->load->model('store/manufacturer');
 		$this->document->breadcrumbs = array();
-		
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=store/home',
+        	'href'      => Url::createUrl("store/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	);
@@ -21,45 +18,107 @@ class ControllerStoreManufacturer extends Controller {
 		
         $this->data['manufacturer_id'] = $manufacturer_id;
         
-		$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+		$manufacturer_info = $this->modelManufacturer->getManufacturer($manufacturer_id);
 	
 		if ($manufacturer_info) {
-      		$this->document->breadcrumbs[] = array(
-        		'href'      => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer&manufacturer_id=' . $this->request->get['manufacturer_id']),
-        		'text'      => $manufacturer_info['name'],
-        		'separator' => $this->language->get('text_separator')
-      		);
-					  		
-			$this->document->title = $manufacturer_info['name'];
-									
-			$this->data['heading_title'] = $manufacturer_info['name'];
-
-			$this->data['text_sort'] = $this->language->get('text_sort');
-			
+            $cached = $this->cache->get('manufacturer.' . 
+                    $manufacturer_id .
+                    $this->config->get('config_language_id') . "." . 
+                    $this->config->get('config_currency') . "." . 
+                    (int)$this->config->get('config_store_id')
+            );
+            $this->load->library('user');
+           	if ($cached && !$this->user->isLogged()) {
+                $this->response->setOutput($cached, $this->config->get('config_compression'));
+       	    } else {
+          		$this->document->breadcrumbs[] = array(
+            		'href'      => Url::createUrl("store/manufacturer",array("manufacturer_id"=>$this->request->get['manufacturer_id'])),
+            		'text'      => $manufacturer_info['name'],
+            		'separator' => $this->language->get('text_separator')
+          		);
+    					  		
+    			$this->document->title = $manufacturer_info['name'];
+    									
+    			$this->data['heading_title'] = $manufacturer_info['name'];
+    
+    			$this->data['text_sort'] = $this->language->get('text_sort');
+    			
+    			$this->modelManufacturer->updateStats($this->request->getQuery('manufacturer_id'),(int)$this->customer->getId());
+    				
+          		$this->data['breadcrumbs'] = $this->document->breadcrumbs;
+    	  			
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
             
-            if ($this->customer->isLogged()) {
-    		     $customer_id = $this->session->get('customer_id');
-    		} else {
-    		     $customer_id = 0;
-    		}
-            $this->model_catalog_manufacturer->updateViewed($this->request->get['manufacturer_id'],$customer_id);
-				
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/manufacturer.tpl')) {
-				$this->template = $this->config->get('config_template') . '/store/manufacturer.tpl';
-			} else {
-				$this->template = 'default/store/manufacturer.tpl';
-			}	
-				
-			$this->children = array(
-        			'common/nav',
-        			'common/column_left',
-        			'common/column_right',
-        			'common/footer',
-        			'common/header'
-		     );	
-				
-			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));										
-      		
+            foreach ($widgets->getWidgets('featuredContent') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
+    			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/manufacturer.tpl')) {
+    				$this->template = $this->config->get('config_template') . '/store/manufacturer.tpl';
+    			} else {
+    				$this->template = 'cuyagua/store/manufacturer.tpl';
+    			}	
+    				
+        		$this->children[] = 'common/column_left';
+        		$this->children[] = 'common/column_right';
+        		$this->children[] = 'common/nav';
+        		$this->children[] = 'common/header';
+        		$this->children[] = 'common/footer';
+                if (!$this->user->isLogged()) {
+            		$this->cacheId = 'manufacturer.' . 
+                        $manufacturer_id .
+                        $this->config->get('config_language_id') . "." . 
+                        $this->config->get('config_currency') . "." . 
+                        (int)$this->config->get('config_store_id');
+                }        
+    			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));										
+     		}
     	} else {
 			$url = '';
 			
@@ -76,11 +135,11 @@ class ControllerStoreManufacturer extends Controller {
 			}	
 			
       		$this->document->breadcrumbs[] = array(
-        		'href'      => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer&manufacturer_id=' . $manufacturer_id . $url),
+        		'href'      => Url::createUrl("store/manufacturer",array("manufacturer_id"=>$manufacturer_id . $url)),
         		'text'      => $this->language->get('text_error'),
         		'separator' => $this->language->get('text_separator')
       		);
-					
+			$this->data['breadcrumbs'] = $this->document->breadcrumbs;		
 			$this->document->title = $this->language->get('text_error');
 
       		$this->data['heading_title'] = $this->language->get('text_error');
@@ -89,29 +148,79 @@ class ControllerStoreManufacturer extends Controller {
 
       		$this->data['button_continue'] = $this->language->get('button_continue');
 
-      		$this->data['continue'] = HTTP_HOME . 'index.php?r=store/home';
-	  			
+      		$this->data['continue'] = Url::createUrl("store/home");
+            
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
+            foreach ($widgets->getWidgets('featuredContent') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
 				$this->template = $this->config->get('config_template') . '/error/not_found.tpl';
 			} else {
-				$this->template = 'default/error/not_found.tpl';
+				$this->template = 'cuyagua/error/not_found.tpl';
 			}
 			
-			$this->children = array(
-			'common/nav',
-			'common/column_left',
-			'common/column_right',
-			'common/footer',
-			'common/header'
-		);		
-			
+    		$this->children[] = 'common/column_left';
+    		$this->children[] = 'common/column_right';
+    		$this->children[] = 'common/nav';
+    		$this->children[] = 'common/header';
+    		$this->children[] = 'common/footer';
+            
 			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 		}
   	}
     
     public function home() { 
             $this->load->language("store/manufacturer");
-			$this->load->model("tool/seo_url");
+			
 			if (isset($this->request->get['page'])) {
 				$page = $this->request->get['page'];
 			} else { 
@@ -161,62 +270,62 @@ class ControllerStoreManufacturer extends Controller {
             $this->data['sorts'][] = array(
 					'text'  => $this->language->get('text_default'),
 					'value' => 'p.sort_order-ASC',
-					'href'  => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC&page='.$page.'&v='.$view),
+					'href'  => Url::createUrl("store/manufacturer/home") .'&manufacturer_id='. $this->request->get['manufacturer_id'] .'&sort=p.sort_order&order=ASC&page='.$page.'&v='.$view,
 					'ajax' => true,
-					'ajaxFunction'  => 'sort(this,"'.$this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC&page='.$page.'&v='.$view).'")'
+					'ajaxFunction'  => 'sort(this,"'.Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC&page='.$page.'&v='.$view.'")'
             );
 				
 			$this->data['sorts'][] = array(
 					'text'  => $this->language->get('text_name_asc'),
 					'value' => 'pd.name-ASC',
-					'href'  => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=ASC&page='.$page.'&v='.$view),
+					'href'  => Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=ASC&page='.$page.'&v='.$view,
 					'ajax' => true,
-					'ajaxFunction'  => 'sort(this,"'.$this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=ASC&page='.$page.'&v='.$view).'")'
+					'ajaxFunction'  => 'sort(this,"'. Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=ASC&page='.$page.'&v='.$view.'")'
 			);
  
 			$this->data['sorts'][] = array(
 					'text'  => $this->language->get('text_name_desc'),
 					'value' => 'pd.name-DESC',
-					'href'  => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=DESC&page='.$page.'&v='.$view),
+					'href'  => Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=DESC&page='.$page.'&v='.$view,
 					'ajax' => true,
-					'ajaxFunction'  => 'sort(this,"'.$this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=DESC&page='.$page.'&v='.$view).'")'
+					'ajaxFunction'  => 'sort(this,"'.Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=DESC&page='.$page.'&v='.$view.'")'
 			);  
 
 			$this->data['sorts'][] = array(
 					'text'  => $this->language->get('text_price_asc'),
 					'value' => 'p.price-ASC',
-					'href'  => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=ASC&page='.$page.'&v='.$view),
+					'href'  => Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=ASC&page='.$page.'&v='.$view,
 					'ajax' => true,
-					'ajaxFunction'  => 'sort(this,"'.$this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=ASC&page='.$page.'&v='.$view).'")'
+					'ajaxFunction'  => 'sort(this,"'. Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=ASC&page='.$page.'&v='.$view.'")'
 			); 
 
 			$this->data['sorts'][] = array(
 					'text'  => $this->language->get('text_price_desc'),
 					'value' => 'p.price-DESC',
-					'href'  => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=DESC&page='.$page.'&v='.$view),
+					'href'  => Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=DESC&page='.$page.'&v='.$view,
 					'ajax' => true,
-					'ajaxFunction'  => 'sort(this,"'.$this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=DESC&page='.$page.'&v='.$view).'")'
+					'ajaxFunction'  => 'sort(this,"'.Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=DESC&page='.$page.'&v='.$view.'")'
 			); 
 				
 			$this->data['sorts'][] = array(
 					'text'  => $this->language->get('text_rating_desc'),
 					'value' => 'rating-DESC',
-					'href'  => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=DESC&page='.$page.'&v='.$view),
+					'href'  => Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=DESC&page='.$page.'&v='.$view,
 					'ajax' => true,
-					'ajaxFunction'  => 'sort(this,"'.$this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=DESC&page='.$page.'&v='.$view).'")'
+					'ajaxFunction'  => 'sort(this,"'.Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=DESC&page='.$page.'&v='.$view.'")'
 			); 
 				
 			$this->data['sorts'][] = array(
 					'text'  => $this->language->get('text_rating_asc'),
 					'value' => 'rating-ASC',
-					'href' => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=ASC&page='.$page.'&v='.$view),
+					'href' => Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=ASC&page='.$page.'&v='.$view,
 					'ajax' => true,
-					'ajaxFunction'  => 'sort(this,"'.$this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=ASC&page='.$page.'&v='.$view).'")'
+					'ajaxFunction'  => 'sort(this,"'.Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=ASC&page='.$page.'&v='.$view.'")'
 			); 	
             
-			$this->load->model('catalog/product');  
+			$this->load->model('store/product');  
 			 
-			$product_total = $this->model_catalog_product->getTotalProductsByManufacturerId($this->request->get["manufacturer_id"]);
+			$product_total = $this->modelProduct->getTotalProductsByManufacturerId($this->request->get["manufacturer_id"]);
 			
 			if ($product_total) {
         		$this->prefetch($sort,$order,$page);									
@@ -228,20 +337,20 @@ class ControllerStoreManufacturer extends Controller {
 			$pagination->ajax = true;
 			$pagination->limit = $this->config->get('config_catalog_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page={page}');
+			$pagination->url = Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page={page}';
 			
 			$this->data['pagination'] = $pagination->render();
 
             $this->data['sort'] = $sort;
             $this->data['order'] = $order;
                 
-            $this->data['gridView'] = $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&v=grid');
-            $this->data['listView'] = $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer/home&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&v=list');
+            $this->data['gridView'] = Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&v=grid';
+            $this->data['listView'] = Url::createUrl("store/manufacturer/home") .'&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&v=list';
             
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/products.tpl')) {
                 $this->template = $this->config->get('config_template') . '/store/products.tpl';
             } else {
-                $this->template = 'default/store/products.tpl';
+                $this->template = 'cuyagua/store/products.tpl';
             }	
 				
             $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -254,9 +363,9 @@ class ControllerStoreManufacturer extends Controller {
         
         $this->data['heading_title'] = "";
 		
-		$this->load->model('catalog/product');
+		$this->load->model('store/product');
 		
-		$results = $this->model_catalog_product->getProductsByManufacturerId($this->request->get["manufacturer_id"], $sort, $order, ($page - 1) * $this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit'));
+		$results = $this->modelProduct->getProductsByManufacturerId($this->request->get["manufacturer_id"], $sort, $order, ($page - 1) * $this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit'));
         
         require_once(DIR_CONTROLLER . "store/product_array.php");
         

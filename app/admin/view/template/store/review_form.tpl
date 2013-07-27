@@ -1,12 +1,12 @@
 <?php echo $header; ?>
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
-        <h1><?php echo $heading_title; ?></h1>
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
-            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $button_save_and_exit; ?></a>
-            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $button_save_and_keep; ?></a>
-            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $button_save_and_new; ?></a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
+            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
+            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_new'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
         <div class="clear"></div>
@@ -14,55 +14,90 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 
             <div class="row">
-                <label><?php echo $entry_author; ?></label>
+                <label><?php echo $Language->get('entry_author'); ?></label>
                 <input id="author" name="author" value="<?php echo $author; ?>" required="true" style="width:40%" />
             </div>
                         
             <div class="clear"></div>
                             
             <div class="row">
-                <label><?php echo $entry_product; ?></label>
-                <b id="product_name"><?php echo $product; ?></b>
-                <input type="hidden" name="product_id" id="product_id" value="<?php echo (int)$product_id; ?>" />
+                <label><?php echo $Language->get('entry_product'); ?></label>
+                <a href="<?php echo $Url::createAdminUrl("store/product/see") . "&product_id=$pid"; ?>"><b id="product_name"><?php echo $product; ?></b></a>
+                <input type="hidden" name="product_id" id="product_id" value="<?php echo (int)$pid; ?>" />
             </div>
             
             <div class="clear"></div>
             
+            <?php if ((int)$parent_id > 0) { ?>
             <div class="row">
-                <label><?php echo $entry_text; ?></label>
+                <label><?php echo $Language->get('entry_review_id'); ?></label>
+                <a href="<?php echo $Url::createAdminUrl("store/review/update",array('review_id'=>$parent_id)); ?>"><b><?php echo $parent_id; ?></b></a>
+            </div>
+            <div class="clear"></div>
+            <?php } ?>
+            
+            <div class="row">
+                <label><?php echo $Language->get('entry_text'); ?></label>
                 <textarea id="text" name="text" style="width:40%"><?php echo $text; ?></textarea>
             </div>
                    
             <div class="clear"></div><br />
             
+            <?php if ($parent_id == 0) { ?>
             <div class="row">
-                <label><?php echo $entry_rating; ?></label>
-                <b class="rating" style="float: left;"><?php echo $entry_bad; ?></b>&nbsp;
-                <input type="radio" name="rating" value="1" showquick="off" style="margin-right:10px;width:10px;height:10px;"<?php if ($rating == 1) { ?> checked="checked"<?php } ?> />&nbsp;
-                <input type="radio" name="rating" value="2" showquick="off" style="margin-right:10px;width:10px;height:10px;"<?php if ($rating == 2) { ?> checked="checked"<?php } ?> />&nbsp;
-                <input type="radio" name="rating" value="3" showquick="off" style="margin-right:10px;width:10px;height:10px;"<?php if ($rating == 3) { ?> checked="checked"<?php } ?> />&nbsp;
-                <input type="radio" name="rating" value="4" showquick="off" style="margin-right:10px;width:10px;height:10px;"<?php if ($rating == 4) { ?> checked="checked"<?php } ?> />&nbsp;
-                <input type="radio" name="rating" value="5" showquick="off" style="margin-right:10px;width:10px;height:10px;"<?php if ($rating == 5) { ?> checked="checked"<?php } ?> />&nbsp;
-                <b class="rating" style="float: left;"><?php echo $entry_good; ?></b>
+                <label><?php echo $Language->get('entry_rating'); ?></label>
+                <a class="star_review<?php if ($rating >= 1) echo ' star_clicked'; ?>" id="1"<?php if ($rating >= 1) echo ' style="background-position: left top;"'; ?>></a>
+                <a class="star_review<?php if ($rating >= 2) echo ' star_clicked'; ?>" id="2"<?php if ($rating >= 2) echo ' style="background-position: left top;"'; ?>></a>
+                <a class="star_review<?php if ($rating >= 3) echo ' star_clicked'; ?>" id="3"<?php if ($rating >= 3) echo ' style="background-position: left top;"'; ?>></a>
+                <a class="star_review<?php if ($rating >= 4) echo ' star_clicked'; ?>" id="4"<?php if ($rating >= 4) echo ' style="background-position: left top;"'; ?>></a>
+                <a class="star_review<?php if ($rating >= 5) echo ' star_clicked'; ?>" id="5"<?php if ($rating >= 5) echo ' style="background-position: left top;"'; ?>></a>
+                <input type="hidden" name="rating" id="rating" value="<?php echo (int)$rating; ?>" />
             </div>
-                   
             <div class="clear"></div><br />
+            <?php } ?>
             
             <div class="row">
-                <label><?php echo $entry_status; ?></label>
+                <label><?php echo $Language->get('entry_status'); ?></label>
                 <select name="status">
-                      <option value="1"<?php if ($status) { ?> selected="selected"<?php } ?>><?php echo $text_enabled; ?></option>
-                      <option value="0"<?php if (!$status) { ?> selected="selected"<?php } ?>><?php echo $text_disabled; ?></option>
+                      <option value="1"<?php if ($status) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_enabled'); ?></option>
+                      <option value="0"<?php if (!$status) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_disabled'); ?></option>
                 </select>
             </div>
                    
+            <div class="clear"></div>
+            
+            <?php if ($parent_id == 0) { ?>
+            <div class="row">
+                <label><?php echo $Language->get('entry_reply'); ?></label>
+                <textarea name="reply" id="reply" style="width:40%"></textarea>
+                <div class="clear"></div>
+                <label>&nbsp;</label>
+                <a class="button" onclick="addReply(this,'<?php echo $pid; ?>','<?php echo $review_id; ?>')"><?php echo $Language->get('button_submit'); ?></a>
+            </div>
+            
             <div class="clear"></div><br />
             
-            <div id="addProductsPanel"><b>Agregar / Modificar Producto Asociado</b></div>
-            <div id="addProductsWrapper"><div id="gridPreloader"></div></div>
+            <div id="replies">
+                <ul>
+            <?php if (count($replies)) { ?>
+                    <?php foreach ($replies as $reply) { ?>
+                    <li id="reply_<?php echo $reply['review_id']; ?>">
+                        <div class="grid_3">
+                            <b><?php echo $reply['author']; ?></b><br />
+                            <small><?php echo date('d-m-Y h:i A',strtotime($reply['date_added'])); ?></small>
+                        </div>
+                        <div class="grid_9">
+                            <?php echo $reply['text']; ?>
+                        </div>
+                        <div class="clear"></div>
+                    </li>
+                    <?php } ?>
+            <?php } ?>
+                </ul>
+            </div>
             
-            <div class="clear"></div><br />
-            
+            <div class="clear"></div>
+            <?php } ?>
         </form>
 </div>
 <div class="sidebar" id="feedbackPanel">
@@ -89,7 +124,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>
@@ -114,4 +149,83 @@
         </ul>
     </div>
 </div>
+<script>
+$(function(){
+    $('#reply').on('focus',function(e){
+        $(this).animate({
+            height:'100px'
+        });
+    }).on('blur',function(e){
+        if ($(this).val().length == 0) {
+            $(this).animate({
+                height:'40px'
+            });
+        }
+    });
+    $('.star_review').hover(
+        function() {
+            var idThis = $(this).attr('id');
+            $('.star_review').each (function() {
+                var idStar = $(this).attr('id');
+                if (idStar <= idThis) {
+                    $(this).css({'background-position':'left top'});
+                }
+            });
+        },
+        function() {
+            $('.star_review').each (function() {
+                if (!$(this).hasClass('star_clicked'))
+                    $(this).css({'background-position':'right top'});
+            });
+        }
+    );
+    $('.star_review').on('click',function(e) {
+        var idThis = $(this).attr('id');
+        $('input[name=rating]').val(idThis);
+        $('.star_review').each(function() {
+            var idStar = $(this).attr('id');
+            if (idStar <= idThis) {
+                $(this).addClass('star_clicked');
+                $(this).css({'background-position':'left top'});
+            } else {
+                $(this).removeClass('star_clicked');
+                $(this).css({'background-position':'right top'});
+            }
+        });
+    });
+});
+function addReply(e,p,r) {
+    $(e).hide();
+    $('.message').fadeOut();
+    if ($('#reply').val().length > 0) {
+        $.post('<?php echo $Url::createAdminUrl("store/review/reply"); ?>&product_id='+ p +'&review_id='+ r,
+        {
+            'product_id':p,
+            'review_id':r,
+            'text':encodeURIComponent($('#reply').val())
+        },
+        function(response){
+            data = $.parseJSON(response);
+            if (typeof data.success != 'undefined' && data.success != 0) {
+                html = '<li>';
+                html += '<div class="grid_3">';
+                html += '<b>'+ data.author +'</b><br />';
+                html += '<small>'+ data.date_added +'</small>';
+                html += '</div>';
+                html += '<div class="grid_9">'+ data.text +'</div>';
+                html += '<div class="clear"></div>';
+                html += '</li>';
+                $('#replies ul').prepend(html);
+            } else {
+                $('#reply').before('<div class="message warning">No se pudo agregar la r&eacute;plica. Por favor intente m&aacute;s tarde.</div>');
+            }
+            $('textarea[name=reply]').val('');
+            $(e).show();
+        });
+    } else {
+        $(e).show();
+        $('#reply').addClass('neco-input-error');
+    }
+}
+</script>
 <?php echo $footer; ?>

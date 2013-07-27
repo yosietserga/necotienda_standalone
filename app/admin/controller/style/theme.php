@@ -2,7 +2,7 @@
 /**
  * ControllerStyleTheme
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -25,48 +25,7 @@ class ControllerStyleTheme extends Controller {
 		$this->document->title = $this->language->get('heading_title');
     	$this->getList();
   	}
-  
-  	/**
-  	 * ControllerStyleTheme::index()
-     * 
-  	 * @see Load
-  	 * @see Document
-  	 * @see Language
-  	 * @see getList
-  	 * @return void
-  	 */
-  	public function save() {
-		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
-            $css = "";
-            $data = array();
-            foreach ($this->request->post['selectors'] as $selector => $properties) {
-                $cssOutput = "";
-                if (isset($properties['background']['background'])) {
-                    $cssOutput .= $properties['background']['background'];
-                    $data[$selector]['background'] = $properties['background']['background'];
-                    $cssOutput .= $properties['background']['background'];
-                } else {
-                    foreach ($properties['background'] as $property => $value) {
-                        if (empty($value)) continue;
-                        if ($property=="image") $value = "url(" . $value .")";
-                        if ($property=="attachment") $value = "fixed";
-                        $cssOutput .= "background-". $property .":". $value .";";
-                        $data[$selector]["background-". $property] = $value;
-                    }
-                }
-                
-                if ($cssOutput) {
-                    $css .= "#". $selector ."{". $cssOutput ."}";
-                }
-                
-            }
-            
-            file_put_contents(DIR_CSS."custom-". $this->request->getQuery('theme_id') ."-". $this->request->getQuery('template') .".css",$css);
-            
-            $this->modelTheme->saveStyle($this->request->getQuery('theme_id'),$data);
-		}
-  	}
-  
+    
   	/**
   	 * ControllerStyleTheme::insert()
   	 * 
@@ -94,7 +53,12 @@ class ControllerStyleTheme extends Controller {
             $this->request->post['date_publish_start'] = date('Y-m-d h:i:s',strtotime($dps[2] ."-". $dps[1] ."-". $dps[0]));
             
 			$theme_id = $this->modelTheme->add($this->request->post);
-
+            
+            if ($this->request->post['default']) {
+                $this->load->model('setting/setting');
+                $this->modelSetting->update('theme',array('theme_default_id'=>$theme_id));
+            }
+            
 			$this->session->set('success',$this->language->get('text_success'));
 			
             if ($_POST['to'] == "saveAndKeep") {
@@ -137,6 +101,11 @@ class ControllerStyleTheme extends Controller {
             
             $theme_id = $this->modelTheme->update($this->request->get['theme_id'], $this->request->post);
 
+            if ($this->request->post['default']) {
+                $this->load->model('setting/setting');
+                $this->modelSetting->update('theme',array('theme_default_id'=>$this->request->get['theme_id']));
+            }
+            
 			$this->session->set('success',$this->language->get('text_success'));
 			
             if ($_POST['to'] == "saveAndKeep") {
@@ -151,6 +120,292 @@ class ControllerStyleTheme extends Controller {
     	$this->getForm();
   	}   
 
+  	/**
+  	 * ControllerStyleTheme::index()
+     * 
+  	 * @see Load
+  	 * @see Document
+  	 * @see Language
+  	 * @see getList
+  	 * @return void
+  	 */
+  	public function save() {
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            $filename = "custom-". $this->request->getQuery('theme_id') ."-". $this->request->getQuery('template') .".css";
+            if (file_exists(DIR_CSS.$filename)) {
+                $css = trim(file_get_contents(DIR_CSS.$filename));
+            } else {
+                $css = "";
+            }
+            
+            $data = array();
+            
+            foreach ($this->request->post as $selector => $properties) {
+                $elements = array('body','html');
+                if (!in_array($selector,$elements)) {
+                    $selector = '#'.$selector;
+                }
+                $selector = str_replace("%20"," ",$selector);
+                
+                $css = trim(preg_replace("%(/\*\*$selector\*\*/)(.*?)(/\*\*$selector\*\*/)%s","",$css));
+                
+                $css .= "\n/**$selector**/\n";
+                $css .= $selector." {\n";
+                
+                if (!empty($properties['background']['image'])) {
+                    $css .= "\tbackground-image: url(". $properties['background']['image'] .");\n";
+                    $data[$selector]['background-image'] = "url(". $properties['background']['image'] .")";
+                }
+                if (!empty($properties['background']['color'])) {
+                    $css .= "\tbackground-color:". $properties['background']['color'] .";\n";
+                    $data[$selector]['background-color'] = $properties['background']['color'];
+                }
+                if (!empty($properties['background']['repeat'])) {
+                    $css .= "\tbackground-repeat:". $properties['background']['repeat'] .";\n";
+                    $data[$selector]['background-repeat'] = $properties['background']['image'];
+                }
+                if (!empty($properties['background']['attachment'])) {
+                    $css .= "\tbackground-attachment:". $properties['background']['attachment'] .";\n";
+                    $data[$selector]['background-attachment'] = $properties['background']['attachment'];
+                }
+                if (!empty($properties['background']['positionX']) && !empty($properties['background']['positionY'])) {
+                    $css .= "\tbackground-position:". $properties['background']['positionX'] ." ". $properties['background']['positionY'] .";\n";
+                    $data[$selector]['background-position'] = $properties['background']['positionX'] ." ". $properties['background']['positionY'];
+                }
+                
+                if (!empty($properties['dimensions']['top'])) {
+                    $css .= "\ttop:". $properties['dimensions']['top'] .";\n";
+                    $data[$selector]['top'] = $properties['dimensions']['top'];
+                }
+                if (!empty($properties['dimensions']['left'])) {
+                    $css .= "\tleft:". $properties['dimensions']['left'] .";\n";
+                    $data[$selector]['left'] = $properties['dimensions']['left'];
+                }
+                if (!empty($properties['dimensions']['width'])) {
+                    $css .= "\twidth:". $properties['dimensions']['width'] .";\n";
+                    $data[$selector]['width'] = $properties['dimensions']['width'];
+                }
+                if (!empty($properties['dimensions']['height'])) {
+                    $css .= "\theight:". $properties['dimensions']['height'] .";\n";
+                    $data[$selector]['height'] = $properties['dimensions']['height'];
+                }
+                if (!empty($properties['dimensions']['float'])) {
+                    $css .= "\tfloat:". $properties['dimensions']['float'] .";\n";
+                    $data[$selector]['float'] = $properties['dimensions']['float'];
+                }
+                if (!empty($properties['dimensions']['position'])) {
+                    $css .= "\tposition:". $properties['dimensions']['position'] .";\n";
+                    $data[$selector]['position'] = $properties['dimensions']['position'];
+                }
+                if (!empty($properties['dimensions']['overflow'])) {
+                    $css .= "\toverflow:". $properties['dimensions']['overflow'] .";\n";
+                    $data[$selector]['overflow'] = $properties['dimensions']['overflow'];
+                }
+                
+                if (!empty($properties['font']['color'])) {
+                    $css .= "\tcolor:". $properties['font']['color'] .";\n";
+                    $data[$selector]['color'] = $properties['font']['color'];
+                }
+                if (!empty($properties['font']['family'])) {
+                    $css .= "\tfont-family:". $properties['font']['family'] .";\n";
+                    $data[$selector]['font-family'] = $properties['font']['family'];
+                }
+                if (!empty($properties['font']['weight'])) {
+                    $css .= "\tfont-weight:". $properties['font']['weight'] .";\n";
+                    $data[$selector]['font-weight'] = $properties['font']['weight'];
+                }
+                if (!empty($properties['font']['style'])) {
+                    $css .= "\tfont-style:". $properties['font']['style'] .";\n";
+                    $data[$selector]['font-style'] = $properties['font']['style'];
+                }
+                if (!empty($properties['font']['size'])) {
+                    $css .= "\tfont-size:". $properties['font']['size'] .";\n";
+                    $data[$selector]['font-size'] = $properties['font']['size'];
+                }
+                if (!empty($properties['font']['align'])) {
+                    $css .= "\ttext-align:". $properties['font']['align'] .";\n";
+                    $data[$selector]['text-align'] = $properties['font']['align'];
+                }
+                if (!empty($properties['font']['transform'])) {
+                    $css .= "\ttext-transform:". $properties['font']['transform'] .";\n";
+                    $data[$selector]['text-transform'] = $properties['font']['transform'];
+                }
+                if (!empty($properties['font']['decoration'])) {
+                    $css .= "\ttext-decoration:". $properties['font']['decoration'] .";\n";
+                    $data[$selector]['text-decoration'] = $properties['font']['decoration'];
+                }
+                if (!empty($properties['font']['letterspacing'])) {
+                    $css .= "\tletter-spacing:". $properties['font']['letterspacing'] .";\n";
+                    $data[$selector]['letter-spacing'] = $properties['font']['letterspacing'];
+                }
+                if (!empty($properties['font']['wordspacing'])) {
+                    $css .= "\tword-spacing:". $properties['font']['wordspacing'] .";\n";
+                    $data[$selector]['word-spacing'] = $properties['font']['wordspacing'];
+                }
+                if (!empty($properties['font']['lineheight'])) {
+                    $css .= "\tline-height:". $properties['font']['lineheight'] .";\n";
+                    $data[$selector]['line-height'] = $properties['font']['lineheight'];
+                }
+                
+                $boxShadow = "";
+                if (isset($properties['boxshadow']['inset'])) {
+                    $boxShadow .= 'inset ';
+                }
+                if (!empty($properties['boxshadow']['x'])) {
+                    $boxShadow .= $properties['boxshadow']['x'] .' ';
+                } else {
+                    $boxShadow .= '0px ';
+                }
+                if (!empty($properties['boxshadow']['y'])) {
+                    $boxShadow .= $properties['boxshadow']['y'] .' ';
+                } else {
+                    $boxShadow .= '0px ';
+                }
+                if (!empty($properties['boxshadow']['blur'])) {
+                    $boxShadow .= $properties['boxshadow']['blur'] .' ';
+                } else {
+                    $boxShadow .= '0px ';
+                }
+                if (!empty($properties['boxshadow']['spread'])) {
+                    $boxShadow .= $properties['boxshadow']['spread'] .' ';
+                } else {
+                    $boxShadow .= '0px ';
+                }
+                if (!empty($properties['boxshadow']['color'])) {
+                    $boxShadow .= $properties['boxshadow']['color'];
+                }
+                $data[$selector]['box-shadow'] = $boxShadow;
+                $css .= "\tbox-shadow:".$boxShadow.";\n";
+                
+                if (empty($properties['border']['topcolor']) 
+                && empty($properties['border']['rightcolor']) 
+                && empty($properties['border']['bottomcolor']) 
+                && empty($properties['border']['leftcolor'])) {
+                    $css .= "\tborder-color:". $properties['border']['color'] .";\n";
+                    $css .= "\tborder-style:". $properties['border']['style'] .";\n";
+                    $css .= "\tborder-width:". $properties['border']['width'] .";\n";
+                    $data[$selector]['border-color'] = $properties['border']['color'];
+                    $data[$selector]['border-style'] = $properties['border']['style'];
+                    $data[$selector]['border-width'] = $properties['border']['width'];
+                } else {
+                    $css .= "\tborder-top-color:". $properties['border']['topcolor'] .";\n";
+                    $css .= "\tborder-top-style:". $properties['border']['topstyle'] .";\n";
+                    $css .= "\tborder-top-width:". $properties['border']['topwidth'] .";\n";
+                    $data[$selector]['border-top-color'] = $properties['border']['topcolor'];
+                    $data[$selector]['border-top-style'] = $properties['border']['topstyle'];
+                    $data[$selector]['border-top-width'] = $properties['border']['topwidth'];
+                    
+                    $css .= "\tborder-right-color:". $properties['border']['rightcolor'] .";\n";
+                    $css .= "\tborder-right-style:". $properties['border']['rightstyle'] .";\n";
+                    $css .= "\tborder-right-width:". $properties['border']['rightwidth'] .";\n";
+                    $data[$selector]['border-right-color'] = $properties['border']['rightcolor'];
+                    $data[$selector]['border-right-style'] = $properties['border']['rightstyle'];
+                    $data[$selector]['border-right-width'] = $properties['border']['rightwidth'];
+                    
+                    $css .= "\tborder-bottom-color:". $properties['border']['bottomcolor'] .";\n";
+                    $css .= "\tborder-bottom-style:". $properties['border']['bottomstyle'] .";\n";
+                    $css .= "\tborder-bottom-width:". $properties['border']['bottomwidth'] .";\n";
+                    $data[$selector]['border-bottom-color'] = $properties['border']['bottomcolor'];
+                    $data[$selector]['border-bottom-style'] = $properties['border']['bottomstyle'];
+                    $data[$selector]['border-bottom-width'] = $properties['border']['bottomwidth'];
+                    
+                    $css .= "\tborder-left-color:". $properties['border']['leftcolor'] .";\n";
+                    $css .= "\tborder-left-style:". $properties['border']['leftstyle'] .";\n";
+                    $css .= "\tborder-left-width:". $properties['border']['leftwidth'] .";\n";
+                    $data[$selector]['border-left-color'] = $properties['border']['leftcolor'];
+                    $data[$selector]['border-left-style'] = $properties['border']['leftstyle'];
+                    $data[$selector]['border-left-width'] = $properties['border']['leftwidth'];
+                }
+                
+                if (empty($properties['borderradius']['topleft']) 
+                && empty($properties['borderradius']['topright']) 
+                && empty($properties['borderradius']['bottomleft']) 
+                && empty($properties['borderradius']['bottomright'])) {
+                    $css .= "\t-moz-border-radius:". $properties['borderradius']['all'] .";\n";
+                    $css .= "\t-webkit-border-radius:". $properties['borderradius']['all'] .";\n";
+                    $css .= "\tborder-radius:". $properties['borderradius']['all'] .";\n";
+                    $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                } else {
+                    $css .= "\t-moz-border-radius:". $properties['borderradius']['topleft'] ." ". 
+                        $properties['borderradius']['topright'] ." ". 
+                        $properties['borderradius']['bottomright'] ." ". 
+                        $properties['borderradius']['bottomleft'] .";\n";
+                    $css .= "\t-webkit-border-radius:". $properties['borderradius']['topleft'] ." ". 
+                        $properties['borderradius']['topright'] ." ". 
+                        $properties['borderradius']['bottomright'] ." ". 
+                        $properties['borderradius']['bottomleft'] .";\n";
+                    $css .= "\tborder-radius:". $properties['borderradius']['topleft'] ." ". 
+                        $properties['borderradius']['topright'] ." ". 
+                        $properties['borderradius']['bottomright'] ." ". 
+                        $properties['borderradius']['bottomleft'] .";\n";
+                    $data[$selector]['border-radius'] = $properties['borderradius']['topleft'] ." ". 
+                        $properties['borderradius']['topright'] ." ".
+                        $properties['borderradius']['bottomright'] ." ". 
+                        $properties['borderradius']['bottomleft'];
+                }
+                
+                if (empty($properties['margin']['top']) 
+                && empty($properties['margin']['right']) 
+                && empty($properties['margin']['bottom']) 
+                && empty($properties['margin']['left'])) {
+                    $css .= "\tmargin:". $properties['margin']['all'] .";\n";
+                    $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                } else {
+                    $css .= "\tmargin:". $properties['margin']['top'] ." ". 
+                        $properties['margin']['right'] ." ". 
+                        $properties['margin']['bottom'] ." ". 
+                        $properties['margin']['left'] .";\n";
+                    $data[$selector]['margin'] = $properties['margin']['top'] ." ". 
+                        $properties['margin']['right'] ." ".
+                        $properties['margin']['bottom'] ." ". 
+                        $properties['margin']['left'];
+                }
+                
+                if (empty($properties['padding']['top']) 
+                && empty($properties['padding']['right']) 
+                && empty($properties['padding']['bottom']) 
+                && empty($properties['padding']['left'])) {
+                    $css .= "\tpadding:". $properties['padding']['all'] .";\n";
+                    $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                } else {
+                    $css .= "\tpadding:". $properties['padding']['top'] ." ". 
+                        $properties['padding']['right'] ." ". 
+                        $properties['padding']['bottom'] ." ". 
+                        $properties['padding']['left'] .";\n";
+                    $data[$selector]['padding'] = $properties['padding']['top'] ." ". 
+                        $properties['padding']['right'] ." ".
+                        $properties['padding']['bottom'] ." ". 
+                        $properties['padding']['left'];
+                }
+            
+                $css .= "}\n";
+                $css .= "/**$selector**/\n";
+            }
+            
+            $css = str_replace("\n\n","",$css);
+            
+            file_put_contents(DIR_CSS.$filename,$css);
+            $this->modelTheme->saveStyle($this->request->getQuery('theme_id'),$data);
+		}
+  	}
+  
+  	/**
+  	 * ControllerMarketingNewsletter::copy()
+     * duplicar un objeto
+  	 * @return boolean
+  	 */
+  	public function copy() {
+        $this->load->auto('style/theme');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelTheme->copy($id);
+            }
+		} else {
+            $this->modelTheme->copy($_GET['id']);
+		}
+        echo 1;
+  	}
+      
     /**
      * ControllerStoreCategory::delete()
      * elimina un objeto
@@ -160,15 +415,17 @@ class ControllerStyleTheme extends Controller {
         $this->load->auto('style/theme');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
+                unlink(DIR_CSS."custom-". $id ."-". $this->request->getQuery('template') .".css");
                 $this->modelTheme->delete($id);
             }
 		} else {
+            unlink(DIR_CSS."custom-". $this->request->getQuery('id') ."-". $this->request->getQuery('template') .".css");
             $this->modelTheme->delete($_GET['id']);
 		}
      }
     
   	/**
-  	 * ControllerStyleTheme::getList()
+  	 * ControllerStyleTheme::getById()
   	 * 
   	 * @see Load
   	 * @see Document
@@ -213,25 +470,58 @@ class ControllerStyleTheme extends Controller {
 
         // SCRIPTS
         $scripts[] = array('id'=>'themeList','method'=>'function','script'=>
-            "function activate(e) {
-                $.getJSON('". Url::createAdminUrl("style/theme/activate") ."',{
-                    id:e
-                },function(data){
-                    if (data > 0) {
-                        $('#img_' + e).attr('src','image/good.png');
-                    } else {
-                        $('#img_' + e).attr('src','image/minus.png');
-                    }
+            "function activate(e) {    
+            	$.ajax({
+            	   'type':'get',
+                   'dataType':'json',
+                   'url':'".Url::createAdminUrl("style/theme/activate")."&id=' + e,
+                   'success': function(data) {
+                        if (data > 0) {
+                            $(\"#img_\" + e).attr('src','image/good.png');
+                        } else {
+                            $(\"#img_\" + e).attr('src','image/minus.png');
+                        }
+                   }
+            	});
+             }
+            function copy(e) {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.getJSON('".Url::createAdminUrl("style/theme/copy")."&id=' + e, function(data) {
+                    $('#gridWrapper').load('". Url::createAdminUrl("style/theme/grid") ."',function(response){
+                        $('#gridPreloader').hide();
+                        $('#gridWrapper').show();
+                    });
                 });
             }
+            function eliminar(e) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("style/theme/delete") ."',{
+                        id:e
+                    });
+                }
+                return false;
+             }
             function editAll() {
                 return false;
             } 
             function addToList() {
                 return false;
             } 
+            function copyAll() {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.post('". Url::createAdminUrl("style/theme/copy") ."',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('". Url::createAdminUrl("style/theme/grid") ."',function(){
+                        $('#gridWrapper').show();
+                        $('#gridPreloader').hide();
+                    });
+                });
+                return false;
+            } 
             function deleteAll() {
-                if (confirm('Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("style/theme/delete") ."',$('#form').serialize(),function(){
@@ -242,16 +532,7 @@ class ControllerStyleTheme extends Controller {
                     });
                 }
                 return false;
-            }
-            function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                    $('#tr_' + e).remove();
-                	$.getJSON('". Url::createAdminUrl("style/theme/delete") ."',{
-                        id:e
-                    });
-                }
-                return false;
-             }");
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("style/theme/grid") ."',function(e){
                 $('#gridPreloader').hide();
@@ -535,66 +816,6 @@ class ControllerStyleTheme extends Controller {
 			$this->data['date_publish_end'] = '';
 		}
 
-        $this->data['Url'] = new Url;
-        //TODO: mostrar los productos al scrolldown para no colapsar el navegador cuando se listan todos los productos
-        $scripts[] = array('id'=>'form','method'=>'ready','script'=>
-            "$('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           }); 
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
-            
-        $scripts[] = array('id'=>'categoryFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }");
-            
-        $this->scripts = array_merge($this->scripts,$scripts);
-        
 		$this->template = 'style/theme_form.tpl';
 		$this->children = array(
 			'common/header',	
@@ -662,18 +883,7 @@ class ControllerStyleTheme extends Controller {
     	if (!$this->user->hasPermission('modify', 'style/theme')) {
 			$this->error['warning'] = $this->language->get('error_permission');
     	}	
-        //TODO: colocar validaciones propias
-		
-		$this->load->auto('store/product');
 
-		foreach ($this->request->post['selected'] as $theme_id) {
-  			$product_total = $this->modelProduct->getTotalProductsByThemeId($theme_id);
-    
-			if ($product_total) {
-	  			$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);	
-			}	
-	  	} 
-		
 		if (!$this->error) {
 	  		return true;
 		} else {
@@ -731,7 +941,7 @@ class ControllerStyleTheme extends Controller {
         $this->load->auto("image");
         $this->load->auto("url");
         if ($this->request->hasQuery('theme_id')) {
-            $rows = $this->modelProduct->getProductsByThemeId($this->request->getQuery('theme_id'));
+            $rows = $this->modelProduct->getAllByThemeId($this->request->getQuery('theme_id'));
             $products_by_theme = array();
             foreach ($rows as $row) {
                 $products_by_theme[] = $row['product_id'];

@@ -24,8 +24,8 @@
         <h3>Restaurar BD</h3>
         <form action="<?php echo $restore; ?>" method="post" enctype="multipart/form-data" id="restore">  
             <div class="row">       
-                <label><?php echo $entry_restore; ?></label>
-                <input title="<?php echo $help_restore; ?>" type="file" name="import" />
+                <label><?php echo $Language->get('entry_restore'); ?></label>
+                <input title="<?php echo $Language->get('help_restore'); ?>" type="file" name="import" />
             </div>
                    
             
@@ -36,9 +36,9 @@
         <h3>Respaldar BD</h3>
         <form action="<?php echo $backup; ?>" method="post" enctype="multipart/form-data" id="backup">
             <div class="row">
-                <label><?php echo $entry_backup; ?>
-                    <a onclick="$('input[name*=\'backup\']').attr('checked', 'checked');"><?php echo $text_select_all; ?></a> / 
-                    <a onclick="$('input[name*=\'backup\']').attr('checked', '');"><?php echo $text_unselect_all; ?></a>
+                <label><?php echo $Language->get('entry_backup'); ?>
+                    <a onclick="$('input[name*=\'backup\']').attr('checked', 'checked');"><?php echo $Language->get('text_select_all'); ?></a> / 
+                    <a onclick="$('input[name*=\'backup\']').attr('checked', '');"><?php echo $Language->get('text_unselect_all'); ?></a>
                 </label>
                 <table>
                     <thead>

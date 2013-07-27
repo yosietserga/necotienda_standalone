@@ -11,7 +11,7 @@
 <div class="grid_24">
     <div class="box">
         <div class="header">
-            <h1><?php echo $heading_title; ?></h1>
+            <h1><?php echo $Language->get('heading_title'); ?></h1>
             <div class="buttons">
                 <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Producto</a>
                 <a onclick="location = '<?php echo $import; ?>'" class="button">Importar</a>
@@ -41,7 +41,7 @@
                 <div class="row">
                     <label>Estado del Pedido:</label>
                     <select name="filter_order_status_id" style="margin-top: 4px;">
-                        <option value="0"><?php echo $text_all_status; ?></option>
+                        <option value="0"><?php echo $Language->get('text_all_status; ?></option>
                         <?php foreach ($order_statuses as $order_status) { ?>
                         <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
                         <?php } ?>

@@ -1,1 +1,38 @@
-<?php echo $header; ?><?php echo $navigation; ?><?php echo $column_left; ?><?php echo $column_right; ?><div class="grid_10" id="content"><h1><?php echo $heading_title; ?></h1><div class="middle"><?php if ($success) { ?><div class="success"><?php echo $success; ?></div><?php } ?><p><b><?php echo $text_my_account; ?></b></p><ul style="list-style:none;"><li><img width="32" height="32" src="<?php echo HTTP_IMAGE; ?>usuarios.png" alt="<?php echo $text_information; ?>">&nbsp;&nbsp;<a title="<?php echo $text_information; ?>" href="<?php echo str_replace('&', '&amp;', $information); ?>"><?php echo $text_information; ?></a></li><li><img width='32' height='32' src="<?php echo HTTP_IMAGE; ?>contrasena.png" alt="<?php echo $text_information; ?>">&nbsp;&nbsp;<a title="<?php echo $text_password; ?>" href="<?php echo str_replace('&', '&amp;', $password); ?>"><?php echo $text_password; ?></a></li><li><img width='32' height='32' src="<?php echo HTTP_IMAGE; ?>direcciones.png" alt="<?php echo $text_information; ?>">&nbsp;&nbsp;<a title="<?php echo $text_address; ?>" href="<?php echo str_replace('&', '&amp;', $address); ?>"><?php echo $text_address; ?></a></li></ul><p><b><?php echo $text_my_orders; ?></b></p><ul style="list-style:none;"><li><img width='32' height='32' src="<?php echo HTTP_IMAGE; ?>ordenes.png" alt="<?php echo $text_information; ?>">&nbsp;&nbsp;<a title="<?php echo $text_history; ?>" href="<?php echo str_replace('&', '&amp;', $history); ?>"><?php echo $text_history; ?></a></li><li><img width='32' height='32' src="<?php echo HTTP_IMAGE; ?>descargas.png" alt="<?php echo $text_information; ?>">&nbsp;&nbsp;<a title="<?php echo $text_download; ?>" href="<?php echo str_replace('&', '&amp;', $download); ?>"><?php echo $text_download; ?></a></li></ul><p><b><?php echo $text_my_newsletter; ?></b></p><ul style="list-style:none;"><li><img width='32' height='32' src="<?php echo HTTP_IMAGE; ?>subscribir.png" alt="<?php echo $text_information; ?>">&nbsp;&nbsp;<a title="<?php echo $text_newsletter; ?>" href="<?php echo str_replace('&', '&amp;', $newsletter); ?>"><?php echo $text_newsletter; ?></a></li></ul></div></div><?php echo $footer; ?>
+<?php echo $header; ?>
+<?php echo $navigation; ?>
+<section id="maincontent" class="nt-editable">
+    <section id="content" class="nt-editable">
+	   <aside id="column_left" class="nt-editable"><?php echo $column_left; ?></aside>
+        <div class="grid_13">
+            <h1><?php echo $heading_title; ?></h1>
+            <?php if ($success) { ?><div class="success"><?php echo $success; ?></div><?php } ?>
+            <?php if ($error) { ?><div class="warning"><?php echo $error; ?></div><?php } ?>
+            <div class="clear"></div>
+            <div class="box">
+                <div class="header">
+				    <h2>Mensajes</h2>
+				</div>
+				<div class="content"></div>
+            </div>
+    		<div class="box">
+                <div class="header">
+                    <h2>Actividades Recientes</h2>
+                </div>
+    			<div class="content"></div>
+    		</div>
+    		<div class="box">
+                <div class="header">
+                    <h2>Últimos Pedidos</h2>
+                </div>
+                <div class="content"></div>
+            </div>
+    		<div class="box">
+                <div class="header">
+                    <h2>Recomendaciones</h2>
+                </div>
+    			<div class="content"></div>
+    		</div>
+        </div>
+    </section>
+</section>
+<?php echo $footer; ?>

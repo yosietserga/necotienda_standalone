@@ -1,6 +1,6 @@
 <?php
 class ModelSettingStore extends Model {
-	public function addStore($data) {
+	public function add($data) {
       	$this->db->query("INSERT INTO " . DB_PREFIX . "store SET 
           name = '" . $this->db->escape($data['name']) . "', 
           url = '" . $this->db->escape($data['url']) . "', 
@@ -53,7 +53,7 @@ class ModelSettingStore extends Model {
 		return $store_id;
 	}
 	
-	public function editStore($store_id, $data) {
+	public function update($store_id, $data) {
       	$this->db->query("UPDATE " . DB_PREFIX . "store SET 
           name = '" . $this->db->escape($data['name']) . "', 
           url = '" . $this->db->escape($data['url']) . "', 
@@ -108,7 +108,7 @@ class ModelSettingStore extends Model {
 		$this->cache->delete('store');
 	}
 	
-	public function deleteStore($store_id) {
+	public function delete($store_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "store WHERE store_id = '" . (int)$store_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "store_description WHERE store_id = '" . (int)$store_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "category_to_store WHERE store_id = '" . (int)$store_id . "'");
@@ -119,13 +119,13 @@ class ModelSettingStore extends Model {
 		$this->cache->delete('store');
 	}	
 	
-	public function getStore($store_id) {
+	public function getById($store_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "store WHERE store_id = '" . (int)$store_id . "'");
 		
 		return $query->row;
 	}
 	
-	public function getStoreDescriptions($store_id) {
+	public function getDescriptions($store_id) {
 		$store_description_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store_description WHERE store_id = '" . (int)$store_id . "'");
@@ -137,67 +137,49 @@ class ModelSettingStore extends Model {
 		return $store_description_data;
 	}
 	
-	public function getStores() {
+	public function getAll() {
 		$store_data = $this->cache->get('store');
 	
 		if (!$store_data) {
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store ORDER BY name");
-
 			$store_data = $query->rows;
-		
 			$this->cache->set('store', $store_data);
 		}
-	 
 		return $store_data;
 	}
 
-	public function getTotalStores() {
+	public function getAllTotal() {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store");
-		
 		return $query->row['total'];
 	}	
 
-	public function getTotalStoresByLanguage($language) {
+	public function getAllTotalByLanguage($language) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE language = '" . $this->db->escape($language) . "'");
-		
 		return $query->row['total'];		
 	}
 	
-	public function getTotalStoresByCurrency($currency) {
+	public function getAllTotalByCurrency($currency) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE currency = '" . $this->db->escape($currency) . "'");
-		
 		return $query->row['total'];		
 	}
 	
-	public function getTotalStoresByCountryId($country_id) {
+	public function getAllTotalByCountryId($country_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE country_id = '" . (int)$country_id . "'");
-		
 		return $query->row['total'];		
 	}
 	
-	public function getTotalStoresByZoneId($zone_id) {
+	public function getAllTotalByZoneId($zone_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE zone_id = '" . (int)$zone_id . "'");
-		
 		return $query->row['total'];		
 	}
 	
-	public function getTotalStoresByCustomerGroupId($customer_group_id) {
+	public function getAllTotalByCustomerGroupId($customer_group_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE customer_group_id = '" . (int)$customer_group_id . "'");
-		
 		return $query->row['total'];		
 	}	
 	
-	public function getTotalStoresByInformationId($information_id) {
-      	$account_query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE account_id = '" . (int)$information_id . "'");
-      	
-		$checkout_query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE checkout_id = '" . (int)$information_id . "'");
-		
-		return ($account_query->row['total'] + $checkout_query->row['total']);
-	}
-	
-	public function getTotalStoresByOrderStatusId($order_status_id) {
+	public function getAllTotalByOrderStatusId($order_status_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store WHERE order_status_id = '" . (int)$order_status_id . "'");
-		
 		return $query->row['total'];		
 	}	
 }

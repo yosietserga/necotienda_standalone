@@ -2,7 +2,7 @@
 /**
  * ModelContentPage
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -11,19 +11,19 @@
  */
 class ModelContentPage extends Model {
 	/**
-	 * ModelContentPage::addPage()
+	 * ModelContentPage::add()
 	 * 
 	 * @param mixed $data
      * @see DB
      * @see Cache
 	 * @return void
 	 */
-	public function addPage($data) {
+	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "post SET 
         parent_id   = '" . (int)$this->request->post['parent_id'] . "', 
-        date_publish_start = '" . date('Y-m-d h:i:s',strtotime($this->db->escape($value['date_publish_start']))) . "', 
-        date_publish_end = '" . date('Y-m-d h:i:s',strtotime($this->db->escape($value['date_publish_end']))) . "', 
-        template    = '" . $this->db->escape($value['template']) . "', 
+        date_publish_start = '" . date('Y-m-d h:i:s',strtotime($this->db->escape($data['date_publish_start']))) . "', 
+        date_publish_end = '" . date('Y-m-d h:i:s',strtotime($this->db->escape($data['date_publish_end']))) . "', 
+        template    = '" . $this->db->escape($data['template']) . "', 
         post_type   = 'page', 
         status      = 1, 
         sort_order  = 0, 
@@ -40,16 +40,24 @@ class ModelContentPage extends Model {
             seo_title  = '" . $this->db->escape($value['seo_title']) . "', 
             meta_description = '" . $this->db->escape($value['meta_description']) . "', 
             meta_keywords    = '" . $this->db->escape($value['meta_keywords']) . "'");
+            
+    		if (!empty($value['keyword'])) {
+    			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
+                language_id = '" . (int)$language_id . "', 
+                object_id   = '" . (int)$post_id . "', 
+                object_type = 'page', 
+                query       = 'page_id=" . (int)$post_id . "', 
+                keyword     = '" . $this->db->escape($value['keyword']) . "'");
+    		}
 		}
 		
-		
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
-            query = 'post_id=" . (int)$post_id . "', 
-            keyword = '" . $this->db->escape($data['keyword']) . "'");
-		}
-		
-		$this->cache->delete('post');
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "post_to_store SET 
+                store_id  = '". intval($store) ."', 
+                post_id = '". intval($post_id) ."'");
+            }
+        
+		$this->cache->delete("post");
         return $post_id;
 	}
 	
@@ -62,22 +70,20 @@ class ModelContentPage extends Model {
      * @see Cache
 	 * @return void
 	 */
-	public function editPage($post_id, $data) {
+	public function update($post_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "post SET 
         parent_id   = '" . (int)$this->request->post['parent_id'] . "',
-        status      = '" . (int)$this->request->post['status'] . "', 
         publish     = '" . (int)$this->request->post['publish'] . "', 
-        date_publish_start = '" . $this->db->escape($value['date_publish_start']) . "', 
-        date_publish_end = '" . $this->db->escape($value['date_publish_end']) . "', 
-        template    = '" . $this->db->escape($value['template']) . "', 
-        status      = '" . (int)$this->request->post['status'] . "', 
+        date_publish_start = '" . $this->db->escape($data['date_publish_start']) . "', 
+        date_publish_end = '" . $this->db->escape($data['date_publish_end']) . "', 
+        template    = '" . $this->db->escape($data['template']) . "', 
         sort_order  = '" . (int)$this->request->post['sort_order'] . "', 
         date_modified  = NOW() 
         WHERE post_id = '" . (int)$post_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "post_description WHERE post_id = '" . (int)$post_id . "'");
 					
-		foreach ($data['post_description'] as $language_id => $value) {
+		foreach ($data['page_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "post_description SET 
             post_id     = '" . (int)$post_id . "', 
             language_id = '" . (int)$language_id . "', 
@@ -86,34 +92,112 @@ class ModelContentPage extends Model {
             seo_title  = '" . $this->db->escape($value['seo_title']) . "', 
             meta_description = '" . $this->db->escape($value['meta_description']) . "', 
             meta_keywords    = '" . $this->db->escape($value['meta_keywords']) . "'");
+            
+    		if (!empty($value['keyword'])) {
+                $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias 
+                WHERE object_id = '" . (int)$post_id . "' 
+                AND language_id = '" . (int)$language_id . "' 
+                AND object_type = 'page'");
+                
+    			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
+                language_id = '" . (int)$language_id . "', 
+                object_id    = '" . (int)$post_id . "', 
+                object_type = 'page', 
+                query       = 'page_id=" . (int)$post_id . "', 
+                keyword     = '" . $this->db->escape($value['keyword']) . "'");
+    		}
 		}
-
-		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'post_id=" . (int)$post_id. "'");
 		
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'post_id=" . (int)$post_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
-		}
-		
-		$this->cache->delete('post');
+            $this->db->query("DELETE FROM " . DB_PREFIX . "post_to_store WHERE post_id = '". (int)$post_id ."'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "post_to_store SET 
+                store_id  = '". intval($store) ."', 
+                post_id = '". intval($post_id) ."'");
+            }
+        
+		$this->cache->delete("post");
         return $post_id;
 	}
 	
 	/**
-	 * ModelContentPage::deletePage()
+	 * ModelStoreProduct::copy()
+	 * 
+	 * @param int $product_id
+     * @see DB
+     * @see Cache
+	 * @return void
+	 */
+	public function copy($post_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "post p 
+        LEFT JOIN " . DB_PREFIX . "post_description pd ON (p.post_id = pd.post_id) 
+        WHERE p.post_id = '" . (int)$post_id . "' 
+        AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data = array_merge($data, array('page_description' => $this->getDescriptions($post_id)));
+			$data['keyword'] = $data['keyword'] . uniqid("-");
+			$this->add($data);
+		}
+	}
+	
+	/**
+	 * ModelContentPost::delete()
 	 * 
 	 * @param int $post_id
      * @see DB
      * @see Cache
 	 * @return void
 	 */
-	public function deletePage($post_id) {
+	public function delete($post_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "post WHERE post_id = '" . (int)$post_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "post_description WHERE post_id = '" . (int)$post_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'post_id=" . (int)$post_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "post_to_store WHERE post_id = '" . (int)$post_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "stat WHERE object_id = '" . (int)$post_id . "' AND object_type = 'page'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE object_id='" . (int)$post_id. "' AND object_type = 'page'");
 
-		$this->cache->delete('post');
+        if ((int)$post_id) {
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post_description 
+            WHERE post_id IN 
+                (SELECT post_id 
+                FROM " . DB_PREFIX . "post
+                WHERE parent_id = '" . (int)$post_id . "')");
+                
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post_to_store 
+            WHERE post_id IN 
+                (SELECT post_id 
+                FROM " . DB_PREFIX . "post 
+                WHERE parent_id = '" . (int)$post_id . "' AND post_type = 'page')");
+                
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "stat 
+            WHERE object_type = 'page' 
+            AND object_id IN 
+                (SELECT post_id 
+                FROM " . DB_PREFIX . "post
+                WHERE parent_id = '" . (int)$post_id . "')");
+                
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias 
+            WHERE object_type = 'page' AND object_id IN 
+                (SELECT post_id 
+                FROM " . DB_PREFIX . "post 
+                WHERE parent_id = '" . (int)$post_id . "' AND post_type = 'page')");
+                
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post WHERE parent_id = '" . (int)$category_id . "'");
+        }
+        
+		$this->cache->delete("page");
 	}	
 
+	public function getStores($id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_to_store WHERE post_id = '" . (int)$id . "'");
+		foreach ($query->rows as $result) {
+            $data[] = $result['store_id'];
+		}
+		return $data;
+	}	
+	
 	/**
 	 * ModelContentPage::getPage()
 	 * 
@@ -131,14 +215,14 @@ class ModelContentPage extends Model {
 	}
 		
 	/**
-	 * ModelContentPage::_getPages()
+	 * ModelContentPage::_getAll()
 	 * 
 	 * @param int $parent_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function _getPages($parent_id) {
+	public function _getAll($parent_id) {
 		$post_data = $this->cache->get('post_admin.' . $this->config->get('config_language_id') . '.' . $parent_id);
 	
 		if (!$post_data) {
@@ -169,14 +253,14 @@ class ModelContentPage extends Model {
 	}
 	
 	/**
-	 * ModelContentPage::getAll()
+	 * ModelContentPage::getCategories()
 	 * 
 	 * @param int $parent_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getAll($parent_id=0, $data=array()) {
+	public function getCategories($parent_id=0, $data=array()) {
 		      
 			$sql = "SELECT * 
             FROM " . DB_PREFIX . "post c 
@@ -215,22 +299,20 @@ class ModelContentPage extends Model {
 	}
 	
 	/**
-	 * ModelContentPage::getPages()
+	 * ModelContentPage::getAll()
 	 * 
 	 * @param mixed $data
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getPages($data = array()) {
-			$sql = "SELECT * FROM " . DB_PREFIX . "post pa 
+	public function getAll($data = array()) {
+	   $sql = "SELECT * FROM " . DB_PREFIX . "post pa 
             LEFT JOIN " . DB_PREFIX . "post_description pad ON (pa.post_id = pad.post_id) 
             WHERE pad.language_id = '" . (int)$this->config->get('config_language_id') . "' 
             AND post_type = 'page' ";
             
-		if ($data) {
-		
-    		$implode = array();
+	   $implode = array();
     		
     		if (isset($data['filter_title']) && !is_null($data['filter_title'])) {
     			$implode[] = "LCASE(title) LIKE '%" . $this->db->escape($data['filter_title']) . "%'";
@@ -287,32 +369,38 @@ class ModelContentPage extends Model {
 			
 			$query = $this->db->query($sql);
 			
-			return $query->rows;		
-		}
+			return $query->rows;
 	}
 	
 	/**
-	 * ModelContentPage::getPageDescriptions()
+	 * ModelContentPage::getDescriptions()
 	 * 
 	 * @param int $post_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getPageDescriptions($post_id) {
+	public function getDescriptions($post_id) {
 		$post_description_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_description pd
         LEFT JOIN " . DB_PREFIX . "post p ON (pd.post_id =p.post_id) 
         WHERE pd.post_id = '" . (int)$post_id . "' AND p.`post_type` = 'page'");
+        
 		foreach ($query->rows as $result) {
-			$post_description_data[$result['language_id']] = array(
-				'title'       => $result['title'],
-				'description' => $result['description'],
-				'seo_title'   => $result['seo_title'],
-				'meta_keywords' => $result['meta_keywords'],
-				'meta_description' => $result['meta_description']
-			);
+			$post_description_data[$result['language_id']]['title'] = $result['title'];
+			$post_description_data[$result['language_id']]['description'] = $result['description'];
+			$post_description_data[$result['language_id']]['seo_title'] = $result['seo_title'];
+			$post_description_data[$result['language_id']]['meta_keywords'] = $result['meta_keywords'];
+			$post_description_data[$result['language_id']]['meta_description'] = $result['meta_description'];
+		}
+		
+		$keywords = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias
+        WHERE object_id = '" . (int)$post_id . "' 
+        AND object_type = 'post'");
+
+		foreach ($keywords->rows as $result) {
+			$post_description_data[$result['language_id']]['keyword'] = $result['keyword'];
 		}
 		
 		return $post_description_data;

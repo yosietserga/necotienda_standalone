@@ -7,12 +7,17 @@ $_['text_module']      = 'Modulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 $_['text_left']        = 'Columna Izquierda';
 $_['text_right']       = 'Columna Derecha';
+$_['text_cart']       = 'Carrito de Compra';
 
 // Entry
 $_['entry_ajax']       = 'AJAX Añade a la Cesta:';
 $_['entry_position']   = 'Ubicaci&oacute;n:';
 $_['entry_status']     = 'Estado:';
 $_['entry_sort_order'] = 'Posici&oacute;n:';
+$_['entry_load']       = 'Auto Cargar:';
+$_['entry_title']      = 'T&iacute;tulo:';
+$_['entry_landing_page'] = 'Mostrar en las siguientes p&aacute;ginas:';
+$_['entry_class']      = 'Clase (CSS):';
 
 // Help
 $_['help_ajax']       = 'Seleccione si desea activar la animaci&oacute;n del carrito';

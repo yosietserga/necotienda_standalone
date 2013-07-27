@@ -2,7 +2,7 @@
 /**
  * ModelSaleCoupon
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -17,7 +17,7 @@ class ModelSaleCoupon extends Model {
      * @see DB
 	 * @return void
 	 */
-	public function addCoupon($data) {
+	public function add($data) {
       	$this->db->query("INSERT INTO " . DB_PREFIX . "coupon SET 
           code      = '" . $this->db->escape($data['code']) . "', 
           discount  = '" . (float)$data['discount'] . "', 
@@ -42,7 +42,13 @@ class ModelSaleCoupon extends Model {
             description = '" . $this->db->escape($value['description']) . "'");
       	}
 		
-		if (isset($data['coupon_product'])) {
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_to_store SET 
+                store_id  = '". intval($store) ."', 
+                coupon_id = '". intval($coupon_id) ."'");
+            }
+        
+		if (isset($data['Products'])) {
             foreach ($data['Products'] as $product_id => $value) {
                 if ($value == 0) continue;
         		$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_product (product_id, coupon_id) VALUES ('" . (int)$product_id . "','" . (int)$coupon_id."')");
@@ -59,7 +65,7 @@ class ModelSaleCoupon extends Model {
      * @see DB
 	 * @return void
 	 */
-	public function editCoupon($coupon_id, $data) {
+	public function update($coupon_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "coupon SET 
         code        = '" . $this->db->escape($data['code']) . "', 
         discount    = '" . (float)$data['discount'] . "', 
@@ -84,13 +90,44 @@ class ModelSaleCoupon extends Model {
             description = '" . $this->db->escape($value['description']) . "'");
       	}
 		
+            $this->db->query("DELETE FROM " . DB_PREFIX . "coupon_to_store WHERE coupon_id = '". (int)$coupon_id ."'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_to_store SET 
+                store_id  = '". intval($store) ."', 
+                coupon_id = '". intval($coupon_id) ."'");
+            }
+        
+		if (isset($data['Products'])) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_product WHERE coupon_id = '" . (int)$coupon_id . "'");
-		if (isset($data['coupon_product'])) {
             foreach ($data['Products'] as $product_id => $value) {
                 if ($value == 0) continue;
         		$this->db->query("INSERT INTO " . DB_PREFIX . "coupon_product (product_id, coupon_id) VALUES ('" . (int)$product_id . "','" . (int)$coupon_id."')");
             }
 		}		
+	}
+	
+	/**
+	 * ModelStoreProduct::copy()
+	 * 
+	 * @param int $product_id
+     * @see DB
+     * @see Cache
+	 * @return void
+	 */
+	public function copy($coupon_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "coupon p 
+        LEFT JOIN " . DB_PREFIX . "coupon_description pd ON (p.coupon_id = pd.coupon_id) 
+        WHERE p.coupon_id = '" . (int)$coupon_id . "' 
+        AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['code'] = uniqid();
+			$data = array_merge($data, array('coupon_description' => $this->getCouponDescriptions($coupon_id)));
+			$data = array_merge($data, array('Products' => $this->getCouponProducts($coupon_id)));
+			$this->addCoupon($data);
+		}
 	}
 	
 	/**
@@ -100,11 +137,21 @@ class ModelSaleCoupon extends Model {
      * @see DB
 	 * @return void
 	 */
-	public function deleteCoupon($coupon_id) {
+	public function delete($coupon_id) {
       	$this->db->query("DELETE FROM " . DB_PREFIX . "coupon WHERE coupon_id = '" . (int)$coupon_id . "'");
       	$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_description WHERE coupon_id = '" . (int)$coupon_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_product WHERE coupon_id = '" . (int)$coupon_id . "'");		
+		$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_product WHERE coupon_id = '" . (int)$coupon_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "coupon_to_store WHERE coupon_id = '" . (int)$coupon_id . "'");		
 	}
+	
+	public function getStores($id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "coupon_to_store WHERE coupon_id = '" . (int)$id . "'");
+		foreach ($query->rows as $result) {
+            $data[] = $result['store_id'];
+		}
+		return $data;
+	}	
 	
 	/**
 	 * ModelSaleCoupon::getCoupon()

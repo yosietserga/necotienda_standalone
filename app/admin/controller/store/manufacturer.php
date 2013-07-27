@@ -2,7 +2,7 @@
 /**
  * ControllerStoreManufacturer
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -41,7 +41,7 @@ class ControllerStoreManufacturer extends Controller {
   	public function insert() {
     	$this->document->title = $this->language->get('heading_title');	
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$manufacturer_id = $this->modelManufacturer->addManufacturer($this->request->post);
+			$manufacturer_id = $this->modelManufacturer->add($this->request->post);
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -72,7 +72,7 @@ class ControllerStoreManufacturer extends Controller {
   	public function update() {
     	$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$manufacturer_id = $this->modelManufacturer->editManufacturer($this->request->get['manufacturer_id'], $this->request->post);
+			$manufacturer_id = $this->modelManufacturer->update($this->request->get['manufacturer_id'], $this->request->post);
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -105,7 +105,7 @@ class ControllerStoreManufacturer extends Controller {
      }
     
   	/**
-  	 * ControllerStoreManufacturer::getList()
+  	 * ControllerStoreManufacturer::getById()
   	 * 
   	 * @see Load
   	 * @see Document
@@ -134,10 +134,6 @@ class ControllerStoreManufacturer extends Controller {
 		$this->data['insert'] = Url::createAdminUrl('store/manufacturer/insert') . $url;
 		$this->data['delete'] = Url::createAdminUrl('store/manufacturer/delete') . $url;	
 
-		$this->data['heading_title']  = $this->language->get('heading_title');
-		$this->data['button_insert']  = $this->language->get('button_insert');
-		$this->data['button_delete']  = $this->language->get('button_delete');
- 
  		$this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
 
 		if ($this->session->has('success')) {
@@ -167,7 +163,7 @@ class ControllerStoreManufacturer extends Controller {
                 return false;
             } 
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("store/manufacturer/delete") ."',$('#form').serialize(),function(){
@@ -180,7 +176,7 @@ class ControllerStoreManufacturer extends Controller {
                 return false;
             }
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
                 	$.getJSON('". Url::createAdminUrl("store/manufacturer/delete") ."',{
                         id:e
@@ -278,9 +274,9 @@ class ControllerStoreManufacturer extends Controller {
 			'limit' => $limit
 		);
 		
-		$manufacturer_total = $this->modelManufacturer->getTotalManufacturers();
+		$manufacturer_total = $this->modelManufacturer->getAllTotal();
 	
-		$results = $this->modelManufacturer->getManufacturers($data);
+		$results = $this->modelManufacturer->getAll($data);
  
     	foreach ($results as $result) {
 				$action = array(
@@ -377,31 +373,6 @@ class ControllerStoreManufacturer extends Controller {
   	 * @return void
   	 */
   	private function getForm() {
-  	 //TODO: condicionar el gestor de archivos para que solo permita seleccionar un (1) archivo de imagen
-     //TODO: crear funciones para seleccionar varias imagenes a la vez y asociarlas con objeto, asi no se tiene que seleccionar de una en una
-     //TODO: detectar los slugs que coincidan y agregarle un contador al final en caso de que hayan palabras claves ya creadas
-    	$this->data['heading_title'] = $this->language->get('heading_title');
-
-    	$this->data['text_enabled'] = $this->language->get('text_enabled');
-    	$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_default'] = $this->language->get('text_default');
-    	$this->data['text_image_manager'] = $this->language->get('text_image_manager');
-		
-		$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
-    	$this->data['entry_image'] = $this->language->get('entry_image');
-		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		
-		$this->data['help_name'] = $this->language->get('help_name');
-		$this->data['help_keyword'] = $this->language->get('help_keyword');
-    	$this->data['help_image'] = $this->language->get('help_image');
-		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
-  
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-	  
  		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
  		$this->data['error_name'] = ($this->error['name']) ? $this->error['name'] : '';
 		    
@@ -432,7 +403,7 @@ class ControllerStoreManufacturer extends Controller {
 		$this->data['cancel'] = Url::createAdminUrl('store/manufacturer') . $url;
 
     	if (isset($this->request->get['manufacturer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$manufacturer_info = $this->modelManufacturer->getManufacturer($this->request->get['manufacturer_id']);
+      		$manufacturer_info = $this->modelManufacturer->getById($this->request->get['manufacturer_id']);
     	}
 
         $this->setvar('name',$manufacturer_info,'');
@@ -440,25 +411,32 @@ class ControllerStoreManufacturer extends Controller {
         $this->setvar('image',$manufacturer_info,'');
         $this->setvar('sort_order',$manufacturer_info,'');
         
+		$this->data['stores'] = $this->modelStore->getAll();
+		$this->data['_stores'] = $this->modelManufacturer->getStores($this->request->get['manufacturer_id']);
+        
 		if (isset($manufacturer_info) && $manufacturer_info['image'] && file_exists(DIR_IMAGE . $manufacturer_info['image'])) {
 			$this->data['preview'] = NTImage::resizeAndSave($manufacturer_info['image'], 100, 100);
 		} else {
 			$this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
 		}
 		
-        $this->data['Url'] = new Url;
         //TODO: mostrar los productos al scrolldown para no colapsar el navegador cuando se listan todos los productos
         $scripts[] = array('id'=>'form','method'=>'ready','script'=>
             "$('#name').blur(function(e){
-                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',{ slug : $(this).val() },function(data){
+                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',
+                { 
+                    slug : $(this).val(),
+                    query : 'manufacturer_id=". $this->request->getQuery('manufacturer_id') ."',
+                },
+                function(data){
                         $('#slug').val(data.slug);
                 });
             });
             
-            $('#addProductsWrapper').hide();
+            $('#addsWrapper').hide();
             
-            $('#addProductsPanel').on('click',function(e){
-                var products = $('#addProductsWrapper').find('.row');
+            $('#addsPanel').on('click',function(e){
+                var products = $('#addsWrapper').find('.row');
                 
                 if (products.length == 0) {
                     $.getJSON('".Url::createAdminUrl("store/manufacturer/products")."',
@@ -466,10 +444,10 @@ class ControllerStoreManufacturer extends Controller {
                             'manufacturer_id':'".$this->request->getQuery('manufacturer_id')."'
                         }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\"></ul>');
                             
                             $.each(data, function(i,item){
-                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
                                 
                             });
                             
@@ -477,9 +455,9 @@ class ControllerStoreManufacturer extends Controller {
                                 var that = this;
                                 var valor = $(that).val().toLowerCase();
                                 if (valor.length <= 0) {
-                                    $('#addProducts li').show();
+                                    $('#adds li').show();
                                 } else {
-                                    $('#addProducts li b').each(function(){
+                                    $('#adds li b').each(function(){
                                         if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
                                             $(this).closest('li').show();
                                         } else {
@@ -503,76 +481,10 @@ class ControllerStoreManufacturer extends Controller {
                 }
             });
                 
-            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
-            
-            $('.trends').fancybox({
-        		maxWidth	: 640,
-        		maxHeight	: 600,
-        		fitToView	: false,
-        		width		: '70%',
-        		height		: '70%',
-        		autoSize	: false,
-        		closeClick	: false,
-        		openEffect	: 'none',
-        		closeEffect	: 'none'
-        	});
-            
-            $('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           }); 
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
+            $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });");
             
         $scripts[] = array('id'=>'categoryFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }
-            
-            function image_delete(field, preview) {
+            "function image_delete(field, preview) {
                 $('#' + field).val('');
                 $('#' + preview).attr('src','". HTTP_IMAGE ."cache/no_image-100x100.jpg');
             }
@@ -582,7 +494,7 @@ class ControllerStoreManufacturer extends Controller {
                 var width = $(window).width() * 0.8;
                 
             	$('#dialog').remove();
-            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
             		title: '".$this->data['text_image_manager']."',
@@ -657,7 +569,7 @@ class ControllerStoreManufacturer extends Controller {
 		$this->load->auto('store/product');
 
 		foreach ($this->request->post['selected'] as $manufacturer_id) {
-  			$product_total = $this->modelProduct->getTotalProductsByManufacturerId($manufacturer_id);
+  			$product_total = $this->modelProduct->getAllTotalByManufacturerId($manufacturer_id);
     
 			if ($product_total) {
 	  			$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);	
@@ -679,7 +591,7 @@ class ControllerStoreManufacturer extends Controller {
      public function activate() {
         if (!isset($_GET['id'])) return false;
         $this->load->auto('store/manufacturer');
-        $status = $this->modelManufacturer->getManufacturer($_GET['id']);
+        $status = $this->modelManufacturer->getById($_GET['id']);
         if ($status) {
             if ($status['status'] == 0) {
                 $this->modelManufacturer->activate($_GET['id']);
@@ -721,7 +633,7 @@ class ControllerStoreManufacturer extends Controller {
         $this->load->auto("image");
         $this->load->auto("url");
         if ($this->request->hasQuery('manufacturer_id')) {
-            $rows = $this->modelProduct->getProductsByManufacturerId($this->request->getQuery('manufacturer_id'));
+            $rows = $this->modelProduct->getAllByManufacturerId($this->request->getQuery('manufacturer_id'));
             $products_by_manufacturer = array();
             foreach ($rows as $row) {
                 $products_by_manufacturer[] = $row['product_id'];

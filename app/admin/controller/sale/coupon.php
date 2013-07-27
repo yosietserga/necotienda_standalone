@@ -2,7 +2,7 @@
 /**
  * ControllerSaleCoupon
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -41,7 +41,7 @@ class ControllerSaleCoupon extends Controller {
   	public function insert() {
     	$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$coupon_id = $this->modelCoupon->addCoupon($this->request->post);
+			$coupon_id = $this->modelCoupon->add($this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
@@ -86,7 +86,7 @@ class ControllerSaleCoupon extends Controller {
   	public function update() {
     	$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelCoupon->editCoupon($this->request->get['coupon_id'], $this->request->post);
+			$this->modelCoupon->update($this->request->get['coupon_id'], $this->request->post);
       		
 			$this->session->set('success',$this->language->get('text_success'));
 	  
@@ -117,49 +117,41 @@ class ControllerSaleCoupon extends Controller {
     	$this->getForm();
   	}
 
+    /**
+     * ControllerMarketingNewsletter::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        $this->load->auto('sale/coupon');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelCoupon->delete($id);
+            }
+		} else {
+            $this->modelCoupon->delete($_GET['id']);
+		}
+     }
+    
   	/**
-  	 * ControllerSaleCoupon::delete()
-  	 * 
-     * @see Load
-     * @see Document
-     * @see Language
-     * @see Session
-     * @see Redirect
-     * @see Request
-     * @see getList
-  	 * @return void
+  	 * ControllerMarketingNewsletter::copy()
+     * duplicar un objeto
+  	 * @return boolean
   	 */
-  	public function delete() {
-    	$this->document->title = $this->language->get('heading_title');
-		if (isset($this->request->post['selected']) && $this->validateDelete()) { 
-			foreach ($this->request->post['selected'] as $coupon_id) {
-				$this->modelCoupon->deleteCoupon($coupon_id);
-			}
-      		
-			$this->session->set('success',$this->language->get('text_success'));
-	  
-			$url = '';
-			
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('sale/coupon') . $url);
-    	}
-	
-    	$this->getList();
+  	public function copy() {
+        $this->load->auto('sale/coupon');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelCoupon->copy($id);
+            }
+		} else {
+            $this->modelCoupon->copy($_GET['id']);
+		}
+        echo 1;
   	}
-
+      
   	/**
-  	 * ControllerSaleCoupon::getList()
+  	 * ControllerSaleCoupon::getById()
   	 * 
      * @see Load
      * @see Document
@@ -208,40 +200,69 @@ class ControllerSaleCoupon extends Controller {
 		
         // SCRIPTS
         $scripts[] = array('id'=>'couponList','method'=>'function','script'=>
-            "function activate(e) {
-                $.getJSON('". Url::createAdminUrl("sale/coupon/activate") ."',{
-                    id:e
-                },function(data){
-                    if (data > 0) {
-                        $('#img_' + e).attr('src','image/good.png');
-                    } else {
-                        $('#img_' + e).attr('src','image/minus.png');
-                    }
+            "function activate(e) {    
+            	$.ajax({
+            	   'type':'get',
+                   'dataType':'json',
+                   'url':'".Url::createAdminUrl("sale/coupon/activate")."&id=' + e,
+                   'success': function(data) {
+                        if (data > 0) {
+                            $(\"#img_\" + e).attr('src','image/good.png');
+                        } else {
+                            $(\"#img_\" + e).attr('src','image/minus.png');
+                        }
+                   }
+            	});
+             }
+            function copy(e) {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.getJSON('".Url::createAdminUrl("sale/coupon/copy")."&id=' + e, function(data) {
+                    $('#gridWrapper').load('". Url::createAdminUrl("sale/coupon/grid") ."',function(response){
+                        $('#gridPreloader').hide();
+                        $('#gridWrapper').show();
+                    });
                 });
             }
-            function borrar() {
-                $('#gridWrapper').html('<img src=\"image/nt_loader.gif\" alt=\"Cargando...\" />');
-                $.post('". Url::createAdminUrl("sale/coupon/delete") ."',$('#formGrid').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("sale/coupon/grid") ."');
-                });
-            } 
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                $('#tr_' + e).hide();
-                	$.getJSON('". Url::createAdminUrl("sale/coupon/eliminar") ."',{
-                            id:e
-                        },
-                        function(data) {
-                            if (data > 0) {
-                                $('#tr_' + e).remove();
-                            } else {
-                                alert('No se pudo eliminar el objeto, posiblemente tenga otros objetos relacionados');
-                                $('#tr_' + e).show().effect('shake', { times:3 }, 300);;
-                            }
-                	});
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("sale/coupon/delete") ."',{
+                        id:e
+                    });
                 }
-             }");
-             //TODO: crear funciones comunes en un solo archivo javascript y pasarle los parametros
+                return false;
+             }
+            function editAll() {
+                return false;
+            } 
+            function addToList() {
+                return false;
+            } 
+            function copyAll() {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.post('". Url::createAdminUrl("sale/coupon/copy") ."',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('". Url::createAdminUrl("sale/coupon/grid") ."',function(){
+                        $('#gridWrapper').show();
+                        $('#gridPreloader').hide();
+                    });
+                });
+                return false;
+            } 
+            function deleteAll() {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("sale/coupon/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("sale/coupon/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("sale/coupon/grid") ."',function(){
                 $('#gridPreloader').hide();
@@ -275,7 +296,7 @@ class ControllerSaleCoupon extends Controller {
   	}
 
   	/**
-  	 * ControllerSaleCoupon::getList()
+  	 * ControllerSaleCoupon::getById()
   	 * 
      * @see Load
      * @see Document
@@ -406,53 +427,6 @@ class ControllerSaleCoupon extends Controller {
   	 * @return void
   	 */
   	private function getForm() {
-    	$this->data['heading_title'] = $this->language->get('heading_title');
-
-    	$this->data['text_enabled'] = $this->language->get('text_enabled');
-    	$this->data['text_disabled'] = $this->language->get('text_disabled');
-    	$this->data['text_yes'] = $this->language->get('text_yes');
-    	$this->data['text_no'] = $this->language->get('text_no');
-    	$this->data['text_percent'] = $this->language->get('text_percent');
-    	$this->data['text_amount'] = $this->language->get('text_amount');
-		
-		$this->data['entry_name'] = $this->language->get('entry_name');
-    	$this->data['entry_description'] = $this->language->get('entry_description');
-    	$this->data['entry_code'] = $this->language->get('entry_code');
-		$this->data['entry_discount'] = $this->language->get('entry_discount');
-		$this->data['entry_logged'] = $this->language->get('entry_logged');
-		$this->data['entry_shipping'] = $this->language->get('entry_shipping');
-		$this->data['entry_type'] = $this->language->get('entry_type');
-		$this->data['entry_total'] = $this->language->get('entry_total');
-		$this->data['entry_product'] = $this->language->get('entry_product');
-    	$this->data['entry_date_start'] = $this->language->get('entry_date_start');
-    	$this->data['entry_date_end'] = $this->language->get('entry_date_end');
-    	$this->data['entry_uses_total'] = $this->language->get('entry_uses_total');
-		$this->data['entry_uses_customer'] = $this->language->get('entry_uses_customer');
-		$this->data['entry_status'] = $this->language->get('entry_status');
-		
-		$this->data['help_name'] = $this->language->get('help_name');
-    	$this->data['help_description'] = $this->language->get('help_description');
-    	$this->data['help_code'] = $this->language->get('help_code');
-		$this->data['help_discount'] = $this->language->get('help_discount');
-		$this->data['help_logged'] = $this->language->get('help_logged');
-		$this->data['help_shipping'] = $this->language->get('help_shipping');
-		$this->data['help_type'] = $this->language->get('help_type');
-		$this->data['help_total'] = $this->language->get('help_total');
-		$this->data['help_product'] = $this->language->get('help_product');
-    	$this->data['help_date_start'] = $this->language->get('help_date_start');
-    	$this->data['help_date_end'] = $this->language->get('help_date_end');
-    	$this->data['help_uses_total'] = $this->language->get('help_uses_total');
-		$this->data['help_uses_customer'] = $this->language->get('help_uses_customer');
-		$this->data['help_status'] = $this->language->get('help_status');
-
-    	$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-    	$this->data['button_cancel'] = $this->language->get('button_cancel');
-
-    	$this->data['tab_general'] = $this->language->get('tab_general');
-
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_name'] = isset($this->error['name']) ? $this->error['name'] : '';
         $this->data['error_description'] = isset($this->error['description']) ? $this->error['description'] : '';
@@ -461,13 +435,11 @@ class ControllerSaleCoupon extends Controller {
         $this->data['error_date_end'] = isset($this->error['date_end']) ? $this->error['date_end'] : '';
         
   		$this->document->breadcrumbs = array();
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => Url::createAdminUrl('common/home'),
        		'text'      => $this->language->get('text_home'),
       		'separator' => false
    		);
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => Url::createAdminUrl('sale/coupon') . $url,
        		'text'      => $this->language->get('heading_title'),
@@ -486,8 +458,10 @@ class ControllerSaleCoupon extends Controller {
       		$coupon_info = $this->modelCoupon->getCoupon($this->request->get['coupon_id']);
     	}
 		
-    	$this->data['languages'] = $this->modelLanguage->getLanguages();
-    
+    	$this->data['languages'] = $this->modelLanguage->getAll();
+		$this->data['stores'] = $this->modelStore->getAll();
+		$this->data['_stores'] = $this->modelCoupon->getStores($this->request->get['coupon_id']);
+        
         $this->setvar('code',$coupon_info,'');
         $this->setvar('type',$coupon_info,'');
         $this->setvar('discount',$coupon_info,'');
@@ -514,7 +488,7 @@ class ControllerSaleCoupon extends Controller {
 			$this->data['coupon_product'] = array();
 		}
 
-		$this->data['categories'] = $this->modelCategory->getCategories(0);
+		$this->data['categories'] = $this->modelCategory->getAll();
 		
 		if (isset($this->request->post['date_start'])) {
        		$this->data['date_start'] = $this->request->post['date_start'];
@@ -535,10 +509,10 @@ class ControllerSaleCoupon extends Controller {
         $this->data['Url'] = new Url;
         
         $scripts[] = array('id'=>'couponForm','method'=>'ready','script'=>
-            "$('#addProductsWrapper').hide();
+            "$('#addsWrapper').hide();
             
-            $('#addProductsPanel').on('click',function(e){
-                var products = $('#addProductsWrapper').find('.row');
+            $('#addsPanel').on('click',function(e){
+                var products = $('#addsWrapper').find('.row');
                 
                 if (products.length == 0) {
                     $.getJSON('". Url::createAdminUrl("sale/coupon/products") ."',
@@ -546,10 +520,10 @@ class ControllerSaleCoupon extends Controller {
                             'coupon_id':'". $this->request->getQuery('coupon_id') ."'
                         }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\"></ul>');
                             
                             $.each(data, function(i,item){
-                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
                                 
                             });
                             
@@ -557,9 +531,9 @@ class ControllerSaleCoupon extends Controller {
                                 var that = this;
                                 var valor = $(that).val().toLowerCase();
                                 if (valor.length <= 0) {
-                                    $('#addProducts li').show();
+                                    $('#adds li').show();
                                 } else {
-                                    $('#addProducts li b').each(function(){
+                                    $('#adds li b').each(function(){
                                         if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
                                             $(this).closest('li').show();
                                         } else {
@@ -583,62 +557,7 @@ class ControllerSaleCoupon extends Controller {
                 }
             });
                 
-            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
-            
-            $('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           }); 
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
-            
-        $scripts[] = array('id'=>'couponFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }");
+            $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });");
             
         $this->scripts = array_merge($this->scripts,$scripts);
         
@@ -704,7 +623,7 @@ class ControllerSaleCoupon extends Controller {
 		
 		$product_data = array();
 		
-		$results = $this->modelProduct->getProductsByCategoryId($category_id);
+		$results = $this->modelProduct->getAllByCategoryId($category_id);
 		$html_output = '';
 		foreach ($results as $result) {
 			$product_data[] = array(

@@ -8,6 +8,7 @@ $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 // Column
 $_['column_title']     = 'Nombre';
 $_['column_unit']      = 'Tipo de Unidad';
+$_['column_value']      = 'Valor';
 $_['column_action']    = 'Acci&oacute;n';
 
 // Entry

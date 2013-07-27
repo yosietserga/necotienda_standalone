@@ -9,6 +9,10 @@ $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 // Entry
 $_['entry_code']       = 'Google Analytics ID (<a onclick="window.open(\'http://www.google.com/analytics/\');">Google Analytics</a>)';
 $_['entry_status']     = 'Estado:';
+$_['entry_load']       = 'Auto Cargar:';
+$_['entry_title']      = 'T&iacute;tulo:';
+$_['entry_landing_page'] = 'Mostrar en las siguientes p&aacute;ginas:';
+$_['entry_class']      = 'Clase (CSS):';
 
 // Help
 $_['help_code']       = 'Ingresa a http://www.google.com/analytics/, crea una cuenta para tu sitio y copia el ID de la cuenta UA-XXXXX-X';

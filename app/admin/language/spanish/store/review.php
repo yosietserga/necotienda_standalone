@@ -14,7 +14,9 @@ $_['column_date_added'] = 'Fecha de añadidura';
 $_['column_action']     = 'Acci&oacute;n';
 
 // Entry
+$_['entry_reply']     = 'R&eacute;plica:';
 $_['entry_product']     = 'Producto:';
+$_['entry_review_id']     = 'Comentario ID:';
 $_['entry_author']      = 'Autor:';
 $_['entry_rating']      = 'Valoraci&oacute;n:';
 $_['entry_status']      = 'Estado:';

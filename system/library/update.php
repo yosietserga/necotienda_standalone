@@ -62,18 +62,20 @@ class Update
             } else {
                 $file_update = $response;
             }
+            
             $file_saved = DIR_ROOT . "update.zip";
+            
             $f = fopen($file_saved,'wb');
             fwrite($f,$file_update);
             fclose($f);
+            
             if (file_exists($file_saved) && sha1_file($file_saved) == $info['checksum']) {
                 $zip = new PclZip();
                 $zip->setZipName($file_saved);
-                if ($zip->extract(PCLZIP_OPT_PATH,DIR_ROOT) > 0) {
+                if ($zip->extract(PCLZIP_OPT_PATH,DIR_ROOT,PCLZIP_OPT_REPLACE_NEWER) > 0) {
                     unlink($file_saved);
-                    if (file_exists(DIR_ROOT . "update.php")) {
-                        require_once(DIR_ROOT . "update.php");
-                    }
+                } else {
+                    return $zip->errorInfo(true);
                 }
             } else {
                 return false;
@@ -127,13 +129,13 @@ class UpdateClass
     }
     
     /**
-     * UpdateClass::request()
+     * UpdateClass::fetch()
      * 
      * @param mixed $url
      * @param mixed $requestData
      * @return
      */
-    public function request($url,$requestData=array()) {
+    public function fetch($url,$requestData=array()) {
         return file_get_contents($url);
     }
 }

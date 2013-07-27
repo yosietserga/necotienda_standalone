@@ -2,7 +2,7 @@
 <div class="grid_6">
     <div class="box">
         <div class="header">
-            <h1><?php echo $heading_title; ?></h1>
+            <h1><?php echo $Language->get('heading_title'); ?></h1>
         </div>      
         <div class="clear"></div><br />
         <h2>Vistas y Plantillas</h2>
@@ -12,28 +12,37 @@
             <h3><?php echo $value['folder']; ?></h3>
             <div>
                 <?php foreach ($value['files'] as $k => $v) { ?>
-                <a href="<?php echo $Url::createAdminUrl("style/editor",array("t"=>"tpl","f"=>basename($value['folder']) ."_". basename($v))); ?>"><?php echo basename($v); ?></a><br />
+                <a href="<?php echo $Url::createAdminUrl("style/editor",array("t"=>"tpl","f"=>basename($value['folder']) ."-". basename($v),"tpl"=>$template)); ?>"><?php echo basename($v); ?></a><br />
                 <?php } ?>
             </div>
         <?php } ?>
         </div>
         
         <div class="clear"></div><br />
-        <h2>Estilos</h2>
+        <h2>Estilos (CSS)</h2>
         <div id="styles">
         <?php foreach ($styles as $key => $value) { ?>
-            <a href="<?php echo $Url::createAdminUrl("style/editor",array("t"=>"css","f"=>$value)); ?>"><?php echo $value; ?></a><br />
+            <a href="<?php echo $Url::createAdminUrl("style/editor",array("t"=>"css","f"=>$value,"tpl"=>$template)); ?>"><?php echo $value; ?></a><br />
         <?php } ?>
         </div>
+        <!-- no esta permitido la edicion en linea de javascript
+        <div class="clear"></div><br />
+        <h2>Javascript</h2>
+        <div id="styles">
+        <?php foreach ($javascripts as $key => $value) { ?>
+            <a href="<?php echo $Url::createAdminUrl("style/editor",array("t"=>"js","f"=>$value,"tpl"=>$template)); ?>"><?php echo $value; ?></a><br />
+        <?php } ?>
+        </div>
+        -->
     </div>
 </div>
 <div class="grid_18">
     <?php if (!$error) { ?>
     <h1><?php echo $filename; ?></h1>
     <a class="button" onclick="$('#form').submit()">Guardar</a>
-    <a class="button" onclick="window.location='<?php $Url::createAdminUrl("style/editor"); ?>'">Cancelar</a>
+    <a class="button" onclick="window.location='<?php echo str_replace("&","&amp;",$cancel); ?>'">Cancelar</a>
     <div class="clear"></div><br />
-    <form action="<?php echo $search; ?>" method="post" enctype="multipart/form-data" id="form">  
+    <form action="<?php echo str_replace("&","&amp;",$action); ?>" method="post" enctype="multipart/form-data" id="form">  
         <textarea name="code" id="code"><?php echo $code; ?></textarea>
         <div id="editor" style="border: solid 1px #900;width:800px;height:1800px;display:block;float:left"></div>
     </form>
@@ -41,7 +50,6 @@
     <div class="grid_24"><div class="message warning"><?php echo $msg; ?></div></div>
     <?php } ?>
 </div>
-<script src="js/vendor/ace/src-noconflict/ace.js"></script>
 <script>
 $(function(){
     var editor = ace.edit("editor");

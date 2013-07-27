@@ -1,21 +1,19 @@
 <?php 
 class ControllerModuleCart extends Controller { 
-	protected function index() {
+	protected function index($widget=null) {
+        if (isset($widget)) {
+            $settings = (array)unserialize($widget['settings']);
+            $this->data['widget_hook'] = $this->data['widgetName'] = $widget['name'];
+        }
 		$this->language->load('module/cart');
 		
-		$this->load->model('tool/seo_url');
-		
-    	$this->data['heading_title'] = $this->language->get('heading_title');
+		if (isset($settings['title'])) {
+            $this->data['heading_title'] = $settings['title'];
+		} else {
+            $this->data['heading_title'] = $this->language->get('heading_title');
+		}
     	
-		$this->data['text_subtotal'] = $this->language->get('text_subtotal');
-		$this->data['text_empty'] = $this->language->get('text_empty');
-		$this->data['text_remove'] = $this->language->get('text_remove');
-		$this->data['text_confirm'] = $this->language->get('text_confirm');
-		$this->data['text_view'] = $this->language->get('text_view');
-		$this->data['text_checkout'] = $this->language->get('text_checkout');
-		
-		$this->data['view'] = HTTP_HOME . 'index.php?r=checkout/cart';
-		$this->data['checkout'] = HTTP_HOME . 'index.php?r=checkout/shipping';
+		$this->data['view'] = Url::createUrl("checkout/cart");
 		
 		$this->data['products'] = array();
 		
@@ -36,7 +34,7 @@ class ControllerModuleCart extends Controller {
         		'quantity'   => $result['quantity'],
 				'stock'      => $result['stock'],
 				'price'      => $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'))),
-				'href'       => $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/product&product_id=' . $result['product_id']),
+				'href'       => Url::createUrl("store/product",array("product_id"=>$result['product_id'])),
       		);
     	}
 	
@@ -48,7 +46,7 @@ class ControllerModuleCart extends Controller {
 		
 		$sort_order = array(); 
 		
-		$results = $this->model_checkout_extension->getExtensions('total');
+		$results = $this->modelExtension->getExtensions('total');
 		
 		foreach ($results as $key => $value) {
 			$sort_order[$key] = $this->config->get($value['key'] . '_sort_order');
@@ -109,16 +107,14 @@ class ControllerModuleCart extends Controller {
                 
         $this->scripts = array_merge($this->scripts,$scripts);
         
-        ;
-        
-		$this->data['ajax'] = $this->config->get('cart_ajax');
+		$this->data['ajax'] = $settings['cart_ajax'];
 		
 		$this->id = 'cart';
 		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/cart.tpl')) {
 			$this->template = $this->config->get('config_template') . '/module/cart.tpl';
 		} else {
-			$this->template = 'default/module/cart.tpl';
+			$this->template = 'cuyagua/module/cart.tpl';
 		}
 		
 		$this->render();
@@ -127,7 +123,7 @@ class ControllerModuleCart extends Controller {
 	public function callback() {
 		$this->language->load('module/cart');
 
-		$this->load->model('tool/seo_url');
+		
 		
 		$this->session->clear('shipping_methods');
 		$this->session->clear('shipping_method');
@@ -157,7 +153,7 @@ class ControllerModuleCart extends Controller {
     		foreach ($this->cart->getProducts() as $product) {
       			$output .= '<tr>';
         		$output .= '<td width="1" valign="top" align="left"><span class="cart_remove" id="remove_ ' . $product['key'] . '" />&nbsp;</span></td><td width="1" valign="top" align="right">' . $product['quantity'] . '&nbsp;x&nbsp;</td>';
-        		$output .= '<td align="left" valign="top"><a href="' . $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/product&product_id=' . $product['product_id']) . '">' . $product['name'] . '</a>';
+        		$output .= '<td align="left" valign="top"><a href="' . Url::createUrl("store/product",array("product_id"=>$product['product_id'])) . '">' . $product['name'] . '</a>';
           		$output .= '<div>';
 	            
 				foreach ($product['option'] as $option) {
@@ -178,10 +174,10 @@ class ControllerModuleCart extends Controller {
 			
 			$sort_order = array(); 
 			
-			$view = HTTP_HOME . 'index.php?r=checkout/cart';
-			$checkout = HTTP_HOME . 'index.php?r=checkout/shipping';
+			$view = Url::createUrl("checkout/cart");
+			$checkout = Url::createUrl("checkout/shipping");
 			
-			$results = $this->model_checkout_extension->getExtensions('total');
+			$results = $this->modelExtension->getExtensions('total');
 			
 			foreach ($results as $key => $value) {
 				$sort_order[$key] = $this->config->get($value['key'] . '_sort_order');

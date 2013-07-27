@@ -1,51 +1,55 @@
 <?php
 class ModelAccountCustomer extends Model {
 	public function addCustomer($data) {
-	   if ($this->getTotalCustomersByEmail($data['email'] > 0)) {
-	       $strError =  "<li>El email ya existe</li>";
-           $error = true;
-	   } 
-       if (!$error) {
-      	$result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET 
-          `store` = '" . (int)C_CODE . "', 
-          `email` = '" . $this->db->escape($data['email']) . "', 
-          `rif` = '" . $this->db->escape($data['rif']) . "', 
-          `company` = '" . $this->db->escape($data['company']) . "', 
-          `password` = '" . $this->db->escape(md5($data['password'])) . "', 
-          `codigo` = '" . $this->db->escape(md5($data['codigo'])) . "',
-          `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "', 
-          `status` = '1', 
-          `date_added` = NOW()");
-		$customer_id = $this->db->getLastId();
+        if (!$this->getTotalCustomersByEmail($data['email'])) {
+            $suffix =  base_convert(rand(10e16, 10e20), 10, 36); //TODO: agregar sufijo a las contrasenas
+            $result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET 
+              `store_id`    = '" . (int)STORE_ID . "', 
+              `firstname`   = '" . $this->db->escape($data['firstname']) . "', 
+              `lastname`    = '" . $this->db->escape($data['lastname']) . "', 
+              `telephone`   = '" . $this->db->escape($data['telephone']) . "', 
+              `email`       = '" . $this->db->escape($data['email']) . "',
+              `birthday`    = '" . $this->db->escape($data['birthday']) . "', 
+              `rif`         = '" . $this->db->escape($data['rif']) . "', 
+              `company`     = '" . $this->db->escape($data['company']) . "', 
+              `password`    = '" . $this->db->escape(md5($data['password'])) . "',
+              `activation_code`      = '" . $this->db->escape($data['activation_code']) . "',
+              `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "', 
+              `status`      = '1', 
+              `date_added`  = NOW()");
+    		$customer_id = $this->db->getLastId();
         
-      	$this->db->query("INSERT INTO " . DB_PREFIX . "address SET 
-          customer_id = '" . (int)$customer_id . "', 
-          firstname = '" . $this->db->escape($data['firstname']) . "', 
-          lastname = '" . $this->db->escape($data['lastname']) . "', 
-          company = '" . $this->db->escape($data['company']) . "', 
-          address_1 = '" . $this->db->escape($data['address_1']) . "',
-          city = '" . $this->db->escape($data['city']) . "', 
-          postcode = '" . $this->db->escape($data['postcode']) . "', 
-          country_id = '" . (int)$data['country_id'] . "', 
-          zone_id = '" . (int)$data['zone_id'] . "'");
+            $result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer_to_store` SET 
+              `store_id`    = '" . (int)STORE_ID . "', 
+              customer_id   = '" . (int)$customer_id . "'");
+              
+      	    $this->db->query("INSERT INTO " . DB_PREFIX . "address SET 
+              customer_id   = '" . (int)$customer_id . "', 
+              firstname     = '" . $this->db->escape($data['firstname']) . "', 
+              lastname      = '" . $this->db->escape($data['lastname']) . "', 
+              company       = '" . $this->db->escape($data['company']) . "', 
+              address_1     = '" . $this->db->escape($data['address_1']) . "',
+              city          = '" . $this->db->escape($data['city']) . "', 
+              postcode      = '" . $this->db->escape($data['postcode']) . "', 
+              country_id    = '" . (int)$data['country_id'] . "', 
+              zone_id       = '" . (int)$data['zone_id'] . "'");
 		
-		$address_id = $this->db->getLastId();
+            $address_id = $this->db->getLastId();
 
-      	$this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$customer_id . "'");
+      	    $this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$customer_id . "'");
 		
-		if ($this->config->get('config_customer_approval')) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `approved` = '1' WHERE `customer_id` = '" . (int)$customer_id . "'");
-		}
-        return $result;	
-      }
-      return $strError;	
+		    if ($this->config->get('config_customer_approval')) {
+			     $this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `approved` = '1' WHERE `customer_id` = '" . (int)$customer_id . "'");
+		    }
+            return $customer_id;	
+        }
 	}
 	
 	public function editCustomer($data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer SET 
         firstname = '" . $this->db->escape($data['firstname']) . "', 
         lastname = '" . $this->db->escape($data['lastname']) . "', 
-        nacimiento = '" .$this->db->escape($data['nacimiento']) . "', 
+        `birthday`    = '" . $this->db->escape($data['birthday']) . "', 
         telephone = '" . $this->db->escape($data['telephone']) . "', 
         fax = '" . $this->db->escape($data['fax']) . "', 
         sexo = '" . $this->db->escape($data['sexo']) . "', 
@@ -64,6 +68,25 @@ class ModelAccountCustomer extends Model {
         company = '" . $this->db->escape($data['company']) . "' 
         WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 	}
+    
+    public function addAddress($customer_id,$data) {
+        
+      	$this->db->query("INSERT INTO " . DB_PREFIX . "address SET 
+          customer_id = '" . (int)$customer_id . "', 
+          firstname = '" . $this->db->escape($data['firstname']) . "', 
+          lastname = '" . $this->db->escape($data['lastname']) . "', 
+          company = '" . $this->db->escape($data['company']) . "', 
+          address_1 = '" . $this->db->escape($data['address_1']) . "',
+          city = '" . $this->db->escape($data['city']) . "', 
+          postcode = '" . $this->db->escape($data['postcode']) . "', 
+          country_id = '" . (int)$data['country_id'] . "', 
+          zone_id = '" . (int)$data['zone_id'] . "'");
+		
+		$address_id = $this->db->getLastId();
+
+      	$this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = '" . (int)$address_id . "' WHERE customer_id = '" . (int)$customer_id . "'");
+		return $address_id;
+    }
     
     public function addPersonal($data) {
       	$this->db->query("INSERT INTO " . DB_PREFIX . "address SET 
@@ -135,6 +158,12 @@ class ModelAccountCustomer extends Model {
         newsletter = '" . (int)$newsletter . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 	}
 			
+	public function getAll($company) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer 
+        WHERE LCASE(company) LIKE '%". $this->db->escape(strtolower($company)) ."%'");
+		return $query->rows;
+	}
+		
 	public function getCustomer($customer_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$customer_id . "'");
 		
@@ -143,6 +172,24 @@ class ModelAccountCustomer extends Model {
 	
 	public function getTotalCustomersByEmail($email) {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "'");
+		
+		return $query->row['total'];
+	}
+    
+	public function getCustomerByTwitter($data) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer 
+        WHERE twitter_oauth_provider = 'twitter' 
+        AND twitter_oauth_id = '". intval($data['oauth_id']) ."' 
+        AND twitter_oauth_token_secret = '". $this->db->escape($data['oauth_token_secret']) ."'");
+		
+		return $query->row['total'];
+	}
+    
+	public function getCustomerByGoogle($data) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer 
+        WHERE google_oauth_provider = 'google' 
+        AND google_oauth_id = '". intval($data['oauth_id']) ."' 
+        AND company = '". $this->db->escape($data['displayName']) ."'");
 		
 		return $query->row['total'];
 	}

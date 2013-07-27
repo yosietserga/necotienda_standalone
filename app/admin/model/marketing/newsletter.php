@@ -50,21 +50,14 @@ class ModelMarketingNewsletter extends Model {
 	}
     
     public function copy($newsletter_id) {
-      $result = $this->db->query("INSERT INTO " . DB_PREFIX . "newsletter (
-              `name`,
-              `textbody`,
-              `htmlbody`,
-              `status`
-          )
-       SELECT 
-          CONCAT(`name`,' (copia)'),
-          `textbody`,
-          `htmlbody`,
-          `status`
-       FROM " . DB_PREFIX . "newsletter 
-       WHERE `newsletter_id` = '".(int)$newsletter_id."'");
-        $newsletters_id = $this->db->getLastId();
-        return $this->db->query("UPDATE " . DB_PREFIX . "newsletter SET `date_added` = NOW() WHERE `newsletter_id` = '".(int)$newsletter_id."'");
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "newsletter WHERE newsletter_id = '" . (int)$newsletter_id . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['name'] = $data['name'] ." - copia";
+			$this->add($data);
+		}
 	}
     
     /**

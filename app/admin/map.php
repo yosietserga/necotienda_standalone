@@ -50,6 +50,7 @@ switch ($route) {
     case 'store/category/update':
         $language->load('store/category');
         $loader->auto('store/category');
+        $loader->auto('store/store');
         $loader->auto('localisation/language');
         $loader->auto('image');
         $document->addStyle(HTTP_CSS . "fancybox/jquery.fancybox.css", $rel = 'stylesheet', $media = 'screen');
@@ -73,7 +74,27 @@ switch ($route) {
     case 'store/download/update':
         $language->load('store/download');
         $loader->auto('store/download');
+        $loader->auto('store/store');
         $loader->auto('localisation/language');
+        break;
+    case 'store/store':
+    case 'store/store/grid':
+    case 'store/store/delete':
+        $language->load('store/store');
+        $loader->auto('store/store');
+        $loader->auto('pagination');
+        break;
+    case 'store/store/insert':
+    case 'store/store/update':
+        $language->load('store/store');
+        $loader->auto('store/store');
+        $loader->auto('localisation/language');
+        $loader->auto('localisation/country');
+        $loader->auto('localisation/currency');
+        $loader->auto('user/customergroup');
+        $loader->auto('localisation/orderstatus');
+        $loader->auto('localisation/stockstatus');
+        $loader->auto('image');
         break;
     case 'store/manufacturer':
     case 'store/manufacturer/grid':
@@ -86,6 +107,7 @@ switch ($route) {
     case 'store/manufacturer/update':
         $language->load('store/manufacturer');
         $loader->auto('store/manufacturer');
+        $loader->auto('store/store');
         $loader->auto('localisation/language');
         $loader->auto('image');
         break;
@@ -98,6 +120,13 @@ switch ($route) {
         $loader->auto('image');
         $loader->auto('pagination');
         break;
+    case 'store/product/see':
+    case 'store/product/seeData':
+        $language->load('store/product');
+        $loader->auto('store/product');
+        $loader->auto('image');
+        $loader->auto('url');
+        break;
     case 'store/product/insert':
     case 'store/product/update':
         $language->load('store/product');
@@ -105,6 +134,7 @@ switch ($route) {
         $loader->auto('store/manufacturer');
 		$loader->auto('store/download');
 		$loader->auto('store/category');
+        $loader->auto('store/store');
 		$loader->auto('localisation/stockstatus');
 		$loader->auto('localisation/taxclass');
 		$loader->auto('localisation/weightclass');
@@ -138,28 +168,26 @@ switch ($route) {
     case 'content/page/update':
         $language->load('content/page');
         $loader->auto('content/page');
+        $loader->auto('store/store');
         $loader->auto('localisation/language');
         break;
-    case 'content/slider':
-    case 'content/slider/grid':
-    case 'content/slider/delete':
-        $language->load('content/slider');
-        $loader->auto('content/slider');
+    case 'content/banner':
+    case 'content/banner/grid':
+    case 'content/banner/delete':
+        $language->load('content/banner');
+        $loader->auto('content/banner');
         $loader->auto('pagination');
         $loader->auto('image');
         $loader->auto('url');
         break;
-    case 'content/slider/insert':
-    case 'content/slider/update':
-        $language->load('content/slider');
-        $loader->auto('content/slider');
+    case 'content/banner/insert':
+    case 'content/banner/update':
+        $language->load('content/banner');
+        $loader->auto('content/banner');
         $loader->auto('store/product');
         $loader->auto('store/category');
 		$loader->auto('setting/store');
-        $loader->auto('tool/seo_url');
         $loader->auto('localisation/language');
-        $loader->auto('image');
-        $loader->auto('url');
         break;
     case 'content/menu':
     case 'content/menu/grid':
@@ -174,6 +202,7 @@ switch ($route) {
         $loader->auto('url');
         $loader->auto('content/menu');
         $loader->auto('content/page');
+        $loader->auto('setting/store');
         $loader->auto('content/post_category');
         $loader->auto('store/category');
         $loader->auto('store/manufacturer');
@@ -189,6 +218,7 @@ switch ($route) {
     case 'content/post_category/update':
         $language->load('content/post_category');
         $loader->auto('content/post_category');
+        $loader->auto('store/store');
         $loader->auto('localisation/language');
         $loader->auto('image');
         break;
@@ -210,6 +240,7 @@ switch ($route) {
     case 'content/post/update':
         $language->load('content/post');
         $loader->auto('content/post');
+        $loader->auto('store/store');
         $loader->auto('localisation/language');
         $loader->auto('url');
         $loader->auto('image');
@@ -239,6 +270,8 @@ switch ($route) {
         $loader->auto('setting/setting');
         break;
     case 'localisation/order_status':
+    case 'localisation/order_status/grid':
+    case 'localisation/order_status/delete':
         $language->load('localisation/order_status');
         $loader->auto('localisation/orderstatus');
         $loader->auto('pagination');
@@ -250,6 +283,8 @@ switch ($route) {
 		$loader->auto('localisation/language');
         break;
     case 'localisation/stock_status':
+    case 'localisation/stock_status/grid':
+    case 'localisation/stock_status/delete':
         $language->load('localisation/stock_status');
         $loader->auto('localisation/stockstatus');
         $loader->auto('pagination');
@@ -259,6 +294,82 @@ switch ($route) {
         $language->load('localisation/stock_status');
         $loader->auto('localisation/stockstatus');
 		$loader->auto('localisation/language');
+        break;
+    case 'localisation/language':
+    case 'localisation/language/grid':
+    case 'localisation/language/delete':
+        $language->load('localisation/language');
+        $loader->auto('localisation/language');
+        $loader->auto('pagination');
+        break;
+    case 'localisation/language/insert':
+    case 'localisation/language/update':
+        $language->load('localisation/language');
+        $loader->auto('localisation/language');
+        break;
+    case 'localisation/tax_class':
+    case 'localisation/tax_class/grid':
+    case 'localisation/tax_class/delete':
+        $language->load('localisation/tax_class');
+        $loader->auto('localisation/taxclass');
+        $loader->auto('pagination');
+        break;
+    case 'localisation/tax_class/insert':
+    case 'localisation/tax_class/update':
+        $language->load('localisation/tax_class');
+		$loader->auto('localisation/language');
+        $loader->auto('localisation/taxclass');
+        break;
+    case 'localisation/currency':
+    case 'localisation/currency/grid':
+    case 'localisation/currency/delete':
+        $language->load('localisation/currency');
+        $loader->auto('localisation/currency');
+        $loader->auto('pagination');
+        break;
+    case 'localisation/currency/insert':
+    case 'localisation/currency/update':
+        $language->load('localisation/currency');
+        $loader->auto('localisation/currency');
+        break;
+    case 'localisation/weight_class':
+    case 'localisation/weight_class/grid':
+    case 'localisation/weight_class/delete':
+        $language->load('localisation/weight_class');
+        $loader->auto('localisation/weightclass');
+        $loader->auto('pagination');
+        break;
+    case 'localisation/weight_class/insert':
+    case 'localisation/weight_class/update':
+        $language->load('localisation/weight_class');
+        $loader->auto('localisation/weightclass');
+        $loader->auto('localisation/language');
+        break;
+    case 'localisation/length_class':
+    case 'localisation/length_class/grid':
+    case 'localisation/length_class/delete':
+        $language->load('localisation/length_class');
+        $loader->auto('localisation/lengthclass');
+        $loader->auto('pagination');
+        break;
+    case 'localisation/length_class/insert':
+    case 'localisation/length_class/update':
+        $language->load('localisation/length_class');
+        $loader->auto('localisation/lengthclass');
+        $loader->auto('localisation/language');
+        break;
+    case 'localisation/geo_zone':
+    case 'localisation/geo_zone/grid':
+    case 'localisation/geo_zone/delete':
+        $language->load('localisation/geo_zone');
+        $loader->auto('localisation/geozone');
+        $loader->auto('pagination');
+        break;
+    case 'localisation/geo_zone/insert':
+    case 'localisation/geo_zone/update':
+        $language->load('localisation/geo_zone');
+        $loader->auto('localisation/geozone');
+        $loader->auto('localisation/language');
         break;
     case 'sale/coupon':
     case 'sale/coupon/grid':
@@ -271,8 +382,37 @@ switch ($route) {
     case 'sale/coupon/update':
         $language->load('sale/coupon');
         $loader->auto('sale/coupon');
+        $loader->auto('store/store');
 		$loader->auto('localisation/language'); 
 		$loader->auto('store/category');
+        break;
+    case 'sale/bank':
+    case 'sale/bank/grid':
+    case 'sale/bank/delete':
+        $language->load('sale/bank');
+        $loader->auto('sale/bank');
+		$loader->auto('image'); 
+        $loader->auto('pagination');
+        break;
+    case 'sale/bank/insert':
+    case 'sale/bank/update':
+        $language->load('sale/bank');
+        $loader->auto('sale/bank');
+		$loader->auto('image'); 
+        break;
+    case 'sale/bank_account':
+    case 'sale/bank_account/grid':
+    case 'sale/bank_account/delete':
+        $language->load('sale/bank_account');
+        $loader->auto('sale/bank_account');
+        $loader->auto('pagination');
+        break;
+    case 'sale/bank_account/insert':
+    case 'sale/bank_account/update':
+        $language->load('sale/bank_account');
+        $loader->auto('sale/bank');
+        $loader->auto('store/store');
+        $loader->auto('sale/bank_account');
         break;
     case 'sale/coupon/products':
         $loader->auto('image');
@@ -360,6 +500,7 @@ switch ($route) {
         $language->load('setting/setting');
 		$loader->auto('setting/setting');
 		$loader->auto('content/page');
+		$loader->auto('marketing/newsletter');
 		$loader->auto('sale/customergroup');
 		$loader->auto('localisation/language');
 		$loader->auto('localisation/country');
@@ -398,6 +539,14 @@ switch ($route) {
         $loader->library('url');
         $registry->set('newsletter', new Newsletter());
         $registry->set('email_template', new EmailTemplate($registry));
+        break;
+    case 'marketing/message':
+        $language->load('marketing/message');
+		$loader->auto('setting/setting');
+		$loader->auto('content/page');
+		$loader->auto('marketing/newsletter');
+        $loader->auto('valid_forms');
+        $registry->set('validate_form', new ValidateForms());
         break;
     case 'marketing/contact':
     case 'marketing/contact/grid':
@@ -454,13 +603,14 @@ switch ($route) {
         $loader->auto('marketing/contact');
         $loader->library('url');
         break;
-    case 'style/backgrounds':
-    case 'style/buttons':
-    case 'style/fonts':
-    case 'style/links':
-        $language->load('style/style');
+    case 'style/widget':
+    case 'style/widget/delete':
+    case 'style/widget/sortable':
+        $language->load('style/widget');
         $loader->auto('image');
-		$loader->auto('style/style');
+		$loader->auto('style/widget');
+		$loader->auto('store/store');
+		$loader->auto('setting/extension');
         break;
     case 'style/theme':
     case 'style/theme/grid':

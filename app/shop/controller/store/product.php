@@ -1,293 +1,369 @@
 <?php  class ControllerStoreProduct extends Controller {
 	private $error = array(); 
 	public $product_id;
-	public function index() { 
-		$this->document->breadcrumbs = array();
-		$this->document->breadcrumbs[] = array(
-			'href'      => Url::createUrl('store/home'),
-			'text'      => $this->language->get('text_home'),
-			'separator' => false
-		);
-		
-		if (isset($this->request->get['path'])) {
-			$path = '';
-			foreach (explode('_', $this->request->get['path']) as $path_id) {
-				$category_info = $this->modelCategory->getCategory($path_id);
-				$path .= (!$path) ? $path_id : '_' . $path_id;
-				if ($category_info) {
-					$this->document->breadcrumbs[] = array(
-						'href'      => $this->modelSeo_url->rewrite(Url::createUrl('store/category',array('path'=>$path))),
-						'text'      => $category_info['name'],
-						'separator' => $this->language->get('text_separator')
-					);
-				}
-			}
-		}
-		
-		if (isset($this->request->get['manufacturer_id'])) {
-			$manufacturer_info = $this->modelManufacturer->getManufacturer($this->request->get['manufacturer_id']);
-			if ($manufacturer_info) {	
-				$this->document->breadcrumbs[] = array(
-					'href'	    => $this->modelSeo_url->rewrite(Url::createUrl('store/manufacturer',array('manufacturer_id'=>$this->request->get['manufacturer_id']))),
-					'text'	    => $manufacturer_info['name'],
-					'separator' => $this->language->get('text_separator')
-				);
-			}
-		}
-		
-		if (isset($this->request->get['keyword'])) {
-			$url = '';
-			if (isset($this->request->get['category_id'])) {
-				$url .= '&category_id=' . $this->request->get['category_id'];
-			}
-			if (isset($this->request->get['description'])) {
-				$url .= '&description=' . $this->request->get['description'];
-			}
-			$this->document->breadcrumbs[] = array(
-				'href'      => Url::createUrl('store/search','&keyword=' . $this->request->get['keyword'] . $url),
-				'text'      => $this->language->get('text_search'),
-				'separator' => $this->language->get('text_separator')
-			);	
-		}
-		
-		$this->product_id = $product_id = isset($this->request->get['product_id']) ? $this->request->get['product_id'] : $product_id = 0;
+	public function index() {
+		$this->product_id = $product_id = isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : $product_id = 0;
 		$product_info = $this->modelProduct->getProduct($product_id);
 		
 		if ($product_info) {
-			$url = '';
-			if (isset($this->request->get['path'])) {
-				$url .= '&path=' . $this->request->get['path'];
-			}
-			if (isset($this->request->get['manufacturer_id'])) {
-				$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
-			}
-			if (isset($this->request->get['keyword'])) {
-				$url .= '&keyword=' . $this->request->get['keyword'];
-			}
-			if (isset($this->request->get['category_id'])) {
-				$url .= '&category_id=' . $this->request->get['category_id'];
-			}
-			if (isset($this->request->get['description'])) {
-				$url .= '&description=' . $this->request->get['description'];
-			}						
-			$this->document->breadcrumbs[] = array(
-				'href'      => $this->modelSeo_url->rewrite(Url::createUrl('store/product',$url . '&product_id=' . $this->request->get['product_id'])),
-				'text'      => $product_info['name'],
-				'separator' => $this->language->get('text_separator')
-			);			
-			
-			$this->document->title = $product_info['name'];
-			$this->document->keywords = $product_info['meta_keywords'];
-			$this->document->description = $product_info['meta_description'];
-			$this->document->links = array();
-			$this->document->links[] = array(
-				'href' => $this->modelSeo_url->rewrite(Url::createUrl('store/product',array('product_id'=>$this->request->get['product_id']))),
-				'rel'  => 'canonical'
-			);
-
-			$this->data['heading_title']     = $product_info['name'];
-			$this->data['text_enlarge']      = $this->language->get('text_enlarge');
-			$this->data['text_discount']     = $this->language->get('text_discount');
-			$this->data['text_options']      = $this->language->get('text_options');
-			$this->data['text_price']        = $this->language->get('text_price');
-			$this->data['text_availability'] = $this->language->get('text_availability');
-			$this->data['text_model']        = $this->language->get('text_model');
-			$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
-			$this->data['text_order_quantity'] = $this->language->get('text_order_quantity');
-			$this->data['text_price_per_item'] = $this->language->get('text_price_per_item');
-			$this->data['text_qty']          = $this->language->get('text_qty');
-			$this->data['text_write']        = $this->language->get('text_write');
-			$this->data['text_average']      = $this->language->get('text_average');
-			$this->data['text_no_rating']    = $this->language->get('text_no_rating');
-			$this->data['text_note']         = $this->language->get('text_note');
-			$this->data['text_no_images']    = $this->language->get('text_no_images');
-			$this->data['text_no_related']   = $this->language->get('text_no_related');
-			$this->data['text_wait']         = $this->language->get('text_wait');
-			$this->data['text_tags']         = $this->language->get('text_tags');
-			$this->data['text_minimum']      = sprintf($this->language->get('text_minimum'), $product_info['minimum']);
-			$this->data['entry_name']        = $this->language->get('entry_name');
-			$this->data['entry_review']      = $this->language->get('entry_review');
-			$this->data['entry_rating']      = $this->language->get('entry_rating');
-			$this->data['entry_good']        = $this->language->get('entry_good');
-			$this->data['entry_bad']         = $this->language->get('entry_bad');
-			$this->data['entry_captcha']     = $this->language->get('entry_captcha');
-			$this->data['button_continue']   = $this->language->get('button_continue');
-			
-			$average = ($this->config->get('config_review')) ? $this->modelReview->getAverageRating($this->request->get['product_id']) : $average = false;
-
-			$this->data['review_status'] = $this->config->get('config_review');
-			$this->data['text_stars']    = sprintf($this->language->get('text_stars'), $average);
-			$this->data['button_add_to_cart'] = $this->language->get('button_add_to_cart');
-			$this->data['action']        = Url::createUrl('checkout/cart');
-			$this->data['redirect']      = Url::createUrl('store/product',$url . '&product_id=' . $this->request->get['product_id']);
-
-			$image = isset($product_info['image']) ? $product_info['image'] : $image = 'no_image.jpg';
-			$this->data['popup']=NTImage::resizeAndSave($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
-			$this->data['thumb']=NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-
-            $imgProduct = array(
-                'popup'  => NTImage::resizeAndSave($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
-                'preview'=> NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
-                'thumb'  => NTImage::resizeAndSave($image, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
-            );
-
-			$this->data['product_info'] = $product_info;
-			
-			$discount = $this->modelProduct->getProductDiscount($this->request->get['product_id']);
-			
-			if ($discount) {
-				$this->data['price'] = $this->currency->format($this->tax->calculate($discount, $product_info['tax_class_id'], $this->config->get('config_tax')));
-				$this->data['special'] = false;
-			} else {
-				$this->data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
-				$special = $this->modelProduct->getProductSpecial($this->request->get['product_id']);
-			
-				if ($special) {
-					$this->data['special'] = $this->currency->format($this->tax->calculate($special, $product_info['tax_class_id'], $this->config->get('config_tax')));
-				} else {
-					$this->data['special'] = false;
-				}
-			}
-			
-			$discounts = $this->modelProduct->getProductDiscounts($this->request->get['product_id']);
-			$this->data['discounts'] = array(); 
-			
-			foreach ($discounts as $discount) {
-				$this->data['discounts'][] = array(
-					'quantity' => $discount['quantity'],
-					'price'    => $this->currency->format($this->tax->calculate($discount['price'], $product_info['tax_class_id'], $this->config->get('config_tax')))
-				);
-			}
-			
-			if ($product_info['quantity'] <= 0) {
-				$this->data['stock'] = $product_info['stock'];
-			} else {
-				if ($this->config->get('config_stock_display')) {
-					$this->data['stock'] = $product_info['quantity'];
-				} else {
-					$this->data['stock'] = $this->language->get('text_instock');
-				}
-			}
-			
-			if ($product_info['minimum']) {
-				$this->data['minimum'] = $product_info['minimum'];
-			} else {
-				$this->data['minimum'] = 1;
-			}
-			
-			$this->data['model']         = $product_info['model'];
-			$this->data['manufacturer']  = $product_info['manufacturer'];
-			$this->data['manufacturers'] = $this->modelSeo_url->rewrite(Url::createUrl('store/manufacturer',array('manufacturer_id'=>$product_info['manufacturer_id'])));
-			$this->data['description']   = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
-			$this->data['product_id']    = $this->request->get['product_id'];
-			$this->data['average']       = $average;
-			$this->data['options']       = array();
-			
-			$options = $this->modelProduct->getProductOptions($this->request->get['product_id']);
-			
-			foreach ($options as $option) { 
-				$option_value_data = array();
-				foreach ($option['option_value'] as $option_value) {
-					$option_value_data[] = array(
-						'option_value_id' => $option_value['product_option_value_id'],
-						'name'            => $option_value['name'],
-						'price'           => (float)$option_value['price'] ? $this->currency->format($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax'))) : false,
-						'prefix'          => $option_value['prefix']
-					);
-				}
-				
-				$this->data['options'][] = array(
-					'option_id'    => $option['product_option_id'],
-					'name'         => $option['name'],
-					'option_value' => $option_value_data
-				);
-			}
-			
-			$this->data['images'] = array();
-			$results = $this->modelProduct->getProductImages($this->request->get['product_id']);
-			
-			foreach ($results as $k => $result) {
-				$this->data['images'][$k] = array(
-					'popup' => NTImage::resizeAndSave($result['image'] , $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
-					'preview' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
-					'thumb' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
-				);
-			}
-            $k = count($this->data['images']) + 1;
-            $this->data['images'][$k] = $imgProduct;
-            
-			if (!$this->config->get('config_customer_price')) {
-				$this->data['display_price'] = true;
-			} elseif ($this->customer->isLogged()) {
-				$this->data['display_price'] = true;
-			} else {
-				$this->data['display_price'] = false;
-			}
-            
-			$customer_id = ($this->customer->isLogged()) ? $this->session->get('customer_id') : $customer_id = 0;
-			
-			$this->modelProduct->updateViewed($this->request->get['product_id'],$customer_id);
-			
-			$this->data['tags'] = array();
-					
-			$results = $this->modelProduct->getProductTags($this->request->get['product_id']);
-			
-			foreach ($results as $result) {
-				if ($result['tag']) {
-					$this->data['tags'][] = array(
-						'tag'	=> $result['tag'],
-						'href'	=> Url::createUrl('store/search',array('keyword'=>$result['tag']))
-					);
-				}
-			}
-			
-            // style files
-            $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-            
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-    		  $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
-    		} else {
-    		  $csspath = str_replace("%theme%","default",$csspath);
-    		}
-            
-            if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
-                $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+            $cached = $this->cache->get('product.' . 
+                    $product_id .
+                    $this->config->get('config_language_id') . "." . 
+                    $this->config->get('config_currency') . "." . 
+                    (int)$this->config->get('config_store_id')
+            );   
+            $this->load->library('user');
+           	if ($cached && !$this->user->isLogged()) {
+                $this->response->setOutput($cached, $this->config->get('config_compression'));
+       	    } else {
+                //Languages
+                $this->language->load('store/product');
+                
+                //Models
+        		$this->load->auto('store/product');
+        		$this->load->auto('store/category');
+        		$this->load->auto('store/manufacturer');
+        		
+        		$this->load->auto('tool/image');
+        		$this->load->auto('store/review');
+                
+                //Libs
+        		$this->load->auto('currency');
+        		$this->load->auto('tax');
+                
+        		$this->document->breadcrumbs = array();
+        		$this->document->breadcrumbs[] = array(
+        			'href'      => Url::createUrl('store/home'),
+        			'text'      => $this->language->get('text_home'),
+        			'separator' => false
+        		);
+        		
+        		if (isset($this->request->get['path'])) {
+        			$path = '';
+        			foreach (explode('_', $this->request->get['path']) as $path_id) {
+        				$category_info = $this->modelCategory->getCategory($path_id);
+        				$path .= (!$path) ? $path_id : '_' . $path_id;
+        				if ($category_info) {
+        					$this->document->breadcrumbs[] = array(
+        						'href'      => Url::createUrl('store/category',array('path'=>$path)),
+        						'text'      => $category_info['name'],
+        						'separator' => $this->language->get('text_separator')
+        					);
+        				}
+        			}
+        		}
+        		
+        		if (isset($this->request->get['manufacturer_id'])) {
+        			$manufacturer_info = $this->modelManufacturer->getManufacturer($this->request->get['manufacturer_id']);
+        			if ($manufacturer_info) {	
+        				$this->document->breadcrumbs[] = array(
+        					'href'	    => Url::createUrl('store/manufacturer',array('manufacturer_id'=>$this->request->get['manufacturer_id'])),
+        					'text'	    => $manufacturer_info['name'],
+        					'separator' => $this->language->get('text_separator')
+        				);
+        			}
+        		}
+        		
+        		if (isset($this->request->get['keyword'])) {
+        			$url = '';
+        			if (isset($this->request->get['category_id'])) {
+        				$url .= '&category_id=' . $this->request->get['category_id'];
+        			}
+        			if (isset($this->request->get['description'])) {
+        				$url .= '&description=' . $this->request->get['description'];
+        			}
+        			$this->document->breadcrumbs[] = array(
+        				'href'      => Url::createUrl('store/search','&keyword=' . $this->request->get['keyword'] . $url),
+        				'text'      => $this->language->get('text_search'),
+        				'separator' => $this->language->get('text_separator')
+        			);	
+        		}
+    		
+    			$url = '';
+    			if (isset($this->request->get['path'])) {
+    				$url .= '&path=' . $this->request->get['path'];
+    			}
+    			if (isset($this->request->get['manufacturer_id'])) {
+    				$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
+    			}
+    			if (isset($this->request->get['keyword'])) {
+    				$url .= '&keyword=' . $this->request->get['keyword'];
+    			}
+    			if (isset($this->request->get['category_id'])) {
+    				$url .= '&category_id=' . $this->request->get['category_id'];
+    			}
+    			if (isset($this->request->get['description'])) {
+    				$url .= '&description=' . $this->request->get['description'];
+    			}						
+    			$this->document->breadcrumbs[] = array(
+    				'href'      => Url::createUrl('store/product',$url . '&product_id=' . $product_id),
+    				'text'      => $product_info['name'],
+    				'separator' => $this->language->get('text_separator')
+    			);			
+    			
+                $this->data['breadcrumbs'] = $this->document->breadcrumbs;
+                
+    			$this->document->title = $product_info['name'];
+    			$this->document->keywords = $product_info['meta_keywords'];
+    			$this->document->description = $product_info['meta_description'];
+    			$this->document->links = array();
+    			$this->document->links[] = array(
+    				'href' => Url::createUrl('store/product',array('product_id'=>$product_id)),
+    				'rel'  => 'canonical'
+    			);
+    
+    			$this->data['heading_title']     = $product_info['name'];
+    			$this->data['text_minimum']      = sprintf($this->language->get('text_minimum'), $product_info['minimum']);
+    			
+    			$average = ($this->config->get('config_review')) ? $this->modelReview->getAverageRating($product_id) : $average = false;
+    
+    			$this->data['review_status'] = $this->config->get('config_review');
+    			$this->data['text_stars']    = sprintf($this->language->get('text_stars'), $average);
+    			$this->data['action']        = Url::createUrl('checkout/cart');
+    			$this->data['redirect']      = Url::createUrl('store/product',$url . '&product_id=' . $product_id);
+    
+    			$image = isset($product_info['image']) ? $product_info['image'] : $image = 'no_image.jpg';
+    			$this->data['popup']=NTImage::resizeAndSave($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
+    			$this->data['thumb']=NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
+    
+                $imgProduct = array(
+                    'popup'  => NTImage::resizeAndSave($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                    'preview'=> NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                    'thumb'  => NTImage::resizeAndSave($image, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+                );
+    
+    			$this->data['product_info'] = $product_info;
+    			
+    			$discount = $this->modelProduct->getProductDiscount($product_id);
+                
+    			if ($discount) {
+    				$this->data['price'] = $this->currency->format($this->tax->calculate($discount, $product_info['tax_class_id'], $this->config->get('config_tax')));
+    				$this->data['special'] = false;
+    			} else {
+    				$this->data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+    				$special = $this->modelProduct->getProductSpecial($product_id);
+    			
+    				if ($special) {
+    					$this->data['special'] = $this->currency->format($this->tax->calculate($special, $product_info['tax_class_id'], $this->config->get('config_tax')));
+    				} else {
+    					$this->data['special'] = false;
+    				}
+    			}
+                
+    			$discounts = $this->modelProduct->getProductDiscounts($product_id);
+                
+    			$this->data['discounts'] = array(); 
+    			foreach ($discounts as $discount) {
+    				$this->data['discounts'][] = array(
+    					'quantity' => $discount['quantity'],
+    					'price'    => $this->currency->format($this->tax->calculate($discount['price'], $product_info['tax_class_id'], $this->config->get('config_tax')))
+    				);
+    			}
+    			
+    			if ($product_info['quantity'] <= 0) {
+    				$this->data['stock'] = $product_info['stock'];
+    			} else {
+    				if ($this->config->get('config_stock_display')) {
+    					$this->data['stock'] = $product_info['quantity'];
+    				} else {
+    					$this->data['stock'] = $this->language->get('text_instock');
+    				}
+    			}
+    			
+    			if ($product_info['minimum']) {
+    				$this->data['minimum'] = $product_info['minimum'];
+    			} else {
+    				$this->data['minimum'] = 1;
+    			}
+    			
+    			$this->data['model']         = $product_info['model'];
+    			$this->data['manufacturer']  = $product_info['manufacturer'];
+    			$this->data['manufacturers'] = Url::createUrl('store/manufacturer',array('manufacturer_id'=>$product_info['manufacturer_id']));
+    			$this->data['description']   = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+    			$this->data['product_id']    = $product_id;
+    			$this->data['average']       = $average;
+    			$this->data['options']       = array();
+    			$this->data['categories']    = $this->modelProduct->getCategoriesByProduct(array('product_id'=>$product_id));
+                $this->data['related']       = $this->modelProduct->getProductRelated($product_id);
+                
+                
+    			$options = $this->modelProduct->getProductOptions($product_id);
+    			
+    			foreach ($options as $option) { 
+    				$option_value_data = array();
+    				foreach ($option['option_value'] as $option_value) {
+    					$option_value_data[] = array(
+    						'option_value_id' => $option_value['product_option_value_id'],
+    						'name'            => $option_value['name'],
+    						'price'           => (float)$option_value['price'] ? $this->currency->format($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax'))) : false,
+    						'prefix'          => $option_value['prefix']
+    					);
+    				}
+    				
+    				$this->data['options'][] = array (
+    					'option_id'    => $option['product_option_id'],
+    					'name'         => $option['name'],
+    					'option_value' => $option_value_data
+    				);
+    			}
+    			
+    			$this->data['images'] = array();
+    			$results = $this->modelProduct->getProductImages($product_id);
+    			
+    			foreach ($results as $k => $result) {
+    				$this->data['images'][$k] = array(
+    					'popup' => NTImage::resizeAndSave($result['image'] , $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+    					'preview' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+    					'thumb' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+    				);
+    			}
+                $k = count($this->data['images']) + 1;
+                $this->data['images'][$k] = $imgProduct;
+                
+    			if (!$this->config->get('config_customer_price')) {
+    				$this->data['display_price'] = true;
+    			} elseif ($this->customer->isLogged()) {
+    				$this->data['display_price'] = true;
+    			} else {
+    				$this->data['display_price'] = false;
+    			}
+                
+                list($dia,$mes,$ano) = explode('-',date('d-m-Y'));
+                list($pdia,$pmes,$pano) = explode('-',date('d-m-Y',strtotime($product_info['created'])));
+                $l = ((int)$this->config->get('config_new_days') > 30) ? 30 : $this->config->get('config_new_days');
+                if ( ($dia = $dia - $l) <= 0) {
+                    $dia = $dia + 30;
+                    if ($dia <= 0) $dia = 1;
+                    $mes = $mes - 1;
+                    if ($mes <= 0) {
+                        $mes = $mes + 12;
+                        $ano = $ano - 1;
+                    }
+                }
+                
+                if ($special && $this->data['display_price']) {
+                    $this->data['sticker'] = "<div class='oferta'></div>";
+                } elseif ($discount && $this->data['display_price']) {
+                    $this->data['sticker'] = "<div class='descuento'></div>";
+                } elseif (strtotime($dia."-".$mes."-".$ano) <= strtotime($pdia."-".$pmes."-".$pano)) {
+                    $this->data['sticker'] = "<div class='nuevo'></div>";
+                } else {
+                    $this->data['sticker'] = "";
+                }
+                
+                $this->data['config_image_popup_width'] = $this->config->get('config_image_popup_width');
+                $this->data['config_image_popup_height'] = $this->config->get('config_image_popup_height');
+                $this->data['config_image_thumb_width'] = $this->config->get('config_image_thumb_width');
+                $this->data['config_image_thumb_height'] = $this->config->get('config_image_thumb_height');
+                $this->data['config_image_additional_width'] = $this->config->get('config_image_additional_width');
+                $this->data['config_image_additional_height'] = $this->config->get('config_image_additional_height');
+                
+    			$this->modelProduct->updateStats($this->request->getQuery('product_id'),(int)$this->customer->getId());
+    			
+    			$this->data['tags'] = array();
+    					
+    			$results = $this->modelProduct->getProductTags($product_id);
+    			
+    			foreach ($results as $result) {
+    				if ($result['tag']) {
+    					$this->data['tags'][] = array(
+    						'tag'	=> $result['tag'],
+    						'href'	=> Url::createUrl('store/search',array('q'=>$result['tag']))
+    					);
+    				}
+    			}
+    			
+                // style files
+                $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+                
+                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+        		  $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
+        		} else {
+        		  $csspath = str_replace("%theme%","default",$csspath);
+        		}
+                
+                if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
+                    $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+                }
+                
+                if (count($styles)) {
+                    $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+                }
+                
+                $template = ($this->config->get('config_product_layout')) ? $this->config->get('config_product_layout') : 'product';
+                
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
             }
             
-            if (count($styles)) {
-                $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+            foreach ($widgets->getWidgets('featuredContent') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
             }
             
-            if ($hasFeatured) {
-                //TODO: obtener los sliders si están asignados a este producto
-                $this->children[] = 'common/showslider';
+        		$this->children[] = 'common/column_left';
+        		$this->children[] = 'common/column_right';
+        		$this->children[] = 'common/nav';
+        		$this->children[] = 'common/header';
+        		$this->children[] = 'common/footer';
+                
+       			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/'. $template .'.tpl')) {
+      				$this->template = $this->config->get('config_template') . '/store/'. $template .'.tpl';
+       			} else {
+      				$this->template = 'cuyagua/store/'. $template .'.tpl';
+       			}
+       			if (!$this->user->isLogged()) {
+            		$this->cacheId = 'product.' . 
+                        $product_id .
+                        $this->config->get('config_language_id') . "." . 
+                        $this->config->get('config_currency') . "." . 
+                        (int)$this->config->get('config_store_id');
+                }     
+    			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
             }
-            
-            if (!$hasColumnLeft) {
-                //TODO: obtener si este template tiene columna izquierda, entonces cargar hijo
-                $this->children[] = 'common/column_left';
-            }
-            
-            if ($hasColumnRight) {
-                //TODO: obtener si este template tiene columna derecha, entonces cargar hijo
-                $this->children[] = 'common/column_right';
-            }
-            
-    		$this->children[] = 'common/header';
-    		$this->children[] = 'common/nav';
-    		$this->children[] = 'common/footer';
-            
-            //TODO: obtener el layout configurado y utilizarlo como template
-            
-            $template = ($this->config->get('config_product_layout')) ? $this->config->get('config_product_layout') : 'product';
-            
-   			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/'. $template .'.tpl')) {
-  				$this->template = $this->config->get('config_template') . '/store/'. $template .'.tpl';
-   			} else {
-  				$this->template = 'default/store/'. $template .'.tpl';
-   			}
-   			
-			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 		} else {
 		  //TODO: forward to error/not_found
 			$url = '';
@@ -307,178 +383,494 @@
 				$url .= '&description=' . $this->request->get['description'];
 			}	
       		$this->document->breadcrumbs[] = array(
-        		'href'      => $this->modelSeo_url->rewrite(Url::createUrl('store/product',$url . '&product_id=' . $product_id)),
+        		'href'      => Url::createUrl('store/product',$url . '&product_id=' . $product_id),
         		'text'      => $this->language->get('text_error'),
         		'separator' => $this->language->get('text_separator')
       		);			
-		
-      		$this->document->title      = $this->language->get('text_error');
-      		$this->data['heading_title']= $this->language->get('text_error');
-      		$this->data['text_error']   = $this->language->get('text_error');
-      		$this->data['button_continue'] = $this->language->get('button_continue');
+		$this->data['breadcrumbs'] = $this->document->breadcrumbs;
+      		$this->document->title      = $this->data['heading_title'] = $this->language->get('text_error');
       		$this->data['continue']     = Url::createUrl('store/home');
 	  
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
+            foreach ($widgets->getWidgets('featuredContent') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
 				$this->template = $this->config->get('config_template') . '/error/not_found.tpl';
 			} else {
-				$this->template = 'default/error/not_found.tpl';
+				$this->template = 'cuyagua/error/not_found.tpl';
 			}
 			
-    		$this->children = array(
-    			'common/header',
-    			'common/nav',
-    			'common/column_left',
-    			'common/column_right',
-    			'common/footer'
-    		);
+    		$this->children[] = 'common/column_left';
+    		$this->children[] = 'common/column_right';
+    		$this->children[] = 'common/nav';
+    		$this->children[] = 'common/header';
+    		$this->children[] = 'common/footer';
             
 			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     	}
   	}
 	
+	public function all() { 
+    	$this->language->load('store/product');
+    	$this->document->title = $this->language->get('heading_title');
+
+		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array( 
+       		'href'      => Url::createUrl("common/home"),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+   		$this->document->breadcrumbs[] = array( 
+       		'href'      => Url::createUrl("store/product/all"),
+       		'text'      => $this->language->get('text_products'),
+      		'separator' => false
+   		);
+        $this->data['breadcrumbs'] = $this->document->breadcrumbs;
+		$data['filter_keyword']       = $this->request->hasQuery('q') ? $this->request->getQuery('q') : '';
+		$data['filter_price_start']   = $this->request->hasQuery('ps') ? $this->request->getQuery('ps') : '';
+		$data['filter_price_end']     = $this->request->hasQuery('pe') ? $this->request->getQuery('pe') : '';
+		$data['filter_color']         = $this->request->hasQuery('co') ? $this->request->getQuery('co') : '';
+		$data['filter_category']      = $this->request->hasQuery('c') ? $this->request->getQuery('c') : '';
+		$data['filter_manufacturer']  = $this->request->hasQuery('m') ? $this->request->getQuery('m') : '';
+        
+		$data['page']   = $this->request->hasQuery('page') ? $this->request->getQuery('page') : 1;
+		$data['sort']   = $this->request->hasQuery('sort') ? $this->request->getQuery('sort') : 'pd.name';
+		$data['order']  = $this->request->hasQuery('order') ? $this->request->getQuery('order') : 'ASC';
+		$data['limit']  = $this->request->hasQuery('limit') ? $this->request->getQuery('limit') : $this->config->get('config_catalog_limit');
+        
+        $this->data['sorts'] = array();
+        
+		$url = '';
+		if ($this->request->hasQuery('q'))    { $url .= '&q=' . $this->request->getQuery('q'); }
+		if ($this->request->hasQuery('ps'))   { $url .= '&ps=' . $this->request->getQuery('ps'); }
+		if ($this->request->hasQuery('pe'))   { $url .= '&pe=' . $this->request->getQuery('pe'); }
+		if ($this->request->hasQuery('co'))   { $url .= '&co=' . $this->request->getQuery('co'); }
+		if ($this->request->hasQuery('c'))    { $url .= '&c=' . $this->request->getQuery('c'); }
+		if ($this->request->hasQuery('m'))    { $url .= '&m=' . $this->request->getQuery('m'); }
+		if ($this->request->hasQuery('page')) { $url .= '&page=' . $this->request->getQuery('page'); }
+		if ($this->request->hasQuery('limit')){ $url .= '&limit=' . $this->request->getQuery('limit'); }
+		if ($this->request->hasQuery('v'))    { $url .= '&v=' . $this->request->getQuery('v'); }
+        
+        $this->data['sorts'][] = array(
+            'text'  => $this->language->get('text_default'),
+            'value' => 'p.sort_order-ASC',
+			'href'  => Url::createUrl("store/product/all",'&sort=p.sort_order&order=ASC'. $url)
+        );
+        
+		$this->data['sorts'][] = array(
+            'text'  => $this->language->get('text_name_asc'),
+			'value' => 'pd.name-ASC',
+			'href'  => Url::createUrl("store/product/all",'&sort=pd.name&order=ASC'. $url)
+			);
+ 
+		$this->data['sorts'][] = array(
+            'text'  => $this->language->get('text_name_desc'),
+			'value' => 'pd.name-DESC',
+			'href'  => Url::createUrl("store/product/all",'&sort=pd.name&order=DESC'. $url)
+		);  
+
+		$this->data['sorts'][] = array(
+            'text'  => $this->language->get('text_price_asc'),
+            'value' => 'p.price-ASC',
+			'href'  => Url::createUrl("store/product/all",'&sort=p.price&order=ASC'. $url)
+		); 
+
+		$this->data['sorts'][] = array(
+            'text'  => $this->language->get('text_price_desc'),
+            'value' => 'p.price-DESC',
+			'href'  => Url::createUrl("store/product/all",'&sort=p.price&order=DESC'. $url)
+		); 
+        
+		$this->data['sorts'][] = array(
+            'text'  => $this->language->get('text_rating_asc'),
+            'value' => 'p.rating-ASC',
+			'href'  => Url::createUrl("store/product/all",'&sort=p.rating&order=ASC'. $url)
+		); 
+
+		$this->data['sorts'][] = array(
+            'text'  => $this->language->get('text_rating_desc'),
+            'value' => 'p.rating-DESC',
+			'href'  => Url::createUrl("store/product/all",'&sort=p.rating&order=DESC'. $url)
+		);
+        
+		$this->load->model('store/product');
+		$this->load->model('store/review');
+        $data['start'] = ($data['page'] - 1) * $data['limit'];
+		$product_total = $this->modelProduct->getTotalByKeyword($data);
+		if ($product_total) {
+    		$url = '';
+    		if ($this->request->hasQuery('q'))    { $url .= '&q=' . $this->request->getQuery('q'); }
+    		if ($this->request->hasQuery('ps'))   { $url .= '&ps=' . $this->request->getQuery('ps'); }
+    		if ($this->request->hasQuery('pe'))   { $url .= '&pe=' . $this->request->getQuery('pe'); }
+    		if ($this->request->hasQuery('co'))   { $url .= '&co=' . $this->request->getQuery('co'); }
+    		if ($this->request->hasQuery('c'))    { $url .= '&c=' . $this->request->getQuery('c'); }
+    		if ($this->request->hasQuery('m'))    { $url .= '&m=' . $this->request->getQuery('m'); }
+    		if ($this->request->hasQuery('order')){ $url .= '&order=' . $this->request->getQuery('order'); }
+    		if ($this->request->hasQuery('sort')) { $url .= '&sort=' . $this->request->getQuery('sort'); }
+    		if ($this->request->hasQuery('limit')){ $url .= '&limit=' . $this->request->getQuery('limit'); }
+    		if ($this->request->hasQuery('v'))    { $url .= '&v=' . $this->request->getQuery('v'); }
+            
+            $this->data['products'] = array();
+            $results = $this->modelProduct->getByKeyword($data);
+    		foreach ($results as $result) {
+    		    $image = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
+    
+    			if ($this->config->get('config_review')) {
+    				$rating = $this->modelReview->getAverageRating($result['product_id']);	
+    			} else {
+    				$rating = false;
+    			}
+                
+    			$special = false;
+    			$discount = $this->modelProduct->getProductDiscount($result['product_id']);
+    			
+    			if ($discount) {
+    				$price = $this->currency->format($this->tax->calculate($discount, $result['tax_class_id'], $this->config->get('config_tax')));
+    			} else {
+    				$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+    				$special = $this->modelProduct->getProductSpecial($result['product_id']);
+    				if ($special) {
+    					$special = $this->currency->format($this->tax->calculate($special, $result['tax_class_id'], $this->config->get('config_tax')));
+    				}						
+    			}
+                
+				$add = Url::createUrl('store/product',array('product_id'=>$result['product_id']));
+                
+    			$this->data['products'][] = array(
+    				'product_id'    => $result['product_id'],
+    				'name'    		=> $result['name'],
+    				'model'   		=> $result['model'],
+    				'overview'   	=> $result['meta_description'],
+    				'rating'  		=> $rating,
+    				'stars'   		=> sprintf($this->language->get('text_stars'), $rating),
+    				'price'   		=> $price,
+    				'options'   	=> $options,
+    				'special' 		=> $special,
+    				'image'   		=> NTImage::resizeAndSave($image, 38, 38),
+    				'lazyImage'   		=> NTImage::resizeAndSave('no_image.jpg', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
+    				'thumb'   		=> NTImage::resizeAndSave($image, $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
+    				'href'    		=> Url::createUrl('store/product',array('product_id'=>$result['product_id'])),
+    				'add'    		=> $add
+    			);
+    		}
+    
+    		if (!$this->config->get('config_customer_price')) {
+    			$this->data['display_price'] = true;
+    		} elseif ($this->customer->isLogged()) {
+    			$this->data['display_price'] = true;
+    		} else {
+    			$this->data['display_price'] = false;
+    		}
+            
+            $this->load->library('pagination');
+        	$pagination = new Pagination(true);
+        	$pagination->total = $product_total;
+        	$pagination->page  = $data['page'];
+        	$pagination->limit = $data['limit'];
+        	$pagination->text  = $this->language->get('text_pagination');
+        	$pagination->url   = Url::createUrl("store/product/all",$url . '&page={page}');
+        			
+       		$this->data['pagination'] = $pagination->render();					
+      	
+            $this->data['gridView'] = Url::createUrl("store/product/all", $url . '&v=grid');
+            $this->data['listView'] = Url::createUrl("store/product/all", $url . '&v=list');
+            
+        	if ($this->request->hasQuery('v')){ $url .= '&v=' . $this->request->getQuery('v'); }
+            
+            $this->data['url'] = $url;
+        }
+        
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
+            foreach ($widgets->getWidgets('featuredContent') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/products_all.tpl')) {
+			$this->template = $this->config->get('config_template') . '/store/products_all.tpl';
+		} else {
+			$this->template = 'cuyagua/store/products_all.tpl';
+		}
+		
+		$this->children[] = 'common/footer';
+		$this->children[] = 'common/column_left';
+		$this->children[] = 'common/column_right';
+		$this->children[] = 'common/nav';
+		$this->children[] = 'common/header';
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+  	}
+	
 	public function review() {
-		$this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
+        //Languages
+        $this->language->load('store/product');
+        
+        //Models
+		$this->load->auto('store/review');
+        
+        //Libs
+		$this->load->auto('pagination');
+        
 		$page = isset($this->request->get['page']) ? $this->request->get['page'] : $page = 1;
 		$this->data['reviews'] = array();
-		$results = $this->modelReview->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);
-		foreach ($results as $result) {
-        	$this->data['reviews'][] = array(
-        		'author'     => $result['author'],
-				'rating'     => $result['rating'],
-				'text'       => strip_tags($result['text']),
-        		'stars'      => sprintf($this->language->get('text_stars'), $result['rating']),
-        		'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
-        	);
-      	}			
-		
 		$review_total = $this->modelReview->getTotalReviewsByProductId($this->request->get['product_id']);
-			
-		$pagination = new Pagination();
-		$pagination->total = $review_total;
-		$pagination->page = $page;
-		$pagination->limit = 5; 
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = Url::createUrl('store/product/review',array('product_id'=>$this->request->get['product_id'],'page'=>'{page}'));
-			
-		$this->data['pagination'] = $pagination->render();
-        
+        if ($review_total) {
+    		$results = $this->modelReview->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);
+    		foreach ($results as $result) {
+                $text = strip_tags($result['text']);
+                $text = urldecode($text);
+                $text = html_entity_decode($text);
+                $text = preg_replace('/<head\b[^>]*>(.*?)<\/head>/is','',$text);
+    			$text = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is','',$text);
+    			$text = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is','',$text);
+    			$text = preg_replace('/<object\b[^>]*>(.*?)<\/object>/is','',$text);
+    			$text = preg_replace('/<embed\b[^>]*>(.*?)<\/embed>/is','',$text);
+    			$text = preg_replace('/<applet\b[^>]*>(.*?)<\/applet>/is','',$text);
+    			$text = preg_replace('/<frame\b[^>]*>(.*?)<\/frame>/is','',$text);
+    			$text = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is','',$text);
+    			$text = preg_replace('/<noembed\b[^>]*>(.*?)<\/noembed>/is','',$text);
+    			$text = htmlentities($text);
+                
+            	$this->data['reviews'][] = array(
+            		'review_id'  => $result['review_id'],
+            		'product_id' => $result['product_id'],
+            		'author'     => $result['author'],
+    				'rating'     => $result['rating'],
+    				'likes'      => $result['likes'],
+    				'dislikes'   => $result['dislikes'],
+    				'text'       => $text,
+    				'replies'    => $this->modelReview->getReplies($result['review_id']),
+    				'isOwner'    => ($this->customer->getId() == $result['customer_id']) ? true : null,
+            		'stars'      => sprintf($this->language->get('text_stars'), $result['rating']),
+            		'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+            	);
+          	}			
+    		$this->data['isLogged'] = $this->customer->isLogged();
+    			
+    		$pagination = new Pagination();
+    		$pagination->total = $review_total;
+    		$pagination->ajax = true;
+    		$pagination->ajaxTarget = 'review';
+    		$pagination->page = $page;
+    		$pagination->limit = 5; 
+    		$pagination->text = $this->language->get('text_pagination');
+    		$pagination->url = Url::createUrl('store/product/review',array('product_id'=>$this->request->get['product_id'],'page'=>'{page}'));
+    			
+    		$this->data['pagination'] = $pagination->render();
+        }
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/review.tpl')) {
 			$this->template = $this->config->get('config_template') . '/store/review.tpl';
 		} else {
-			$this->template = 'default/store/review.tpl';
+			$this->template = 'cuyagua/store/review.tpl';
 		}
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 	}
 	
 	public function comment() {
+	   $this->language->load('store/product');
 		$this->data['review_status']  = $this->config->get('config_review');
 		$this->data['text_stars']     = sprintf($this->language->get('text_stars'), $average);
-		$this->data['entry_name']     = $this->language->get('entry_name');
-		$this->data['entry_review']   = $this->language->get('entry_review');
-		$this->data['entry_rating']   = $this->language->get('entry_rating');
-		$this->data['entry_good']     = $this->language->get('entry_good');
-		$this->data['entry_bad']      = $this->language->get('entry_bad');
-		$this->data['entry_captcha']  = $this->language->get('entry_captcha');
-        $this->data['button_continue']= $this->language->get('button_continue');
-		$this->data['text_wait']         = $this->language->get('text_wait');
-        
-        // evitando ataques xsrf y xss
-        $fid = ($this->session->has('fid')) ? $this->session->get('fid') : strtotime(date('d-m-Y h:i:s'));$this->session->set('fid',$fid);
-        $fkey = $this->fkey . "." . $this->session->get('fid') . "_" . str_replace('/','-',$_GET['r']);
-        $this->data['fkey'] = "<input type='hidden' name='fkey' id='fkey' value='$fkey' />";
-        
-        $scripts[] = array(
-            'id'=>'productComment',
-            'method'=>'ready',
-            'script'=>"$('.star_review').on(\"hover\",
-                    function() {
-                        var idThis = $(this).attr('id');
-                        $('.star_review').each (function() {
-                            var idStar = $(this).attr('id');
-                            if (idStar <= idThis) {
-                                $(this).css({'backgroundPosition':'left top'});
-                            }
-                        });
-                    },
-                    function() {
-                        $('.star_review').each (function() {
-                            $(this).css({'backgroundPosition':'right top'});
-                        });
-                    }
-                );
-                $('.detail a').click(function() {
-                    var idThis = $(this).attr('id');
-                    $('input[name=rating]').val(idThis);
-                    $('.detail a').each (function() {
-                        var idStar = $(this).attr('id');
-                        if (idStar <= idThis) {
-                            $(this).removeClass();
-                            $(this).addClass('star_clicked');
-                            $(this).css({'backgroundPosition':'left top'});
-                        } else {
-                            $(this).removeClass();
-                            $(this).addClass('star_review');
-                            $(this).css({'backgroundPosition':'right top'});
-                        }
-                    });
-                });");
-        $scripts[] = array(
-            'id'=>'productReviewWrite',
-            'method'=>'function',
-            'script'=>"function review() {
-            	$.ajax({
-            		type: 'POST',
-            		url: '".HTTP_HOME."index.php?r=store/product/write&product_id=".$this->request->getQuery('product_id')."',
-            		dataType: 'json',
-            		data: 'name=' + encodeURIComponent($('input[name=\'name\']').val()) + '&text=' + encodeURIComponent($('textarea[name=\'text\']').val()) + '&rating=' + encodeURIComponent($('input[name=\'rating\']:checked').val() ? $('input[name=\'rating\']:checked').val() : '') + '&captcha=' + encodeURIComponent($('input[name=\'captcha\']').val()) + '&fkey=' + encodeURIComponent($('#fkey').val()),
-            		beforeSend: function() {
-            			$('.success, .warning').remove();
-            			$('#review_button').attr('disabled', 'disabled');
-            			$('#review_title').after('<div class=\"wait\"><img src=\"image/loading_1.gif\" alt=\"\">".$this->data['text_wait']."</div>');
-            		},
-            		complete: function() {
-            			$('#review_button').attr('disabled', '');
-            			$('.wait').remove();
-            		},
-            		success: function(data) {
-            			if (data.error) {
-            				$('#review_title').after('<div class=\"warning\">' + data.error + '</div>');
-            			}
-            			if (data.success) {
-            				$('#review_title').after('<div class=\"success\">' + data.success + '</div>');
-            				$('input[name=\'name\']').val('');
-            				$('textarea[name=\'text\']').val('');
-            				$('input[name=\'rating\']:checked').attr('checked', '');
-            				$('input[name=\'captcha\']').val('');
-            			}
-            		}
-            	});
-            }");
+        $this->data['islogged']       = (int)$this->customer->islogged();
+        $this->data['product_id']     = $this->request->getQuery('product_id');
                     
-        $this->scripts = array_merge($this->scripts,$scripts);
-            
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/comment.tpl')) {
 			$this->template = $this->config->get('config_template') . '/store/comment.tpl';
 		} else {
-			$this->template = 'default/store/comment.tpl';
+			$this->template = 'cuyagua/store/comment.tpl';
 		}
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 	}
 	
+    public function deleteReview() {
+        //Models
+		$this->load->auto('store/review');
+        
+		$review_id = $this->request->getPost('review_id') ? $this->request->getPost('review_id') : $this->request->getQuery('review_id');
+        if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->customer->islogged() && $review_id) {
+            $this->modelReview->deleteReview($review_id);
+        }
+    }
+    
+    public function likeReview() {
+        //Models
+		$this->load->auto('store/review');
+        
+		$review_id = $this->request->getPost('review_id') ? $this->request->getPost('review_id') : $this->request->getQuery('review_id');
+		$product_id = $this->request->getPost('product_id') ? $this->request->getPost('product_id') : $this->request->getQuery('product_id');
+        if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->customer->islogged() && $review_id && $product_id) {
+            $result = $this->modelReview->likeReview($review_id,$product_id);
+            $json['likes'] = $result['likes'];
+            $json['dislikes'] = $result['dislikes'];
+            $json['success'] = 1;
+        }
+        //TODO: registrar y enviar notificacion de que le gusta 
+		$this->load->library('json');
+		$this->response->setOutput(Json::encode($json));
+    }
+    
+    public function dislikeReview() {
+        //Models
+		$this->load->auto('store/review');
+        
+		$review_id = $this->request->getPost('review_id') ? $this->request->getPost('review_id') : $this->request->getQuery('review_id');
+		$product_id = $this->request->getPost('product_id') ? $this->request->getPost('product_id') : $this->request->getQuery('product_id');
+        if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->customer->islogged() && $review_id && $product_id) {
+            $result = $this->modelReview->dislikeReview($review_id,$product_id);
+            $json['likes'] = $result['likes'];
+            $json['dislikes'] = $result['dislikes'];
+            $json['success'] = 1;
+        }
+        //TODO: registrar y enviar notificacion de que no le gusta 
+		$this->load->library('json');
+		$this->response->setOutput(Json::encode($json));
+    }
+    
 	public function write() {
-		$product_id = $this->product_id;
+        //Languages
+        $this->language->load('store/product');
+        
+        //Models
+		$this->load->auto('store/review');
+        
+		$product_id = $this->request->getPost('product_id') ? $this->request->getPost('product_id') : $this->request->getQuery('product_id');
 		$json = array();
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $fid = substr($_POST['fkey'],strpos($_POST['fkey'],".")+1,10); // verificamos que id del formulario es correcto
-            $date = substr($this->fkey,strpos($this->fkey,"_")+1,10); // verificamos que la fecha es de hoy
-            if (($this->session->get('fkey')==$this->fkey) && ($fid==$this->session->get('fid')) && ($date==strtotime(date('d-m-Y')))) { // validamos el id de sesión para evitar ataques csrf
-                $this->session->clear('fid');                    
-        			
-    			$this->model_catalog_review->addReview($product_id, $this->request->post);
-    			
-    			$json['success'] = $this->language->get('text_success');
+		  
+            $text = strip_tags($this->request->post['text']);
+            $text = urldecode($text);
+            $text = html_entity_decode($text);
+            $text = preg_replace('/<head\b[^>]*>(.*?)<\/head>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<object\b[^>]*>(.*?)<\/object>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<embed\b[^>]*>(.*?)<\/embed>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<applet\b[^>]*>(.*?)<\/applet>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<frame\b[^>]*>(.*?)<\/frame>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<noembed\b[^>]*>(.*?)<\/noembed>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$this->request->post['text'] = htmlentities($text);
+			$this->request->post['status'] = intval($this->config->get('config_review_approve'));
+            
+    		$review_id = $this->modelReview->addReview($product_id, $this->request->post);
+            
+            
+            $json['review_id']  =
+            $json['author']     =
+            $json['product_id'] =
+            $json['text']       =
+            $json['customer_id']=             
+            $json['date_added'] = '';
+            
+            if ($this->config->get('config_review_approve')) {
+                $json['review_id']  = $review_id;
+                $json['author']     = $this->customer->getFirstName() ." ". $this->customer->getLastName();
+                $json['product_id'] = $product_id;
+                $json['text']       = $this->request->post['text'];
+                $json['rating']     = $this->request->post['rating'];
+                $json['customer_id']= $this->customer->getId();
+                $json['date_added'] = date('d-m-Y h:i A');
+                $json['show'] = 1;
             }
+            
+            $this->notifyReview($product_id);
+    		$json['success'] = $this->language->get('text_success');
 		} else {
 			$json['error'] = $this->error['message'];
 		}
@@ -486,32 +878,305 @@
 		$this->response->setOutput(Json::encode($json));
 	}
 	
+	public function reply() {
+        //Languages
+        $this->language->load('store/product');
+        
+        //Models
+		$this->load->auto('store/review');
+        
+		$this->request->post['product_id'] = $this->request->getPost('product_id') ? $this->request->getPost('product_id') : $this->request->getQuery('product_id');
+		$this->request->post['review_id'] = $this->request->getPost('review_id') ? $this->request->getPost('review_id') : $this->request->getQuery('review_id');
+		$json = array();
+		$json['success'] = 0;
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateReply()) {
+		  
+            $text = strip_tags($this->request->post['text']);
+            $text = urldecode($text);
+            $text = html_entity_decode($text);
+            $text = preg_replace('/<head\b[^>]*>(.*?)<\/head>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<object\b[^>]*>(.*?)<\/object>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<embed\b[^>]*>(.*?)<\/embed>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<applet\b[^>]*>(.*?)<\/applet>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<frame\b[^>]*>(.*?)<\/frame>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$text = preg_replace('/<noembed\b[^>]*>(.*?)<\/noembed>/is',' [CONTENIDO ELIMINADO POR SEGURIDAD] ',$text);
+			$this->request->post['text'] = htmlentities($text);
+            
+			$this->request->post['status'] = intval($this->config->get('config_review_approve'));
+            
+    		$this->modelReview->addReply($this->request->post);
+            
+            $json['review_id']  =
+            $json['author']     =
+            $json['product_id'] =
+            $json['text']       =
+            $json['customer_id']= 
+            $json['date_added'] = '';
+            if ($this->config->get('config_review_approve')) {
+                $json['review_id']  = $this->request->post['review_id'];
+                $json['author']     = $this->customer->getFirstName() ." ". $this->customer->getLastName();
+                $json['product_id'] = $this->request->post['product_id'];
+                $json['text']       = $this->request->post['text'];
+                $json['customer_id']= $this->customer->getId();
+                $json['date_added'] = date('d-m-Y');
+                $json['show'] = 1;
+            }
+            
+            $this->notifyReview($this->request->post['product_id']);
+            $this->notifyReply($this->request->post['review_id'],$this->request->post['product_id']);
+            
+    		$json['success'] = $this->language->get('text_success');
+		}
+		$this->load->library('json');
+		$this->response->setOutput(Json::encode($json));
+	}
+	
+    protected function notifyReview($product_id) {
+        if (!$product_id) return false;
+        $this->load->auto('email/mailer');
+        $this->load->auto('store/product');
+        $this->load->auto('store/review');
+        $this->load->auto('marketing/newsletter');
+        $product_info = $this->modelProduct->getProduct($product_id);
+        
+        if ($this->config->get('marketing_email_new_comment') && $product_info) {
+            $this->load->model("marketing/newsletter");
+            $this->load->library('email/mailer');
+            $this->load->library('BarcodeQR');
+            $this->load->library('Barcode39');
+            $mailer     = new Mailer;
+            $qr         = new BarcodeQR;
+            $barcode    = new Barcode39(C_CODE);
+            
+            $qrStore = "cache/" . str_replace(".","_",$this->config->get('config_owner')).'.png';
+            $eanStore = "cache/" . str_replace(" ","_",$this->config->get('config_owner') ."_barcode_39_order_id_" . $order_id) . '.gif';
+            
+            if (!file_exists(DIR_IMAGE . $qrStore)) {
+                $qr->url(HTTP_HOME);
+                $qr->draw(150,DIR_IMAGE . $qrStore);
+            }
+            if (!file_exists(DIR_IMAGE . $eanStore)) {
+                $barcode->draw(DIR_IMAGE . $eanStore);
+            }
+            
+            $result = $this->modelNewsletter->getById($this->config->get('marketing_email_new_comment'));
+            $message = $result['htmlbody'];
+
+            $message = str_replace("{%store_logo%}",'<img src="'. HTTP_IMAGE . $this->config->get('config_logo') .'" alt="'. $this->config->get('config_name') .'" />',$message);
+            $message = str_replace("{%store_url%}",HTTP_HOME,$message);
+            $message = str_replace("{%store_owner%}",$this->config->get('config_owner'),$message);
+            $message = str_replace("{%store_name%}",$this->config->get('config_name'),$message);
+            $message = str_replace("{%store_rif%}",$this->config->get('config_rif'),$message);
+            $message = str_replace("{%store_email%}",$this->config->get('config_email'),$message);
+            $message = str_replace("{%store_telephone%}",$this->config->get('config_telephone'),$message);
+            $message = str_replace("{%store_address%}",$this->config->get('config_address'),$message);
+            $message = str_replace("{%product_url%}",Url::createUrl('store/product',array('product_id'=>$product_id)),$message);
+            $message = str_replace("{%url_account%}",Url::createUrl('account/review'),$message);
+            $message = str_replace("{%product_name%}",$product_info['name'],$message);
+            $message = str_replace("{%fullname%}",$this->customer->getFirstName() ." ". $this->customer->getFirstName(),$message);
+            $message = str_replace("{%company%}",$this->customer->getCompany(),$message);
+            $message = str_replace("{%email%}",$this->customer->getEmail(),$message);
+            $message = str_replace("{%qr_code_store%}",'<img src="'. HTTP_IMAGE . $qrStore .'" alt="QR Code" />',$message);
+            $message = str_replace("{%barcode_39_order_id%}",'<img src="'. HTTP_IMAGE . $eanStore .'" alt="QR Code" />',$message);
+                
+            $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+            
+            $subject = $this->config->get('config_owner') ." ". $this->language->get('text_new_comment');
+            if ($this->config->get('config_smtp_method')=='smtp') {
+                $mailer->IsSMTP();
+            	$mailer->Hostname = $this->config->get('config_smtp_host');
+            	$mailer->Username = $this->config->get('config_smtp_username');
+            	$mailer->Password = base64_decode($this->config->get('config_smtp_password'));
+            	$mailer->Port     = $this->config->get('config_smtp_port');
+                $mailer->Timeout  = $this->config->get('config_smtp_timeout');
+                $mailer->SMTPSecure = $this->config->get('config_smtp_ssl');
+                $mailer->SMTPAuth = ($this->config->get('config_smtp_auth')) ? true : false;          
+            } elseif ($this->config->get('config_smtp_method')=='sendmail') {
+                $mailer->IsSendmail();
+            } else {
+                $mailer->IsMail();
+            }
+             
+            $mailer->IsHTML();
+            
+            $reps = $this->modelReview->getCustomersReviewsByProductId($product_id);
+            $this->load->library('validar');
+            $validate = new Validar;
+            foreach ($reps as $k => $v) {
+                if (!$validate->validEmail($v['email'])) continue;
+                $mailer->AddBCC($v['email'],$v['author']);
+            }
+            
+            $mailer->AddBCC($this->config->get('config_email'),$this->config->get('config_name'));
+        	$mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+        	$mailer->Subject = $subject;
+        	$mailer->Body = html_entity_decode(htmlspecialchars_decode($message));
+            $mailer->Send();
+        }
+    }
+    
+    protected function notifyReply($review_id,$product_id) {
+        if (!$review_id) return false;
+        $this->load->auto('email/mailer');
+        $this->load->auto('store/product');
+        $this->load->auto('account/customer');
+        $this->load->auto('store/review');
+        $this->load->auto('marketing/newsletter');
+        $review_info = $this->modelReview->getById($review_id);
+        $product_info = $this->modelProduct->getProduct($product_id);
+        
+        if ($this->config->get('marketing_email_new_reply') && $review_info) {
+            $this->load->model("marketing/newsletter");
+            $this->load->library('email/mailer');
+            $this->load->library('BarcodeQR');
+            $this->load->library('Barcode39');
+            $mailer     = new Mailer;
+            $qr         = new BarcodeQR;
+            $barcode    = new Barcode39(C_CODE);
+            
+            $qrStore = "cache/" . str_replace(".","_",$this->config->get('config_owner')).'.png';
+            $eanStore = "cache/" . str_replace(" ","_",$this->config->get('config_owner') ."_barcode_39_order_id_" . $order_id) . '.gif';
+            
+            if (!file_exists(DIR_IMAGE . $qrStore)) {
+                $qr->url(HTTP_HOME);
+                $qr->draw(150,DIR_IMAGE . $qrStore);
+            }
+            if (!file_exists(DIR_IMAGE . $eanStore)) {
+                $barcode->draw(DIR_IMAGE . $eanStore);
+            }
+            
+            $customer_info = $this->modelCustomer->getCustomer($review_info['customer_id']);
+            
+            $result = $this->modelNewsletter->getById($this->config->get('marketing_email_new_reply'));
+            $message = $result['htmlbody'];
+
+            $message = str_replace("{%store_logo%}",'<img src="'. HTTP_IMAGE . $this->config->get('config_logo') .'" alt="'. $this->config->get('config_name') .'" />',$message);
+            $message = str_replace("{%store_url%}",HTTP_HOME,$message);
+            $message = str_replace("{%store_owner%}",$this->config->get('config_owner'),$message);
+            $message = str_replace("{%store_name%}",$this->config->get('config_name'),$message);
+            $message = str_replace("{%store_rif%}",$this->config->get('config_rif'),$message);
+            $message = str_replace("{%store_email%}",$this->config->get('config_email'),$message);
+            $message = str_replace("{%store_telephone%}",$this->config->get('config_telephone'),$message);
+            $message = str_replace("{%store_address%}",$this->config->get('config_address'),$message);
+            $message = str_replace("{%product_url%}",Url::createUrl('store/product',array('product_id'=>$product_id)),$message);
+            $message = str_replace("{%url_account%}",Url::createUrl('account/review'),$message);
+            $message = str_replace("{%product_name%}",$product_info['name'],$message);
+            $message = str_replace("{%fullname%}",$customer_info['firstname'] ." ". $customer_info['lastname'],$message);
+            $message = str_replace("{%company%}",$customer_info['company'],$message);
+            $message = str_replace("{%email%}",$customer_info['email'],$message);
+            $message = str_replace("{%qr_code_store%}",'<img src="'. HTTP_IMAGE . $qrStore .'" alt="QR Code" />',$message);
+            $message = str_replace("{%barcode_39_order_id%}",'<img src="'. HTTP_IMAGE . $eanStore .'" alt="QR Code" />',$message);
+                
+            $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+            
+            $subject = $this->config->get('config_owner') ." ". $this->language->get('text_new_reply');
+            if ($this->config->get('config_smtp_method')=='smtp') {
+                $mailer->IsSMTP();
+            	$mailer->Hostname = $this->config->get('config_smtp_host');
+            	$mailer->Username = $this->config->get('config_smtp_username');
+            	$mailer->Password = base64_decode($this->config->get('config_smtp_password'));
+            	$mailer->Port     = $this->config->get('config_smtp_port');
+                $mailer->Timeout  = $this->config->get('config_smtp_timeout');
+                $mailer->SMTPSecure = $this->config->get('config_smtp_ssl');
+                $mailer->SMTPAuth = ($this->config->get('config_smtp_auth')) ? true : false;          
+            } elseif ($this->config->get('config_smtp_method')=='sendmail') {
+                $mailer->IsSendmail();
+            } else {
+                $mailer->IsMail();
+            }
+             
+            $mailer->IsHTML();
+            $mailer->AddAddress($customer_info['email'],$customer_info['author']);
+            $mailer->AddBCC($this->config->get('config_email'),$this->config->get('config_name'));
+        	$mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+        	$mailer->Subject = $subject;
+        	$mailer->Body = html_entity_decode($message);
+            $mailer->Send();
+        }
+    }
+    
+    public function relatedJson() {
+        $json = array();
+        $this->load->auto("store/product");
+        $this->load->auto('image');
+        $this->load->auto('json');
+        
+        $json['results'] = $this->modelProduct->getProductRelated($this->request->get['product_id']);
+        $width  = isset($_GET['width']) ? $_GET['width'] : 80;
+        $height = isset($_GET['height']) ? $_GET['height'] : 80;
+        foreach ($json['results'] as $k => $v) {
+            if (!file_exists(DIR_IMAGE . $v['image'])) $json['results'][$k]['image'] = HTTP_IMAGE ."no_image.jpg";
+            $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
+            $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+        }
+        
+        if (!count($json['results'])) $json['error'] = 1;
+        
+        $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
+    }
+    
     public function related() {
-        $this->load->language("store/related");      
-        $this->load->model("catalog/product");
+        //Languages
+        $this->language->load('store/related');
+        
+        //Models
+		$this->load->auto('store/product');
+        
+        //Libs
+		$this->load->auto('image');
+		$this->load->auto('currency');
+		$this->load->auto('tax');
+        
         $results = $this->modelProduct->getProductRelated($this->request->get['product_id']);
         require_once(DIR_CONTROLLER . "store/product_array.php");
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/products_grid.tpl')) {
 			$this->template = $this->config->get('config_template') . '/store/products_grid.tpl';
 		} else {
-			$this->template = 'default/store/products_grid.tpl';
+			$this->template = 'cuyagua/store/products_grid.tpl';
 		}
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
 	private function validate() {
-		if ((strlen(utf8_decode($this->request->post['name'])) < 3) || (strlen(utf8_decode($this->request->post['name']))> 25)) {
-			$this->error['message'] = $this->language->get('error_name');
+		if (!$this->customer->islogged()) {
+			$this->error['message'] = $this->language->get('error_login');
 		}
 		
-		if ((strlen(utf8_decode($this->request->post['text'])) < 25) || (strlen(utf8_decode($this->request->post['text']))> 1000)) {
+		if (!$this->request->hasPost('product_id') && !$this->request->hasQuery('product_id')) {
+			$this->error['message'] = $this->language->get('error_product');
+		}
+		
+		if (empty($this->request->post['text'])) {
 			$this->error['message'] = $this->language->get('error_text');
 		}
+        
+		if (!$this->error) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
 
-		if (!$this->request->post['rating']) {
-			$this->error['message'] = $this->language->get('error_rating');
+	private function validateReply() {
+		if (!$this->customer->islogged()) {
+			$this->error['message'] = $this->language->get('error_login');
 		}
-
+		
+		if (!$this->request->hasPost('product_id') && !$this->request->hasQuery('product_id')) {
+			$this->error['message'] = $this->language->get('error_product');
+		}
+		
+		if (!$this->request->hasPost('review_id') && !$this->request->hasQuery('review_id')) {
+			$this->error['message'] = $this->language->get('error_review');
+		}
+		
+		if (empty($this->request->post['text'])) {
+			$this->error['message'] = $this->language->get('error_text');
+		}
+        
 		if (!$this->error) {
 			return true;
 		} else {

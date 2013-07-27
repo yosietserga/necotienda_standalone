@@ -88,3 +88,5 @@ require_once(DIR_SYSTEM . 'library/log.php');
 require_once(DIR_SYSTEM . 'library/request.php');
 require_once(DIR_SYSTEM . 'library/response.php');
 require_once(DIR_SYSTEM . 'library/session.php');
+require_once(DIR_SYSTEM . 'library/url.php');
+require_once(DIR_SYSTEM . 'library/image.php');

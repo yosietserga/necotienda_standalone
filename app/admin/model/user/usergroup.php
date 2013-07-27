@@ -1,14 +1,39 @@
 <?php
 class ModelUserUserGroup extends Model {
-	public function addUserGroup($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET name = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
+	public function add($data) {
+		$this->db->query("INSERT INTO " . DB_PREFIX . "user_group SET 
+        name = '" . $this->db->escape($data['name']) . "', 
+        permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'");
+        return $this->db->getLastId();
 	}
 	
-	public function editUserGroup($user_group_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "user_group SET name = '" . $this->db->escape($data['name']) . "', permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' WHERE user_group_id = '" . (int)$user_group_id . "'");
+	public function update($user_group_id, $data) {
+		$this->db->query("UPDATE " . DB_PREFIX . "user_group SET 
+        name = '" . $this->db->escape($data['name']) . "', 
+        permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' 
+        WHERE user_group_id = '" . (int)$user_group_id . "'");
 	}
 	
-	public function deleteUserGroup($user_group_id) {
+	/**
+	 * ModelStoreProduct::copy()
+	 * 
+	 * @param int $product_id
+     * @see DB
+     * @see Cache
+	 * @return void
+	 */
+	public function copy($id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$id . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['name'] = $data['name'] ." - copia";
+			$this->add($data);
+		}
+	}
+	
+	public function delete($user_group_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_group_id . "'");
 	}
 
@@ -28,7 +53,7 @@ class ModelUserUserGroup extends Model {
 		}
 	}
 	
-	public function getUserGroup($user_group_id) {
+	public function getById($user_group_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_group_id . "'");
 		
 		$user_group = array(
@@ -39,7 +64,7 @@ class ModelUserUserGroup extends Model {
 		return $user_group;
 	}
 	
-	public function getUserGroups($data = array()) {
+	public function getAll($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "user_group";
 		
 		$sql .= " ORDER BY name";	
@@ -67,7 +92,7 @@ class ModelUserUserGroup extends Model {
 		return $query->rows;
 	}
 	
-	public function getTotalUserGroups() {
+	public function getAllTotal() {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "user_group");
 		
 		return $query->row['total'];

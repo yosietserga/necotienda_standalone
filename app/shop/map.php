@@ -34,9 +34,9 @@ $registry->set('cart', new Cart($registry));
 $language->load('common/header');
 
 $loader->auto('account/customer');
-$loader->auto('catalog/product');
-$loader->auto('catalog/category');
-$loader->auto('tool/seo_url'); //TODO: rediseñar clase de URLs
+$loader->auto('store/product');
+$loader->auto('store/category');
+ //TODO: rediseñar clase de URLs
 $loader->auto('localisation/language');
 $loader->auto('localisation/currency');
 
@@ -69,62 +69,12 @@ switch ($route) {
         $language->load('store/product');
         
         //Models
-		$loader->auto('catalog/category');
-		$loader->auto('tool/seo_url');
-		$loader->auto('tool/image');
-        break;
-    case 'store/product':
-    case 'store/product/home':
-        //Languages
-        $language->load('store/product');
-        
-        //Models
-		$loader->auto('catalog/product');
-		$loader->auto('catalog/category');
-		$loader->auto('catalog/manufacturer');
-		$loader->auto('tool/seo_url');
-		$loader->auto('tool/image');
-		$loader->auto('catalog/review');
-        
-        //Libs
-		$loader->auto('image');
-		$loader->auto('currency');
-		$loader->auto('tax');
-        break;
-    case 'store/product/related':
-        //Languages
-        $language->load('store/related');
-        
-        //Models
-		$loader->auto('catalog/product');
-		$loader->auto('tool/seo_url');
-		$loader->auto('catalog/review');
-        
-        //Libs
-		$loader->auto('image');
-		$loader->auto('currency');
-		$loader->auto('tax');
-        break;
-    case 'store/product/review':
-    case 'store/product/write':
-        //Languages
-        $language->load('store/product');
-        
-        //Models
-		$loader->auto('catalog/review');
-        
+		$loader->auto('store/category');
+		$loader->auto('store/product');
+		
         //Libs
 		$loader->auto('pagination');
-        break;
-    case 'store/product/comment':
-        //Languages
-        $language->load('store/product');
         
-        //Models
-		$loader->auto('catalog/review');
-        
-        //Libs
-		$loader->auto('pagination');
         break;
     case 'store/search':
     case 'store/search/home':
@@ -133,10 +83,38 @@ switch ($route) {
         $language->load('store/product');
         
         //Models
-		$loader->auto('catalog/product');
-		$loader->auto('catalog/category');
-		$loader->auto('tool/seo_url');
-		$loader->auto('tool/image');
+		$loader->auto('store/product');
+		$loader->auto('store/category');
+		
+        break;
+    case 'store/manufacturer':
+    case 'store/manufacturer/home':
+        //Languages
+		$language->load('store/manufacturer');
+        $language->load('store/product');
+        
+        //Models
+		$loader->auto('store/product');
+		$loader->auto('store/manufacturer');
+        
+        //Libs
+		$loader->auto('pagination');
+		
+        break;
+    case 'store/special':
+    case 'store/special/home':
+        //Languages
+		$language->load('store/special');
+        $language->load('store/product');
+        
+        //Models
+		$loader->auto('store/product');
+		$loader->auto('store/manufacturer');
+		$loader->auto('store/category');
+        
+        //Libs
+		$loader->auto('pagination');
+		
         break;
     default:
         //Languages

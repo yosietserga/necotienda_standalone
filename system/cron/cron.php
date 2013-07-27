@@ -9,13 +9,19 @@ echo "Begin cron process\n";
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app/admin/config_cron.php');
 require_once(DIR_SYSTEM . 'startup.php');
 
-require_once dirname(__FILE__) . '/api/send.php';
+require_once dirname(__FILE__) . '/api/send.php';       //Gestiona y envia las campanas de email marketing
+require_once dirname(__FILE__) . '/api/birthday.php';   //Detecta a los cumpleaneros y crea una tarea para felicitarlos
+require_once dirname(__FILE__) . '/api/promoter.php';   //Detecta las visitas de los clientes, prepara newsletters y crea las tareas
 /*
-require_once dirname(__FILE__) . '/api/sale.php';
-require_once dirname(__FILE__) . '/api/bounce.php';
-require_once dirname(__FILE__) . '/api/addons.php';
-require_once dirname(__FILE__) . '/api/triggeremails.php';
-require_once dirname(__FILE__) . '/api/maintenance.php';
+require_once dirname(__FILE__) . '/api/seller.php';       //Gestiona las preventas para convertirlas en ventas seguras, basado en fases o pasos predefinidos
+require_once dirname(__FILE__) . '/api/bounce.php';     //Gestiona y elimina los correos basura de las cuentas configuradas
+require_once dirname(__FILE__) . '/api/maintenance.php';//Gestiona y ejecuta los mantenimientos a la bd
+require_once dirname(__FILE__) . '/api/seo.php';        //Evalua y corrige los alias de url y demás campos para el SEO
+require_once dirname(__FILE__) . '/api/update.php';     //Gestiona y ejecuta las actualizaciones del core, los modulos y plantillas
+require_once dirname(__FILE__) . '/api/order.php';      //Gestiona los pedidos y pagos pendientes u olvidados
+require_once dirname(__FILE__) . '/api/task.php';       //Gestiona las tareas programadas de los modulos
+require_once dirname(__FILE__) . '/api/report.php';     //Analiza y crea reportes de las operaciones del sitio y las envia por email
+require_once dirname(__FILE__) . '/api/backup.php';     //Gestiona y ejecuta los respaldos
 */
 
 class Cron {
@@ -45,6 +51,21 @@ class Cron {
     protected $cache;
     
     /**
+     * @var $request
+     * */
+    protected $request;
+    
+    /**
+     * @var $session
+     * */
+    protected $session;
+    
+    /**
+     * @var $customer
+     * */
+    protected $customer;
+    
+    /**
      * @var $timeZone
      * */
     protected $timeZone = "America/Caracas";
@@ -55,16 +76,24 @@ class Cron {
     private $tasks = array();
     
     public function __construct() {
-        $this->registry   = new Registry();
-        $this->load = new Loader($this->registry);
-        $this->config = new Config();
-        $this->cache = new Cache();
-        $this->db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+        $this->registry = new Registry();
+        $this->load     = new Loader($this->registry);
+        $this->config   = new Config();
+        $this->cache    = new Cache();
+        $this->session  = new Session();
+        $this->request  = new Request();
+        $this->db       = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
         
         $this->registry->set('db', $this->db);
         $this->registry->set('load', $this->load);
         $this->registry->set('config', $this->config);
         $this->registry->set('cache', $this->cache);
+        $this->registry->set('session', $this->session);
+        $this->registry->set('request', $this->request);
+        
+        $this->load->library('customer');
+        $this->customer = new Customer($this->registry);
+        $this->registry->set('customer', $this->customer);
         
         $this->load->library('task');
         $this->load->library('email/mailer');
@@ -82,6 +111,8 @@ class Cron {
         $this->initMailer();
         
         $this->cronSend     = new CronSend($this->registry);
+        $this->cronBirthday = new CronBirthday($this->registry);
+        $this->cronPromoter  = new CronPromoter($this->registry);
         /*
         $this->cronSale     = new CronSale($this->registry);
         $this->cronEnquiry  = new CronEnquiry($this->registry);
@@ -114,11 +145,17 @@ class Cron {
             $task->date_start_exec  = $row['date_start_exec'];
             $task->date_end_exec    = $row['date_end_exec'];
             
+            $limit = "";
+            if ($task->type == 'send') {
+                $limit = " LIMIT 2 ";
+            }
+            
             $qry = $this->db->query("SELECT * 
             FROM ". DB_PREFIX ."task_queue t
             WHERE task_id = '". (int)$row['task_id'] ."' 
             AND status = 1
-            ORDER BY sort_order ASC, time_exec ASC");
+            ORDER BY sort_order ASC, time_exec ASC
+            $limit");
             
             foreach ($qry->rows as $queue) {
                 $task->addQueue($queue);

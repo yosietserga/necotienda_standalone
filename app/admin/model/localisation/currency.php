@@ -1,34 +1,75 @@
 <?php
 class ModelLocalisationCurrency extends Model {
-	public function addCurrency($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "currency SET title = '" . $this->db->escape($data['title']) . "', code = '" . $this->db->escape($data['code']) . "', symbol_left = '" . $this->db->escape($data['symbol_left']) . "', symbol_right = '" . $this->db->escape($data['symbol_right']) . "', decimal_place = '" . $this->db->escape($data['decimal_place']) . "', value = '" . $this->db->escape($data['value']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW()");
-
+	public function add($data) {
+		$this->db->query("INSERT INTO " . DB_PREFIX . "currency SET 
+        title = '" . $this->db->escape($data['title']) . "', 
+        code = '" . $this->db->escape($data['code']) . "',
+        symbol_left = '" . $this->db->escape($data['symbol_left']) . "', 
+        symbol_right = '" . $this->db->escape($data['symbol_right']) . "', 
+        decimal_place = '" . $this->db->escape($data['decimal_place']) . "', 
+        value = '" . $this->db->escape($data['value']) . "', 
+        status = '" . (int)$data['status'] . "', 
+        date_modified = NOW()");
+		$this->cache->delete('currency');
+        return $this->db->getLastId();
+	}
+	
+	public function update($currency_id, $data) {
+		$this->db->query("UPDATE " . DB_PREFIX . "currency SET 
+        title = '" . $this->db->escape($data['title']) . "', 
+        code = '" . $this->db->escape($data['code']) . "', 
+        symbol_left = '" . $this->db->escape($data['symbol_left']) . "', 
+        symbol_right = '" . $this->db->escape($data['symbol_right']) . "', 
+        decimal_place = '" . $this->db->escape($data['decimal_place']) . "', 
+        value = '" . $this->db->escape($data['value']) . "', 
+        status = '" . (int)$data['status'] . "', 
+        date_modified = NOW() 
+        WHERE currency_id = '" . (int)$currency_id . "'");
 		$this->cache->delete('currency');
 	}
 	
-	public function editCurrency($currency_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "currency SET title = '" . $this->db->escape($data['title']) . "', code = '" . $this->db->escape($data['code']) . "', symbol_left = '" . $this->db->escape($data['symbol_left']) . "', symbol_right = '" . $this->db->escape($data['symbol_right']) . "', decimal_place = '" . $this->db->escape($data['decimal_place']) . "', value = '" . $this->db->escape($data['value']) . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE currency_id = '" . (int)$currency_id . "'");
-
-		$this->cache->delete('currency');
+	public function copy($currency_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['title'] = $data['title'] ." - copia";
+			$data['code'] = "copia";
+			$this->add($data);
+		}
 	}
 	
-	public function deleteCurrency($currency_id) {
+	public function delete($currency_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
-	
 		$this->cache->delete('currency');
 	}
 
-	public function getCurrency($currency_id) {
+	public function getById($currency_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
 	
 		return $query->row;
 	}
 	
-	public function getCurrencies($data = array()) {
-		if ($data) {
-			$sql = "SELECT * FROM " . DB_PREFIX . "currency";
+	public function getAll($data = array()) {
+        $sql = "SELECT * FROM " . DB_PREFIX . "currency";
 
-			$sort_data = array(
+       $criteria = array();
+       
+        if (!empty($data['filter_title'])) {
+            $criteria[] = " LCASE(title) LIKE '%". strtolower($this->db->escape($data['filter_title'])) ."%'";
+        }
+        
+        if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $criteria[] = " date_modified BETWEEN '". $this->db->escape($data['filter_date_start']) ."' AND '". $this->db->escape($data['filter_date_end']) ."'";
+        } elseif (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
+            $criteria[] = " date_modified BETWEEN '". $this->db->escape($data['filter_date_start']) ."' AND '". $this->db->escape(date('Y-m-d h:i:s')) ."'";
+        }
+        
+        if ($criteria) {
+            $sql .= " WHERE ". implode(" AND ", $criteria);
+        }
+        
+        $sort_data = array(
 				'title',
 				'code',
 				'value',
@@ -62,34 +103,9 @@ class ModelLocalisationCurrency extends Model {
 			$query = $this->db->query($sql);
 	
 			return $query->rows;
-		} else {
-			$currency_data = $this->cache->get('currency');
-
-			if (!$currency_data) {
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency ORDER BY title ASC");
-	
-				foreach ($query->rows as $result) {
-      				$currency_data[$result['code']] = array(
-        				'currency_id'   => $result['currency_id'],
-        				'title'         => $result['title'],
-        				'code'          => $result['code'],
-						'symbol_left'   => $result['symbol_left'],
-						'symbol_right'  => $result['symbol_right'],
-						'decimal_place' => $result['decimal_place'],
-						'value'         => $result['value'],
-						'status'        => $result['status'],
-						'date_modified' => $result['date_modified']
-      				);
-    			}	
-			
-				$this->cache->set('currency', $currency_data);
-			}
-			
-			return $currency_data;			
-		}
 	}	
 
-	public function updateCurrencies() {
+	public function updateAll() {
 		if (extension_loaded('curl')) {
 			$data = array();
 			
@@ -124,7 +140,7 @@ class ModelLocalisationCurrency extends Model {
 		}
 	}
 	
-	public function getTotalCurrencies() {
+	public function getAllTotal() {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "currency");
 		
 		return $query->row['total'];

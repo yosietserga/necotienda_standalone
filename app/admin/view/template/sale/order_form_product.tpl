@@ -2,10 +2,10 @@
 <table id="products" class="list">
     <thead>
         <tr>
-            <th><?php echo $column_product; ?></th>
-            <th><?php echo $column_quantity; ?></th>
-            <th><?php echo $column_price; ?></th>
-            <th><?php echo $column_total; ?></th>
+            <th><?php echo $Language->get('column_product'); ?></th>
+            <th><?php echo $Language->get('column_quantity'); ?></th>
+            <th><?php echo $Language->get('column_price'); ?></th>
+            <th><?php echo $Language->get('column_total'); ?></th>
         </tr>
     </thead>
     
@@ -41,9 +41,9 @@
 <table class="list">
     <thead>
         <tr>
-            <th><?php echo $column_download; ?></th>
-            <th><?php echo $column_filename; ?></th>
-            <th><?php echo $column_remaining; ?></th>
+            <th><?php echo $Language->get('column_download'); ?></th>
+            <th><?php echo $Language->get('column_filename'); ?></th>
+            <th><?php echo $Language->get('column_remaining'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -60,11 +60,11 @@
 
 <table>
     <tr>
-        <td><?php echo $entry_add_product; ?><br />
+        <td><?php echo $Language->get('entry_add_product'); ?><br />
         <table>
             <tr>
                 <td style="padding: 0;" colspan="3">
-                    <select id="category" style="margin-bottom: 5px;" onchange="getProducts();">
+                    <select id="category" style="margin-bottom: 5px;" onchange="getAll();">
                     <?php foreach ($categories as $category) { ?>
                         <option value="<?php echo $category['category_id']; ?>"><?php echo $category['name']; ?></option>
 			        <?php } ?>
@@ -75,13 +75,13 @@
                 <td style="padding: 0;">
                     <select multiple="multiple" id="product" size="10" style="width: 350px;"></select>
                 </td>
-			    <td style="vertical-align: middle;"><span class="add" onclick="addProduct();">&nbsp;</span></td>
+			    <td style="vertical-align: middle;"><span class="add" onclick="add();">&nbsp;</span></td>
             </tr>
         </table>
     </tr>
 </table>
 <script type="text/javascript">
-function addProduct() {
+function add() {
     var orderProductRow = $('.product_row:last-child').index();
 
     $('#product :selected').each(function() {
@@ -105,7 +105,7 @@ function addProduct() {
 	});
 }
 
-function getProducts() {
+function getAll() {
 	$('#product option').remove();
 	$.getJSON('<?php echo $Url::createAdminUrl("sale/order/category"); ?>&category_id=' + $('#category').val(), function(data) {
         for (i = 0; i < data.length; i++) {
@@ -114,6 +114,6 @@ function getProducts() {
 	});
 }
 $(function() {
-    getProducts();
+    getAll();
 });
 </script>

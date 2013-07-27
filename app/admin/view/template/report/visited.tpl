@@ -6,41 +6,41 @@
   <div class="left"></div>
   <div class="right"></div>
   <div class="heading">
-    <h1 style="background-image: url('image/report.png');"><?php echo $heading_title; ?></h1>
-    <div class="buttons"><a onclick=" if (confirm('Se borrará toda la información. ¿Desea continuar?')) {location = '<?php echo $reset; ?>';}" class="button"><span><?php echo $button_reset; ?></span></a></div>  
+    <h1 style="background-image: url('image/report.png');"><?php echo $Language->get('heading_title'); ?></h1>
+    <div class="buttons"><a onclick=" if (confirm('Se borrará toda la información. ¿Desea continuar?')) {location = '<?php echo $reset; ?>';}" class="button"><span><?php echo $Language->get('button_reset; ?></span></a></div>  
   </div>
   <div class="content">  
-            <label>Fecha Inicial:</label><input  type="date" name="filter_sdate" value="<?php echo $filter_sdate; ?>" id="sdate">
-            <label>Fecha Final:</label><input  type="date" name="filter_fdate" value="<?php echo $filter_fdate; ?>" id="fdate">
+            <label>Fecha Inicial:</label><input type="date" name="filter_sdate" value="<?php echo $filter_sdate; ?>" id="sdate">
+            <label>Fecha Final:</label><input type="date" name="filter_fdate" value="<?php echo $filter_fdate; ?>" id="fdate">
     <table class="list">
     <thead>
           <tr>
             <td class="left"><?php if ($sort == 'email') { ?>
-              <a  href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
+              <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_email; ?></a>
               <?php } else { ?>
-              <a  href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
+              <a href="<?php echo $sort_email; ?>"><?php echo $Language->get('column_email; ?></a>
               <?php } ?></td>
             <td class="left"><?php if ($sort == 'name') { ?>
-              <a  href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+              <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_name'); ?></a>
               <?php } else { ?>
-              <a  href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
+              <a href="<?php echo $sort_name; ?>"><?php echo $Language->get('column_name'); ?></a>
               <?php } ?></td>
             <td class="left"><?php if ($sort == 'visited') { ?>
-              <a  href="<?php echo $sort_visited; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_tvisited; ?></a>
+              <a href="<?php echo $sort_visited; ?>" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_tvisited; ?></a>
               <?php } else { ?>
-              <a  href="<?php echo $sort_visited; ?>"><?php echo $column_tvisited; ?></a>
+              <a href="<?php echo $sort_visited; ?>"><?php echo $Language->get('column_tvisited; ?></a>
               <?php } ?></td>
-          <td class="right"><?php echo $column_visited; ?></td>
-          <td class="right"><?php echo $column_percent; ?></td>
+          <td class="right"><?php echo $Language->get('column_visited; ?></td>
+          <td class="right"><?php echo $Language->get('column_percent; ?></td>
           </tr>
         </thead>
       <tbody>
       <tr class="filter">
-            <td><input  type="text" name="filter_email" value="<?php echo $filter_email; ?>"></td>
-            <td><input  type="text" name="filter_name" value="<?php echo $filter_name; ?>"></td>
+            <td><input type="text" name="filter_email" value="<?php echo $filter_email; ?>"></td>
+            <td><input type="text" name="filter_name" value="<?php echo $filter_name; ?>"></td>
             <td></td>
             <td></td>
-            <td align="right"><a onclick="filter();" class="button"><span><?php echo $button_filter; ?></span></a></td>
+            <td align="right"><a onclick="filter();" class="button"><span><?php echo $Language->get('button_filter; ?></span></a></td>
           </tr>
         <?php if ($customers) { ?>
         <?php foreach ($customers as $customer) { ?>
@@ -67,7 +67,7 @@
         <?php } ?>  
         <?php } else { ?>
         <tr>
-          <td class="center" colspan="5"><?php echo $text_no_results; ?></td>
+          <td class="center" colspan="5"><?php echo $Language->get('text_no_results'); ?></td>
         </tr>
         <?php } ?>
       </tbody>
@@ -78,21 +78,21 @@
     <thead>
           <tr>
             <td class="left"><?php if ($sort == 'name') { ?>
-              <a  href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+              <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_name'); ?></a>
               <?php } else { ?>
-              <a  href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
+              <a href="<?php echo $sort_name; ?>"><?php echo $Language->get('column_name'); ?></a>
               <?php } ?></td>
             <td class="left"><?php if ($sort == 'email') { ?>
-              <a  href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
+              <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_email; ?></a>
               <?php } else { ?>
-              <a  href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
+              <a href="<?php echo $sort_email; ?>"><?php echo $Language->get('column_email; ?></a>
               <?php } ?></td>
             <td class="left"><?php if ($sort == 'ip') { ?>
-              <a  href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
+              <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_ip; ?></a>
               <?php } else { ?>
-              <a  href="<?php echo $sort_ip; ?>"><?php echo $column_ip; ?></a>
+              <a href="<?php echo $sort_ip; ?>"><?php echo $Language->get('column_ip; ?></a>
               <?php } ?></td>
-            <td class="left"><?php echo $column_added; ?></td>
+            <td class="left"><?php echo $Language->get('column_added; ?></td>
           </tr>
         </thead>
       <tbody>
@@ -113,7 +113,7 @@
         <?php } ?> 
         <?php } else { ?>
         <tr>
-          <td class="center" colspan="5"><?php echo $text_no_results; ?></td>
+          <td class="center" colspan="5"><?php echo $Language->get('text_no_results'); ?></td>
         </tr>
         <?php } ?>
       </tbody>
@@ -121,10 +121,10 @@
   </div>
 </div>
 <form action="index.php?r=tool/excel&token=<?php echo $_GET['token']; ?>" name="excel_form" id="excel_form" method="post">
-	<input  type='hidden' value='<?php echo $content_excel; ?>' name='excel_data' id='excel_data'>
+	<input type='hidden' value='<?php echo $content_excel; ?>' name='excel_data' id='excel_data'>
 </form>
 <form action="index.php?r=tool/csv&token=<?php echo $_GET['token']; ?>" name="csv_form" id="csv_form" method="post">
-	<input  type='hidden' value='<?php echo $content_csv; ?>' name='csv_data' id='csv_data'>
+	<input type='hidden' value='<?php echo $content_csv; ?>' name='csv_data' id='csv_data'>
 </form>
 <script>
 $(function(){    

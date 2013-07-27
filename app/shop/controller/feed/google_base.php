@@ -9,33 +9,31 @@ class ControllerFeedGoogleBase extends Controller {
 			$output .= '<description>' . $this->config->get('config_meta_description') . '</description>';
 			$output .= '<link>' . HTTP_HOME . '</link>';
 			
-			$this->load->model('catalog/category');
+			$this->load->model('store/category');
 			
-			$this->load->model('catalog/product');
+			$this->load->model('store/product');
 			
-			$this->load->model('tool/image');
-			
-			$products = $this->model_catalog_product->getProducts();
+			$products = $this->modelProduct->getProducts();
 			
 			foreach ($products as $product) {
 				if ($product['description']) {
 					$output .= '<item>';
 					$output .= '<title>' . html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8') . '</title>';
-					$output .= '<link>' . HTTP_HOME . 'index.php?r=store/product&amp;product_id=' . $product['product_id'] . '</link>';
+					$output .= '<link>' . Url::createUrl("store/product") . '&amp;product_id=' . $product['product_id'] . '</link>';
 					$output .= '<description>' . $product['description'] . '</description>';
 					$output .= '<g:brand>' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . '</g:brand>';
 					$output .= '<g:condition>new</g:condition>';
 					$output .= '<g:id>' . $product['product_id'] . '</g:id>';
 					
 					if ($product['image']) {
-						$output .= '<g:image_link>' . $this->model_tool_image->resize($product['image'], 500, 500) . '</g:image_link>';
+						$output .= '<g:image_link>' . NTImage::resizeAndSave($product['image'], 500, 500) . '</g:image_link>';
 					} else {
-						$output .= '<g:image_link>' . $this->model_tool_image->resize('no_image.jpg', 500, 500) . '</g:image_link>';
+						$output .= '<g:image_link>' . NTImage::resizeAndSave('no_image.jpg', 500, 500) . '</g:image_link>';
 					}
 					
 					$output .= '<g:mpn>' . $product['model'] . '</g:mpn>';
 
-					$special = $this->model_catalog_product->getProductSpecial($product['product_id']);
+					$special = $this->modelProduct->getProductSpecial($product['product_id']);
 					
 					if ($special) {
 						$output .= '<g:price>' . $this->tax->calculate($special, $product['tax_class_id']) . '</g:price>';
@@ -43,7 +41,7 @@ class ControllerFeedGoogleBase extends Controller {
 						$output .= '<g:price>' . $this->tax->calculate($product['price'], $product['tax_class_id']) . '</g:price>';
 					}
 			   
-					$categories = $this->model_catalog_product->getCategories($product['product_id']);
+					$categories = $this->modelProduct->getCategories($product['product_id']);
 					
 					foreach ($categories as $category) {
 						$path = $this->getPath($category['category_id']);
@@ -52,7 +50,7 @@ class ControllerFeedGoogleBase extends Controller {
 							$string = '';
 							
 							foreach (explode('_', $path) as $path_id) {
-								$category_info = $this->model_catalog_category->getCategory($path_id);
+								$category_info = $this->modelCategory->getCategory($path_id);
 								
 								if ($category_info) {
 									if (!$string) {
@@ -83,7 +81,7 @@ class ControllerFeedGoogleBase extends Controller {
 	}
 	
 	protected function getPath($parent_id, $current_path = '') {
-		$category_info = $this->model_catalog_category->getCategory($parent_id);
+		$category_info = $this->modelCategory->getCategory($parent_id);
 	
 		if ($category_info) {
 			if (!$current_path) {

@@ -4,9 +4,7 @@
     <option value="editAll">Editar</option>
     <option value="addToList">Agregar a una lista</option>
     -->
-    <option value="activateAll">Activar</option>
     <option value="copyAll">Copiar</option>
-    <option value="desactivateAll">Desactivar</option>
     <option value="deleteAll">Eliminar</option>
 </select>
 <a href="#" title="Ejecutar acci&oacute;n por lote" onclick="if ($('#batch').val().length <= 0) { return false; } else { window[$('#batch').val()](); return false;}" style="margin-left: 10px;font-size: 10px;">[ Ejecutar ]</a>
@@ -17,10 +15,10 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_name; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_subject; ?>')"<?php if ($sort == 'subject') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_subject; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_added; ?>')"<?php if ($sort == 'date_added') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_date_added; ?></a></th>
-                <th><?php echo $column_action; ?></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_name'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_subject; ?>')"<?php if ($sort == 'subject') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_subject'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_added; ?>')"<?php if ($sort == 'date_added') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_date_added'); ?></a></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -54,7 +52,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

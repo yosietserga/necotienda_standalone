@@ -1,7 +1,11 @@
 <?php   class ControllerCommonHeader extends Controller {
 	protected function index() {
-        $this->data['Url'] = new Url;
-        
+        $this->load->library('browser');
+        $browser = new Browser;
+        if ($browser->getBrowser() == 'Internet Explorer' && $browser->getVersion() <= 8) {
+            $this->redirect(Url::createUrl("page/deprecated"));
+        }
+       
     	if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['language_code'])) {
 			$this->session->set('language',$this->request->post['language_code']);
 		
@@ -10,33 +14,8 @@
 			} else {
 				$this->redirect(Url::createUrl('common/home'));
 			}
-    	}		
+    	}
 		
-        $query = $this->db->query("SELECT * 
-        FROM ".DB_PREFIX."information i 
-        LEFT JOIN ".DB_PREFIX."information_description id ON (i.information_id=id.information_id)");
-        foreach ($query->rows as $information) {
-            $this->db->query("INSERT INTO ".DB_PREFIX."post SET
-            date_publish_start = NOW(),
-            date_publish_end = '0000-00-00 00:00',
-            publish = 1, 
-            status = 1,
-            post_type = 'page',
-            date_added = NOW()");
-            
-            $page_id = $this->db->getLastId();
-            
-            $this->db->query("INSERT INTO ".DB_PREFIX."post_description SET
-            post_id = '$page_id',
-            language_id = '". intval($information['language_id']) ."',
-            `title` = '". $this->db->escape($information['title']) ."',
-            `description` = '". $this->db->escape($information['description']) ."'");
-            
-            
-        }
-        $this->db->query("DELETE FROM ". DB_PREFIX ."information");
-        $this->db->query("DELETE FROM ". DB_PREFIX ."information_description");
-        
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['currency_code'])) {
       		$this->currency->set($this->request->post['currency_code']);
 			$this->session->clear('shipping_methods');
@@ -48,6 +27,12 @@
 			}
    		}
 		
+        if (!$this->session->has('token')) {
+            $this->session->set('token',md5(rand()));
+        }
+        
+        $this->data['token'] = $this->session->get('token');
+        
 		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
 			$this->data['base'] = HTTPS_HOME;
 		} else {
@@ -73,37 +58,55 @@
 		$this->data['charset']    = $this->language->get('charset');
 		$this->data['lang']       = $this->language->get('code');
 		$this->data['direction']  = $this->language->get('direction');
-		$this->data['links']      = $this->document->links;	
-		$this->data['styles']     = $this->document->styles;
-		$this->data['scripts']    = $this->document->scripts;		
+		$this->data['links']      = $this->document->links;			
 		$this->data['breadcrumbs']= $this->document->breadcrumbs;
         
         // style files
         $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
-        //TODO: detectar browser y cargar el estilo adecuado
-        $styles[] = array('media'=>'all','href'=>$csspath.'screen.css'); 
-        //$styles[] = array('media'=>'print','href'=>$csspath.'print.css');
         
+        /*
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
 			$styles[] = array('media'=>'all','href'=> str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_CSS) . 'theme.css');
 		} else {
-			$styles[] = array('media'=>'all','href'=> str_replace('%theme%','default',HTTP_THEME_CSS) . 'theme.css');
+			$styles[] = array('media'=>'all','href'=> str_replace('%theme%','choroni',HTTP_THEME_CSS) . 'theme.css');
 		}
+        if (file_exists(DIR_CSS."custom-". (int)$this->config->get('theme_default_id') ."-". $this->config->get('config_template') .".css")) {
+            $styles[] = array('media'=>'all','href'=>$csspath."custom-". (int)$this->config->get('theme_default_id') ."-". $this->config->get('config_template') .".css");
+        }
+        */
+        
+        $this->data['css'] = "";
+		if (file_exists(str_replace('%theme%',$this->config->get('config_template'),DIR_THEME_CSS) . 'theme.css')) {
+            $this->data['css'] .= file_get_contents(str_replace('%theme%',$this->config->get('config_template'),DIR_THEME_CSS) . 'theme.css');
+		}
+        foreach ($this->styles as $css) {
+            $this->data['css'] .= file_get_contents($css['href']);
+        }
+        if (file_exists(DIR_CSS."custom-". (int)$this->config->get('theme_default_id') ."-". $this->config->get('config_template') .".css")) {
+            $this->data['css'] .= file_get_contents($csspath."custom-". (int)$this->config->get('theme_default_id') ."-". $this->config->get('config_template') .".css");
+        }
+        if ($this->data['css']) {
+            $this->data['css'] = str_replace("../../../images/",HTTP_IMAGE,$this->data['css']);
+            $this->data['css'] = str_replace("../images/",str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_IMAGE),$this->data['css']);
+            $this->data['css'] = str_replace("../fonts/",str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_FONT),$this->data['css']);
+        }
         
         $this->load->library('user');
         if ($this->user->getId()) {
             $this->data['is_admin'] = true;
-            $styles[] = array('media'=>'screen','href'=>$csspath.'admin.css');
+            $styles[] = array('media'=>'screen','href'=>HTTP_ADMIN .'css/front/admin.css');
+            $styles[] = array('media'=>'screen','href'=>$csspath.'neco.tips.css');
+            $styles[] = array('media'=>'screen','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
             
             if ($this->request->hasQuery('theme_editor')) {
                 $this->data['theme_editor'] = true;
                 
                 if ($this->request->hasQuery('template') && file_exists(DIR_TEMPLATE . $this->request->getQuery('template') . '/common/header.tpl')) {
-                    $styles[] = array('media'=>'screen','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
                     $styles[] = array('media'=>'screen','href'=>$csspath.'neco.colorpicker.css');
                     $this->config->set('config_template',$this->request->getQuery('template'));
                     $this->data['new_theme']= Url::createAdminUrl('style/theme/insert',array(),'NONSSL',HTTP_ADMIN);
                     $this->data['save_theme']= Url::createAdminUrl('style/theme/save',array('theme_id'=>$this->request->getQuery('theme_id'),'template'=>$this->request->getQuery('template')),'NONSSL',HTTP_ADMIN);
+                    $this->data['download_theme']= Url::createAdminUrl('style/theme/download',array('theme_id'=>$this->request->getQuery('theme_id'),'template'=>$this->request->getQuery('template')),'NONSSL',HTTP_ADMIN);
                 }
             }
             
@@ -115,10 +118,7 @@
             $this->data['create_post_category']= Url::createAdminUrl('content/post_category/insert',array(),'NONSSL',HTTP_ADMIN);
         }
 
-        if (is_file(DIR_CSS."custom-". $this->config->get('config_theme_id') ."-". $this->config->get('config_template') .".css")) {
-            $styles[] = array('media'=>'all','href'=>$csspath."custom-". $this->config->get('config_theme_id') ."-". $this->config->get('config_template') .".css");
-        }
-        $this->data['styles'] = $this->styles = array_merge($styles,$this->styles);
+        if ($styles) $this->data['styles'] = $this->styles = array_merge($styles,$this->styles);
         
 		$this->data['store'] = $this->config->get('config_name');
 		
@@ -209,7 +209,7 @@
 				$url = '&' . urldecode(http_build_query($data));
 			}			
 			
-			$this->data['redirect'] = $this->modelSeo_url->rewrite(Url::createUrl($route,$url));
+			$this->data['redirect'] = Url::createUrl($route,$url);
 		}
 		
 		$this->data['language_code'] = $this->session->get('language');
@@ -228,7 +228,7 @@
 		
 		$this->data['currency_code'] = $this->currency->getCode();
 	    $this->data['currencies'] = array();
-		$results = $this->model_localisation_currency->getCurrencies();	
+		$results = $this->modelCurrency->getCurrencies();	
 		
 		foreach ($results as $result) {
 			if ($result['status']) {
@@ -239,12 +239,43 @@
 			}
 		}
         
+        $this->session->set('state',md5(rand()));
+        $this->data['google_client_id'] = $this->config->get('social_google_client_id');
+        $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
+        $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
+        
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
 		$this->id = 'header';
-		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
 			$this->template = $this->config->get('config_template') . '/common/header.tpl';
 		} else {
-			$this->template = 'default/common/header.tpl';
+			$this->template = 'cuyagua/common/header.tpl';
 		}
 		
     	$this->render();

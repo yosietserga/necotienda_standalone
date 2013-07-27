@@ -1,14 +1,12 @@
-<select name="" onchange="">
-    <option value="">Procesamiento en lote, selecciona una opci&oacute;n</option>
-    <option value="">Editar los productos seleccionados</option>
-    <option value="">Agregar a una categor&iacute;a</option>
-    <option value="">Comparar los productos seleccionados</option>
-    <option value="">Duplicar los productos seleccionados</option>
-    <option value="">Activar los productos seleccionados</option>
-    <option value="">Desactivar los productos seleccionados</option>
-    <option value="">Eliminar los productos seleccionados</option>
+<select id="batch">
+    <option value="">Procesamiento en lote</option>
+    <!--
+    <option value="editAll">Editar</option>
+    <option value="addToList">Agregar a una lista</option>
+    -->
+    <option value="deleteAll">Eliminar</option>
 </select>
-
+<a href="#" title="Ejecutar acci&oacute;n por lote" onclick="if ($('#batch').val().length <= 0) { return false; } else { window[$('#batch').val()](); return false;}" style="margin-left: 10px;font-size: 10px;">[ Ejecutar ]</a>
 <div class="clear"></div><br />
 
 <div class="pagination"><?php echo $pagination; ?></div>
@@ -17,12 +15,12 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_name; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_route; ?>')"<?php if ($sort == 'route') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_route; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_position; ?>')"<?php if ($sort == 'position') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_position; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"<?php if ($sort == 'status') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_status; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"<?php if ($sort == 'sort_order') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $column_sort_order; ?></a></th>
-                <th><?php echo $column_action; ?></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_name'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_route; ?>')"<?php if ($sort == 'route') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_route'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_position; ?>')"<?php if ($sort == 'position') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_position'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"<?php if ($sort == 'status') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_status'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"<?php if ($sort == 'sort_order') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $Language->get('column_sort_order'); ?></a></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -55,7 +53,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td class="center" colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td class="center" colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

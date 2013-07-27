@@ -5,19 +5,19 @@
 <div class="grid_24" id="msg"></div>
 <div class="clear"></div>
 <div class="box">
-        <h1><?php echo $heading_title; ?></h1>
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
-            <a onclick="saveAndExit();" class="button"><?php echo $button_save_and_exit; ?></a>
-            <a onclick="saveAndKeep();" class="button"><?php echo $button_save_and_keep; ?></a>
-            <a onclick="saveAndNew();" class="button"><?php echo $button_save_and_new; ?></a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="saveAndExit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
+            <a onclick="saveAndKeep();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
+            <a onclick="saveAndNew();" class="button"><?php echo $Language->get('button_save_and_new'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
         <div class="clear"></div>
                                 
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
             <div class="row">
-                <label><?php echo $entry_name; ?></label>
+                <label><?php echo $Language->get('entry_name'); ?></label>
                 <input id="name" name="name" value="<?php echo isset($name) ? $name : ''; ?>" required="true" style="width:40%" />
                 <?php if ($error_name) {echo $error_name;} ?>
             </div>
@@ -25,22 +25,26 @@
             <div class="clear"></div>
                         
             <div class="row">
-                <label><?php echo $entry_description; ?></label>
+                <label><?php echo $Language->get('entry_description'); ?></label>
                 <textarea id="description" name="description" style="width:40%"><?php echo isset($description) ? $description : ''; ?></textarea>
             </div>
             
             <div class="clear"></div>
             
             <div class="row">
-                <label><?php echo $entry_contact; ?></label>
+                <label><?php echo $Language->get('entry_contact'); ?></label>
                 <?php if ($contacts) { ?>
                 <input type="text" title="Filtrar listado de categor&iacute;as" value="" name="q" id="q" />
                 <div class="clear"></div>
                 <label>&nbsp;</label>
+                <div class="clear"></div>
+                <a onclick="$('#contactsWrapper input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a onclick="$('#contactsWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
+                <div class="clear"></div>
                 <ul id="contactsWrapper" class="scrollbox">
                 <?php foreach ($contacts as $contact) { ?>
                     <li>
-                        <input title="<?php echo $help_contact; ?>" type="checkbox" name="contact_list[]" value="<?php echo $contact['contact_id']; ?>"<?php if (in_array($contact['contact_id'], $contacts_list)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <input title="<?php echo $Language->get('help_contact'); ?>" type="checkbox" name="contact_list[]" value="<?php echo $contact['contact_id']; ?>"<?php if (in_array($contact['contact_id'], $contacts_list)) { ?> checked="checked"<?php } ?> showquick="off" />
                         <b><?php echo $contact['name']; ?>&nbsp;&nbsp;(&nbsp;<?php echo $contact['mail']; ?>&nbsp;)</b>
                     </li>
                 <?php } ?>
@@ -78,7 +82,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>

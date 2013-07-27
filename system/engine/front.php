@@ -17,10 +17,8 @@ final class Front {
 			
 		foreach ($this->pre_action as $pre_action) {
 			$result = $this->execute($pre_action);
-					
 			if ($result) {
 				$action = $result;
-				
 				break;
 			}
 		}

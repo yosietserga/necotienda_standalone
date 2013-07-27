@@ -6,6 +6,9 @@ $adminPath      = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 $systemPath     = $defaultPath . "system" . DIRECTORY_SEPARATOR;
 $shopPath       = $adminPath . ".." . DIRECTORY_SEPARATOR . "shop" . DIRECTORY_SEPARATOR;
 
+define('HTTP_HOME', "http://www.detallesvictoria.com/");
+define('HTTP_IMAGE', "http://www.detallesvictoria.com/assets/images/");
+
 // Admin system
 define('DIR_APPLICATION',   $adminPath);
 define('DIR_LANGUAGE',      DIR_APPLICATION . "language" . DIRECTORY_SEPARATOR);

@@ -2,7 +2,7 @@
 /**
  * ControllerExtensionModule
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -148,17 +148,12 @@ class ControllerExtensionModule extends Controller {
 		$this->data['column_action'] = $this->language->get('column_action');
 
 		$extensions = $this->modelExtension->getInstalled('module');
-		
 		$this->data['extensions'] = array();
-		
-		$files = glob(DIR_APPLICATION . "controller/module/$filter_name*.php");
-		
-		if ($files) {
-			foreach ($files as $file) {
-				$extension = basename($file, '.php');
-				
-				$this->load->language('module/' . $extension);
-	
+		$modules = glob(DIR_APPLICATION . "controller/module/$filter_name*", GLOB_ONLYDIR);
+		if ($modules) {
+			foreach ($modules as $module) {
+				$extension = basename($module,'plugin.php');
+				$this->load->language('module/'. $extension);
 				$action = array();
                 
 				if (!in_array($extension, $extensions)) {
@@ -166,38 +161,36 @@ class ControllerExtensionModule extends Controller {
 						'action' => 'install',
 						'img' => 'install.png',
 						'text' => $this->language->get('text_install'),
-						'href' => Url::createAdminUrl('extension/module/install') . '&extension=' . $extension
+						'href' => Url::createAdminUrl("module/$extension/install")
 					);
 				} else {
+				    if (file_exists(DIR_APPLICATION . "controller/module/$extension/plugin.php")) {
+    					$action[] = array(
+    						'action' => 'edit',
+    						'img' => 'edit.png',
+    						'text' => $this->language->get('text_edit'),
+    						'href' => Url::createAdminUrl('module/' . $extension . '/plugin')
+    					);
+				    }
+                    $status = $this->config->get($extension . '_status') ? 'activate' : 'desactivate';
 					$action[] = array(
-						'action' => 'edit',
-						'img' => 'edit.png',
-						'text' => $this->language->get('text_edit'),
-						'href' => Url::createAdminUrl('module/' . $extension . '')
-					);		
+						'action' => $status,
+						'img' => $status.'.png',
+						'text' => $this->config->get($extension . '_status') ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+						'href' => Url::createAdminUrl('extension/module/'. $status) . '&extension=' . $extension
+					);
 					$action[] = array(
 						'action' => 'install',
 						'img' => 'uninstall.png',
 						'text' => $this->language->get('text_uninstall'),
-						'href' => Url::createAdminUrl('extension/module/uninstall') . '&extension=' . $extension
+						'href' => Url::createAdminUrl("module/$extension/uninstall")
 					);
 				}
 				
-				$postion = $pos = $this->config->get($extension . '_position');						
-				
-				if ($postion) {
-					$postion = $this->language->get('text_' . $postion);
-				} else {
-					$postion = "";
-				}
-								
-				$this->data['extensions'][] = array(
-					'extension'   => $extension,
+				$this->data['modules'][] = array(
+					'module'      => $module,
 					'name'        => $this->language->get('heading_title'),
-					'pos'         => $pos,
-					'position'    => $postion,
 					'status'      => $this->config->get($extension . '_status') ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-					'sort_order'  => $this->config->get($extension . '_sort_order'),
 					'action'      => $action
 				);
 			}
@@ -219,12 +212,11 @@ class ControllerExtensionModule extends Controller {
 	 */
 	public function install() {
 		if (!$this->user->hasPermission('modify', 'extension/module')) {
-			$this->session->set('error',$this->language->get('error_permission')); ; 
-			
+			$this->session->set('error',$this->language->get('error_permission'));
 			$this->redirect(Url::createAdminUrl('extension/module'));
 		} else {
+            
 			$this->modelExtension->install('module', $this->request->get['extension']);
-
 			$this->load->auto('user/usergroup');
 		
 			$this->modelUsergroup->addPermission($this->user->getId(), 'access', 'module/' . $this->request->get['extension']);
@@ -252,7 +244,7 @@ class ControllerExtensionModule extends Controller {
 		} else {		
 			$this->modelExtension->uninstall('module', $this->request->get['extension']);
 		
-			$this->modelSetting->deleteSetting($this->request->get['extension']);
+			$this->modelSetting->delete($this->request->get['extension']);
 		
 			$this->redirect(Url::createAdminUrl('extension/module'));	
 		}

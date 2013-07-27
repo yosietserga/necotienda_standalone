@@ -2,32 +2,32 @@
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <?php if ($success) { ?><div class="grid_24"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
 <div class="box">
-    <h1><?php echo $heading_title; ?></h1>
+    <h1><?php echo $Language->get('heading_title'); ?></h1>
     <div class="buttons">
-        <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $button_save; ?></a>
-        <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+        <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save'); ?></a>
+        <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
     </div>
         
     <div class="clear"></div>
                                 
     <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-        <div class="htabs product_tabs">
-            <a data-target="#general" class="htab"><?php echo $tab_general; ?></a>
-            <a data-target="#store" class="htab"><?php echo $tab_store; ?></a>
-            <a data-target="#local" class="htab"><?php echo $tab_local; ?></a>
-            <a data-target="#option" class="htab"><?php echo $tab_option; ?></a>
-            <a data-target="#image" class="htab"><?php echo $tab_image; ?></a>
-            <a data-target="#mail" class="htab"><?php echo $tab_mail; ?></a>
-            <a data-target="#server" class="htab"><?php echo $tab_server; ?></a>
+        <div class="htabs">
+            <a tab="#general" class="htab"><?php echo $Language->get('tab_general'); ?></a>
+            <a tab="#store" class="htab"><?php echo $Language->get('tab_store'); ?></a>
+            <a tab="#local" class="htab"><?php echo $Language->get('tab_local'); ?></a>
+            <a tab="#option" class="htab"><?php echo $Language->get('tab_option'); ?></a>
+            <a tab="#image" class="htab"><?php echo $Language->get('tab_image'); ?></a>
+            <a tab="#mail" class="htab"><?php echo $Language->get('tab_mail'); ?></a>
+            <a tab="#server" class="htab"><?php echo $Language->get('tab_server'); ?></a>
         </div>
         
-        <div class="product_tab" id="general"><?php require_once(dirname(__FILE__)."/setting_form_general.tpl"); ?></div>
-        <div class="product_tab" id="store"><?php require_once(dirname(__FILE__)."/setting_form_store.tpl"); ?></div>
-        <div class="product_tab" id="local"><?php require_once(dirname(__FILE__)."/setting_form_local.tpl"); ?></div>
-        <div class="product_tab" id="option"><?php require_once(dirname(__FILE__)."/setting_form_option.tpl"); ?></div>
-        <div class="product_tab" id="image"><?php require_once(dirname(__FILE__)."/setting_form_images.tpl"); ?></div>
-        <div class="product_tab" id="mail"><?php require_once(dirname(__FILE__)."/setting_form_mail.tpl"); ?></div>
-        <div class="product_tab" id="server"><?php require_once(dirname(__FILE__)."/setting_form_server.tpl"); ?></div>
+        <div id="general"><?php require_once(dirname(__FILE__)."/setting_form_general.tpl"); ?></div>
+        <div id="store"><?php require_once(dirname(__FILE__)."/setting_form_store.tpl"); ?></div>
+        <div id="local"><?php require_once(dirname(__FILE__)."/setting_form_local.tpl"); ?></div>
+        <div id="option"><?php require_once(dirname(__FILE__)."/setting_form_option.tpl"); ?></div>
+        <div id="image"><?php require_once(dirname(__FILE__)."/setting_form_images.tpl"); ?></div>
+        <div id="mail"><?php require_once(dirname(__FILE__)."/setting_form_mail.tpl"); ?></div>
+        <div id="server"><?php require_once(dirname(__FILE__)."/setting_form_server.tpl"); ?></div>
     </form>
 </div>
 
@@ -78,7 +78,7 @@ function bounce() {
 				'type'				: 'ajax',
 				'showCloseButton'   : true,
 				'hideOnOverlayClick': false,
-				'href'				: 'index.php?r=email/bounce/test&token=<?php echo $token; ?>&config_bounce_server=' + encodeURIComponent(jQuery("input[name='config_bounce_server']").val()) 
+				'href'				: '<?php echo $Url::createAdminUrl("email/bounce/test"); ?>&config_bounce_server=' + encodeURIComponent(jQuery("input[name='config_bounce_server']").val()) 
 				+ '&config_bounce_username=' + encodeURIComponent(jQuery("input[name='config_bounce_username']").val()) 
 				+ '&config_bounce_password=' + encodeURIComponent(jQuery("input[name='config_bounce_password']").val()) 
 				+ '&config_bounce_protocol=' + encodeURIComponent(jQuery("select[name='config_bounce_protocol']").val()) 
@@ -98,7 +98,7 @@ function a(e) {
 }
 </script>
 <script type="text/javascript">
-$('#template').load('index.php?r=setting/setting/template&token=<?php echo $token; ?>&template=' + encodeURIComponent($('select[name=\'config_template\']').attr('value')));
+$('#template').load('<?php echo $Url::createAdminUrl("setting/setting/template"); ?>&template=' + encodeURIComponent($('select[name=\'config_template\']').attr('value')));
 $("#_textos").click(function(){
     $("#textos").slideToggle();
     if ($(this).hasClass('slideOff')) {
@@ -147,6 +147,6 @@ $("#_botones").click(function(){
         $(this).removeClass().addClass("slideOff");
     }
 });
-$('#zone').load('index.php?r=setting/setting/zone&token=<?php echo $token; ?>&country_id=<?php echo $config_country_id; ?>&zone_id=<?php echo $config_zone_id; ?>');
+$('#zone').load('<?php echo $Url::createAdminUrl("setting/setting/zone"); ?>&country_id=<?php echo $config_country_id; ?>&zone_id=<?php echo $config_zone_id; ?>');
 </script>
 <?php echo $footer; ?>

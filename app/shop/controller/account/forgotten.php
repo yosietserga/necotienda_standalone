@@ -3,10 +3,8 @@ class ControllerAccountForgotten extends Controller {
 	private $error = array();
 
 	public function index() {
-	   if ($this->customer->isLogged() && !$this->customer->getComplete()) {  
-      		$this->redirect(HTTP_HOME . 'index.php?r=account/complete_activation');
-    	} elseif ($this->customer->isLogged()) {
-			$this->redirect(HTTP_HOME . 'index.php?r=account/account');
+        if ($this->customer->isLogged()) {
+			$this->redirect(Url::createUrl("account/account"));
 		}
 
 		$this->language->load('account/forgotten');
@@ -16,54 +14,100 @@ class ControllerAccountForgotten extends Controller {
 		$this->load->model('account/customer');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->language->load('mail/account_forgotten');
-			
-			$password = substr(md5(rand()), 0, 11);
-			
-			$subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
-			
-			$message  = sprintf($this->language->get('text_greeting'), $this->config->get('config_name')) . "\n\n";
-			$message .= $this->language->get('text_password') . "\n\n";
-			$message .= $password;
-
-			$mail = new Mail();
-			$mail->protocol = 'mail';
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->hostname = $this->config->get('config_smtp_host');
-			$mail->username = $this->config->get('config_smtp_username');
-			$mail->password = $this->config->get('config_smtp_password');
-			$mail->port = $this->config->get('config_smtp_port');
-			$mail->timeout = $this->config->get('config_smtp_timeout');				
-			$mail->setTo($this->request->post['email']);
-			$mail->setFrom($this->config->get('config_email'));
-			$mail->setSender($this->config->get('config_name'));
-			$mail->setSubject($subject);
-			$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
-			$mail->send();
-			
-			$this->model_account_customer->editPassword($this->request->post['email'], $password);
-			
+            $this->load->library('email/mailer');
+            $this->load->library('BarcodeQR');
+            $this->load->library('Barcode39');
+                        
+            $mailer     = new Mailer;
+            $qr         = new BarcodeQR;
+            $barcode    = new Barcode39(C_CODE);
+			$password   = substr(md5(rand()), 0, 11);
+            $qrStore    = "cache/" . str_replace(".","_",$this->config->get('config_owner')).'.png';
+            $eanStore   = "cache/" . str_replace(" ","_",$this->config->get('config_owner') ."_barcode_39_order_id_" . $order_id) . '.gif';
+                    
+            if (!file_exists(DIR_IMAGE . $qrStore)) {
+                $qr->url(HTTP_HOME);
+                $qr->draw(150,DIR_IMAGE . $qrStore);
+            }
+            if (!file_exists(DIR_IMAGE . $eanStore)) {
+                $barcode->draw(DIR_IMAGE . $eanStore);
+            }
+                    
+            if ($this->config->get('marketing_email_new_password')) {
+                $this->load->model("marketing/newsletter");
+          		$result = $this->modelNewsletter->getById($this->config->get('marketing_email_new_password'));
+                $message = $result['htmlbody'];
+           		
+                $message = str_replace("{%store_logo%}",'<img src="'. HTTP_IMAGE . $this->config->get('config_logo') .'" alt="'. $this->config->get('config_name') .'" />',$message);
+                $message = str_replace("{%store_url%}",HTTP_HOME,$message);
+                $message = str_replace("{%url_login%}",Url::createUrl("account/login"),$message);
+                $message = str_replace("{%url_activate%}",Url::createUrl("account/activate",array('ac'=>$this->request->post['activation_code'])),$message);
+                $message = str_replace("{%store_owner%}",$this->config->get('config_owner'),$message);
+                $message = str_replace("{%store_name%}",$this->config->get('config_name'),$message);
+                $message = str_replace("{%store_rif%}",$this->config->get('config_rif'),$message);
+                $message = str_replace("{%store_email%}",$this->config->get('config_email'),$message);
+                $message = str_replace("{%store_telephone%}",$this->config->get('config_telephone'),$message);
+                $message = str_replace("{%store_address%}",$this->config->get('config_address'),$message);
+                $message = str_replace("{%email%}",$this->request->post['email'],$message);
+                $message = str_replace("{%password%}",$password,$message);
+                $message = str_replace("{%date_added%}",date('d-m-Y h:i A'),$message);
+                $message = str_replace("{%ip%}",$_SERVER['REMOTE_ADDR'],$message);
+                $message = str_replace("{%qr_code_store%}",'<img src="'. HTTP_IMAGE . $qrStore .'" alt="QR Code" />',$message);
+                $message = str_replace("{%barcode_39_order_id%}",'<img src="'. HTTP_IMAGE . $eanStore .'" alt="NT Code" />',$message);
+                        
+                $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+            } else {
+                $message = "<h1>". $this->config->get('config_name') ."</h1>";
+                $message .= "<p>". $this->language->get('text_password_renew') ."</p>";
+                $message .= "<p><b>". $password ."</b></p><br />";
+                $message .= '<img src="'. HTTP_IMAGE . $qrStore .'" alt="QR Code" />';
+                $message .= '<img src="'. HTTP_IMAGE . $eanStore .'" alt="NT Code" />';
+                $message .= "<br /><p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+            }
+            
+            $subject = $this->config->get('config_name') ." ". $this->language->get('text_new_password');
+            if ($this->config->get('config_smtp_method')=='smtp') {
+                $mailer->IsSMTP();
+                $mailer->Hostname = $this->config->get('config_smtp_host');
+                $mailer->Username = $this->config->get('config_smtp_username');
+                $mailer->Password = base64_decode($this->config->get('config_smtp_password'));
+                $mailer->Port     = $this->config->get('config_smtp_port');
+                $mailer->Timeout  = $this->config->get('config_smtp_timeout');
+                $mailer->SMTPSecure = $this->config->get('config_smtp_ssl');
+                $mailer->SMTPAuth = ($this->config->get('config_smtp_auth')) ? true : false;          
+            } elseif ($this->config->get('config_smtp_method')=='sendmail') {
+                $mailer->IsSendmail();
+            } else {
+                $mailer->IsMail();
+            }
+            $mailer->IsHTML();
+            $mailer->AddAddress($this->request->post['email'],$this->config->get('config_name'));
+            $mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+            $mailer->Subject = $subject;
+        	$mailer->Body = html_entity_decode(htmlspecialchars_decode($message));
+            $mailer->Send();
+                    
+			$this->modelCustomer->editPassword($this->request->post['email'], $password);
 			$this->session->set('success',$this->language->get('text_success'));
-
-			$this->redirect(HTTP_HOME . 'index.php?r=account/login');
+			$this->redirect(Url::createUrl("account/login"));
 		}
 
       	$this->document->breadcrumbs = array();
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=common/home',
+        	'href'      => Url::createUrl("common/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	); 
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/account',
+        	'href'      => Url::createUrl("account/account"),
         	'text'      => $this->language->get('text_account'),
         	'separator' => $this->language->get('text_separator')
       	);
 		
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/forgotten',
+        	'href'      => Url::createUrl("account/forgotten"),
         	'text'      => $this->language->get('text_forgotten'),
         	'separator' => $this->language->get('text_separator')
       	);
@@ -84,10 +128,61 @@ class ControllerAccountForgotten extends Controller {
 			$this->data['error'] = '';
 		}
 		
-		$this->data['action'] = HTTP_HOME . 'index.php?r=account/forgotten';
- 
-		$this->data['back'] = HTTP_HOME . 'index.php?r=account/account';
+		$this->data['action'] = Url::createUrl("account/forgotten");
+		$this->data['back'] = Url::createUrl("account/account");
 		
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
+            foreach ($widgets->getWidgets('featuredContent') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/forgotten.tpl')) {
 			$this->template = $this->config->get('config_template') . '/account/forgotten.tpl';
 		} else {
@@ -108,7 +203,7 @@ class ControllerAccountForgotten extends Controller {
 		$this->load->model('account/customer');
 		if (!$this->validar->validEmail($this->request->post['email'])) {
 		      $this->error['message'] = $this->language->get('error_email');
-		} elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+		} elseif (!$this->modelCustomer->getTotalCustomersByEmail($this->request->post['email'])) {
 			$this->error['message'] = $this->language->get('error_email');
 		}
 

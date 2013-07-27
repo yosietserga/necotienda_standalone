@@ -1,6 +1,7 @@
 <?php
 // Heading
 $_['heading_title']        = 'Productos'; 
+$_['heading_see_title']        = 'Estad&iacute;sticas de Productos'; 
 
 // Text  
 $_['text_success']         = 'Se ha actualizado satisfactoriamente!';

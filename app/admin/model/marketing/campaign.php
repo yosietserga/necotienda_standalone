@@ -47,6 +47,11 @@ class ModelMarketingCampaign extends Model {
                   `status`     = 1");
             }
         }
+        if ($data['links']) {
+            foreach ($data['links'] as $link) {
+              	$this->addLink($link,$id);
+            }
+        }
         return $id;
 	}
 	
@@ -61,42 +66,94 @@ class ModelMarketingCampaign extends Model {
      * @see DB::getLastId()
 	 * @return void
 	 */
-	public function update($newsletter_id, $data) {
-      	return $this->db->query("UPDATE " . DB_PREFIX . "newsletter SET 
-          `name`        = '" . $this->db->escape($data['name']) . "',
-          `textbody`    = '" . $this->db->escape($data['textbody']) . "',
-          `htmlbody`    = '" . $this->db->escape($data['htmlbody']) . "',
-          `date_modified`  = NOW() 
-          WHERE `newsletter_id` = '".(int)$newsletter_id."'");
+	public function update($id, $data) {
+      	$this->db->query("UPDATE " . DB_PREFIX . "campaign SET 
+          `newsletter_id`        = '" . (int)$data['newsletter_id'] . "',
+          `name`            = '" . $this->db->escape($data['name']) . "',
+          `subject`         = '" . $this->db->escape($data['subject']) . "',
+          `from_name`       = '" . $this->db->escape($data['from_name']) . "',
+          `from_email`      = '" . $this->db->escape($data['from_email']) . "',
+          `replyto_email`   = '" . $this->db->escape($data['replyto_email']) . "',
+          `trace_email`     = '" . (int)$data['trace_email'] . "',
+          `trace_click`     = '" . (int)$data['trace_click'] . "',
+          `embed_image`     = '" . (int)$data['embed_image'] . "',
+          `repeat`          = '" . $this->db->escape($data['repeat']) . "',
+          `date_start`      = '" . $this->db->escape($data['date_start']) . "',
+          `date_end`        = '" . $this->db->escape($data['date_end']) . "',
+          WHERE campaign_id = '". (int)$id ."'");
+        
+        if ($data['contacts']) {
+            $this->db->query("DELETE FROM " . DB_PREFIX . "campaign_contact WHERE campaign_id = '". (int)$id ."'");
+            foreach ($data['contacts'] as $contact) {
+              	$this->db->query("INSERT INTO " . DB_PREFIX . "campaign_contact SET 
+                  `campaign_id`= '" . (int)$id . "',
+                  `contact_id` = '" . (int)$contact['contact_id'] . "',
+                  `name`       = '" . $this->db->escape($contact['name']) . "',
+                  `email`      = '" . $this->db->escape($contact['email']) . "',
+                  `status`     = 1");
+            }
+        }
 	}
     
-    public function copy($newsletter_id) {
-      $result = $this->db->query("INSERT INTO " . DB_PREFIX . "newsletter (
-              `name`,
-              `textbody`,
-              `htmlbody`,
-              `status`
-          )
-       SELECT 
-          CONCAT(`name`,' (copia)'),
-          `textbody`,
-          `htmlbody`,
-          `status`
-       FROM " . DB_PREFIX . "newsletter 
-       WHERE `newsletter_id` = '".(int)$newsletter_id."'");
-        $newsletters_id = $this->db->getLastId();
-        return $this->db->query("UPDATE " . DB_PREFIX . "newsletter SET `date_added` = NOW() WHERE `newsletter_id` = '".(int)$newsletter_id."'");
+	/**
+	 * ModelStoreProduct::copy()
+	 * 
+	 * @param int $product_id
+     * @see DB
+     * @see Cache
+	 * @return void
+	 */
+	public function copy($id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "campaign WHERE campaign_id = '" . (int)$id . "'");
+		
+		if ($query->num_rows) {
+			$data = array();
+			$data = $query->row;
+			$data['name'] = $data['name'] ." - copia";
+			$data = array_merge($data, array('contacts' => $this->getContacts($id)));
+			$data = array_merge($data, array('links' => $this->getLinks($id)));
+			$this->add($data);
+		}
 	}
-    
+	
     /**
      * ModelMarketingCampaign::delete()
      * 
      * @return
      */
-    public function delete($newsletter_id) {
-		//TODO: validar que no tenga trabajos de envío pendientes, si es así mostrar una confirmación            
-        $this->db->query("DELETE FROM " . DB_PREFIX . "newsletter WHERE `newsletter_id` = '".(int)$newsletter_id."'");
+    public function delete($campaign_id) {
+		//TODO: validar que no tenga trabajos de envío pendientes, si es así mostrar una confirmación
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "task_exec te
+        LEFT JOIN " . DB_PREFIX . "task t ON (te.task_id=t.task_id) 
+        WHERE object_id = '".(int)$campaign_id."' 
+        AND object_type = 'campaign'");
+        if (!$query->num_rows) {
+            $this->db->query("DELETE FROM " . DB_PREFIX . "campaign WHERE `campaign_id` = '".(int)$campaign_id."'");
+            $this->db->query("DELETE FROM " . DB_PREFIX . "campaign_contact WHERE `campaign_id` = '".(int)$campaign_id."'");
+            $this->db->query("DELETE FROM " . DB_PREFIX . "task_queue WHERE `task_id` IN (SELECT task_id FROM ". DB_PREFIX ."task WHERE object_id = '".(int)$campaign_id."' AND object_type = 'campaign')");
+            $this->db->query("DELETE FROM " . DB_PREFIX . "task WHERE `task_id` = '".(int)$campaign_id."'");
+        }
 	}
+    
+    public function getContacts($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "campaign_contact WHERE campaign_id = '" . (int)$id . "'");
+        return $query->rows;
+    }
+    
+    public function getLinks($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "campaign_link WHERE campaign_id = '" . (int)$id . "'");
+        return $query->rows;
+    }
+    
+    public function getTasks($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "task WHERE object_id = '" . (int)$id . "' AND object_type = 'campaign'");
+        return $query->rows;
+    }
+    
+    public function getNewsletter($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "newsletter WHERE newsletter_id = '" . (int)$id . "'");
+        return $query->row;
+    }
     
 	/**
 	 * ModelMarketingCampaign::addLink()
@@ -121,9 +178,13 @@ class ModelMarketingCampaign extends Model {
      * 
      * @return
      */
-    public function getById($newsletter_id) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "newsletter WHERE newsletter_id = '" . (int)$newsletter_id . "'");
-		return $query->row;
+    public function getById($id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "campaign WHERE campaign_id = '" . (int)$id . "'");
+        $return = $query->row;
+        $return['links'] = $this->getLinks($id);
+        $return['contacts'] = $this->getContacts($id);
+        $return['tasks'] = $this->getTasks($id);
+		return $return;
     }
 	
     /**
@@ -132,16 +193,16 @@ class ModelMarketingCampaign extends Model {
      * @return
      */
     public function getAll($data = array()) {	
-	    $sql = "SELECT * FROM " . DB_PREFIX . "newsletter ";
+	    $sql = "SELECT * FROM " . DB_PREFIX . "campaign ";
 
-		$implode = array();
+		$criteria = array();
 		
-		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-			$implode[] = "name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+		if (!empty($data['filter_name'])) {
+			$criteria[] = "LCASE(name) LIKE '%" . $this->db->escape(strtolower($data['filter_name'])) . "%'";
 		}
 		
-		if ($implode) {
-			$sql .= " WHERE " . implode(" AND ", $implode);
+		if ($criteria) {
+			$sql .= " WHERE " . implode(" AND ", $criteria);
 		}
 		
 		$sort_data = array(
@@ -176,9 +237,27 @@ class ModelMarketingCampaign extends Model {
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}		
 		
+        $return = array();
 		$query = $this->db->query($sql);
-		
-		return $query->rows;
+        
+        foreach ($query->rows as $result) {
+            $return[] = array(
+                'campaign_id'   =>$result['campaign_id'],
+                'name'          =>$result['name'],
+                'subject'       =>$result['subject'],
+                'status'        =>$result['status'],
+                'date_added'    =>$result['date_added'],
+                'date_start'    =>$result['date_start'],
+                'date_end'      =>$result['date_end'],
+                'repeat'        =>$result['repeat'],
+                'newsletter'    =>$this->getNewsletter($result['newsletter_id']),
+                'contacts'      =>$this->getContacts($result['campaign_id']),
+                'links'         =>$this->getLinks($result['campaign_id']),
+                'tasks'         =>$this->getTasks($result['campaign_id'])
+            );
+        }
+        
+		return $return;
     }
     
 	/**
@@ -187,31 +266,31 @@ class ModelMarketingCampaign extends Model {
 	 * @return
 	 */
 	public function getTotalCampaigns($data = array()) {
-      	$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "newsletter";
+      	$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "campaign";
 		
-		$implode = array();
+		$criteria = array();
 		
-		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-			$implode[] = "name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+		if (!empty($data['filter_name'])) {
+			$criteria[] = "name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
 		}
 		
-		if (isset($data['filter_subject']) && !is_null($data['filter_subject'])) {
-			$implode[] = "subject = '" . $this->db->escape($data['filter_subject']) . "'";
+		if (!empty($data['filter_subject'])) {
+			$criteria[] = "subject = '" . $this->db->escape($data['filter_subject']) . "'";
 		}	
 		
-		if (isset($data['filter_active']) && !is_null($data['filter_active'])) {
-			$implode[] = "active = '" . $this->db->escape($data['filter_active']) . "'";
+		if (!empty($data['filter_active'])) {
+			$criteria[] = "active = '" . $this->db->escape($data['filter_active']) . "'";
 		}	
 		
-		if (isset($data['filter_archive']) && !is_null($data['filter_archive'])) {
-			$implode[] = "archive = '" . $this->db->escape($data['filter_archive']) . "'";
+		if (!empty($data['filter_archive'])) {
+			$criteria[] = "archive = '" . $this->db->escape($data['filter_archive']) . "'";
 		}				
 		
-		if (isset($data['filter_date_added']) && !is_null($data['filter_date_added'])) {
-			$implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+		if (!empty($data['filter_date_start'])) {
+			$criteria[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
 		}
 		
-		if ($implode) {
+		if ($criteria) {
 			$sql .= " WHERE " . implode(" AND ", $implode);
 		}
 				
@@ -225,8 +304,8 @@ class ModelMarketingCampaign extends Model {
      * 
      * @return
      */
-    public function activate($newsletter_id) {
-		$this->db->query("UPDATE " . DB_PREFIX . "newsletter SET status = '1' WHERE newsletter_id = '" . (int)$newsletter_id . "'");
+    public function activate($id) {
+		$this->db->query("UPDATE " . DB_PREFIX . "campaign SET status = '1' WHERE campaign_id = '" . (int)$id . "'");
 	}
 
     /**
@@ -234,7 +313,7 @@ class ModelMarketingCampaign extends Model {
      * 
      * @return
      */
-    public function desactivate($newsletter_id) {
-		$this->db->query("UPDATE " . DB_PREFIX . "newsletter SET status = '0' WHERE newsletter_id = '" . (int)$newsletter_id . "'");
+    public function desactivate($id) {
+		$this->db->query("UPDATE " . DB_PREFIX . "campaign SET status = '0' WHERE campaign_id = '" . (int)$id . "'");
 	}
 }

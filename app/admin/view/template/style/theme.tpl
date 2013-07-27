@@ -311,22 +311,22 @@ function showCssTools(css) {
 }
 function changeLayout(layout) {
     if (confirm('Al cambiar la plantilla se perderán todos los cambios realizados, ¿Desea continuar?')) {
-        if (layout=='fullcontent') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/fullcontent"); ?>');
-        if (layout=='fullcontentfeatured') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/fullcontentfeatured"); ?>');
-        if (layout=='onecolleft') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/onecolleft"); ?>');
-        if (layout=='onecolleftfeatured') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/onecolleftfeatured"); ?>');
-        if (layout=='onecolright') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/onecolright"); ?>');
-        if (layout=='onecolrightfeatured') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/onecolrightfeatured"); ?>');
-        if (layout=='twocolscenter') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/twocolscenter"); ?>');
-        if (layout=='twocolscenterfeatured') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/twocolscenterfeatured"); ?>');
-        if (layout=='twocolsleft') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/twocolsleft"); ?>');
-        if (layout=='twocolsleftfeatured') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/twocolsleftfeatured"); ?>');
-        if (layout=='twocolsright') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/twocolsright"); ?>');
-        if (layout=='twocolsrightfeatured') $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/twocolsrightfeatured"); ?>');
+        if (layout=='fullcontent') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/fullcontent"); ?>');
+        if (layout=='fullcontentfeatured') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/fullcontentfeatured"); ?>');
+        if (layout=='onecolleft') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/onecolleft"); ?>');
+        if (layout=='onecolleftfeatured') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/onecolleftfeatured"); ?>');
+        if (layout=='onecolright') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/onecolright"); ?>');
+        if (layout=='onecolrightfeatured') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/onecolrightfeatured"); ?>');
+        if (layout=='twocolscenter') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/twocolscenter"); ?>');
+        if (layout=='twocolscenterfeatured') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/twocolscenterfeatured"); ?>');
+        if (layout=='twocolsleft') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/twocolsleft"); ?>');
+        if (layout=='twocolsleftfeatured') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/twocolsleftfeatured"); ?>');
+        if (layout=='twocolsright') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/twocolsright"); ?>');
+        if (layout=='twocolsrightfeatured') $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/twocolsrightfeatured"); ?>');
     }
 }
 $(function(){
-    /* $("#htmlWrapper").load('<?php echo Url::createAdminUrl("layout/fullcontentfeatured"); ?>'); */
+    /* $("#htmlWrapper").load('<?php echo $Url::createAdminUrl("layout/fullcontentfeatured"); ?>'); */
     $("#cssToolsWrapper > div").each(function(){ $(this).hide(); });
     $("#layoutsWrapper").fadeIn();
     

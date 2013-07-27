@@ -57,12 +57,18 @@ class CronSend {
             if (isset($task->params['job']) && $task->params['job'] == 'send_campaign') {
                 $this->sendCampaign($task);
             }
+            if (isset($task->params['job']) && $task->params['job'] == 'send_birthday') {
+                $this->sendBirthday($task);
+            }
+            if (isset($task->params['job']) && $task->params['job'] == 'send_recommended_products') {
+                $this->sendRecommendedProducts($task);
+            }
+            
         }
         /**
          * 
          * array (
-         * send_campaign,               // enviar campaña de email marketing
-         * send_birthday,               // enviar felicitaciones de cumpleaños a todos los clientes que cumplan año
+         * ,               // enviar felicitaciones de cumpleaños a todos los clientes que cumplan año
          * send_new_products,           // enviar boletín de productos nuevos
          * send_products_of_interest,   // enviar productos de interés para el cliente
          * send_special,                // enviar boletín con los productos en ofertas
@@ -75,16 +81,122 @@ class CronSend {
          * */
     }
     
-    public function sendCampaign($task) {
-        if ($this->isLocked('send_campaign')) {
+    public function sendBirthday ($task) {
+        if ($this->isLocked('send_birthday',$task->task_id)) {
             $task->addMinute(15);
         } else {
             $task->start();
-            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."campaign c WHERE campaign_id = '". (int)$task->params['campaign_id'] ."'");
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."newsletter WHERE newsletter_id = '". $task->object_id ."'");
+            if ($query->num_rows) {
+                $htmlbody = $this->prepareTemplate($query->row['htmlbody']);
+                $count = 0;
+                foreach ($task->getTaskQueue() as $key => $queue) {
+                    if ($count >= 50) break;
+                    
+                    $params   = unserialize($queue['params']);
+                    
+                    $htmlbody = str_replace("{%fullname%}",$params['fullname'],$htmlbody);
+                    $htmlbody = str_replace("{%rif%}",$params['rif'],$htmlbody);
+                    $htmlbody = str_replace("{%company%}",$params['company'],$htmlbody);
+                    $htmlbody = str_replace("{%email%}",$params['email'],$htmlbody);
+                    $htmlbody = str_replace("{%telephone%}",$params['telephone'],$htmlbody);
+                    
+                    $this->mailer->AddAddress($params['email'],$params['fullname']);
+                    $this->mailer->IsHTML();
+                    $this->mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+                    $this->mailer->Subject = "Feliz Cumpleaños - ". $this->config->get('config_name');
+                    $this->mailer->Body = $htmlbody;
+                    $this->mailer->Send();
+                    $this->mailer->ClearAllRecipients();
+                    
+                    $task->setQueueDone($key);
+                    $count++;
+                }
+                
+                if (count($task->getTaskDos())) {
+                    $task->addMinute(15);
+                } else {
+                    $task->setTaskDone();
+                }
+            }
+            $task->update();
+        }
+    }
+    
+    public function sendRecommendedProducts($task) {
+        if ($this->isLocked('send_recommended_products',$task->task_id)) {
+            $task->addMinute(15);
+        } else {
+            $task->start();
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."newsletter WHERE newsletter_id = '". $task->object_id ."'");
+            if ($query->num_rows) {
+                $htmlbody = $this->prepareTemplate($query->row['htmlbody']);
+                $count = 0;
+                foreach ($task->getTaskQueue() as $key => $queue) {
+                    if ($count >= 50) break;
+                    
+                    $params   = unserialize($queue['params']);
+                    
+                    $htmlbody = str_replace("{%fullname%}",$params['fullname'],$htmlbody);
+                    $htmlbody = str_replace("{%rif%}",$params['rif'],$htmlbody);
+                    $htmlbody = str_replace("{%company%}",$params['company'],$htmlbody);
+                    $htmlbody = str_replace("{%email%}",$params['email'],$htmlbody);
+                    $htmlbody = str_replace("{%telephone%}",$params['telephone'],$htmlbody);
+                    
+                    $product_html = "<table><tr>";
+                    $count = 0;
+              		foreach ($params['products']as $key => $product) {
+                        $product_html .= "<td style=\"text-align:center;\">";
+                        $product_html .= "<img src=\"". HTTP_IMAGE . $product['image'] ."\" alt=\"". $product['name'] ."\" /><br />";
+                        $product_html .= "<h3>". $product['name'] ."</h3>";
+                        $product_html .= "<p>".$product['model']."<br /><b>".$product['price']."</b></p>";
+                        $product_html .= "<a href=\"". $product['href'] ."\">Ver Detalles</a>";
+                        $product_html .= "</td>";
+                        if ($count >= 3) {
+                            $count = 0;
+                            $product_html .= "</tr><tr>";
+                        } else {
+                            $count++;
+                        }
+              		}
+    	            $product_html .= "</tr></table>";
+                    $htmlbody = str_replace("{%products%}",$product_html,$htmlbody);
+                   
+                    $this->mailer->AddAddress($params['email'],$params['fullname']);
+                    $this->mailer->IsHTML();
+                    $this->mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+                    $this->mailer->Subject = "Productos Recomendados - ". $this->config->get('config_name');
+                    $this->mailer->Body = $htmlbody;
+                    $this->mailer->Send();
+                    $this->mailer->ClearAllRecipients();
+                    
+                    $task->setQueueDone($key);
+                    $count++;
+            }
+            
+            if (count($task->getTaskDos())) {
+                $task->addMinute(15);
+            } else {
+                $task->setTaskDone();
+            }
+        }
+        
+        $task->update();
+        }
+    }
+    
+    public function sendCampaign($task) {
+        if ($this->isLocked('send_campaign',$task->task_id)) {
+            $task->addMinute(15);
+        } else {
+            $task->start();
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."campaign c 
+            LEFT JOIN " . DB_PREFIX . "newsletter n ON (n.newsletter_id=c.newsletter_id) 
+            WHERE campaign_id = '". (int)$task->params['campaign_id'] ."'");
             
             $campign_info = $query->row;
             
-            $htmlbody = html_entity_decode($this->cache->get("campaign.html." . (int)$task->params['campaign_id']));
+            $htmlbody = html_entity_decode($campign_info['htmlbody']);
             $count = 0;
             foreach ($task->getTaskQueue() as $key => $queue) {
                 if ($count >= 50) {
@@ -92,7 +204,14 @@ class CronSend {
                 }
                 
                 $params = unserialize($queue['params']);
-        
+                
+                $cached = $this->cache->get("campaign.html.{$params['campaign_id']}.{$params['contact_id']}");
+                if ($cached) {
+                    $htmlbody = html_entity_decode($cached);
+                }
+                
+                $htmlbody = str_replace("%7B","{",$htmlbody);
+                $htmlbody = str_replace("%7D","}",$htmlbody);
                 $htmlbody = str_replace("{%contact_id%}",$params['contact_id'],$htmlbody);
                 $htmlbody = str_replace("{%campaign_id%}",$params['campaign_id'],$htmlbody);
                 
@@ -103,12 +222,13 @@ class CronSend {
                 $this->mailer->Subject = $campign_info['subject'];
                 $this->mailer->Body = $htmlbody;
                 $this->mailer->Send();
+                $this->mailer->ClearAllRecipients();
                 
                 $task->setQueueDone($key);
                 $count++;
             }
             
-            if ($task->getTaskDos()) {
+            if (count($task->getTaskDos())) {
                 $task->addMinute(15);
             } else {
                 $task->setTaskDone();
@@ -140,10 +260,77 @@ class CronSend {
          * */
     }
     
-    private function isLocked($job) {
+    private function isLocked($job,$current_task_id) {
         $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."task_exec WHERE `type` = '". $this->db->escape($job) ."'");
         if (count($query->rows)) {
-            return true;
+            $queue = $this->db->query("SELECT COUNT(*) AS total FROM ". DB_PREFIX ."task_queue WHERE `status` = '1' AND task_id = '". (int)$query->row['task_id'] ."'");
+            if ($queue->row['total'] > 0) {
+                if ($current_task_id == $query->row['task_id']) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                $queue = $this->db->query("DELETE FROM ". DB_PREFIX ."task_exec WHERE `type` = '". $this->db->escape($job) ."'");
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    private function prepareTemplate($newsletter) {
+        if (!$newsletter) return false;
+        $message = $newsletter;
+        $this->load->library('url');
+        $this->load->library('BarcodeQR');
+        $this->load->library('Barcode39');
+        $qr       = new BarcodeQR;
+        $barcode  = new Barcode39(C_CODE);
+                        
+        $qrStore  = "cache/". $this->escape($this->config->get('config_owner')) .'.png';
+        $eanStore = "cache/". $this->escape($this->config->get('config_owner')) ."_barcode_39.gif";
+                   
+        if (!file_exists(DIR_IMAGE . $qrStore)) {
+            $qr->url(HTTP_HOME);
+            $qr->draw(150,DIR_IMAGE . $qrStore);
+        }
+        
+        if (!file_exists(DIR_IMAGE . $eanStore)) {
+            $barcode->draw(DIR_IMAGE . $eanStore);
+        }
+             
+        $message = str_replace("{%store_logo%}",'<img src="'. HTTP_IMAGE . $this->config->get('config_logo') .'" alt="'. $this->config->get('config_name') .'" />',$message);
+        $message = str_replace("{%store_url%}",HTTP_HOME,$message);
+        $message = str_replace("{%url_login%}",Url::createUrl("account/login"),$message);
+        $message = str_replace("{%store_owner%}",$this->config->get('config_owner'),$message);
+        $message = str_replace("{%store_name%}",$this->config->get('config_name'),$message);
+        $message = str_replace("{%store_rif%}",$this->config->get('config_rif'),$message);
+        $message = str_replace("{%store_email%}",$this->config->get('config_email'),$message);
+        $message = str_replace("{%store_telephone%}",$this->config->get('config_telephone'),$message);
+        $message = str_replace("{%store_address%}",$this->config->get('config_address'),$message);
+        /*
+        $message = str_replace("{%products%}",$product_html,$message);
+        */
+        $message = str_replace("{%date_added%}",date('d-m-Y h:i A'),$message);
+        $message = str_replace("{%ip%}",$_SERVER['REMOTE_ADDR'],$message);
+        $message = str_replace("{%qr_code_store%}",'<img src="'. HTTP_IMAGE . $qrStore .'" alt="QR Code" />',$message);
+        $message = str_replace("{%barcode_39_order_id%}",'<img src="'. HTTP_IMAGE . $eanStore .'" alt="NT Code" />',$message);
+                        
+        $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+        
+        return html_entity_decode(htmlspecialchars_decode($message));    
+    }
+    
+    public function escape($str) {
+        if (isset($str)) {
+        	if($str !== mb_convert_encoding( mb_convert_encoding($str, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
+        		$str = mb_convert_encoding($str, 'UTF-8', mb_detect_encoding($str));
+        	$str = htmlentities($str, ENT_NOQUOTES, 'UTF-8');
+        	$str = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $str);
+        	$str = html_entity_decode($str, ENT_NOQUOTES, 'UTF-8');
+        	$str = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $str);
+        	$str = strtolower( trim($str, '-') );
+            return $str;
         } else {
             return false;
         }

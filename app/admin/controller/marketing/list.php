@@ -12,7 +12,7 @@ class ControllerMarketingList extends Controller {
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 		  
-			$contact_list_id = $this->modelList->addList($this->request->post);
+			$contact_list_id = $this->modelList->add($this->request->post);
 			$this->session->set('success',$this->language->get('text_success'));
             
             if ($this->request->post['to'] == "saveAndKeep") {
@@ -31,7 +31,7 @@ class ControllerMarketingList extends Controller {
 		$this->document->title = $this->language->get('heading_title');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->modelList->editList($this->request->get['contact_list_id'], $this->request->post);
+            $this->modelList->update($this->request->get['contact_list_id'], $this->request->post);
 			$this->session->set('success',$this->language->get('text_success'));
             
             if ($this->request->post['to'] == "saveAndKeep") {
@@ -81,26 +81,21 @@ class ControllerMarketingList extends Controller {
 		}
 
         // SCRIPTS
-        $scripts[] = array('id'=>'list','method'=>'function','script'=>
-            "function editAll() {
-                return false;
-            } 
-            function addToList() {
-                return false;
-            } 
-            function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
-                    $('#gridWrapper').hide();
-                    $('#gridPreloader').show();
-                    $.post('". Url::createAdminUrl("marketing/list/delete") ."',$('#form').serialize(),function(){
-                        $('#gridWrapper').load('". Url::createAdminUrl("marketing/list/grid") ."',function(){
-                            $('#gridWrapper').show();
-                            $('#gridPreloader').hide();
-                        });
-                    });
-                }
-                return false;
-            } 
+        $scripts[] = array('id'=>'contactList','method'=>'function','script'=>
+            "function activate(e) {    
+            	$.ajax({
+            	   'type':'get',
+                   'dataType':'json',
+                   'url':'".Url::createAdminUrl("marketing/list/activate")."&id=' + e,
+                   'success': function(data) {
+                        if (data > 0) {
+                            $(\"#img_\" + e).attr('src','image/good.png');
+                        } else {
+                            $(\"#img_\" + e).attr('src','image/minus.png');
+                        }
+                   }
+            	});
+             }
             function copy(e) {
                 $('#gridWrapper').hide();
                 $('#gridPreloader').show();
@@ -111,12 +106,45 @@ class ControllerMarketingList extends Controller {
                     });
                 });
             }
-            function eliminar(e) {    
-                if (confirm('¿Desea eliminar este objeto?')) {
+            function eliminar(e) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
-                	$.getJSON('". Url::createAdminUrl("marketing/list/delete") ."',{ id:e });
+                	$.getJSON('". Url::createAdminUrl("marketing/list/delete") ."',{
+                        id:e
+                    });
                 }
-             }");
+                return false;
+             }
+            function editAll() {
+                return false;
+            } 
+            function addToList() {
+                return false;
+            } 
+            function copyAll() {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.post('". Url::createAdminUrl("marketing/list/copy") ."',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('". Url::createAdminUrl("marketing/list/grid") ."',function(){
+                        $('#gridWrapper').show();
+                        $('#gridPreloader').hide();
+                    });
+                });
+                return false;
+            } 
+            function deleteAll() {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("marketing/list/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("marketing/list/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("marketing/list/grid") ."',function(e){
                 $('#gridPreloader').hide();
@@ -185,8 +213,8 @@ class ControllerMarketingList extends Controller {
 			'start'                  => ($page - 1) * $this->config->get('config_admin_limit'),
 			'limit'                  => $limit
 		);
-		$lists_total = $this->modelList->getTotalLists($data);
-		$results = $this->modelList->getLists($data);
+		$lists_total = $this->modelList->getAllTotal($data);
+		$results = $this->modelList->getAll($data);
  
     	foreach ($results as $result) {
 			$action = array();
@@ -292,19 +320,6 @@ class ControllerMarketingList extends Controller {
     
     
   	public function getForm() {
-        $this->data['Url'] = new Url;
-		$this->data['heading_title'] = $this->language->get('heading_title');
-        
-		$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_description'] = $this->language->get('entry_description');
-		$this->data['entry_contact'] = $this->language->get('entry_contact');		
-            
-		$this->data['button_save']        = $this->language->get('button_save');
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-
         $this->document->breadcrumbs = array();
 	
 		$this->document->breadcrumbs[] = array(
@@ -312,7 +327,6 @@ class ControllerMarketingList extends Controller {
 				'text'      => $this->language->get('text_home'),
 				'separator' => false
 		);
-	
 		$this->document->breadcrumbs[] = array(
 				'href'      => Url::createAdminUrl('marketing/list'),
 				'text'      => $this->language->get('heading_title'),
@@ -331,8 +345,10 @@ class ControllerMarketingList extends Controller {
 		$this->data['cancel'] = Url::createAdminUrl('marketing/list');
 		$this->data['contact_list_id'] = $this->request->get['contact_list_id'];
             
-		if (isset($this->request->get['contact_list_id'])) {
-            $list_info = $this->modelList->getList($this->request->get['contact_list_id']);
+		if (isset($this->request->post['contact_list'])) {
+    		$this->data['contacts_list'] = $this->request->post['contact_list'];
+        } elseif (isset($this->request->get['contact_list_id'])) {
+            $list_info = $this->modelList->getById($this->request->get['contact_list_id']);
             $this->data['contacts_list'] = $this->modelContact->getContactsByListId($this->request->get['contact_list_id']);
 		} else {
             $list_info = array();
@@ -342,15 +358,15 @@ class ControllerMarketingList extends Controller {
         $this->setvar('name',$list_info,'');
 
         $this->data['contacts'] = $this->modelContact->getContacts();
-    		
+        /*
         if (isset($this->request->post['contact_list'])) {
     		$this->data['contact_list'] = $this->request->post['contact_list'];
         } elseif (isset($list_info)) {
-    		//$this->data['contact_list'] = $this->modelList->getContacts($this->data['contact_list_id']);
+    		$this->data['contact_list'] = $this->modelList->getContacts(array($this->data['contact_list_id']));
     	} else {
             $this->data['contact_list'] = array();
     	}
-            
+        */  
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {

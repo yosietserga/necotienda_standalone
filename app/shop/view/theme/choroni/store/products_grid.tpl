@@ -5,7 +5,7 @@
 <div class="content">
 <?php if ($sort) { ?>
     <div class="sort">
-       <div style="font:bold 9px verdana;float:left;"><?php echo $text_sort; ?>&nbsp;</div>
+       <div style="font:bold 9px verdana;float:left;"><?php echo $Language->get('text_sort'); ?>&nbsp;</div>
         <?php foreach ($sorts as $key => $sorts) { 
             if ($key != 'text_default') {
                 if (($sort . '-' . $order) == $sorts['value']) { ?>
@@ -20,7 +20,7 @@
     <div class="grid_view">
     <?php foreach($products as $product) { ?>
         <div class="product_preview">
-            <a class="thumb" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a>
+            <a class="thumb" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /><?php echo $product['sticker']; ?></a>
             <a class="name" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>"><?php echo $product['name']; ?></a>
             <p class="model"><?php echo $product['model']; ?></p>
             <?php if ($display_price) { ?>
@@ -31,8 +31,8 @@
                     <p class="special"><?php echo $product['special']; ?></p>
                 <?php } ?>
             <?php } ?>
-            <a title="<?php echo $button_see_product; ?>" class="button_see_small" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $button_see_product; ?></a>
-            <a title="<?php echo $button_add_to_cart; ?>" class="button_add_small" href="<?php echo str_replace('&', '&amp;', $product['add']); ?>"><?php echo $button_add_to_cart; ?></a>
+            <a title="<?php echo $Language->get('button_see_product'); ?>" class="button_see_small" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $Language->get('button_see_product'); ?></a>
+            <a title="<?php echo $Language->get('button_add_to_cart'); ?>" class="button_add_small" href="<?php echo str_replace('&', '&amp;', $product['add']); ?>"><?php echo $Language->get('button_add_to_cart'); ?></a>
             <?php if ($product['rating']) { ?>
                 <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $product['rating'] . '.png'; ?>" alt="<?php echo $product['stars']; ?>" />
           <?php } ?>

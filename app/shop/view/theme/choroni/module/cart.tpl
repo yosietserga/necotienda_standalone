@@ -1,6 +1,6 @@
-<li id="module_cart" class="box cartModule">
-    <div class="header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div>
-    <div class="content">
+<li id="module_cart" class="nt-editable box cartWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>">
+<?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div><?php } ?>
+    <div class="content" id="<?php echo $widgetName; ?>Content">
     <?php if ($products) { ?>
         <?php foreach ($products as $product) { ?>
         <div class="cartProduct">
@@ -14,8 +14,8 @@
         <?php } ?>
         <br />
         <?php foreach ($totals as $total) { ?>
-            <div class="cartModuleTotal"><b><?php echo $total['title']; ?></b></div>
-            <div class="cartModuleTotal"><?php echo $total['text']; ?></div>
+            <div class="cartWidgetTotal"><b><?php echo $total['title']; ?></b></div>
+            <div class="cartWidgetTotal"><?php echo $total['text']; ?></div>
             <div class="clear"></div>
         <?php } ?>
         <div class="cartLinks">
@@ -26,4 +26,5 @@
         <div style="text-align: center;"><?php echo $text_empty; ?></div>
     <?php } ?>
   </div>
+    <div class="clear"></div><br />
 </li>

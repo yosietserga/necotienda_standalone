@@ -1,47 +1,44 @@
 <?php 
 class ControllerAccountInvoice extends Controller {
 	public function index() { 
-	   if ($this->customer->isLogged() && !$this->customer->getComplete()) {  
-	        $this->session->set('redirect',HTTP_HOME . 'index.php?r=account/invoice&order_id=' . $order_id);
-      		$this->redirect(HTTP_HOME . 'index.php?r=account/complete_activation');
-    	} elseif (!$this->customer->isLogged()) {  
+	   if (!$this->customer->isLogged()) {  
       		if (isset($this->request->get['order_id'])) {
 				$order_id = $this->request->get['order_id'];
 			} else {
 				$order_id = 0;
 			}				
-			$this->session->set('redirect',HTTP_HOME . 'index.php?r=account/invoice&order_id=' . $order_id);			
-			$this->redirect(HTTP_HOME . 'index.php?r=account/login');
+			$this->session->set('redirect',Url::createUrl("account/invoice",array("order_id"=>$order_id)));			
+			$this->redirect(Url::createUrl("account/login"));
     	}
         	  
     	$this->language->load('account/invoice');
         $this->load->model('account/customer');
-        $customer_address = $this->model_account_customer->getCustomer($this->customer->getId());
+        $customer_address = $this->modelCustomer->getCustomer($this->customer->getId());
 
     	$this->document->title = $this->language->get('heading_title');
       	
 		$this->document->breadcrumbs = array();
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=common/home',
+        	'href'      => Url::createUrl("common/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	); 
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/account',
+        	'href'      => Url::createUrl("account/account"),
         	'text'      => $this->language->get('text_account'),
         	'separator' => $this->language->get('text_separator')
       	);
 		
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/history',
+        	'href'      => Url::createUrl("account/history"),
         	'text'      => $this->language->get('text_history'),
         	'separator' => $this->language->get('text_separator')
       	);
       	
 		$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/invoice&order_id=' . $this->request->get['order_id'],
+        	'href'      => Url::createUrl("account/invoice",array("order_id"=>$this->request->get['order_id'])),
         	'text'      => $this->language->get('text_invoice'),
         	'separator' => $this->language->get('text_separator')
       	);
@@ -54,7 +51,7 @@ class ControllerAccountInvoice extends Controller {
 			$order_id = 0;
 		}
 			
-		$order_info = $this->model_account_order->getOrder($order_id);
+		$order_info = $this->modelOrder->getOrder($order_id);
 		
 		if ($order_info) {
       		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -166,10 +163,10 @@ class ControllerAccountInvoice extends Controller {
 			
 			$this->data['products'] = array();
 			
-			$products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+			$products = $this->modelOrder->getOrderProducts($this->request->get['order_id']);
 
       		foreach ($products as $product) {
-				$options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
+				$options = $this->modelOrder->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
 
         		$option_data = array();
 
@@ -190,13 +187,13 @@ class ControllerAccountInvoice extends Controller {
         		);
       		}
 
-      		$this->data['totals'] = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
+      		$this->data['totals'] = $this->modelOrder->getOrderTotals($this->request->get['order_id']);
 			
 			$this->data['comment'] = $order_info['comment'];
       		
 			$this->data['historys'] = array();
 
-			$results = $this->model_account_order->getOrderHistories($this->request->get['order_id']);
+			$results = $this->modelOrder->getOrderHistories($this->request->get['order_id']);
 
       		foreach ($results as $result) {
         		$this->data['historys'][] = array(
@@ -206,17 +203,52 @@ class ControllerAccountInvoice extends Controller {
         		);
       		}
 
-      		$this->data['continue'] = HTTP_HOME . 'index.php?r=account/history';
+      		$this->data['continue'] = Url::createUrl("account/history");
 
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/invoice.tpl')) {
 				$this->template = $this->config->get('config_template') . '/account/invoice.tpl';
 			} else {
-				$this->template = 'default/account/invoice.tpl';
+				$this->template = 'cuyagua/account/invoice.tpl';
 			}
 			
+        // style files
+        $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
+        str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_CSS);
+		if (file_exists(str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_CSS) . 'neco.form.css')) {
+			$styles[] = array('media'=>'all','href'=> str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_CSS) . 'neco.form.css');
+		} else {
+			$styles[] = array('media'=>'all','href'=>$csspath . 'neco.form.css');
+		}
+        $this->styles = array_merge($styles,$this->styles);
+        
+        // javascript files
+        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+        $javascripts[] = $jspath."necojs/neco.form.js";
+        $this->javascripts = array_merge($this->javascripts, $javascripts);
+        
+        // SCRIPTS
+        $scripts[] = array('id'=>'messageScripts','method'=>'ready','script'=>
+        "$('#form').ntForm({
+            ajax:true,
+            url:'{$this->data['action']}',
+            success:function(data) {
+                if (data.success) {
+                    window.location.href = '". Url::createUrl('account/message') ."';
+                }
+                if (data.error) {
+                    $('#messageForm').append(data.msg);
+                }
+            }
+        });
+        
+        $('#form textarea').ntInput();
+        ");
+        
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
 			$this->children = array(
 			'common/nav',
-			'common/column_left',
+			'account/column_left',
 			'common/footer',
 			'common/header'
 		);	
@@ -229,12 +261,12 @@ class ControllerAccountInvoice extends Controller {
 
       		$this->data['button_continue'] = $this->language->get('button_continue');
 
-      		$this->data['continue'] = HTTP_HOME . 'index.php?r=account/history';
+      		$this->data['continue'] = Url::createUrl("account/history");
       			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
 				$this->template = $this->config->get('config_template') . '/error/not_found.tpl';
 			} else {
-				$this->template = 'default/error/not_found.tpl';
+				$this->template = 'cuyagua/error/not_found.tpl';
 			}
 			
 			$this->children = array(

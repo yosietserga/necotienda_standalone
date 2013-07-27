@@ -5,55 +5,55 @@ class ControllerFeedGoogleSitemap extends Controller {
 		 $output  = '<?xml version="1.0" encoding="UTF-8"';
 		 $output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 		 
-		 $this->load->model('tool/seo_url');
 		 
-		 $this->load->model('catalog/product');
 		 
-		 $products = $this->model_catalog_product->getProducts();
+		 $this->load->model('store/product');
+		 
+		 $products = $this->modelProduct->getProducts();
 		 
 		 foreach ($products as $product) {
 			$output .= '<url>';
-			$output .= '<loc>' . str_replace('&', '&amp;', $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/product&product_id=' . $product['product_id'])) . '</loc>';
+			$output .= '<loc>' . str_replace('&', '&amp;', Url::createUrl("store/product",array("product_id"=>$product['product_id']))) . '</loc>';
 			$output .= '<changefreq>weekly</changefreq>';
 			$output .= '<priority>1.0</priority>';
 			$output .= '</url>';   
 		 }
 		 
-		 $this->load->model('catalog/category');
+		 $this->load->model('store/category');
 		 
-		 $categories = $this->model_catalog_category->getCategories();
+		 $categories = $this->modelCategory->getCategories();
 		 
 		 $output .= $this->getCategories(0);
 		 
-		 $this->load->model('catalog/manufacturer');
+		 $this->load->model('store/manufacturer');
 		 
-		 $manufacturers = $this->model_catalog_manufacturer->getManufacturers();
+		 $manufacturers = $this->modelManufacturer->getManufacturers();
 		 
 		 foreach ($manufacturers as $manufacturer) {
 			$output .= '<url>';
-			$output .= '<loc>' . str_replace('&', '&amp;', $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/manufacturer&manufacturer_id=' . $manufacturer['manufacturer_id'])) . '</loc>';
+			$output .= '<loc>' . str_replace('&', '&amp;', Url::createUrl("store/manufacturer",array("manufacturer_id"=>$manufacturer['manufacturer_id']))) . '</loc>';
 			$output .= '<changefreq>weekly</changefreq>';
 			$output .= '<priority>0.7</priority>';
 			$output .= '</url>';   
 			
-			$products = $this->model_catalog_product->getProductsByManufacturerId($manufacturer['manufacturer_id']);
+			$products = $this->modelProduct->getProductsByManufacturerId($manufacturer['manufacturer_id']);
 			
 			foreach ($products as $product) {
 			   $output .= '<url>';
-			   $output .= '<loc>' . str_replace('&', '&amp;', $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/product&manufacturer_id=' . $manufacturer['manufacturer_id'] . '&product_id=' . $product['product_id'])) . '</loc>';
+			   $output .= '<loc>' . str_replace('&', '&amp;', Url::createUrl("store/product",array("manufacturer_id"=>$manufacturer['manufacturer_id'],"product_id"=>$product['product_id']))) . '</loc>';
 			   $output .= '<changefreq>weekly</changefreq>';
 			   $output .= '<priority>1.0</priority>';
 			   $output .= '</url>';   
 			}         
 		 }
 		 
-		 $this->load->model('catalog/information');
+		 $this->load->model('content/page');
 		 
-		 $informations = $this->model_catalog_information->getInformations();
+		 $pages = $this->modelPage->getByIds();
 		 
-		 foreach ($informations as $information) {
+		 foreach ($pages as $page) {
 			$output .= '<url>';
-			$output .= '<loc>' . str_replace('&', '&amp;', $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=information/information&information_id=' . $information['information_id'])) . '</loc>';
+			$output .= '<loc>' . str_replace('&', '&amp;', Url::createUrl("content/page",array("page_id"=>$page['page_id']))) . '</loc>';
 			$output .= '<changefreq>weekly</changefreq>';
 			$output .= '<priority>0.5</priority>';
 			$output .= '</url>';   
@@ -69,7 +69,7 @@ class ControllerFeedGoogleSitemap extends Controller {
    protected function getCategories($parent_id, $current_path = '') {
 	  $output = '';
 	  
-	  $results = $this->model_catalog_category->getCategories($parent_id);
+	  $results = $this->modelCategory->getCategories($parent_id);
 	  
 	  foreach ($results as $result) {
 		 if (!$current_path) {
@@ -79,16 +79,16 @@ class ControllerFeedGoogleSitemap extends Controller {
 		 }
 
 		 $output .= '<url>';
-		 $output .= '<loc>' . str_replace('&', '&amp;', $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/category&path=' . $new_path)) . '</loc>';
+		 $output .= '<loc>' . str_replace('&', '&amp;', Url::createUrl("store/category",array("path"=>$new_path))) . '</loc>';
 		 $output .= '<changefreq>weekly</changefreq>';
 		 $output .= '<priority>0.7</priority>';
 		 $output .= '</url>';         
 
-		 $products = $this->model_catalog_product->getProductsByCategoryId($result['category_id']);
+		 $products = $this->modelProduct->getProductsByCategoryId($result['category_id']);
 		 
 		 foreach ($products as $product) {
 			$output .= '<url>';
-			$output .= '<loc>' . str_replace('&', '&amp;', $this->model_tool_seo_url->rewrite(HTTP_HOME . 'index.php?r=store/product&path=' . $new_path . '&product_id=' . $product['product_id'])) . '</loc>';
+			$output .= '<loc>' . str_replace('&', '&amp;', Url::createUrl("store/product",array("path"=>$new_path,"product_id"=>$product['product_id']))) . '</loc>';
 			$output .= '<changefreq>weekly</changefreq>';
 			$output .= '<priority>1.0</priority>';
 			$output .= '</url>';   

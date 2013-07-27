@@ -4,7 +4,7 @@ class ModelTotalCoupon extends Model {
 		if ($this->session->has('coupon') && $this->config->get('coupon_status')) {
 			$this->load->model('checkout/coupon');
 			 
-			$coupon = $this->model_checkout_coupon->getCoupon($this->session->get('coupon'));
+			$coupon = $this->modelCoupon->getCoupon($this->session->get('coupon'));
 			
 			if ($coupon) {
 				$discount_total = 0;

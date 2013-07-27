@@ -39,7 +39,7 @@ class ControllerMarketingCampaign extends Controller {
             );
             
             if ($this->request->post['trace_email']) {
-                $trace_url  = Url::createUrl("marketing/campaign/trace",$params);
+                $trace_url  = Url::createUrl("marketing/campaign/trace",$params,'NONSSL',HTTP_CATALOG);
                 $trackEmail = $dom->createElement('img');
                 $trackEmail->setAttribute('src',$trace_url);
                 $dom->appendChild($trackEmail);
@@ -50,13 +50,14 @@ class ControllerMarketingCampaign extends Controller {
                 $total_links = $total_trace_links = 0;
                 foreach ($links as $link) {
                     $href = $link->getAttribute('href');
+                    $total_links++;
                     if (empty($href) || $href == "#" || strpos($href,"mailto")) continue;
-                        
+                    
                     //TODO: validar enlaces
                     //TODO: sanitizar enlaces
-                            
-                    $params['link_index'] = time().uniqid();
-                    $_link = Url::createUrl("marketing/campaign/link",$params);
+                    
+                    $params['link_index'] = md5(time().mt_rand(1000000,9999999).$href);
+                    $_link = Url::createUrl("marketing/campaign/link",$params,'NONSSL',HTTP_CATALOG);
                     $link->setAttribute('href',$_link);
                     $_links[] = array(
                         "url"=>$_link,
@@ -64,7 +65,6 @@ class ControllerMarketingCampaign extends Controller {
                         "link_index"=>$params['link_index']
                     );
                     $total_trace_links++;
-                    $total_links++;
                     //TODO: agregar valor a la etiqueta title si esta vacia
                 }
             }
@@ -169,6 +169,40 @@ class ControllerMarketingCampaign extends Controller {
     	$this->getForm();
   	} 
         
+    /**
+     * ControllerMarketingList::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        //TODO: preguntar si desea eliminar tambien los contactos de la lista
+        $this->load->auto('marketing/campaign');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelCampaign->delete($id);
+            }
+		} else {
+            $this->modelCampaign->delete($_GET['id']);
+		}
+     }
+    
+  	/**
+  	 * ControllerMarketingList::copy()
+     * duplicar un objeto
+  	 * @return boolean
+  	 */
+  	public function copy() {
+        $this->load->auto('marketing/campaign');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelCampaign->copy($id);
+            }
+		} else {
+            $this->modelCampaign->copy($_GET['id']);
+		}
+        echo 1;
+  	}
+    
   	private function getList() {
   		$this->document->breadcrumbs = array();
 
@@ -210,54 +244,64 @@ class ControllerMarketingCampaign extends Controller {
 		
         
         // SCRIPTS
-        $scripts[] = array('id'=>'list','method'=>'function','script'=>
-            "function activate(e) {
-                $.getJSON('". Url::createAdminUrl("marketing/campaign/activate") ."',{
-                    id:e
-                },function(data){
-                    if (data > 0) {
-                        $('#img_' + e).attr('src','image/good.png');
-                    } else {
-                        $('#img_' + e).attr('src','image/minus.png');
-                    }
-                });
-            }
-            function copy(e) {    
-                $.ajax({
-            	    'type':'get',
-                    'dataType':'json',
-                    'url':'".Url::createAdminUrl("marketing/campaign/duplicate")."&id=' + e,
-                    'success': function(data) {
+        $scripts[] = array('id'=>'campaignList','method'=>'function','script'=>
+            "function activate(e) {    
+            	$.ajax({
+            	   'type':'get',
+                   'dataType':'json',
+                   'url':'".Url::createAdminUrl("marketing/campaign/activate")."&id=' + e,
+                   'success': function(data) {
                         if (data > 0) {
-                            $('#gridWrapper').load('". Url::createAdminUrl("marketing/campaign/grid") ."');
+                            $(\"#img_\" + e).attr('src','image/good.png');
                         } else {
-                            alert(\"No se pudo duplicar el objeto, por favor intente nuemás tarde\");
+                            $(\"#img_\" + e).attr('src','image/minus.png');
                         }
-                    }
-               	});
-            }
-            function borrar() {
-                $('#gridWrapper').html('<img src=\"image/nt_loader.gif\" alt=\"Cargando...\" />');
-                $.post('". Url::createAdminUrl("marketing/campaign/delete") ."',$('#formGrid').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("marketing/campaign/grid") ."');
+                   }
+            	});
+             }
+            function copy(e) {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.getJSON('".Url::createAdminUrl("marketing/campaign/copy")."&id=' + e, function(data) {
+                    $('#gridWrapper').load('". Url::createAdminUrl("marketing/campaign/grid") ."',function(response){
+                        $('#gridPreloader').hide();
+                        $('#gridWrapper').show();
+                    });
                 });
-            } 
+            }
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                $('#tr_' + e).hide();
-                	$.getJSON('". Url::createAdminUrl("marketing/campaign/eliminar") ."',{
-                            id:e
-                        },
-                        function(data) {
-                            if (data > 0) {
-                                $('#tr_' + e).remove();
-                            } else {
-                                alert('No se pudo eliminar el objeto, posiblemente tenga otros objetos relacionados');
-                                $('#tr_' + e).show().effect('shake', { times:3 }, 300);;
-                            }
-                	});
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("marketing/campaign/delete") ."',{
+                        id:e
+                    });
                 }
-             }");
+                return false;
+             }
+            function copyAll() {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.post('". Url::createAdminUrl("marketing/campaign/copy") ."',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('". Url::createAdminUrl("marketing/campaign/grid") ."',function(){
+                        $('#gridWrapper').show();
+                        $('#gridPreloader').hide();
+                    });
+                });
+                return false;
+            } 
+            function deleteAll() {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("marketing/campaign/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("marketing/campaign/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("marketing/campaign/grid") ."',function(e){
                 $('#gridPreloader').hide();
@@ -375,62 +419,53 @@ class ControllerMarketingCampaign extends Controller {
 			'filter_date_added'        => $filter_date_added,
 			'sort'                     => $sort,
 			'order'                    => $order,
-			'start'                    => ($page - 1) * $this->config->get('config_admin_limit'),
-			'limit'                    => $this->config->get('config_admin_limit')
+			'start'                    => ($page - 1) * $limit,
+			'limit'                    => $limit
 		);
         
 		$campaign_total = $this->modelCampaign->getTotalCampaigns($data);
-		$results = $this->modelCampaign->getAll($data);
-    	foreach ($results as $result) {
-			$action = array();
-            
-		    $action['activate'] = array(
-                'action'  => 'activate',
-                'text'  => $this->language->get('text_activate'),
-                'href'  =>'',
-                'img'   => 'good.png'
-   			);
-            
-		    $action['edit'] = array(
-                'action'  => 'edit',
-                'text'  => $this->language->get('text_edit'),
-                'href'  =>Url::createAdminUrl('marketing/campaign/update') . '&campaign_id=' . $result['campaign_id'] . $url,
-                'img'   => 'edit.png'
-   			);
-            
-		    $action['duplicate'] = array(
-                        'action'  => 'duplicate',
-                        'text'  => $this->language->get('text_copy'),
-                        'href'  =>'',
-                        'img'   => 'copy.png'
-   			);
-            
-		    $action['delete'] = array(
-                        'action'  => 'delete',
-                        'text'  => $this->language->get('text_delete'),
-                        'href'  =>'',
-                        'img'   => 'delete.png'
-   			);
-            
-			$this->data['campaigns'][] = array(
-				'campaign_id'  => $result['campaign_id'],
-				'name'           => $result['name'],
-				'textbody'       => $result['textbody'],
-				'htmlbody'       => $result['htmlbody'],
-				'date_added'     => date('d-m-Y h:i', strtotime($result['date_added'])),
-				'action'         => $action
-			);
-		}	
-
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_yes'] = $this->language->get('text_yes');
-		$this->data['text_no'] = $this->language->get('text_no');		
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-
-		$this->data['column_name'] = $this->language->get('column_name');
-		$this->data['column_date_added'] = $this->language->get('column_date_added');
-		$this->data['column_action'] = $this->language->get('column_action');		
+        if ($campaign_total) {
+    		$results = $this->modelCampaign->getAll($data);
+        	foreach ($results as $result) {
+    			$action = array();
+                
+    		    $action['activate'] = array(
+                    'action'  => 'activate',
+                    'text'  => $this->language->get('text_activate'),
+                    'href'  =>'',
+                    'img'   => 'good.png'
+       			);
+                
+    		    $action['edit'] = array(
+                    'action'  => 'edit',
+                    'text'  => $this->language->get('text_edit'),
+                    'href'  =>Url::createAdminUrl('marketing/campaign/update') . '&campaign_id=' . $result['campaign_id'] . $url,
+                    'img'   => 'edit.png'
+       			);
+                
+    		    $action['duplicate'] = array(
+                            'action'  => 'duplicate',
+                            'text'  => $this->language->get('text_copy'),
+                            'href'  =>'',
+                            'img'   => 'copy.png'
+       			);
+                
+    		    $action['delete'] = array(
+                            'action'  => 'delete',
+                            'text'  => $this->language->get('text_delete'),
+                            'href'  =>'',
+                            'img'   => 'delete.png'
+       			);
+                
+                $result['date_added'] = date('d-m-Y h:i A', strtotime($result['date_added']));
+                $result['date_start'] = date('d-m-Y h:i A', strtotime($result['date_start']));
+                $result['date_end']   = date('d-m-Y h:i A', strtotime($result['date_end']));
+                $result['repeat']     = ($result['repeat']) ? $result['repeat'] : null;
+                $result['action']     = $action;
+                
+    			$this->data['campaigns'][] = $result;
+    		}
+        }
 
 		$url = '';
 
@@ -464,6 +499,8 @@ class ControllerMarketingCampaign extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $campaign_total;
 		$pagination->page = $page;
+		$pagination->ajax = true;
+		$pagination->ajaxTarget = 'gridWrapper';
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = Url::createAdminUrl('marketing/campaign/grid') . $url . '&page={page}';
@@ -534,7 +571,7 @@ class ControllerMarketingCampaign extends Controller {
 		} else {
     	    $campaign_info = null;
 		}
-        $this->data['lists'] = $this->modelList->getLists();
+        $this->data['lists'] = $this->modelList->getAll();
         $this->data['newsletters'] = $this->modelNewsletter->getAll();
         
         $this->setvar('name',$campaign_info,'');
@@ -564,23 +601,7 @@ class ControllerMarketingCampaign extends Controller {
         $this->data['minutes'] = array('00','05','10','15','20','25','30','35','40','45','50','55');
         
         $scripts[] = array('id'=>'form','method'=>'ready','script'=>
-            "$('#form').ntForm({
-                cancelButton:false,
-                submitButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('#q').on('keyup',function(e){
+            "$('#q').on('keyup',function(e){
                 var that = this;
                 var valor = $(that).val().toLowerCase();
                 if (valor.length <= 0) {
@@ -595,47 +616,7 @@ class ControllerMarketingCampaign extends Controller {
                         }
                     });
                 }
-            }); 
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           });
-           
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
             });");
-            
-        $scripts[] = array('id'=>'functions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }");
             
         $this->scripts = array_merge($this->scripts,$scripts);
         
@@ -672,7 +653,7 @@ class ControllerMarketingCampaign extends Controller {
 		$category_id = $this->request->get['category_id'];
 		$this->load->auto('store/product');
         $strProducts = '';
-        $products = $this->modelProduct->getProductsByCategoryId($category_id);
+        $products = $this->modelProduct->getAllByCategoryId($category_id);
         if ($products) {
             foreach ($products as $product) {
                 $strProducts .= "<div id='pid".$product['product_id']."' style='margin:5px;padding:3px;background:#FFF;float:left;border:solid 3px #666;width:150px;height:200px;display:block;text-align:center'>\n";
@@ -707,8 +688,9 @@ class ControllerMarketingCampaign extends Controller {
   	}    
     
     public function send() {
-        $this->load->library("url");
-        $htmlbody = $this->cache->get("campaign.html.temp");
+        $htmlbody = html_entity_decode($this->cache->get("campaign.html.temp"));
+        $htmlbody = str_replace('%7B','{',$htmlbody);
+        $htmlbody = str_replace('%7D','}',$htmlbody);
         $data = unserialize($this->cache->get("campaign.data.temp"));
         
         $to = $data['to'];
@@ -741,10 +723,11 @@ class ControllerMarketingCampaign extends Controller {
         $task->date_start_exec  = date('Y-m-d H:i:s',strtotime($campaign['date_start']));
         $task->date_end_exec    = date('Y-m-d H:i:s',strtotime($campaign['date_end']));
         
-        
         foreach ($to as $sort_order => $contact) {
             foreach ($links as $link) {
                 if (empty($link['url']) || empty($link['redirect'])) continue;
+                $link['url'] = str_replace('%7B','{',$link['url']);
+                $link['url'] = str_replace('%7D','}',$link['url']);
                 $link['url'] = str_replace('{%contact_id%}',$contact['contact_id'],$link['url']);
                 $link['url'] = str_replace('{%campaign_id%}',$campaign_id,$link['url']);
                 $this->modelCampaign->addLink($link,$campaign_id);
@@ -760,6 +743,11 @@ class ControllerMarketingCampaign extends Controller {
                 "status"    =>1,
                 "time_exec" =>date('Y-m-d H:i:s',strtotime($campaign['date_start']))
             );
+            
+            $htmlbody = str_replace('{%contact_id%}',$contact['contact_id'],$htmlbody);
+            $htmlbody = str_replace('{%campaign_id%}',$campaign_id,$htmlbody);
+            $this->cache->set("campaign.html.$campaign_id.".$contact['contact_id'],$htmlbody);
+            
             $task->addQueue($queue);
         }
         $task->createSendTask();
@@ -767,6 +755,6 @@ class ControllerMarketingCampaign extends Controller {
         
 		$this->session->set('success',$this->language->get('text_success'));
         
-        //$this->redirect(Url::createAdminUrl("marketing/campaign"));
+        $this->redirect(Url::createAdminUrl("marketing/campaign"));
     }
 }

@@ -1,6 +1,6 @@
 <?php 
 class ModelMarketingBounce extends Model {
-	public function addList($data) {		
+	public function add($data) {		
        $subscribe_count = sizeof($data['customer_id']);
 		$query = $this->db->query("INSERT INTO " . DB_PREFIX . "email_lists SET 
         `name` = '" . $this->db->escape($data['name']) . "',
@@ -39,7 +39,7 @@ class ModelMarketingBounce extends Model {
 		}
 	}
 	
-	public function editList($list_id,$data) {
+	public function update($list_id,$data) {
 	    $subscribe_count = sizeof($data['customer_id']);
         $this->db->query("UPDATE `" . DB_PREFIX . "email_lists` SET 
         `name` = '" . $this->db->escape($data['name']) . "',
@@ -79,7 +79,7 @@ class ModelMarketingBounce extends Model {
    		}
 	}
     
-    public function getLists($data = array()) {
+    public function getAll($data = array()) {
 		$sql = "SELECT * FROM " . DB_PREFIX . "email_lists ";
 
 		
@@ -135,7 +135,7 @@ class ModelMarketingBounce extends Model {
 		return $query->rows;
 	}	
     
-    public function getList($list_id){
+    public function getById($list_id){
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "email_lists WHERE `list_id` = ".(int)$list_id);
         return $query->row;
     }
@@ -164,7 +164,7 @@ class ModelMarketingBounce extends Model {
 		return $category_data;
 	}
     
-    public function getTotalLists($data = array()) {
+    public function getAllTotal($data = array()) {
       	$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "email_lists`";
 		
 		if (isset($data['filter_list_id']) && !is_null($data['filter_list_id'])) {

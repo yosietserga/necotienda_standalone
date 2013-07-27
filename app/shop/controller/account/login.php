@@ -3,68 +3,51 @@ class ControllerAccountLogin extends Controller {
 	private $error = array();
 	
 	public function index() {
-	   if ($this->customer->isLogged() && !$this->customer->getComplete()) {  
-      		$this->redirect(HTTP_HOME . 'index.php?r=account/complete_activation');
-    	} elseif ($this->customer->isLogged()) {  
-      		$this->redirect(HTTP_HOME . 'index.php?r=account/account');
+        if ($this->customer->isLogged()) {  
+      		$this->redirect(Url::createUrl("account/account"));
     	}
         
         $this->activarUser();
         
-        
     	$this->language->load('account/login');
 
     	$this->document->title = $this->language->get('heading_title');
-        
-        
-        // evitando ataques xsrf y xss
-        $fid = ($this->session->has('fid')) ? $this->session->get('fid') : strtotime(date('d-m-Y h:i:s'));$this->session->set('fid',$fid);
-        $fkey = $this->fkey . "." . $this->session->get('fid') . "_" . str_replace('/','-',$_GET['r']);
-        $this->data['fkey'] = "<input type='hidden' name='formkey' value='$fkey' />";
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             if (isset($this->request->post['account'])) {
                 $this->session->set('account',$this->request->post['account']);
     				
     			if ($this->request->post['account'] == 'guest') {
-    				$this->redirect(HTTP_HOME . 'index.php?r=checkout/guest_step_1');
+    				$this->redirect(Url::createUrl("checkout/guest_step_1"));
     			}
   			}
             if (isset($this->request->post['email']) && isset($this->request->post['password']) && $this->validate()) {
-            $route = str_replace("-","/",substr($_POST['formkey'],strrpos($_POST['formkey'],"_")+1)); // verificamos que la ruta pertenece a este formulario
-            $fid = substr($_POST['formkey'],strpos($_POST['formkey'],".")+1,10); // verificamos que id del formulario es correcto
-            $date = substr($this->fkey,strpos($this->fkey,"_")+1,10); // verificamos que la fecha es de hoy
-            
-            if (($this->session->get('fkey')==$this->fkey) && ($route==$_GET['r']) && ($fid==$this->session->get('fid')) && ($date==strtotime(date('d-m-Y')))) { // validamos el id de sesi?n para evitar ataques csrf
-                $this->session->clear('fid');
                 $this->session->clear('guest');
-                
-    				if (isset($this->request->post['redirect'])) {
-    					$this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
-    				} else {
-    					$this->redirect(HTTP_HOME . 'index.php?r=common/home');
-    				} 
-    			}              
-            }
-			
+                    
+                if (isset($this->request->post['redirect'])) {
+                    $this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
+      			} else {
+                    $this->redirect(Url::createUrl("common/home"));
+      			} 
+       		}
     	}  
 		
       	$this->document->breadcrumbs = array();
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=common/home',
+        	'href'      => Url::createUrl("common/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	);
  
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/account',
+        	'href'      => Url::createUrl("account/account"),
         	'text'      => $this->language->get('text_account'),
         	'separator' => $this->language->get('text_separator')
       	);
 		
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/login',
+        	'href'      => Url::createUrl("account/login"),
         	'text'      => $this->language->get('text_login'),
         	'separator' => $this->language->get('text_separator')
       	);
@@ -89,8 +72,8 @@ class ControllerAccountLogin extends Controller {
 		$this->data['button_login'] = $this->language->get('button_login');
 
 		$this->data['error'] = isset($this->error['message']) ? $this->error['message'] : '';
-		$this->data['action'] = HTTP_HOME . 'index.php?r=account/login';
-		$this->data['register'] = HTTP_HOME . 'index.php?r=account/register';
+		$this->data['action'] = Url::createUrl("account/login");
+		$this->data['register'] = Url::createUrl("account/register");
 
     	if (isset($this->request->post['redirect'])) {
 			$this->data['redirect'] = $this->request->post['redirect'];
@@ -100,7 +83,11 @@ class ControllerAccountLogin extends Controller {
     	} else {
 			$this->data['redirect'] = '';
 		}
-
+        
+        if ($this->request->hasQuery('error')) {
+            $this->data['error'] = $this->language->get('error_login');
+        }
+        
 		if ($this->session->has('success')) {
     		$this->data['success'] = $this->session->get('success');
 	  		$this->session->clear('success');	
@@ -114,13 +101,72 @@ class ControllerAccountLogin extends Controller {
 			$this->data['account'] = 'register';
 		}
 		
-    	$this->data['forgotten'] = HTTP_HOME . 'index.php?r=account/forgotten';
+        $this->data['Url'] = new Url($this->registry);
+        
+        $this->session->set('state',md5(rand()));
+        $this->data['google_client_id'] = $this->config->get('social_google_client_id');
+        $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
+        $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
+        
+    	$this->data['forgotten'] = Url::createUrl("account/forgotten");
 		$this->data['guest_checkout'] = ($this->config->get('config_guest_checkout') && $this->cart->hasProducts() && !$this->cart->hasDownload());
 
+            $this->load->helper('widgets');
+            $widgets = new NecoWidget($this->registry,$this->Route);
+            foreach ($widgets->getWidgets('main') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
+            foreach ($widgets->getWidgets('featuredContent') as $widget) {
+                $settings = (array)unserialize($widget['settings']);
+                if ($settings['asyn']) {
+                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                    $scripts[$widget['name']] = array(
+                        'id'=>$widget['name'],
+                        'method'=>'ready',
+                        'script'=>
+                        "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                    );
+                } else {
+                    if (isset($settings['route'])) {
+                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+            
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/login.tpl')) {
 			$this->template = $this->config->get('config_template') . '/account/login.tpl';
 		} else {
-			$this->template = 'default/account/login.tpl';
+			$this->template = 'cuyagua/account/login.tpl';
 		}
 		
 		$this->children = array(
@@ -167,4 +213,35 @@ class ControllerAccountLogin extends Controller {
       		return false;
     	}  	
   	}
+    
+    public function header() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+        header("Cache-Control: no-cache, must-revalidate"); 
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        
+    	$this->language->load('account/login');
+        if (!$this->request->hasPost("email") && !$this->request->hasPost("password")) {
+            $json['error'] = 1;
+            $json['message'] = $this->language->get('error_login');
+        }
+        
+        if (!$this->request->hasPost("token") && $this->request->getPost("token") != $this->session->get('token')) {
+            $json['error'] = 1;
+            $json['message'] = $this->language->get('error_login');
+        }
+        
+        if (!$this->customer->login($this->request->getPost("email"), $this->request->getPost("password"), false)) {
+      		$json['error'] = 1;
+            $json['message'] = $this->language->get('error_login');
+    	} 
+        
+        if (!$json['error']) {
+            $json['success'] = 1;
+        }
+        
+        $this->load->auto('json');
+		$this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));  
+    }
 }

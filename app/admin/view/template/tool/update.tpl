@@ -5,11 +5,15 @@
 <div class="grid_24">
     <div class="box">
         <div class="header">
-            <h1><?php echo $heading_title; ?></h1>
+            <h1><?php echo $Language->get('heading_title'); ?></h1>
             <div class="buttons">
-                <a onclick="$('#form').submit();" class="button">Actualizar</a>
+                <a onclick="$('.header').after('<img src=\'image/loader.gif\' alt=\'Actualizando...\' /><div class=\'message warning\'>Esto puede tardar unos minutos, no cancele ni cierre el navegador.</div>');$('#form').submit();" class="button">Actualizar</a>
             </div>
         </div>      
+        <div class="clear"></div><br />
+        
+        <h3>Versi&oacute;n Actual</h3>
+        <?php echo VERSION; ?>
         <div class="clear"></div><br />
         
         <h3>Versi&oacute;n Disponible</h3>

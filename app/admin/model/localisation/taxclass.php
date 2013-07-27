@@ -1,6 +1,6 @@
 <?php 
 class ModelLocalisationTaxClass extends Model {
-	public function addTaxClass($data) {
+	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "tax_class SET title = '" . $this->db->escape($data['title']) . "', description = '" . $this->db->escape($data['description']) . "', date_added = NOW()");
 		
 		$tax_class_id = $this->db->getLastId();
@@ -14,7 +14,7 @@ class ModelLocalisationTaxClass extends Model {
 		$this->cache->delete('tax_class');
 	}
 	
-	public function editTaxClass($tax_class_id, $data) {
+	public function update($tax_class_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "tax_class SET title = '" . $this->db->escape($data['title']) . "', description = '" . $this->db->escape($data['description']) . "', date_modified = NOW() WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "tax_rate WHERE tax_class_id = '" . (int)$tax_class_id . "'");
@@ -28,20 +28,20 @@ class ModelLocalisationTaxClass extends Model {
 		$this->cache->delete('tax_class');
 	}
 	
-	public function deleteTaxClass($tax_class_id) {
+	public function delete($tax_class_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "tax_class WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "tax_rate WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 		
 		$this->cache->delete('tax_class');
 	}
 	
-	public function getTaxClass($tax_class_id) {
+	public function getById($tax_class_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "tax_class WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 		
 		return $query->row;
 	}
 
-	public function getTaxClasses($data = array()) {
+	public function getAll($data = array()) {
     	if ($data) {
 			$sql = "SELECT * FROM " . DB_PREFIX . "tax_class";
 
@@ -89,13 +89,13 @@ class ModelLocalisationTaxClass extends Model {
 		return $query->rows;
 	}
 			
-	public function getTotalTaxClasses() {
+	public function getAllTotal() {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "tax_class");
 		
 		return $query->row['total'];
 	}	
 	
-	public function getTotalTaxRatesByGeoZoneId($geo_zone_id) {
+	public function getAllTotalByGeoZoneId($geo_zone_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "tax_rate WHERE geo_zone_id = '" . (int)$geo_zone_id . "'");
 		
 		return $query->row['total'];

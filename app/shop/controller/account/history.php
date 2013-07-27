@@ -1,33 +1,21 @@
 <?php 
 class ControllerAccountHistory extends Controller {	
 	public function index() {
-	   if ($this->customer->isLogged() && !$this->customer->getComplete()) {  
-      		$this->redirect(HTTP_HOME . 'index.php?r=account/complete_activation');
-    	} elseif (!$this->customer->isLogged()) {  
-      		$this->session->set('redirect',HTTP_HOME . 'index.php?r=account/history');
+        if (!$this->customer->isLogged()) {  
+      		$this->session->set('redirect',Url::createUrl("account/history"));
 
-	  		$this->redirect(HTTP_HOME . 'index.php?r=account/login');
+	  		$this->redirect(Url::createUrl("account/login"));
     	}
         
         $this->load->model('account/customer');
         
-		
-        // evitando ataques xsrf y xss
-        $fid = ($this->session->has('fid')) ? $this->session->get('fid') : strtotime(date('d-m-Y h:i:s'));$this->session->set('fid',$fid);
-        $fkey = $this->fkey . "." . $this->session->get('fid') . "_" . str_replace('/','-',$_GET['r']);
-        $this->data['fkey'] = "<input type='hidden' name='fkey' id='fkey' value='$fkey' />";
-                
         if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
-            $route = str_replace("-","/",substr($_POST['fkey'],strrpos($_POST['fkey'],"_")+1)); // verificamos que la ruta pertenece a este formulario
-            $fid = substr($_POST['fkey'],strpos($_POST['fkey'],".")+1,10); // verificamos que id del formulario es correcto
-            $date = substr($this->fkey,strpos($this->fkey,"_")+1,10); // verificamos que la fecha es de hoy
-            if (($this->session->get('fkey')==$this->fkey) && ($route==$_GET['r']) && ($fid==$this->session->get('fid')) && ($date==strtotime(date('d-m-Y')))) { // validamos el id de sesión para evitar ataques csrf
-                $this->session->clear('fid');
+
                 //if ($this->validateDB()) {
-            	$result = $this->model_account_customer->addTransferencia($this->request->post);
+            	$result = $this->modelCustomer->addTransferencia($this->request->post);
                 if ($result != 1) $this->validar->custom($result); 
                 $this->data['mostrarError'] = $this->validar->mostrarError();
-                $result = $this->model_account_customer->getCustomer($this->customer->getId());
+                $result = $this->modelCustomer->getCustomer($this->customer->getId());
              
     			$subject = "Reporte de Pago de Pedido";
     
@@ -67,7 +55,7 @@ class ControllerAccountHistory extends Controller {
           		$mail->send();
                 //}
                 unset($this->request->post);
-            }
+            
 		}
  
     	$this->language->load('account/history');
@@ -77,26 +65,26 @@ class ControllerAccountHistory extends Controller {
       	$this->document->breadcrumbs = array();
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=common/home',
+        	'href'      => Url::createUrl("common/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	); 
 
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/account',
+        	'href'      => Url::createUrl("account/account"),
         	'text'      => $this->language->get('text_account'),
         	'separator' => $this->language->get('text_separator')
       	);
 		
       	$this->document->breadcrumbs[] = array(
-        	'href'      => HTTP_HOME . 'index.php?r=account/history',
+        	'href'      => Url::createUrl("account/history"),
         	'text'      => $this->language->get('text_history'),
         	'separator' => $this->language->get('text_separator')
       	);
 				
 		$this->load->model('account/order');
 
-		$order_total = $this->model_account_order->getTotalOrders();
+		$order_total = $this->modelOrder->getTotalOrders();
 		
 		if ($order_total) {
       		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -126,7 +114,7 @@ class ControllerAccountHistory extends Controller {
       		$this->data['button_continue'] = $this->language->get('button_continue');
             $this->data['button_back'] = $this->language->get('button_back');
             
-    		$this->data['action'] = HTTP_HOME . 'index.php?r=account/history';
+    		$this->data['action'] = Url::createUrl("account/history");
             
     		$this->setvar('forma_de_pago');
     		$this->setvar('order_id');
@@ -141,7 +129,7 @@ class ControllerAccountHistory extends Controller {
     		$this->setvar('captcha');
     		$this->setvar('agree');            
                 
-            $this->data['back'] = HTTP_HOME . 'index.php?r=account/account';
+            $this->data['back'] = Url::createUrl("account/account");
                 
 			if (isset($this->request->get['page'])) {
 				$page = $this->request->get['page'];
@@ -151,10 +139,10 @@ class ControllerAccountHistory extends Controller {
 			
       		$this->data['orders'] = array();
 			
-			$results = $this->model_account_order->getOrders(($page - 1) * $this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit'));
+			$results = $this->modelOrder->getOrders(($page - 1) * $this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit'));
       		
 			foreach ($results as $result) {
-        		$product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
+        		$product_total = $this->modelOrder->getTotalOrderProductsByOrderId($result['order_id']);
 
         		$this->data['orders'][] = array(
           			'order_id'   => $result['order_id'],
@@ -163,7 +151,7 @@ class ControllerAccountHistory extends Controller {
           			'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
           			'products'   => $product_total,
           			'total'      => $this->currency->format($result['total'], $result['currency'], $result['value']),
-					'href'       => HTTP_HOME . 'index.php?r=account/invoice&order_id=' . $result['order_id']
+					'href'       => Url::createUrl("account/invoice",array("order_id"=>$result['order_id']))
         		);
       		}
 
@@ -172,16 +160,16 @@ class ControllerAccountHistory extends Controller {
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_catalog_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = HTTP_HOME . 'index.php?r=account/history&page=%s';
+			$pagination->url = Url::createUrl("account/history") . '&page=%s';
 			
 			$this->data['pagination'] = $pagination->render();
 
-      		$this->data['continue'] = HTTP_HOME . 'index.php?r=account/account';
+      		$this->data['continue'] = Url::createUrl("account/account");
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/history.tpl')) {
 				$this->template = $this->config->get('config_template') . '/account/history.tpl';
 			} else {
-				$this->template = 'default/account/history.tpl';
+				$this->template = 'cuyagua/account/history.tpl';
 			}
 			
 			$this->children = array(
@@ -199,12 +187,12 @@ class ControllerAccountHistory extends Controller {
 
       		$this->data['button_continue'] = $this->language->get('button_continue');
 
-      		$this->data['continue'] = HTTP_HOME . 'index.php?r=account/account';
+      		$this->data['continue'] = Url::createUrl("account/account");
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
 				$this->template = $this->config->get('config_template') . '/error/not_found.tpl';
 			} else {
-				$this->template = 'default/error/not_found.tpl';
+				$this->template = 'cuyagua/error/not_found.tpl';
 			}
 			
 			$this->children = array(
@@ -300,7 +288,7 @@ class ControllerAccountHistory extends Controller {
 		
 		$this->load->model('localisation/zone');
 
-    	$results = $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']);
+    	$results = $this->modelZone->getZonesByCountryId($this->request->get['country_id']);
         
       	foreach ($results as $result) {
         	$output .= '<option value="' . $result['zone_id'] . '"';

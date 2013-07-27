@@ -2,7 +2,7 @@
 /**
  * ControllerStoreProduct
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -11,7 +11,7 @@
  */
 class ControllerStoreProduct extends Controller {
 	private $error = array(); 
-     
+    private $aKey  = "";
   	/**
   	 * ControllerStoreProduct::index()
      * 
@@ -76,7 +76,7 @@ class ControllerStoreProduct extends Controller {
                 $this->request->post['product_description'][$language_id] = $description;
             }
               
-			$product_id = $this->modelProduct->addProduct($this->request->post);
+			$product_id = $this->modelProduct->add($this->request->post);
             if ($product_id===false) {
                 $this->error['warning'] = "No puede crear m&aacute;s productos, ha llegado al l&iacute;mite permitido para su cuenta.\nSi desea agregar m&aacute;s productos a su tienda debe comprar una nueva licencia.";
             } else {            
@@ -110,7 +110,6 @@ class ControllerStoreProduct extends Controller {
   	public function update() {
     	$this->document->title = $this->language->get('heading_title');
     	if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            
             foreach ($this->request->post['product_description'] as $language_id => $description) {
                 $dom = new DOMDocument;
                 $dom->preserveWhiteSpace = false;
@@ -144,13 +143,25 @@ class ControllerStoreProduct extends Controller {
                 $description['description'] = htmlentities($dom->saveHTML());
                 $this->request->post['product_description'][$language_id] = $description;
             }
-              
-			$this->modelProduct->editProduct($this->request->get['product_id'], $this->request->post);
+            
+            foreach ($this->request->post['discount'] as $key => $discount) {
+                $discount['date_start'] = date('Y-m-d',strtotime($discount['date_start']));
+                $discount['date_end'] = date('Y-m-d',strtotime($discount['date_end']));
+                $this->request->post['discount'][$key] = $discount;
+            }
+            
+            foreach ($this->request->post['product_special'] as $key => $special) {
+                $discount['date_start'] = date('Y-m-d',strtotime($special['date_start']));
+                $discount['date_end'] = date('Y-m-d',strtotime($special['date_end']));
+                $this->request->post['product_special'][$key] = $special;
+            }
+            
+			$this->modelProduct->update($this->request->get['product_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
-			
+            
                 if ($_POST['to'] == "saveAndKeep") {
-                    $this->redirect(Url::createAdminUrl('store/product/update',array('product_id'=>$this->request->get['product_id']))); 
+                    $this->redirect(Url::createAdminUrl('store/product/update',array('product_id'=>$this->request->getQuery('product_id')))); 
                 } elseif ($_POST['to'] == "saveAndNew") {
                     $this->redirect(Url::createAdminUrl('store/product/insert')); 
                 } else {
@@ -162,7 +173,499 @@ class ControllerStoreProduct extends Controller {
   	}
 
   	/**
-  	 * ControllerStoreProduct::getList()
+  	 * ControllerStoreProduct::see()
+     * 
+     * Wrapper para los informes
+     * 
+  	 * @see Load
+  	 * @see Language
+  	 * @see Document
+  	 * @see Model
+  	 * @see getList
+  	 * @return void
+  	 */
+  	public function see() {
+  	     /*
+        $stats = $this->db->query("SELECT * FROM ". DB_PREFIX ."stat");
+        $years = array(2012,2013);
+        $months = array('10','11','12');
+        $days = array('01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31');
+        $count = 0;
+        foreach ($years as $year) {
+            foreach ($months as $month) {
+                foreach ($days as $day) {
+                    foreach ($stats->rows as $row) {
+                    if ($count > 160) {
+                        $count = 0;
+                        continue;
+                    }
+                		$this->db->query("INSERT " . DB_PREFIX . "stat SET 
+                        `object_id`     = '". (int)$row['object_id'] ."',
+                        `store_id`      = '". (int)STORE_ID ."',
+                        `customer_id`   = '". (int)$row['object_id'] ."',
+                        `object_type`   = '". $this->db->escape($row['object_type']) ."',
+                        `server`        = '". $this->db->escape($row['server']) ."',
+                        `session`       = '". $this->db->escape($row['session']) ."',
+                        `request`       = '". $this->db->escape($row['request']) ."',
+                        `store_url`     = '". $this->db->escape($row['store_url']) ."',
+                        `ref`           = '". $this->db->escape($row['ref']) ."',
+                        `browser`       = '". $this->db->escape($row['browser']) ."',
+                        `browser_version`= '". $this->db->escape($row['browser_version']) ."',
+                        `os`            = '". $this->db->escape($row['os']) ."',
+                        `ip`            = '". $this->db->escape($row['ip']) ."',
+                        `date_added`    = '". $year ."-". $month ."-". $day ." ". rand(1,23) .":". rand(1,59) .":00'");
+                        $count++;
+                    }
+                }
+            }
+        }
+        */
+        
+  	     //TODO: mantener y capturar los filtros en todos los enlaces
+		$filter_product_id = isset($this->request->get['product_id']) ? $this->request->get['product_id'] : null;
+		$filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
+		$filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
+
+		$url = '';
+			
+		if (isset($this->request->get['product_id'])) { $url .= '&product_id=' . $this->request->get['product_id']; } 
+		if (isset($this->request->get['ds'])) { $url .= '&ds=' . $this->request->get['ds']; }
+		if (isset($this->request->get['de'])) { $url .= '&de=' . $this->request->get['de']; }
+		
+		$this->data['products'] = array();
+
+		$data = array(
+			'object_id'	  => $filter_product_id, 
+			'object'      => 'product',
+			'filter_date_start'=> $filter_date_start,
+			'filter_date_end' => $filter_date_end
+		);
+         
+		$this->document->title = $this->data['heading_title'] = $this->language->get('heading_see_title'); 
+        
+  		$this->document->breadcrumbs = array();
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('common/home'),
+       		'text'      => $this->language->get('text_home'),
+      		'separator' => false
+   		);
+
+   		$this->document->breadcrumbs[] = array(
+       		'href'      => Url::createAdminUrl('store/product') . $url,
+       		'text'      => $this->language->get('heading_title'),
+      		'separator' => ' :: '
+   		);
+		
+        $this->load->auto('stats/traffic');
+        $allStock = "[";
+        foreach ($this->modelTraffic->getAllForHS($data) as $row) {
+            $allStock .= "[". $row['date_added'] .",". $row['total'] ."],";
+        }
+        $allStock = substr($allStock, 0, strlen($allStock) - 1) ."]";
+        
+        $productsStock = "[";
+        foreach ($this->modelTraffic->getAllProductsForHS($data) as $row) {
+            $productsStock .= "[". $row['date_added'] .",". $row['total'] ."],";
+        }
+        $productsStock = substr($productsStock, 0, strlen($productsStock) - 1) ."]";
+        
+        $this->load->auto('stats/order');
+        $total_orders = $cash_orders = array();
+        foreach ($this->modelOrder->getAllForHS($data) as $row) {
+            $total_orders[]   = $row['cant_total'];
+            $cash_orders[]     = round($row['total'],2);
+            $range[] = "'". date('m-Y',$row['date_added']) ."'";
+        }
+        $total_orders = implode(',',$total_orders);
+        $cash_orders = implode(',',$cash_orders);
+        $range = implode(',',$range);
+        
+        // javascript files
+        $javascripts[] = "js/vendor/highstock/highstock.js";
+        $javascripts[] = "js/vendor/highstock/modules/exporting.js";
+        $javascripts[] = "js/vendor/highcharts/jquery.highchartTable.min.js";
+        $this->data['javascripts'] = $this->javascripts = array_merge($javascripts,$this->javascripts);
+        
+        // SCRIPTS
+        $scripts[] = array('id'=>'seeFunctions','method'=>'function','script'=>
+            "function showTab(a) {
+                $('.vtabs_page').hide();
+                $($(a).attr('data-target')).show();
+            }
+            
+            function updateCharts(ds,de) {
+                if (typeof de == 'undefined' || typeof ds == 'undefined') {
+                    alert('No se pudieron cargar todas las estad\xedsticas');
+                    return false;
+                }
+                
+                var params = '&ds='+ ds +'&de='+ de;
+                
+                $('#visitsStats')
+                    .html('<img src=\"image/nt_loader.gif\" alt\"Cargando...\" />')
+                    .load('". Url::createAdminUrl("store/product/visits") ."' + params);
+                $('#ordersStats')
+                    .delay(600)
+                    .html('<img src=\"image/nt_loader.gif\" alt\"Cargando...\" />')
+                    .load('". Url::createAdminUrl("store/product/orders") ."' + params);
+                /*
+                $('#salesStats')
+                    .delay(1200)
+                    .html('<img src=\"image/nt_loader.gif\" alt\"Cargando...\" />')
+                    .load('". Url::createAdminUrl("store/product/visits") ."' + params);
+                    
+                $('#commentsStats')
+                    .delay(1800)
+                    .html('<img src=\"image/nt_loader.gif\" alt\"Cargando...\" />')
+                    .load('". Url::createAdminUrl("store/product/visits") ."' + params);
+                */
+            }");
+        $scripts[] = array('id'=>'seeScripts','method'=>'ready','script'=>
+            "$('#chartOrders').highcharts({
+                chart: {
+                    zoomType: 'xy'
+                },
+                title: {
+                    text: 'Gr&aacute;fico de Pedidos'
+                },
+                subtitle: {
+                    text: 'Relaci&oacute;n Ingresos por Pedidos / Cant. de Pedidos'
+                },
+                xAxis: [{
+                    categories: [ $range ]
+                }],
+                yAxis: [{ /* Primary yAxis */
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: '#89A54E'
+                        }
+                    },
+                    title: {
+                        text: 'Pedidos',
+                        style: {
+                            color: '#89A54E'
+                        }
+                    }
+                }, { /* Secondary yAxis */
+                    title: {
+                        text: 'Efectivo',
+                        style: {
+                            color: '#4572A7'
+                        }
+                    },
+                    labels: {
+                        format: '{value} Bs.',
+                        style: {
+                            color: '#4572A7'
+                        }
+                    },
+                    opposite: true
+                }],
+                tooltip: {
+                    shared: true
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'left',
+                    x: 120,
+                    verticalAlign: 'top',
+                    y: 100,
+                    floating: true,
+                    backgroundColor: '#FFFFFF'
+                },
+                series: [{
+                    name: 'Efectivo',
+                    color: '#4572A7',
+                    type: 'column',
+                    yAxis: 1,
+                    data: [ $cash_orders ],
+                    tooltip: {
+                        valuePrefix: 'Bs. '
+                    }
+        
+                }, {
+                    name: 'Pedidos',
+                    color: '#89A54E',
+                    type: 'spline',
+                    data: [ $total_orders ]
+                }]
+            });
+            
+            var requestFired = false;
+            $('#chartVisits').highcharts('StockChart', {
+                chart: {
+                    events: {
+                        load: function(e) {
+                            var ds = new Date(this.xAxis[0].min),
+                            de = new Date(this.xAxis[0].max),
+                            dateStart,
+                            dateEnd;
+                            
+                            dsDate = (ds.getUTCDate() < 10) ? '0'+ (ds.getUTCDate()+1): (ds.getUTCDate()+1);
+                            dsMonth = (ds.getUTCMonth() < 9) ? '0'+ (ds.getUTCMonth()+1): (ds.getUTCMonth()+1);
+                            dateStart = ds.getUTCFullYear() +'/'+ dsMonth +'/'+ dsDate;
+                            
+                            deDate = (de.getUTCDate() < 10) ? '0'+ (de.getUTCDate()+1): (de.getUTCDate()+1);
+                            deMonth = (de.getUTCMonth() < 9) ? '0'+ (de.getUTCMonth()+1): (de.getUTCMonth()+1);
+                            dateEnd = de.getUTCFullYear() +'/'+ deMonth +'/'+ deDate;
+                            
+                            updateCharts(dateStart,dateEnd);
+                        }
+                    }
+                },
+                rangeSelector : {
+    				selected : 1
+    			},
+    			title : {
+    				text : 'Visitas a la Tienda Virtual'
+    			},
+    			tooltip: {
+                    pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b><br/>',
+        			valueDecimals: 0
+    			},
+                xAxis: {
+                    events: {
+                        afterSetExtremes: function(e) {
+                            var ds = new Date(e.min),
+                            de = new Date(e.max),
+                            dateStart,
+                            dateEnd;
+                                    
+                            dsDate = (ds.getUTCDate() < 10) ? '0'+ (ds.getUTCDate()+1): (ds.getUTCDate()+1);
+                            dsMonth = (ds.getUTCMonth() < 9) ? '0'+ (ds.getUTCMonth()+1): (ds.getUTCMonth()+1);
+                            dateStart = ds.getUTCFullYear() +'/'+ dsMonth +'/'+ dsDate;
+                                    
+                            deDate = (de.getUTCDate() < 10) ? '0'+ (de.getUTCDate()+1): (de.getUTCDate()+1);
+                            deMonth = (de.getUTCMonth() < 9) ? '0'+ (de.getUTCMonth()+1): (de.getUTCMonth()+1);
+                            dateEnd = de.getUTCFullYear() +'/'+ deMonth +'/'+ deDate;
+                                    
+                            updateCharts(dateStart,dateEnd);        
+                        }
+                    },
+                    minRange: 3600000
+                },
+    			series : 
+                [{
+        			name : 'Total Visitas',
+        			data : $allStock
+    			},
+                {
+        			name : 'Visitas Productos',
+                    data : $productsStock
+        		}]
+    		});
+            
+            $('#formFilter').ntForm({
+                lockButton:false,
+                ajax:true,
+                type:'get',
+                dataType:'html',
+                url:'". Url::createAdminUrl("store/product/seeData") ."',
+                beforeSend:function(){
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                },
+                success:function(data){
+                    $('#gridPreloader').hide();
+                    $('#gridWrapper').html(data).show();
+                }
+            });
+            
+            $('.vtabs_page').hide();
+            $('#tab_visits').show();");
+             
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
+		$this->template = 'store/product_see.tpl';
+		$this->children = array(
+			'common/header',	
+			'common/footer'	
+		);
+		
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+  	}
+  
+  	/**
+  	 * ControllerStoreProduct::visits()
+     * 
+     * Estadisticas de visitas
+     * 
+  	 * @see Load
+  	 * @see Request
+  	 * @see Model
+  	 * @return void
+  	 */
+  	public function visits() {
+  	     //TODO: mantener y capturar los filtros en todos los enlaces
+		$filter_date_start = ($this->request->hasQuery('ds')) ? $this->request->getQuery('ds') : null;
+		$filter_date_end = ($this->request->hasQuery('de')) ? $this->request->getQuery('de') : null;
+		$product_id = ($this->request->hasQuery('product_id')) ? $this->request->getQuery('product_id') : 0;
+
+		$url = '';
+        
+		if ($this->request->hasQuery('ds')) { $url .= '&ds=' . $this->request->getQuery('ds'); }
+		if ($this->request->hasQuery('de')) { $url .= '&de=' . $this->request->getQuery('de'); }
+		if ($this->request->hasQuery('product_id')) { $url .= '&product_id=' . $this->request->getQuery('product_id'); }
+        
+        $de = new DateTime($filter_date_start,new DateTimeZone('America/Caracas'));
+        $ds = new DateTime($filter_date_end,new DateTimeZone('America/Caracas'));
+        
+		$data = array(
+			'object'         => 'product',
+			'object_id'     => $product_id,
+			'filter_date_start'=> $de->format('Y-m-d h:i:s'),
+			'filter_date_end'=> $ds->format('Y-m-d h:i:s')
+		);
+        
+        echo $de->format('Y-m-d h:i:s').'<br>';
+        echo $ds->format('Y-m-d h:i:s').'<br>';
+        
+        $this->load->auto('stats/traffic');
+		$this->data['browsers']   = $this->modelTraffic->getAllByBrowser($data);
+		$this->data['os']         = $this->modelTraffic->getAllByOS($data);
+		$this->data['customers']  = $this->modelTraffic->getAllByCustomer($data);
+		$this->data['ips']  = $this->modelTraffic->getAllByIP($data);
+		/*
+        $this->data['os'] = $this->modelTraffic->getAllByOS($data);
+		$this->data['ips'] = $this->modelTraffic->getAllByIp($data);
+        */
+        
+        $this->data['Url'] = new Url;
+        $this->data['params'] = $url;
+		$this->template = 'store/product_see_visits.tpl';
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+  	}
+  
+  	/**
+  	 * ControllerStoreProduct::visits()
+     * 
+     * Estadisticas de visitas
+     * 
+  	 * @see Load
+  	 * @see Request
+  	 * @see Model
+  	 * @return void
+  	 */
+  	public function orders() {
+  	     //TODO: mantener y capturar los filtros en todos los enlaces
+		$filter_date_start = isset($this->request->get['ds']) ? $this->request->get['ds'] : null;
+		$filter_date_end = isset($this->request->get['de']) ? $this->request->get['de'] : null;
+		$product_id = isset($this->request->get['product_id']) ? $this->request->get['product_id'] : 0;
+
+		$url = '';
+			
+		if (isset($this->request->get['ds'])) { $url .= '&ds=' . $this->request->get['ds']; }
+		if (isset($this->request->get['de'])) { $url .= '&de=' . $this->request->get['de']; }
+		if (isset($this->request->get['product_id'])) { $url .= '&product_id=' . $this->request->get['product_id']; }
+		
+		$data = array(
+			'object'=> 'product',
+			'object_id'=> $product_id,
+			'filter_date_start'=> $filter_date_start,
+			'filter_date_end' => $filter_date_end
+		);
+        
+        $this->load->auto('stats/traffic');
+		$this->data['browsers'] = $this->modelTraffic->getAllByOrders($data);
+		/*
+        $this->data['os'] = $this->modelTraffic->getAllByOS($data);
+		$this->data['ips'] = $this->modelTraffic->getAllByIp($data);
+        */
+        
+        $this->data['Url'] = new Url;
+        $this->data['params'] = $url;
+		$this->template = 'store/product_see_visits.tpl';
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+  	}
+  
+  	/**
+  	 * ControllerStoreProduct::visits()
+     * 
+     * Estadisticas de visitas
+     * 
+  	 * @see Load
+  	 * @see Request
+  	 * @see Model
+  	 * @return void
+  	 */
+  	public function sales() {
+  	     //TODO: mantener y capturar los filtros en todos los enlaces
+		$filter_date_start = isset($this->request->get['ds']) ? $this->request->get['ds'] : null;
+		$filter_date_end = isset($this->request->get['de']) ? $this->request->get['de'] : null;
+		$product_id = isset($this->request->get['product_id']) ? $this->request->get['product_id'] : 0;
+
+		$url = '';
+			
+		if (isset($this->request->get['ds'])) { $url .= '&ds=' . $this->request->get['ds']; }
+		if (isset($this->request->get['de'])) { $url .= '&de=' . $this->request->get['de']; }
+		if (isset($this->request->get['product_id'])) { $url .= '&product_id=' . $this->request->get['product_id']; }
+		
+		$data = array(
+			'object'=> 'product',
+			'object_id'=> $product_id,
+			'filter_date_start'=> $filter_date_start,
+			'filter_date_end' => $filter_date_end
+		);
+        
+        $this->load->auto('stats/traffic');
+		$this->data['browsers'] = $this->modelTraffic->getAllBySales($data);
+		/*
+        $this->data['os'] = $this->modelTraffic->getAllByOS($data);
+		$this->data['ips'] = $this->modelTraffic->getAllByIp($data);
+        */
+        
+        $this->data['Url'] = new Url;
+        $this->data['params'] = $url;
+		$this->template = 'store/product_see_visits.tpl';
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+  	}
+  
+  	/**
+  	 * ControllerStoreProduct::visits()
+     * 
+     * Estadisticas de visitas
+     * 
+  	 * @see Load
+  	 * @see Request
+  	 * @see Model
+  	 * @return void
+  	 */
+  	public function comments() {
+  	     //TODO: mantener y capturar los filtros en todos los enlaces
+		$filter_date_start = isset($this->request->get['ds']) ? $this->request->get['ds'] : null;
+		$filter_date_end = isset($this->request->get['de']) ? $this->request->get['de'] : null;
+		$product_id = isset($this->request->get['product_id']) ? $this->request->get['product_id'] : 0;
+
+		$url = '';
+			
+		if (isset($this->request->get['ds'])) { $url .= '&ds=' . $this->request->get['ds']; }
+		if (isset($this->request->get['de'])) { $url .= '&de=' . $this->request->get['de']; }
+		if (isset($this->request->get['product_id'])) { $url .= '&product_id=' . $this->request->get['product_id']; }
+		
+		$data = array(
+			'object'=> 'product',
+			'object_id'=> $product_id,
+			'filter_date_start'=> $filter_date_start,
+			'filter_date_end' => $filter_date_end
+		);
+        
+        $this->load->auto('stats/traffic');
+		$this->data['browsers'] = $this->modelTraffic->getAllByComments($data);
+		/*
+        $this->data['os'] = $this->modelTraffic->getAllByOS($data);
+		$this->data['ips'] = $this->modelTraffic->getAllByIp($data);
+        */
+        
+        $this->data['Url'] = new Url;
+        $this->data['params'] = $url;
+		$this->template = 'store/product_see_visits.tpl';
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+  	}
+  
+  	/**
+  	 * ControllerStoreProduct::getById()
   	 * 
   	 * @see Load
   	 * @see Language
@@ -191,16 +694,9 @@ class ControllerStoreProduct extends Controller {
 		$this->data['insert'] = Url::createAdminUrl('store/product/insert') . $url;
 		$this->data['import'] = Url::createAdminUrl('store/product/import') . $url;
 		$this->data['export'] = Url::createAdminUrl('store/product/export') . $url;
-		$this->data['copy'] = Url::createAdminUrl('store/product/copy') . $url;	
+		$this->data['copy']   = Url::createAdminUrl('store/product/copy') . $url;	
 		$this->data['delete'] = Url::createAdminUrl('store/product/delete') . $url;
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['button_export'] = $this->language->get('button_export');
-		$this->data['button_insert'] = $this->language->get('button_insert');
-		$this->data['button_import'] = $this->language->get('button_import');
-		$this->data['button_filter'] = $this->language->get('button_filter');
- 
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -241,7 +737,7 @@ class ControllerStoreProduct extends Controller {
                 });
             }
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
                 	$.getJSON('". Url::createAdminUrl("store/product/delete") ."',{
                         id:e
@@ -267,7 +763,7 @@ class ControllerStoreProduct extends Controller {
                 return false;
             } 
             function deleteAll() {
-                if (confirm('¿Desea eliminar todos los objetos seleccionados?')) {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
                     $.post('". Url::createAdminUrl("store/product/delete") ."',$('#form').serialize(),function(){
@@ -385,9 +881,9 @@ class ControllerStoreProduct extends Controller {
 			'limit'           => $limit
 		);
         
-		$product_total = $this->modelProduct->getTotalProducts($data);
+		$product_total = $this->modelProduct->getAllTotal($data);
 			
-		$results = $this->modelProduct->getProducts($data);
+		$results = $this->modelProduct->getAll($data);
 				    	
 		foreach ($results as $result) {
 			$action = array(
@@ -458,20 +954,7 @@ class ControllerStoreProduct extends Controller {
 			);
     	}
         
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
-
-		$this->data['column_image'] = $this->language->get('column_image');
-		$this->data['column_name'] = $this->language->get('column_name');
-    	$this->data['column_model'] = $this->language->get('column_model');
-		$this->data['column_quantity'] = $this->language->get('column_quantity');
-		$this->data['column_status'] = $this->language->get('column_status');
-		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
-		$this->data['column_action'] = $this->language->get('column_action');
-
-$url = '';
+        $url = '';
 								
 		if (isset($this->request->get['page'])) {$url .= '&page=' . $this->request->get['page'];}
 		if (isset($this->request->get['sort'])) {$url .= '&sort=' . $this->request->get['sort'];}
@@ -534,125 +1017,12 @@ $url = '';
   	 * @return void
   	 */
   	private function getForm() {
-    	$this->data['heading_title'] = $this->language->get('heading_title');
- 
-    	$this->data['text_enabled'] = $this->language->get('text_enabled');
-    	$this->data['text_disabled'] = $this->language->get('text_disabled');
-    	$this->data['text_none'] = $this->language->get('text_none');
-    	$this->data['text_yes'] = $this->language->get('text_yes');
-    	$this->data['text_no'] = $this->language->get('text_no');
-		$this->data['text_plus'] = $this->language->get('text_plus');
-		$this->data['text_minus'] = $this->language->get('text_minus');
-		$this->data['text_default'] = $this->language->get('text_default');
-		$this->data['text_image_manager'] = $this->language->get('text_image_manager');
-		$this->data['text_option'] = $this->language->get('text_option');
-		$this->data['text_option_value'] = $this->language->get('text_option_value');
-		$this->data['text_select'] = $this->language->get('text_select');
-		$this->data['text_none'] = $this->language->get('text_none');
-		
-		$this->data['tab_shipping'] = $this->language->get('tab_shipping');
-		$this->data['tab_links'] = $this->language->get('tab_links');
-		
-		$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_meta_keywords'] = $this->language->get('entry_meta_keywords');
-		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
-		$this->data['entry_description'] = $this->language->get('entry_description');
-		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
-    	$this->data['entry_model'] = $this->language->get('entry_model');
-		$this->data['entry_sku'] = $this->language->get('entry_sku');
-		$this->data['entry_location'] = $this->language->get('entry_location');
-		$this->data['entry_minimum'] = $this->language->get('entry_minimum');
-		$this->data['entry_manufacturer'] = $this->language->get('entry_manufacturer');
-    	$this->data['entry_shipping'] = $this->language->get('entry_shipping');
-    	$this->data['entry_date_available'] = $this->language->get('entry_date_available');
-    	$this->data['entry_quantity'] = $this->language->get('entry_quantity');
-		$this->data['entry_stock_status'] = $this->language->get('entry_stock_status');
-    	$this->data['entry_status'] = $this->language->get('entry_status');
-    	$this->data['entry_tax_class'] = $this->language->get('entry_tax_class');
-    	$this->data['entry_price'] = $this->language->get('entry_price');
-		$this->data['entry_cost'] = $this->language->get('entry_cost');
-		$this->data['entry_subtract'] = $this->language->get('entry_subtract');
-    	$this->data['entry_weight_class'] = $this->language->get('entry_weight_class');
-    	$this->data['entry_weight'] = $this->language->get('entry_weight');
-		$this->data['entry_dimension'] = $this->language->get('entry_dimension');
-		$this->data['entry_length'] = $this->language->get('entry_length');
-    	$this->data['entry_image'] = $this->language->get('entry_image');
-    	$this->data['entry_download'] = $this->language->get('entry_download');
-    	$this->data['entry_category'] = $this->language->get('entry_category');
-		$this->data['entry_related'] = $this->language->get('entry_related');
-		$this->data['entry_option'] = $this->language->get('entry_option');
-		$this->data['entry_option_value'] = $this->language->get('entry_option_value');
-		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		$this->data['entry_prefix'] = $this->language->get('entry_prefix');
-		$this->data['entry_customer_group'] = $this->language->get('entry_customer_group');
-		$this->data['entry_date_start'] = $this->language->get('entry_date_start');
-		$this->data['entry_date_end'] = $this->language->get('entry_date_end');
-		$this->data['entry_priority'] = $this->language->get('entry_priority');
-		$this->data['entry_tags'] = $this->language->get('entry_tags');
-		
-		$this->data['help_name'] = $this->language->get('help_name');
-		$this->data['help_meta_keywords'] = $this->language->get('help_meta_keywords');
-		$this->data['help_meta_description'] = $this->language->get('help_meta_description');
-		$this->data['help_description'] = $this->language->get('help_description');
-		$this->data['help_keyword'] = $this->language->get('help_keyword');
-    	$this->data['help_model'] = $this->language->get('help_model');
-		$this->data['help_sku'] = $this->language->get('help_sku');
-		$this->data['help_location'] = $this->language->get('help_location');
-		$this->data['help_minimum'] = $this->language->get('help_minimum');
-		$this->data['help_manufacturer'] = $this->language->get('help_manufacturer');
-    	$this->data['help_shipping'] = $this->language->get('help_shipping');
-    	$this->data['help_date_available'] = $this->language->get('help_date_available');
-    	$this->data['help_quantity'] = $this->language->get('help_quantity');
-		$this->data['help_stock_status'] = $this->language->get('help_stock_status');
-    	$this->data['help_status'] = $this->language->get('help_status');
-    	$this->data['help_tax_class'] = $this->language->get('help_tax_class');
-    	$this->data['help_price'] = $this->language->get('help_price');
-		$this->data['help_cost'] = $this->language->get('help_cost');
-		$this->data['help_subtract'] = $this->language->get('help_subtract');
-    	$this->data['help_weight_class'] = $this->language->get('help_weight_class');
-    	$this->data['help_weight'] = $this->language->get('help_weight');
-		$this->data['help_dimension'] = $this->language->get('help_dimension');
-		$this->data['help_length'] = $this->language->get('help_length');
-    	$this->data['help_image'] = $this->language->get('help_image');
-    	$this->data['help_download'] = $this->language->get('help_download');
-    	$this->data['help_category'] = $this->language->get('help_category');
-		$this->data['help_related'] = $this->language->get('help_related');
-		$this->data['help_option'] = $this->language->get('help_option');
-		$this->data['help_option_value'] = $this->language->get('help_option_value');
-		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
-		$this->data['help_prefix'] = $this->language->get('help_prefix');
-		$this->data['help_customer_group'] = $this->language->get('help_customer_group');
-		$this->data['help_date_start'] = $this->language->get('help_date_start');
-		$this->data['help_date_end'] = $this->language->get('help_date_end');
-		$this->data['help_priority'] = $this->language->get('help_priority');
-		$this->data['help_tags'] = $this->language->get('help_tags');
-		
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-    	$this->data['button_cancel'] = $this->language->get('button_cancel');
-		$this->data['button_add_option'] = $this->language->get('button_add_option');
-		$this->data['button_add_option_value'] = $this->language->get('button_add_option_value');
-		$this->data['button_add_discount'] = $this->language->get('button_add_discount');
-		$this->data['button_add_special'] = $this->language->get('button_add_special');
-		$this->data['button_add_image'] = $this->language->get('button_add_image');
-		$this->data['button_remove'] = $this->language->get('button_remove');
-		
-    	$this->data['tab_general'] = $this->language->get('tab_general');
-    	$this->data['tab_data'] = $this->language->get('tab_data');
-    	$this->data['tab_links'] = $this->language->get('tab_links');
-		$this->data['tab_discount'] = $this->language->get('tab_discount');
-		$this->data['tab_special'] = $this->language->get('tab_special');
-		$this->data['tab_option'] = $this->language->get('tab_option');
-    	$this->data['tab_image'] = $this->language->get('tab_image');
- 
  		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
  		$this->data['error_name'] = ($this->error['name']) ? $this->error['name'] : '';
  		$this->data['error_meta_description'] = ($this->error['meta_description']) ? $this->error['meta_description'] : '';
  		$this->data['error_description'] = ($this->error['description']) ? $this->error['description'] : '';
  		$this->data['error_model'] = ($this->error['model']) ? $this->error['model'] : '';
  		$this->data['error_date_available'] = ($this->error['date_available']) ? $this->error['date_available'] : '';
-
 
 		$url = '';
 		if (isset($this->request->get['filter_name'])) { $url .= '&filter_name=' . $this->request->get['filter_name']; }
@@ -684,9 +1054,9 @@ $url = '';
 		$this->data['cancel'] = Url::createAdminUrl('store/product') . $url;
 
 		if (isset($this->request->get['product_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$product_info = $this->modelProduct->getProduct($this->request->get['product_id']);
+      		$product_info = $this->modelProduct->getById($this->request->get['product_id']);
     	}
-
+        
         $this->setvar('model',$product_info,'');
         $this->setvar('sku',$product_info,'');
         $this->setvar('location',$product_info,'');
@@ -708,20 +1078,23 @@ $url = '';
         $this->setvar('width',$product_info,'');
         $this->setvar('height',$product_info,'');
         
-		$this->data['languages'] = $this->modelLanguage->getLanguages();
-    	$this->data['manufacturers'] = $this->modelManufacturer->getManufacturers();
-		$this->data['stock_statuses'] = $this->modelStockstatus->getStockStatuses();
-		$this->data['tax_classes'] = $this->modelTaxclass->getTaxClasses();
-		$this->data['weight_classes'] = $this->modelWeightclass->getWeightClasses();
-		$this->data['length_classes'] = $this->modelLengthclass->getLengthClasses();
-		$this->data['customer_groups'] = $this->modelCustomergroup->getCustomerGroups();
-		$this->data['downloads'] = $this->modelDownload->getDownloads();
-		$this->data['categories'] = $this->modelCategory->getCategories(0);
+		$this->data['languages'] = $this->modelLanguage->getAll();
+    	$this->data['manufacturers'] = $this->modelManufacturer->getAll();
+		$this->data['stock_statuses'] = $this->modelStockstatus->getAll();
+		$this->data['tax_classes'] = $this->modelTaxclass->getAll();
+		$this->data['weight_classes'] = $this->modelWeightclass->getAll();
+		$this->data['length_classes'] = $this->modelLengthclass->getAll();
+		$this->data['customer_groups'] = $this->modelCustomergroup->getAll();
+		$this->data['downloads'] = $this->modelDownload->getAll();
+		$this->data['categories'] = $this->modelCategory->getAll();
+		$this->data['stores'] = $this->modelStore->getAll();
+		$this->data['_stores'] = $this->modelProduct->getStores($this->request->get['product_id']);
+        
         
 		if (isset($this->request->post['product_description'])) {
 			$this->data['product_description'] = $this->request->post['product_description'];
 		} elseif (isset($product_info)) {
-			$this->data['product_description'] = $this->modelProduct->getProductDescriptions($this->request->get['product_id']);
+			$this->data['product_description'] = $this->modelProduct->getDescriptions($this->request->get['product_id']);
 		} else {
 			$this->data['product_description'] = array();
 		}
@@ -729,7 +1102,7 @@ $url = '';
 		if (isset($this->request->post['product_tags'])) {
 			$this->data['product_tags'] = $this->request->post['product_tags'];
 		} elseif (isset($product_info)) {
-			$this->data['product_tags'] = $this->modelProduct->getProductTags($this->request->get['product_id']);
+			$this->data['product_tags'] = $this->modelProduct->getTags($this->request->get['product_id']);
 		} else {
 			$this->data['product_tags'] = array();
 		}
@@ -743,13 +1116,13 @@ $url = '';
 		if (isset($this->request->post['date_available'])) {
        		$this->data['date_available'] = $this->request->post['date_available'];
 		} elseif (isset($product_info)) {
-			$this->data['date_available'] = date('Y-m-d', strtotime($product_info['date_available']));
+			$this->data['date_available'] = date('d/m/Y', strtotime($product_info['date_available']));
 		} else {
-			$this->data['date_available'] = date('Y-m-d', time()-86400);
+			$this->data['date_available'] = date('d/m/Y', time()-86400);
 		}
 		
     	
-    	$weight_info = $this->modelWeightclass->getWeightClassDescriptionByUnit($this->config->get('config_weight_class'));
+    	$weight_info = $this->modelWeightclass->getDescriptionByUnit($this->config->get('config_weight_class'));
 		if (isset($this->request->post['weight_class_id'])) {
       		$this->data['weight_class_id'] = $this->request->post['weight_class_id'];
     	} elseif (isset($product_info)) {
@@ -760,7 +1133,7 @@ $url = '';
       		$this->data['weight_class_id'] = '';
     	}
 		
-    	$length_info = $this->modelLengthclass->getLengthClassDescriptionByUnit($this->config->get('config_length_class'));
+    	$length_info = $this->modelLengthclass->getDescriptionByUnit($this->config->get('config_length_class'));
 		if (isset($this->request->post['length_class_id'])) {
       		$this->data['length_class_id'] = $this->request->post['length_class_id'];
     	} elseif (isset($product_info)) {
@@ -776,7 +1149,7 @@ $url = '';
 		if (isset($this->request->post['product_option'])) {
 			$this->data['product_options'] = $this->request->post['product_option'];
 		} elseif (isset($product_info)) {
-			$this->data['product_options'] = $this->modelProduct->getProductOptions($this->request->get['product_id']);
+			$this->data['product_options'] = $this->modelProduct->getOptions($this->request->get['product_id']);
 		} else {
 			$this->data['product_options'] = array();
 		}
@@ -785,7 +1158,7 @@ $url = '';
 		if (isset($this->request->post['product_discount'])) {
 			$this->data['product_discounts'] = $this->request->post['product_discount'];
 		} elseif (isset($product_info)) {
-			$this->data['product_discounts'] = $this->modelProduct->getProductDiscounts($this->request->get['product_id']);
+			$this->data['product_discounts'] = $this->modelProduct->getDiscounts($this->request->get['product_id']);
 		} else {
 			$this->data['product_discounts'] = array();
 		}
@@ -793,7 +1166,7 @@ $url = '';
 		if (isset($this->request->post['product_special'])) {
 			$this->data['product_specials'] = $this->request->post['product_special'];
 		} elseif (isset($product_info)) {
-			$this->data['product_specials'] = $this->modelProduct->getProductSpecials($this->request->get['product_id']);
+			$this->data['product_specials'] = $this->modelProduct->getSpecials($this->request->get['product_id']);
 		} else {
 			$this->data['product_specials'] = array();
 		}
@@ -801,7 +1174,7 @@ $url = '';
 		if (isset($this->request->post['product_download'])) {
 			$this->data['product_download'] = $this->request->post['product_download'];
 		} elseif (isset($product_info)) {
-			$this->data['product_download'] = $this->modelProduct->getProductDownloads($this->request->get['product_id']);
+			$this->data['product_download'] = $this->modelProduct->getDownloads($this->request->get['product_id']);
 		} else {
 			$this->data['product_download'] = array();
 		}		
@@ -810,7 +1183,7 @@ $url = '';
 		if (isset($this->request->post['product_category'])) {
 			$this->data['product_category'] = $this->request->post['product_category'];
 		} elseif (isset($product_info)) {
-			$this->data['product_category'] = $this->modelProduct->getProductCategories($this->request->get['product_id']);
+			$this->data['product_category'] = $this->modelProduct->getCategories($this->request->get['product_id']);
 		} else {
 			$this->data['product_category'] = array();
 		}		
@@ -818,15 +1191,15 @@ $url = '';
  		if (isset($this->request->post['product_related'])) {
 			$this->data['product_related'] = $this->request->post['product_related'];
 		} elseif (isset($product_info)) {
-			$this->data['product_related'] = $this->modelProduct->getProductRelated($this->request->get['product_id']);
+			$this->data['product_related'] = $this->modelProduct->getRelated($this->request->get['product_id']);
 		} else {
 			$this->data['product_related'] = array();
 		}
-				
+        
 		$this->data['no_image'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
 		$this->data['product_images'] = array();
 		if (isset($product_info)) {
-			$results = $this->modelProduct->getProductImages($this->request->get['product_id']);
+			$results = $this->modelProduct->getImages($this->request->get['product_id']);
 			foreach ($results as $result) {
 				if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
 					$this->data['product_images'][] = array(
@@ -842,42 +1215,35 @@ $url = '';
 			}
 		}		
 
-        $this->data['Url'] = new Url;
-        
         $scripts[] = array('id'=>'form','method'=>'ready','script'=>
-            "$('#product_description1_name').blur(function(e){
-                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',{ slug : $(this).val() },function(data){
-                        $('#slug').val(data.slug);
-                });
-            });
-            
-            $('#accordion').accordion({
+            "$('#accordion').accordion({
                 collapsible: true
             });
-            $('#addProductsWrapper').hide();
-            
-            $('#addProductsPanel').on('click',function(e){
-                var products = $('#addProductsWrapper').find('.row');
+            $('#addsWrapper').hide();
+            $('#addsPanel').on('click',function(e){
+                var products = $('#addsWrapper').find('.row');
                 
                 if (products.length == 0) {
+                    $('#product_related').remove();
                     $.getJSON('".Url::createAdminUrl("store/product/products")."', {
                         product_id: '". (int)$this->request->getQuery('product_id') ."'
                     }, function(data) {
                             
-                            $('#addProductsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"addProducts\"></ul>');
+                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\"></ul>');
                             
                             $.each(data, function(i,item){
-                                $('#addProducts').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"product_related[' + item.product_id + ']\" value=\"' + item.product_id + '\" /></li>');
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"checkbox\" name=\"product_related[' + item.product_id + ']\" value=\"' + item.product_id + '\" style=\"display:none\" /></li>');
                                 
                             });
                             
                             $('#q').on('change',function(e){
-                                var that = this;
-                                var valor = $(that).val().toLowerCase();
-                                if (valor.length <= 0) {
-                                    $('#addProducts li').show();
+                                alert('hola');
+                                var valor = $(this).val().toLowerCase();
+                                console.log(valor);
+                                if (valor.length == 0) {
+                                    $('#adds li').show();
                                 } else {
-                                    $('#addProducts li b').each(function(){
+                                    $('#adds li b').each(function(){
                                         if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
                                             $(this).closest('li').show();
                                         } else {
@@ -891,29 +1257,16 @@ $url = '';
                                 var b = $(this).find('b');
                                 if (b.hasClass('added')) {
                                     b.removeClass('added').addClass('add');
-                                    $(this).find('input').val(0);
+                                    $(this).find('input[type=checkbox]').removeAttr('checked');
                                 } else {
                                     b.removeClass('add').addClass('added');
-                                    $(this).find('input').val(1);
+                                    $(this).find('input[type=checkbox]').attr('checked','checked');
                                 }
                             });
                     });
                 }
             });
-                
-            $('#addProductsPanel').on('click',function(){ $('#addProductsWrapper').slideToggle() });
-            
-            $('.trends').fancybox({
-        		maxWidth	: 640,
-        		maxHeight	: 600,
-        		fitToView	: false,
-        		width		: '70%',
-        		height		: '70%',
-        		autoSize	: false,
-        		closeClick	: false,
-        		openEffect	: 'none',
-        		closeEffect	: 'none'
-        	});
+            $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });
             
             $('#q').on('change',function(e){
                 var that = this;
@@ -930,60 +1283,39 @@ $url = '';
                     });
                 }
             }); 
-                            
-            $('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
             
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
+            $('.htabs2 .htab2').on('click',function() {
+                $('.htab2').each(function(){
+                   $($(this).attr('tab')).hide();
+                   $(this).removeClass('selected'); 
                 });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           }); 
+                $(this).addClass('selected');
+                $($(this).attr('tab')).show(); 
+            });
+            $('.htabs2 .htab2:first-child').trigger('click');
            
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });
-            
             $('.vtabs_page').hide();
             $('.vtabs_page:first-child').show();");
             
         foreach ($this->data['languages'] as $language) {
-            $scripts[] = array('id'=>'Language$language["language_id"]','method'=>'ready','script'=>
-                "CKEDITOR.replace('description". $language["language_id"] ."', {
+            $scripts[] = array('id'=>'Language'. $language["language_id"],'method'=>'ready','script'=>
+                "CKEDITOR.replace('description_". $language["language_id"] ."_description', {
                 	filebrowserBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserImageBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserFlashBrowseUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserImageUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
                 	filebrowserFlashUploadUrl: '". Url::createAdminUrl("common/filemanager") ."'
+                });
+                $('#description_". $language["language_id"] ."_name').change(function(e){
+                    $.getJSON('". Url::createAdminUrl('common/home/slug') ."',
+                    { 
+                        slug : $(this).val(),
+                        query : 'product_id=". $this->request->getQuery('product_id') ."',
+                    },
+                    function(data){
+                        $('#description_". $language["language_id"] ."_keyword').val(data.slug);
+                    });
                 });");
         }
         
@@ -1029,7 +1361,7 @@ $url = '';
                 var height = $(window).height() * 0.8;
                 var width = $(window).width() * 0.8;
             	$('#dialog').remove();
-            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
             		title: '".$this->data['text_image_manager']."',
@@ -1057,13 +1389,9 @@ $url = '';
         
         // javascript files
         $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
-        
         $javascripts[] = "js/vendor/ckeditor/ckeditor.js";
-        
         $this->javascripts = array_merge($javascripts,$this->javascripts);
         
-                
-                
 		$this->template = 'store/product_form.tpl';
 		$this->children = array(
 			'common/header',	
@@ -1084,16 +1412,16 @@ $url = '';
         $this->load->auto('image');
         $this->load->auto('url');
         if ($this->request->hasQuery('product_id') > 0) {
-            $products_related = $this->modelProduct->getProductRelated($this->request->getQuery('product_id'));
+            $products_related = $this->modelProduct->getRelated($this->request->getQuery('product_id'));
         }
         
         $cache = $this->cache->get("products.for.product.form");
         if ($cache) {
-            $products = unserialize($cache);
+            $products = $cache;
         } else {
             $model = $this->modelProduct->getAll();
             $products = $model->obj;
-            $this->cache->set("products.for.product.form",serialize($products));
+            $this->cache->set("products.for.product.form",$products);
         }
         
         $this->data['Image'] = new NTImage();
@@ -1226,7 +1554,7 @@ $url = '';
 		
 		$product_data = array();
 		
-		$results = $this->modelProduct->getProductsByCategoryId($category_id);
+		$results = $this->modelProduct->getAllByCategoryId($category_id);
 		
 		foreach ($results as $result) {
 			$product_data[] = array(
@@ -1252,6 +1580,12 @@ $url = '';
 	 * @return void
 	 */
 	public function related() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+        header("Cache-Control: no-cache, must-revalidate"); 
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        
 		$this->load->auto('store/product');
 		
 		if (isset($this->request->post['product_related'])) {
@@ -1263,7 +1597,7 @@ $url = '';
 		$product_data = array();
 		
 		foreach ($products as $product_id) {
-			$product_info = $this->modelProduct->getProduct($product_id);
+			$product_info = $this->modelProduct->getById($product_id);
 			
 			if ($product_info) {
 				$product_data[] = array(
@@ -1288,7 +1622,7 @@ $url = '';
      public function activate() {
         if (!isset($_GET['id'])) return false;
         $this->load->auto('store/product');
-        $status = $this->modelProduct->getProduct($_GET['id']);
+        $status = $this->modelProduct->getById($_GET['id']);
         if ($status) {
             if ($status['status'] == 0) {
                 $this->modelProduct->activate($_GET['id']);
@@ -1319,22 +1653,6 @@ $url = '';
 		}
      }
     
-    /**
-     * ControllerStoreCategory::sortable()
-     * ordenar el listado actualizando la posición de cada objeto
-     * @return boolean
-     * */
-     public function sortable() {
-        if (!isset($this->request->post['tr'])) return false;
-        $this->load->auto('store/product');
-        $result = $this->modelProduct->sortProduct($this->request->post['tr']);
-        if ($result) {
-            echo 1;
-        } else {
-            echo 0;
-        }
-     }
-     
   	/**
   	 * ControllerMarketingNewsletter::copy()
      * duplicar un objeto
@@ -1352,6 +1670,22 @@ $url = '';
         echo 1;
   	}
       
+    /**
+     * ControllerStoreCategory::sortable()
+     * ordenar el listado actualizando la posición de cada objeto
+     * @return boolean
+     * */
+     public function sortable() {
+        if (!isset($this->request->post['tr'])) return false;
+        $this->load->auto('store/product');
+        $result = $this->modelProduct->sortProduct($this->request->post['tr']);
+        if ($result) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+     }
+     
     public function import() {
          $this->document->title = $this->data['heading_title'] = "Importar Productos";
          
@@ -1404,7 +1738,7 @@ $url = '';
                 var height = $(window).height() * 0.8;
                 var width = $(window).width() * 0.8;
             	$('#dialog').remove();
-            	$('#form').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+            	$('#form').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
             		title: '".$this->data['text_image_manager']."',
@@ -1438,7 +1772,7 @@ $url = '';
             case 1:
             default:
                 $this->load->auto("store/category");
-                $this->data['categories'] = $this->modelCategory->getCategories(0);
+                $this->data['categories'] = $this->modelCategory->getAll();
         		$this->template = 'store/product_import_1.tpl';
         		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
                 break;
@@ -1795,5 +2129,49 @@ $url = '';
                 break;
          } 
     }
-	
+    
+	protected function ntASort ($a, $b) {//(&$array, $key) {
+        /*
+        $sorter=array();
+        $ret=array();
+        reset($array);
+        foreach ($array as $ii => $va) {
+            $sorter[$ii]=$va[$key];
+        }
+        asort($sorter);
+        foreach ($sorter as $ii => $va) {
+            $ret[$ii]=$array[$ii];
+        }
+        $array=$ret;
+        */
+        return $a[$this->aKey] - $b[$this->aKey];
+    }
+    
+    protected function msort($array, $key, $sort_flags = SORT_REGULAR) {
+        if (is_array($array) && count($array) > 0) {
+            if (!empty($key)) {
+                $mapping = array();
+                foreach ($array as $k => $v) {
+                    $sort_key = '';
+                    if (!is_array($key)) {
+                        $sort_key = $v[$key];
+                    } else {
+                        // @TODO This should be fixed, now it will be sorted as string
+                        foreach ($key as $key_key) {
+                            $sort_key .= $v[$key_key];
+                        }
+                        $sort_flags = SORT_STRING;
+                    }
+                    $mapping[$k] = $sort_key;
+                }
+                asort($mapping, $sort_flags);
+                $sorted = array();
+                foreach ($mapping as $k => $v) {
+                    $sorted[] = $array[$k];
+                }
+                return $sorted;
+            }
+        }
+        return $array;
+    }
 }

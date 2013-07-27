@@ -3,10 +3,10 @@
 <div class="box">
         <h1>Crear Campa&ntilde;a</h1>
         <div class="buttons">
-            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $button_save_and_exit; ?></a>
-            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $button_save_and_keep; ?></a>
-            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $button_save_and_new; ?></a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
+            <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
+            <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_new'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
         <div class="clear"></div>
@@ -38,7 +38,7 @@
                 <ul id="contactsWrapper" class="scrollbox">
                 <?php foreach ($lists as $list) { ?>
                     <li>
-                        <input title="<?php echo $help_contact; ?>" type="checkbox" name="contact_list[]" value="<?php echo $list['contact_list_id']; ?>"<?php if (in_array($list['contact_list_id'], $contact_lists)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <input title="<?php echo $Language->get('help_contact'); ?>" type="checkbox" name="contact_list[]" value="<?php echo $list['contact_list_id']; ?>"<?php if (in_array($list['contact_list_id'], $contact_lists)) { ?> checked="checked"<?php } ?> showquick="off" />
                         <b><?php echo $list['name']; ?></b>
                     </li>
                 <?php } ?>
@@ -75,7 +75,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>
@@ -100,4 +100,9 @@
         </ul>
     </div>
 </div>
+<script>
+(function($){ $(window).load(function(){ 
+    $('.ui-combobox-input').val('<?php echo $email; ?>');
+});})(jQuery);
+</script>
 <?php echo $footer; ?>

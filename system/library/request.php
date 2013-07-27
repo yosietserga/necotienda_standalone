@@ -41,7 +41,7 @@ final class Request {
     }
     
     public function getQuery($key) {
-        return ($this->hasQuery($key)) ? $this->get[$key] : null;
+        return ($this->hasQuery($key)) ? trim($this->get[$key]) : null;
     }
     
     public function hasQuery($key) {
@@ -61,46 +61,14 @@ final class Request {
     }
     
     public function setPost($key,$value) {
-        $this->post[C_CODE . "_" . $key] = $value;
+        $this->post[$key] = $value;
     }
     
     public function getPost($key) {
-        return $this->post[C_CODE . "_" . $key];
+        return $this->post[$key];
     }
     
     public function hasPost($key) {
-        return isset($this->post[C_CODE . "_" . $key]);
+        return isset($this->post[$key]);
     }
-    
-	public function createLink($route, $args = array()) {
-		$path = '';
-		
-		$parts = explode('/', str_replace('../', '', $route));
-		
-		foreach ($parts as $part) { 
-			$path .= $part;
-			
-			if (is_dir(DIR_APPLICATION . 'controller/' . $path)) {
-				$path .= '/';
-				array_shift($parts);
-				continue;
-			}
-			
-			if (is_file(DIR_APPLICATION . 'controller/' . str_replace('../', '', $path) . '.php')) {
-				array_shift($parts);
-                $url = HTTP_HOME . "index.php?route=" . $route;
-				break;
-			} else {
-                return "Esta URL no existe: " . HTTP_HOME . "index.php?route=" . $route;
-			}
-		}
-
-		if ($args) {
-		  foreach (array_unique($args) as $k => $v) {
-            $url .= "&" . $k . "=" . $v;
-		  }
-		}
-        return $url;
-	}
-	
 }

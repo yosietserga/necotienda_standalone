@@ -16,12 +16,12 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_title; ?>')"<?php if ($sort == 'title') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_title; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_publish; ?>')"<?php if ($sort == 'publish') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_publish; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_publish_start; ?>')"<?php if ($sort == 'date_publish_start') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_date_publish_start; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_publish_end; ?>')"<?php if ($sort == 'date_publish_end') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_date_publish_end; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"<?php if ($sort == 'pa.sort_order') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $column_sort_order; ?></a></th>
-                <th><?php echo $column_action; ?></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_title; ?>')"<?php if ($sort == 'title') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_title'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_publish; ?>')"<?php if ($sort == 'publish') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_publish'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_publish_start; ?>')"<?php if ($sort == 'date_publish_start') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_date_publish_start'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_publish_end; ?>')"<?php if ($sort == 'date_publish_end') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_date_publish_end'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"<?php if ($sort == 'pa.sort_order') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $Language->get('column_sort_order'); ?></a></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -54,7 +54,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

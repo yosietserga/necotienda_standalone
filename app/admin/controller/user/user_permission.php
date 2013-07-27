@@ -10,25 +10,15 @@ class ControllerUserUserPermission extends Controller {
 	public function insert() {
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelUsergroup->addUserGroup($this->request->post);
+			$user_group_id = $this->modelUsergroup->add($this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
-			$url = '';
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('user/user_permission') . $url);
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('user/user_permission/update',array('user_group_id'=>$user_group_id))); 
+            } else {
+                $this->redirect(Url::createAdminUrl('user/user_permission')); 
+            }
 		}
 
 		$this->getForm();
@@ -37,59 +27,53 @@ class ControllerUserUserPermission extends Controller {
 	public function update() {
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelUsergroup->editUserGroup($this->request->get['user_group_id'], $this->request->post);
+			$this->modelUsergroup->update($this->request->get['user_group_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			
-			$url = '';
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('user/user_permission') . $url);
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('user/user_permission/update',array('user_group_id'=>$this->request->get['user_group_id']))); 
+            } else {
+                $this->redirect(Url::createAdminUrl('user/user_permission')); 
+            }
 		}
 
 		$this->getForm();
 	}
 
-	public function delete() { 
-		$this->document->title = $this->language->get('heading_title');
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-      		foreach ($this->request->post['selected'] as $user_group_id) {
-				$this->modelUsergroup->deleteUserGroup($user_group_id);	
-			}
-						
-			$this->session->set('success',$this->language->get('text_success'));
-			
-			$url = '';
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('user/user_permission') . $url);
+    /**
+     * ControllerMarketingNewsletter::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        $this->load->auto('user/usergroup');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelUsergroup->delete($id);
+            }
+		} else {
+            $this->modelUsergroup->delete($_GET['id']);
 		}
-
-		$this->getList();
-	}
-
+     }
+    
+  	/**
+  	 * ControllerMarketingNewsletter::copy()
+     * duplicar un objeto
+  	 * @return boolean
+  	 */
+  	public function copy() {
+        $this->load->auto('user/usergroup');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelUsergroup->copy($id);
+            }
+		} else {
+            $this->modelUsergroup->copy($_GET['id']);
+		}
+        echo 1;
+  	}
+      
 	private function getList() {
   		$this->document->breadcrumbs = array();
 
@@ -129,28 +113,69 @@ class ControllerUserUserPermission extends Controller {
 				
         // SCRIPTS
         $scripts[] = array('id'=>'userGroupList','method'=>'function','script'=>
-            "function borrar() {
-                $('#gridWrapper').html('<img src=\"image/nt_loader.gif\" alt=\"Cargando...\" />');
-                $.post('". Url::createAdminUrl("user/user_permission/delete") ."',$('#formGrid').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("user/user_permission/grid") ."');
+            "function activate(e) {    
+            	$.ajax({
+            	   'type':'get',
+                   'dataType':'json',
+                   'url':'".Url::createAdminUrl("user/user_permission/activate")."&id=' + e,
+                   'success': function(data) {
+                        if (data > 0) {
+                            $(\"#img_\" + e).attr('src','image/good.png');
+                        } else {
+                            $(\"#img_\" + e).attr('src','image/minus.png');
+                        }
+                   }
+            	});
+             }
+            function copy(e) {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.getJSON('".Url::createAdminUrl("user/user_permission/copy")."&id=' + e, function(data) {
+                    $('#gridWrapper').load('". Url::createAdminUrl("user/user_permission/grid") ."',function(response){
+                        $('#gridPreloader').hide();
+                        $('#gridWrapper').show();
+                    });
                 });
-            } 
+            }
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                $('#tr_' + e).hide();
-                	$.getJSON('". Url::createAdminUrl("user/user_permission/eliminar") ."',{
-                            id:e
-                        },
-                        function(data) {
-                            if (data > 0) {
-                                $('#tr_' + e).remove();
-                            } else {
-                                alert('No se pudo eliminar el objeto, posiblemente tenga otros objetos relacionados');
-                                $('#tr_' + e).show().effect('shake', { times:3 }, 300);;
-                            }
-                	});
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("user/user_permission/delete") ."',{
+                        id:e
+                    });
                 }
-             }");
+                return false;
+             }
+            function editAll() {
+                return false;
+            } 
+            function addToList() {
+                return false;
+            } 
+            function copyAll() {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.post('". Url::createAdminUrl("user/user_permission/copy") ."',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('". Url::createAdminUrl("user/user_permission/grid") ."',function(){
+                        $('#gridWrapper').show();
+                        $('#gridPreloader').hide();
+                    });
+                });
+                return false;
+            } 
+            function deleteAll() {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("user/user_permission/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("user/user_permission/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("user/user_permission/grid") ."',function(data){
                 $('#gridPreloader').hide();
@@ -216,9 +241,9 @@ class ControllerUserUserPermission extends Controller {
 			'limit' => $limit
 		);
 		
-		$user_group_total = $this->modelUsergroup->getTotalUserGroups($data);
+		$user_group_total = $this->modelUsergroup->getAllTotal($data);
 		
-		$results = $this->modelUsergroup->getUserGroups($data);
+		$results = $this->modelUsergroup->getAll($data);
 
 		foreach ($results as $result) {
 			$action = array();
@@ -282,7 +307,7 @@ class ControllerUserUserPermission extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = Url::createAdminUrl('user/user_permission') . $url . '&page={page}';
+		$pagination->url = Url::createAdminUrl('user/user_permission/grid') . $url . '&page={page}';
 		
 		$this->data['pagination'] = $pagination->render();				
 
@@ -304,8 +329,16 @@ class ControllerUserUserPermission extends Controller {
 		$this->data['entry_name'] = $this->language->get('entry_name');
 		$this->data['entry_access'] = $this->language->get('entry_access');
 		$this->data['entry_modify'] = $this->language->get('entry_modify');
+        
+		$this->data['column_module'] = $this->language->get('column_module');
+		$this->data['column_access'] = $this->language->get('column_access');
+		$this->data['column_create'] = $this->language->get('column_create');
+		$this->data['column_modidy'] = $this->language->get('column_modidy');
+		$this->data['column_delete'] = $this->language->get('column_delete');
 		
 		$this->data['button_save'] = $this->language->get('button_save');
+		$this->data['button_save_and_exit'] = $this->language->get('button_save_and_exit');
+		$this->data['button_save_and_keep'] = $this->language->get('button_save_and_keep');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
 		$this->data['tab_general'] = $this->language->get('tab_general');
@@ -359,7 +392,7 @@ class ControllerUserUserPermission extends Controller {
     	$this->data['cancel'] = Url::createAdminUrl('user/user_permission') . $url;
 
 		if (isset($this->request->get['user_group_id']) && $this->request->server['REQUEST_METHOD'] != 'POST') {
-			$user_group_info = $this->modelUsergroup->getUserGroup($this->request->get['user_group_id']);
+			$user_group_info = $this->modelUsergroup->getById($this->request->get['user_group_id']);
 		}
 
 		if (isset($this->request->post['name'])) {
@@ -384,18 +417,25 @@ class ControllerUserUserPermission extends Controller {
 				
 		$this->data['permissions'] = array();
 		
+		$files2 = glob(DIR_APPLICATION . 'controller/module/*/*.php');
 		$files = glob(DIR_APPLICATION . 'controller/*/*.php');
-		
+        $files = array_merge($files,$files2);
 		foreach ($files as $file) {
-			$data = explode('/', dirname($file));
-			
-			$permission = end($data) . '/' . basename($file, '.php');
+            $route = explode('/', substr($file,strpos($file,"controller/")));
+			$data = explode('/', dirname($route));
+			if ($route[1] == 'module') {
+                $route = "module/". $route[2];
+			} else {
+                $route = $route[1];
+			}
+			$permission = $route . '/' . basename($file, '.php');
 			
 			if (!in_array($permission, $ignore)) {
 				$this->data['permissions'][] = $permission;
 			}
 		}
-		
+		asort($this->data['permissions']);
+        
 		if (isset($this->request->post['permission'])) {
 			$this->data['access'] = $this->request->post['permission']['access'];
 		} elseif (isset($user_group_info['permission']['access'])) {
@@ -412,6 +452,59 @@ class ControllerUserUserPermission extends Controller {
 			$this->data['modify'] = array();
 		}
 			
+		if (isset($this->request->post['permission'])) {
+			$this->data['delete'] = $this->request->post['permission']['delete'];
+		} elseif (isset($user_group_info['permission']['delete'])) {
+			$this->data['delete'] = $user_group_info['permission']['delete'];
+		} else { 
+			$this->data['delete'] = array();
+		}
+			
+        $scripts[] = array('id'=>'scriptForm','method'=>'ready','script'=>
+            "$('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
+            
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });");
+            
+        $scripts[] = array('id'=>'scriptFunctions','method'=>'function','script'=>
+            "function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }");
+            
+        $this->scripts = array_merge($this->scripts,$scripts);
+        
 		$this->template = 'user/user_group_form.tpl';
 		$this->children = array(
 			'common/header',	
@@ -445,7 +538,7 @@ class ControllerUserUserPermission extends Controller {
 		$this->load->auto('user/user');
       	
 		foreach ($this->request->post['selected'] as $user_group_id) {
-			$user_total = $this->modelUser->getTotalUsersByGroupId($user_group_id);
+			$user_total = $this->modelUser->getAllTotalByGroupId($user_group_id);
 
 			if ($user_total) {
 				$this->error['warning'] = sprintf($this->language->get('error_user'), $user_total);

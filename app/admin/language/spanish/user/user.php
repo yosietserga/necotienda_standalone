@@ -8,6 +8,8 @@ $_['text_success']      = 'Se ha actualizado satisfactoriamente!';
 // Column
 $_['column_username']   = 'Nombre de usaurio';
 $_['column_status']     = 'Estado';
+$_['column_name']     = 'Nombre de Usuario';
+$_['column_group']     = 'Grupo de Usuario';
 $_['column_date_added'] = 'Fecha de Alta';
 $_['column_action']     = 'Acci&oacute;n';
 

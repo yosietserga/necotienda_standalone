@@ -2,7 +2,7 @@
 /**
  * ControllerContentPage
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -73,32 +73,31 @@ class ControllerContentPage extends Controller {
                         $image->setAttribute('src', HTTP_IMAGE . "data/" . $filename);
                     }
                 }
-                $description['description'] = htmlentities($dom->saveHTML());
-                $this->request->post['page_description'][$language_id] = $description;
+                $this->request->post['page_description'][$language_id]['description'] = htmlentities($dom->saveHTML());
             }
             
             if (empty($this->request->post['date_publish_end'])) {
                 $this->request->post['date_publish_end'] = '0000-00-00 00:00:00';
             } else {
                 $dpe = explode("/",$this->request->post['date_publish_end']);
-                $this->request->post['date_publish_end'] = date('Y-m-d h:i:s',strtotime($dpe[2] ."-". $dpe[1] ."-". $dpe[0]));
+                $this->request->post['date_publish_end'] = $dpe[2] ."-". $dpe[1] ."-". $dpe[0] .' 00:00:00';
             }
             
             $dps = explode("/",$this->request->post['date_publish_start']);
-            $this->request->post['date_publish_start'] = date('Y-m-d h:i:s',strtotime($dps[2] ."-". $dps[1] ."-". $dps[0]));
+            $this->request->post['date_publish_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0] .' 00:00:00';
             
-			$post_id = $this->modelPage->addPage($this->request->post);
-        
-			
+			$post_id = $this->modelPage->add($this->request->post);
+            
 			$this->session->set('success',$this->language->get('text_success'));
 
             if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('content/page/update',array('post_id'=>$post_id))); 
+                $this->redirect(Url::createAdminUrl('content/page/update',array('page_id'=>$post_id))); 
             } elseif ($_POST['to'] == "saveAndNew") {
                 $this->redirect(Url::createAdminUrl('content/page/insert')); 
             } else {
                 $this->redirect(Url::createAdminUrl('content/page')); 
             }
+            
 		}
 
 		$this->getForm();
@@ -150,26 +149,25 @@ class ControllerContentPage extends Controller {
                         $image->setAttribute('src', HTTP_IMAGE . "data/" . $filename);
                     }
                 }
-                $description['description'] = htmlentities($dom->saveHTML());
-                $this->request->post['page_description'][$language_id] = $description;
+                $this->request->post['page_description'][$language_id]['description'] = htmlentities($dom->saveHTML());
             }
               
             if (empty($this->request->post['date_publish_end'])) {
                 $this->request->post['date_publish_end'] = '0000-00-00 00:00:00';
             } else {
                 $dpe = explode("/",$this->request->post['date_publish_end']);
-                $this->request->post['date_publish_end'] = date('Y-m-d h:i:s',strtotime($dpe[2] ."-". $dpe[1] ."-". $dpe[0]));
+                $this->request->post['date_publish_end'] = $dpe[2] ."-". $dpe[1] ."-". $dpe[0] .' 00:00:00';
             }
             
             $dps = explode("/",$this->request->post['date_publish_start']);
-            $this->request->post['date_publish_start'] = date('Y-m-d h:i:s',strtotime($dps[2] ."-". $dps[1] ."-". $dps[0]));
+            $this->request->post['date_publish_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0] .' 00:00:00';
             
-			$post_id = $this->modelPage->editPage($this->request->get['page_id'], $this->request->post);
+			$post_id = $this->modelPage->update($this->request->get['page_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
             if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('content/page/update',array('post_id'=>$post_id))); 
+                $this->redirect(Url::createAdminUrl('content/page/update',array('page_id'=>$post_id))); 
             } elseif ($_POST['to'] == "saveAndNew") {
                 $this->redirect(Url::createAdminUrl('content/page/insert')); 
             } else {
@@ -180,49 +178,41 @@ class ControllerContentPage extends Controller {
 		$this->getForm();
 	}
  
-	/**
-	 * ControllerContentPage::delete()
-	 * 
-	 * @see Load
-	 * @see Document
-	 * @see Model
-	 * @see Request
-	 * @see Session
-	 * @see Redirect
-	 * @see getList
-	 * @return void
-	 */
-	public function delete() {
-		$this->document->title = $this->language->get('heading_title');
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $page_id) {
-				$this->modelPage->deletePage($page_id);
-			}
-			
-			$this->session->set('success',$this->language->get('text_success'));
-
-			$url = '';
-			
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('content/page') . $url);
+    /**
+     * ControllerMarketingNewsletter::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        $this->load->auto('content/page');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelPage->delete($id);
+            }
+		} else {
+            $this->modelPage->delete($_GET['id']);
 		}
-
-		$this->getList();
-	}
-
+     }
+    
+  	/**
+  	 * ControllerMarketingNewsletter::copy()
+     * duplicar un objeto
+  	 * @return boolean
+  	 */
+  	public function copy() {
+        $this->load->auto('content/page');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelPage->copy($id);
+            }
+		} else {
+            $this->modelPage->copy($_GET['id']);
+		}
+        echo 1;
+  	}
+      
 	/**
-	 * ControllerContentPage::getList()
+	 * ControllerContentPage::getById()
 	 * 
 	 * @see Load
 	 * @see Document
@@ -252,10 +242,6 @@ class ControllerContentPage extends Controller {
 		$this->data['insert'] = Url::createAdminUrl('content/page/insert') . $url;
 		$this->data['delete'] = Url::createAdminUrl('content/page/delete') . $url;	
 
-		$this->data['heading_title'] = $this->language->get('heading_title');
-		$this->data['button_insert'] = $this->language->get('button_insert');
-		$this->data['button_delete'] = $this->language->get('button_delete');
- 
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -271,40 +257,71 @@ class ControllerContentPage extends Controller {
 		}
 
         // SCRIPTS
+        
         $scripts[] = array('id'=>'pageList','method'=>'function','script'=>
-            "function activate(e) {
-                $.getJSON('". Url::createAdminUrl("content/page/activate") ."',{
-                    id:e
-                },function(data){
-                    if (data > 0) {
-                        $('#img_' + e).attr('src','image/good.png');
-                    } else {
-                        $('#img_' + e).attr('src','image/minus.png');
-                    }
+            "function activate(e) {    
+            	$.ajax({
+            	   'type':'get',
+                   'dataType':'json',
+                   'url':'".Url::createAdminUrl("content/page/activate")."&id=' + e,
+                   'success': function(data) {
+                        if (data > 0) {
+                            $(\"#img_\" + e).attr('src','image/good.png');
+                        } else {
+                            $(\"#img_\" + e).attr('src','image/minus.png');
+                        }
+                   }
+            	});
+             }
+            function copy(e) {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.getJSON('".Url::createAdminUrl("content/page/copy")."&id=' + e, function(data) {
+                    $('#gridWrapper').load('". Url::createAdminUrl("content/page/grid") ."',function(response){
+                        $('#gridPreloader').hide();
+                        $('#gridWrapper').show();
+                    });
                 });
             }
-            function borrar() {
-                $('#gridWrapper').html('<img src=\"image/nt_loader.gif\" alt=\"Cargando...\" />');
-                $.post('". Url::createAdminUrl("content/page/delete") ."',$('#formGrid').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("content/page/grid") ."');
-                });
-            } 
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                $('#tr_' + e).hide();
-                	$.getJSON('". Url::createAdminUrl("content/page/eliminar") ."',{
-                            id:e
-                        },
-                        function(data) {
-                            if (data > 0) {
-                                $('#tr_' + e).remove();
-                            } else {
-                                alert('No se pudo eliminar el objeto, posiblemente tenga otros objetos relacionados');
-                                $('#tr_' + e).show().effect('shake', { times:3 }, 300);;
-                            }
-                	});
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("content/page/delete") ."',{
+                        id:e
+                    });
                 }
-             }");
+                return false;
+             }
+            function editAll() {
+                return false;
+            } 
+            function addToList() {
+                return false;
+            } 
+            function copyAll() {
+                $('#gridWrapper').hide();
+                $('#gridPreloader').show();
+                $.post('". Url::createAdminUrl("content/page/copy") ."',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('". Url::createAdminUrl("content/page/grid") ."',function(){
+                        $('#gridWrapper').show();
+                        $('#gridPreloader').hide();
+                    });
+                });
+                return false;
+            } 
+            function deleteAll() {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("content/page/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("content/page/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("content/page/grid") ."',function(e){
                 $('#gridPreloader').hide();
@@ -412,7 +429,7 @@ class ControllerContentPage extends Controller {
 		
 		$page_total = $this->modelPage->getTotalPages($data);
 	
-		$results = $this->modelPage->getPages($data);
+		$results = $this->modelPage->getAll($data);
  
     	foreach ($results as $result) {
 			
@@ -448,15 +465,7 @@ class ControllerContentPage extends Controller {
 				'action'     => $action
 			);
 		}	
-	
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-		$this->data['column_title'] = $this->language->get('column_title');
-		$this->data['column_publish'] = $this->language->get('column_publish');
-		$this->data['column_date_publish_start'] = $this->language->get('column_date_publish_start');
-		$this->data['column_date_publish_end'] = $this->language->get('column_date_publish_end');
-		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
-		$this->data['column_action'] = $this->language->get('column_action');		
-		
+        
 		$url = '';
 
 		if ($order == 'ASC') {
@@ -518,31 +527,6 @@ class ControllerContentPage extends Controller {
 	 * @return void
 	 */
 	private function getForm() {
-		$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['text_none'] = $this->language->get('text_none');
-		
-		$this->data['entry_title'] = $this->language->get('entry_title');
-		$this->data['entry_seo_title'] = $this->language->get('entry_seo_title');
-		$this->data['entry_description'] = $this->language->get('entry_description');
-		$this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
-		$this->data['entry_meta_keywords'] = $this->language->get('entry_meta_keywords');
-		$this->data['entry_keyword'] = $this->language->get('entry_keyword');
-		$this->data['entry_parent'] = $this->language->get('entry_parent');
-		$this->data['entry_date_start'] = $this->language->get('entry_date_start');
-		$this->data['entry_date_end'] = $this->language->get('entry_date_end');
-		
-		$this->data['help_title'] = $this->language->get('help_title');
-		$this->data['help_description'] = $this->language->get('help_description');
-		$this->data['help_keyword'] = $this->language->get('help_keyword');
-		$this->data['help_sort_order'] = $this->language->get('help_sort_order');
-		$this->data['help_status'] = $this->language->get('help_status');
-		
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
-
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_title'] = isset($this->error['title']) ? $this->error['title'] : '';
         $this->data['error_description'] = isset($this->error['description']) ? $this->error['description'] : '';
@@ -576,22 +560,22 @@ class ControllerContentPage extends Controller {
 			$page_info = $this->modelPage->getPage($this->request->get['page_id']);
 		}
         
-		$this->data['languages'] = $this->modelLanguage->getLanguages();
+		$this->data['languages'] = $this->modelLanguage->getAll();
 		$this->data['pages'] = $this->modelPage->getAll();
-        
-        $this->setvar('keyword',$page_info,'');
+		$this->data['stores'] = $this->modelStore->getAll();
+		$this->data['_stores'] = $this->modelPage->getStores($this->request->get['page_id']);
         
 		if (isset($this->request->post['page_description'])) {
 			$this->data['page_description'] = $this->request->post['page_description'];
 		} elseif (isset($this->request->get['page_id'])) {
-			$this->data['page_description'] = $this->modelPage->getPageDescriptions($this->request->get['page_id']);
+			$this->data['page_description'] = $this->modelPage->getDescriptions($this->request->get['page_id']);
 		} else {
 			$this->data['page_description'] = array();
 		}
 
 		if (isset($this->request->post['date_publish_start'])) {
 			$this->data['date_publish_start'] = date('d-m-Y',strtotime($this->request->post['date_publish_start']));
-		} elseif ($page_info) {
+		} elseif (isset($page_info['date_publish_start']) && $page_info['date_publish_start'] != '0000-00-00 00:00:00') {
 			$this->data['date_publish_start'] = date('d-m-Y',strtotime($page_info['date_publish_start']));
 		} else {
 			$this->data['date_publish_start'] = date('d-m-Y');
@@ -599,69 +583,14 @@ class ControllerContentPage extends Controller {
 
 		if (isset($this->request->post['date_publish_end'])) {
 			$this->data['date_publish_end'] = date('d-m-Y',strtotime($this->request->post['date_publish_end']));
-		} elseif ($page_info) {
+		} elseif (isset($page_info['date_publish_end']) && $page_info['date_publish_end'] != '0000-00-00 00:00:00') {
 			$this->data['date_publish_end'] = date('d-m-Y',strtotime($page_info['date_publish_end']));
 		} else {
 			$this->data['date_publish_end'] = '';
 		}
 
         $scripts[] = array('id'=>'pageForm','method'=>'ready','script'=>
-            "$('#page_description_1_title').blur(function(e){
-                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',{ slug : $(this).val() },function(data){
-                        $('#slug').val(data.slug);
-                });
-            });
-            
-            $('.trends').fancybox({
-        		maxWidth	: 640,
-        		maxHeight	: 600,
-        		fitToView	: false,
-        		width		: '70%',
-        		height		: '70%',
-        		autoSize	: false,
-        		closeClick	: false,
-        		openEffect	: 'none',
-        		closeEffect	: 'none'
-        	});
-            
-            $('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.tabs li').on('click',function() {
-                $('.tabs li').each(function(){
-                   $('#' + this.id + '_content').hide();
-                   $(this).removeClass('active'); 
-                });
-                $(this).addClass('active');
-                $('#' + this.id + '_content').show(); 
-           }); 
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
+            "");
             
         foreach ($this->data['languages'] as $language) {
             $scripts[] = array('id'=>'pageLanguage'.$language["language_id"],'method'=>'ready','script'=>
@@ -674,26 +603,20 @@ class ControllerContentPage extends Controller {
                 	filebrowserFlashUploadUrl: '". Url::createAdminUrl("common/filemanager") ."',
                     height:600
                 });
+                editor". $language["language_id"] .".products = '". $json['products'] ."';
                 
-                editor.products = '". $json['products'] ."';");
+                $('#description_". $language["language_id"] ."_title').change(function(e){
+                    $.getJSON('". Url::createAdminUrl('common/home/slug') ."',
+                    { 
+                        slug : $(this).val(),
+                        query : 'page_id=". $this->request->getQuery('page_id') ."',
+                    },
+                    function(data){
+                            $('#description_". $language["language_id"] ."_keyword').val(data.slug);
+                    });
+                });");
         }
         
-        $scripts[] = array('id'=>'pageFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }");
-            
         $this->scripts = array_merge($this->scripts,$scripts);
         
         // javascript files

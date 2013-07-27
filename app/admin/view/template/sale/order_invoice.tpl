@@ -13,16 +13,16 @@
 <body>
 <?php foreach ($orders as $order) { ?>
 <div style="page-break-after: always;">
-    <h1><?php echo $text_invoice; ?></h1>
+    <h1><?php echo $Language->get('text_invoice'); ?></h1>
     <div class="div1">
         <table>
             <tr>
                 <td>
                     <?php echo $order['store_name']; ?><br />
                     <?php echo $order['address']; ?><br />
-                    <?php echo $text_telephone; ?> <?php echo $order['telephone']; ?><br />
+                    <?php echo $Language->get('text_telephone'); ?> <?php echo $order['telephone']; ?><br />
                     <?php if ($order['fax']) { ?>
-                    <?php echo $text_fax; ?> <?php echo $order['fax']; ?><br />
+                    <?php echo $Language->get('text_fax'); ?> <?php echo $order['fax']; ?><br />
                     <?php } ?>
                     <?php echo $order['email']; ?><br />
                     <?php echo $order['store_url']; ?>
@@ -30,17 +30,17 @@
                 <td style="text-align: right;">
                     <table>
                         <tr style="text-align: right;">
-                            <td><b><?php echo $text_date_added; ?></b></td>
+                            <td><b><?php echo $Language->get('text_date_added'); ?></b></td>
                             <td><?php echo $order['date_added']; ?></td>
                         </tr>
                         <?php if ($order['invoice_id']) { ?>
                         <tr style="text-align: right;">
-                            <td><b><?php echo $text_invoice_id; ?></b></td>
+                            <td><b><?php echo $Language->get('text_invoice_id'); ?></b></td>
                             <td><?php echo $order['invoice_id']; ?></td>
                         </tr>
                         <?php } ?>
                         <tr style="text-align: right;">
-                            <td><b><?php echo $text_order_id; ?></b></td>
+                            <td><b><?php echo $Language->get('text_order_id'); ?></b></td>
                             <td><?php echo $order['order_id']; ?></td>
                         </tr>
                     </table>
@@ -50,8 +50,8 @@
     </div>
     <table class="address">
         <tr class="heading">
-            <td><b><?php echo $text_to; ?></b></td>
-            <td><b><?php echo $text_ship_to; ?></b></td>
+            <td><b><?php echo $Language->get('text_to'); ?></b></td>
+            <td><b><?php echo $Language->get('text_ship_to'); ?></b></td>
         </tr>
         <tr>
             <td>
@@ -64,11 +64,11 @@
     </table>
     <table class="product">
         <tr class="heading">
-            <td><b><?php echo $column_product; ?></b></td>
-            <td><b><?php echo $column_model; ?></b></td>
-            <td><b><?php echo $column_quantity; ?></b></td>
-            <td><b><?php echo $column_price; ?></b></td>
-            <td><b><?php echo $column_total; ?></b></td>
+            <td><b><?php echo $Language->get('column_product'); ?></b></td>
+            <td><b><?php echo $Language->get('column_model'); ?></b></td>
+            <td><b><?php echo $Language->get('column_quantity'); ?></b></td>
+            <td><b><?php echo $Language->get('column_price'); ?></b></td>
+            <td><b><?php echo $Language->get('column_total'); ?></b></td>
         </tr>
         <?php foreach ($order['product'] as $product) { ?>
         <tr>
@@ -93,7 +93,7 @@
     </table>
     <table class="product">
         <tr class="heading">
-            <td><b><?php echo $column_comment; ?></b></td>
+            <td><b><?php echo $Language->get('column_comment'); ?></b></td>
         </tr>
         <tr>
             <td><?php echo $order['comment']; ?></td>

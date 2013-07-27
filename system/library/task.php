@@ -201,14 +201,14 @@ final class Task {
      * @param $object_id
      * A que objeto le pertenece la tarea
      * */
-	private $object_id;
+	public $object_id;
     
     /**
      * Task::object_type
      * @param $object_type
      * El nombre de la tabla de la BD donde se encuentra el objeto
      * */
-	private $object_type;
+	public $object_type;
     
     /**
      * Task::types
@@ -250,7 +250,7 @@ final class Task {
         $this->dateTime->add(new DateInterval('PT'. (int)$min .'M'));
         $this->time_exec = $this->dateTime->format('Y-m-d h:i:s');
         foreach ($this->queue as $key => $queue) {
-            $this->queue[$key]['time_exec'] = $this->dateTime->format('Y-m-d h:i:s');
+            $this->queue[$key]['time_exec'] = $this->time_exec;
         }
     }
     
@@ -258,7 +258,7 @@ final class Task {
         $this->dateTime->add(new DateInterval('PT'. (int)$hour .'H'));
         $this->time_exec = $this->dateTime->format('Y-m-d h:i:s');
         foreach ($this->queue as $key => $queue) {
-            $this->queue[$key]['time_exec'] = $this->dateTime->format('Y-m-d h:i:s');
+            $this->queue[$key]['time_exec'] = $this->time_exec;
         }
     }
     
@@ -266,7 +266,7 @@ final class Task {
         $this->dateTime->add(new DateInterval('P'. (int)$day .'D'));
         $this->time_exec = $this->dateTime->format('Y-m-d h:i:s');
         foreach ($this->queue as $key => $queue) {
-            $this->queue[$key]['time_exec'] = $this->dateTime->format('Y-m-d h:i:s');
+            $this->queue[$key]['time_exec'] = $this->time_exec;
         }
     }
     
@@ -274,7 +274,7 @@ final class Task {
         $this->dateTime->add(new DateInterval('P'. (int)$month .'M'));
         $this->time_exec = $this->dateTime->format('Y-m-d h:i:s');
         foreach ($this->queue as $key => $queue) {
-            $this->queue[$key]['time_exec'] = $this->dateTime->format('Y-m-d h:i:s');
+            $this->queue[$key]['time_exec'] = $this->time_exec;
         }
     }
     
@@ -282,7 +282,7 @@ final class Task {
         $this->dateTime->add(new DateInterval('P'. (int)$year .'Y'));
         $this->time_exec = $this->dateTime->format('Y-m-d h:i:s');
         foreach ($this->queue as $key => $queue) {
-            $this->queue[$key]['time_exec'] = $this->dateTime->format('Y-m-d h:i:s');
+            $this->queue[$key]['time_exec'] = $this->time_exec;
         }
     }
     

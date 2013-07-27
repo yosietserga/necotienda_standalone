@@ -5,12 +5,12 @@ $_['heading_title']   = 'Historial de Pedidos';
 // Text
 $_['text_account']    = 'Cuenta';
 $_['text_history']    = 'Historial de Pedidos';
-$_['text_order']      = 'ID de Pedido:';
-$_['text_status']     = 'Estado:';
-$_['text_date_added'] = 'Fecha:';
-$_['text_customer']   = 'Cliente:';
-$_['text_products']   = 'Productos:';
-$_['text_total']      = 'Total:';
+$_['text_order']      = 'ID de Pedido';
+$_['text_status']     = 'Estado';
+$_['text_date_added'] = 'Fecha';
+$_['text_customer']   = 'Cliente';
+$_['text_products']   = 'Productos';
+$_['text_total']      = 'Total';
 $_['text_agree']           = 'He lei&iacute;do y estoy de acuerdo con <a onclick="window.open(\'%s\');"><b>%s</b></a>';
 $_['text_error']      = 'No has realizado con anterioridad ning&uacute;n pedido!';
 $_['text_transferencia']      = 'Transferencia  ';

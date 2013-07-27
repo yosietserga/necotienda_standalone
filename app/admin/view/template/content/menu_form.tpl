@@ -1,14 +1,13 @@
 <?php echo $header; ?>
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-
+<div id="menuMsg"></div>
 <div class="grid_24">
     <div class="box">
-        <h1><?php echo $heading_title; ?></h1>
+                    
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
-            <a onclick="saveAndExit();" class="button"><?php echo $button_save_and_exit; ?></a>
-            <a onclick="saveAndKeep();" class="button"><?php echo $button_save_and_keep; ?></a>
-            <a onclick="saveAndNew();" class="button"><?php echo $button_save_and_new; ?></a>
-            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a>
+            <a onclick="$('#menuItems').submit();" class="button"><?php echo $Language->get('button_save'); ?></a>
+            <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
     </div>
 </div>
@@ -18,29 +17,48 @@
 <div class="grid_8">
     <div class="box">
         <h2>Datos del Men&uacute;</h2>
-        <div class="row">
-            <label class="neco-label">Nombre:</label>
-            <input id="name" name="name" value="<?php echo $name; ?>" style="width:40%" />
-        </div>
-        <div class="row">
-            <label class="neco-label">Ubicaci&oacute;n del Men&uacute;:</label>
-            <select name="position">
-                <option value="">Men&uacute; Principal</option>
-                <option value="">Men&uacute; Usuario</option>
-                <option value="">Men&uacute; Lateral</option>
-                <option value="">Pie de P&aacute;gina Izquierda</option>
-                <option value="">Pie de P&aacute;gina Centro</option>
-                <option value="">Pie de P&aacute;gina Derecha</option>
-                <option value="">Pie de P&aacute;gina General</option>
-            </select>
-        </div>
-        <div class="row">
-            <label class="neco-label">Estado:</label>
-            <select name="status">
-                <option value="1"<?php if ($status) { ?> selected="selected"<?php } ?>>Activado</option>
-                <option value="0"<?php if (!$status) { ?> selected="selected"<?php } ?>>Desactivado</option>
-            </select>
-        </div>
+        <form action="<?php echo $action; ?>" class="neco-form" id="formMenu">
+            <div class="row">
+                <label class="neco-label">Nombre:</label>
+                <input id="_name" name="_name" value="<?php echo $name; ?>" style="width:140px" />
+            </div>
+            
+            <div class="clear"></div>
+               
+            <div class="row">
+                <label class="neco-label">Predeterminado:</label>
+                <input type="checkbox" id="_default" name="_default" value="1" onclick="$('#default').attr('checked', this.checked);"<?php if ($default) { echo ' checked="checked"'; }?> />
+            </div>
+            
+            <?php if ($stores) { ?>
+            <div class="clear"></div>
+            <div class="row">
+                <label><?php echo $Language->get('entry_store'); ?></label><br />
+                <input type="text" title="Filtrar listado de tiendas y sucursales" value="" name="q" id="q" placeholder="Filtrar Tiendas" />
+                <div class="clear"></div>
+                <a onclick="$('#storesWrapper input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a onclick="$('#storesWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
+                <div class="clear"></div>
+                <ul id="storesWrapper" class="scrollbox">
+                    <li class="stores">
+                        <input type="checkbox" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> onclick="$('#store0').attr('checked', this.checked);" showquick="off" />
+                        <b><?php echo $Language->get('text_default'); ?></b>
+                        <div class="clear"></div>
+                    </li>
+                <?php foreach ($stores as $store) { ?>
+                    <li class="stores">
+                        <input type="checkbox" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> onclick="$('#store<?php echo $store['store_id']; ?>').attr('checked', this.checked);" showquick="off" />
+                        <b><?php echo $store['name']; ?></b>
+                        <div class="clear"></div>
+                    </li>
+                <?php } ?>
+                </ul>
+            </div> 
+            <?php } else { ?>
+                <input type="hidden" value="0" />
+            <?php } ?>
+            
+        </form>
     </div>
         
     <div class="clear"></div>
@@ -69,7 +87,7 @@
             <ul id="pagesWrapper" class="scrollbox" style="width:96%;"><?php echo $pages; ?></ul>
         </div>
         <div class="clear"></div>
-        <a class="button" onclick="addPage('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
+        <a class="button" onclick="add('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
     </div>
         
     <div class="clear"></div>
@@ -83,7 +101,7 @@
             <ul id="categoriesWrapper" class="scrollbox" style="width:96%;"><?php echo $categories; ?></ul>
         </div>
         <div class="clear"></div>
-        <a class="button" onclick="addCategory('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
+        <a class="button" onclick="add('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
     </div>
         
     <div class="clear"></div>
@@ -97,7 +115,7 @@
             <ul id="post_categoriesWrapper" class="scrollbox" style="width:96%;"><?php echo $post_categories; ?></ul>
         </div>
         <div class="clear"></div>
-        <a class="button" onclick="addPostCategory('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
+        <a class="button" onclick="add('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
     </div>
         
     <div class="clear"></div>
@@ -108,7 +126,15 @@
 <div class="grid_15">
     <div class="box">
         <h2>Enlaces del Men&uacute;</h2>
-        <form action="<?php echo $action; ?>" method="post" class="neco-form" id="formMenu">
+        <form action="<?php echo str_replace('&','&amp;',$action); ?>" class="neco-form" id="menuItems" method="post">
+        <input type="hidden" id="name" name="name" value="<?php echo $name; ?>" style="width:140px" />
+        <input type="checkbox" id="default" name="default" value="1" style="display: none;"<?php if ($default) echo ' checked="checked"'; ?> />
+        <?php if ($stores) { ?>
+        <input type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> id="store0" style="display: none;" />
+        <?php foreach ($stores as $store) { ?>
+        <input type="checkbox" name="stores[]" value="<?php echo $store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> id="store<?php echo $store['store_id']; ?>" style="display: none;" />
+        <?php } ?>
+        <?php } ?>
             <ol class="items">
                 <?php echo $links; ?>
             </ol>
@@ -140,7 +166,7 @@
         <h2>Herramientas</h2>
         <p>S&aacute;cale provecho a NecoTienda y aumenta tus ventas.</p>
         <ul>
-            <li><a onclick="$('#addProductsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addProductsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
+            <li><a onclick="$('#addsWrapper').slideDown();$('html, body').animate({scrollTop:$('#addsWrapper').offset().top}, 'slow');">Agregar Productos</a></li>
             <li><a class="trends" data-fancybox-type="iframe" href="http://www.necotienda.com/index.php?route=api/trends&q=samsung&geo=VE">Evaluar Palabras Claves</a></li>
             <li><a>Eliminar Esta Categor&iacute;a</a></li>
         </ul>

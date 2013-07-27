@@ -2,7 +2,7 @@
 /**
  * ControllerSaleCustomer
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -40,7 +40,7 @@ class ControllerSaleCustomer extends Controller {
   	public function insert() {
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-      	  	$this->modelCustomer->addCustomer($this->request->post);
+      	  	$this->modelCustomer->add($this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 		  
@@ -151,72 +151,25 @@ class ControllerSaleCustomer extends Controller {
     	$this->getForm();
   	}   
 
-  	/**
-  	 * ControllerSaleCustomer::delete()
-  	 * 
-     * @see Load
-     * @see Document
-     * @see Language
-     * @see Session
-     * @see Redirect
-     * @see getList
-  	 * @return void 
-  	 */
-  	public function delete() {
-		$this->document->title = $this->language->get('heading_title');
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $customer_id) {
-				$this->modelCustomer->deleteCustomer($customer_id);
-			}
-			
-			$this->session->set('success',$this->language->get('text_success'));
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . $this->request->get['filter_name'];
-			}
-			
-			if (isset($this->request->get['filter_email'])) {
-				$url .= '&filter_email=' . $this->request->get['filter_email'];
-			}
-			
-			if (isset($this->request->get['filter_customer_group_id'])) {
-				$url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
-			}
-			
-			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
-			}
-			
-			if (isset($this->request->get['filter_approved'])) {
-				$url .= '&filter_approved=' . $this->request->get['filter_approved'];
-			}		
-		
-			if (isset($this->request->get['filter_date_added'])) {
-				$url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-			}
-						
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-			
-			$this->redirect(Url::createAdminUrl('sale/customer') . $url);
-    	}
+    /**
+     * ControllerMarketingNewsletter::delete()
+     * elimina un objeto
+     * @return boolean
+     * */
+     public function delete() {
+        $this->load->auto('sale/customer');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelCustomer->delete($id);
+            }
+		} else {
+            $this->modelCustomer->delete($_GET['id']);
+		}
+     }
     
-    	$this->getList();
-  	}  
     
   	/**
-  	 * ControllerSaleCustomer::getList()
+  	 * ControllerSaleCustomer::getById()
   	 * 
      * @see Load
      * @see Document
@@ -273,39 +226,42 @@ class ControllerSaleCustomer extends Controller {
         
         // SCRIPTS
         $scripts[] = array('id'=>'customerList','method'=>'function','script'=>
-            "function activate(e) {
-                $.getJSON('". Url::createAdminUrl("sale/customer/activate") ."',{
-                    id:e
-                },function(data){
-                    if (data > 0) {
-                        $('#img_' + e).attr('src','image/good.png');
-                    } else {
-                        $('#img_' + e).attr('src','image/minus.png');
-                    }
-                });
-            }
-            function borrar() {
-                $('#gridWrapper').html('<img src=\"image/nt_loader.gif\" alt=\"Cargando...\" />');
-                $.post('". Url::createAdminUrl("sale/customer/delete") ."',$('#formGrid').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("sale/customer/grid") ."');
-                });
-            } 
+            "function activate(e) {    
+            	$.ajax({
+            	   'type':'get',
+                   'dataType':'json',
+                   'url':'".Url::createAdminUrl("sale/customer/activate")."&id=' + e,
+                   'success': function(data) {
+                        if (data > 0) {
+                            $(\"#img_\" + e).attr('src','image/good.png');
+                        } else {
+                            $(\"#img_\" + e).attr('src','image/minus.png');
+                        }
+                   }
+            	});
+             }
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
-                $('#tr_' + e).hide();
-                	$.getJSON('". Url::createAdminUrl("sale/customer/eliminar") ."',{
-                            id:e
-                        },
-                        function(data) {
-                            if (data > 0) {
-                                $('#tr_' + e).remove();
-                            } else {
-                                alert('No se pudo eliminar el objeto, posiblemente tenga otros objetos relacionados');
-                                $('#tr_' + e).show().effect('shake', { times:3 }, 300);;
-                            }
-                	});
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
+                    $('#tr_' + e).remove();
+                	$.getJSON('". Url::createAdminUrl("sale/customer/delete") ."',{
+                        id:e
+                    });
                 }
-             }");
+                return false;
+             }
+            function deleteAll() {
+                if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
+                    $('#gridWrapper').hide();
+                    $('#gridPreloader').show();
+                    $.post('". Url::createAdminUrl("sale/customer/delete") ."',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('". Url::createAdminUrl("sale/customer/grid") ."',function(){
+                            $('#gridWrapper').show();
+                            $('#gridPreloader').hide();
+                        });
+                    });
+                }
+                return false;
+            }");
         $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
             "$('#gridWrapper').load('". Url::createAdminUrl("sale/customer/grid") ."',function(e){
                 $('#gridPreloader').hide();
@@ -414,8 +370,8 @@ class ControllerSaleCustomer extends Controller {
 			'limit'                    => $limit
 		);
 		
-		$customer_total = $this->modelCustomer->getTotalCustomers($data);
-		$results = $this->modelCustomer->getCustomers($data);
+		$customer_total = $this->modelCustomer->getAllTotal($data);
+		$results = $this->modelCustomer->getAll($data);
  
     	foreach ($results as $result) {
 			
@@ -549,7 +505,7 @@ class ControllerSaleCustomer extends Controller {
 		$this->data['filter_date_start'] = $filter_date_start;
 		$this->data['filter_date_end'] = $filter_date_end;
 		
-    	$this->data['customer_groups'] = $this->modelCustomergroup->getCustomerGroups();
+    	$this->data['customer_groups'] = $this->modelCustomergroup->getAll();
 		
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -731,8 +687,8 @@ class ControllerSaleCustomer extends Controller {
         $this->data['password'] = ($this->request->post['password']) ? $this->request->post['password'] : '';
         $this->data['confirm'] = ($this->request->post['confirm']) ? $this->request->post['confirm'] : '';
 		
-		$this->data['customer_groups'] = $this->modelCustomergroup->getCustomerGroups();		
-		$this->data['countries'] = $this->modelCountry->getCountries();
+		$this->data['customer_groups'] = $this->modelCustomergroup->getAll();		
+		$this->data['countries'] = $this->modelCountry->getAll();
 		foreach ($this->data['countries'] as $country) { 
             $countries .= "<option value=\"". $country["country_id"] ."\">". addslashes($country["name"]) ."</option>";
         }
@@ -740,7 +696,7 @@ class ControllerSaleCustomer extends Controller {
 		if (isset($this->request->post['addresses'])) { 
       		$this->data['addresses'] = $this->request->post['addresses'];
 		} elseif (isset($this->request->get['customer_id'])) {
-			$this->data['addresses'] = $this->modelCustomer->getAddressesByCustomerId($this->request->get['customer_id']);
+			$this->data['addresses'] = $this->modelCustomer->getAddresses($this->request->get['customer_id']);
 		} else {
 			$this->data['addresses'] = array();
     	}
@@ -901,7 +857,7 @@ class ControllerSaleCustomer extends Controller {
 		
 		$this->load->auto('localisation/zone');
 		
-		$results = $this->modelZone->getZonesByCountryId($this->request->get['country_id']);
+		$results = $this->modelZone->getAllByCountryId($this->request->get['country_id']);
 		
 		foreach ($results as $result) {
 			$output .= '<option value="' . $result['zone_id'] . '"';
@@ -1091,7 +1047,7 @@ class ControllerSaleCustomer extends Controller {
 		$this->load->model('sale/customer');
         $name = $this->request->get['term'];
         
-        $results = $this->modelCustomer->getCustomers();
+        $results = $this->modelCustomer->getAll();
         if (!$results) {
     		 $data['error'] = 1; 
 		} else {
@@ -1153,23 +1109,4 @@ class ControllerSaleCustomer extends Controller {
             echo 0;
         }
      }
-    
-    /**
-     * ControllerSaleCategory::activate()
-     * activar o desactivar un objeto accedido por ajax
-     * @return boolean
-     * */
-     public function eliminar() {
-        if (!isset($_GET['id'])) return false;
-        $this->load->auto('sale/customer');
-        $result = $this->modelCustomer->getCustomer($_GET['id']);
-        if ($result) {
-            $this->modelCustomer->deleteCustomer($_GET['id']);
-            echo 1;
-        } else {
-            echo 0;
-        }
-     }
-    
-	
 }

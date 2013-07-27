@@ -2,11 +2,11 @@
 <div class="grid_24">
     <div class="box">
         <div class="header">
-            <h1><?php echo $heading_title; ?></h1>
+            <h1><?php echo $Language->get('heading_title'); ?></h1>
             <div class="buttons">
-                <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a>
-                <a onclick="location = '<?php echo $import; ?>'" class="button"><?php echo $button_import; ?></a>
-                <a onclick="location = '<?php echo $export; ?>'" class="button"><?php echo $button_export; ?></a>
+                <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $Language->get('button_insert'); ?></a>
+                <a onclick="location = '<?php echo $import; ?>'" class="button"><?php echo $Language->get('button_import'); ?></a>
+                <a onclick="location = '<?php echo $export; ?>'" class="button"><?php echo $Language->get('button_export'); ?></a>
             </div>
         </div>      
         <div class="clear"></div><br />

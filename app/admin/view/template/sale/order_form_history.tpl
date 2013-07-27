@@ -3,9 +3,9 @@
 <table class="list">
     <thead>
         <tr>
-            <th><?php echo $column_date_added; ?></th>
-            <th><?php echo $column_status; ?></th>
-            <th><?php echo $column_notify; ?></th>
+            <th><?php echo $Language->get('column_date_added'); ?></th>
+            <th><?php echo $Language->get('column_status'); ?></th>
+            <th><?php echo $Language->get('column_notify'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
     <?php if ($history['comment']) { ?>
     <thead>
         <tr>
-            <th><?php echo $column_comment; ?></th>
+            <th><?php echo $Language->get('column_comment'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -35,10 +35,10 @@
 
 <table class="form">
     <tr>
-        <td><?php echo $entry_status; ?></td>
+        <td><?php echo $Language->get('entry_status'); ?></td>
         <td>
             <select name="order_status_id">
-                <option value="0"><?php echo $text_none; ?></option>
+                <option value="0"><?php echo $Language->get('text_none'); ?></option>
 				<?php foreach ($order_statuses as $order_statuses) { ?>
                 <option value="<?php echo $order_statuses['order_status_id']; ?>"<?php if ($order_statuses['order_status_id'] == $order_status_id) { ?> selected="selected"<?php } ?>><?php echo $order_statuses['name']; ?></option>
                 <?php } ?>
@@ -46,19 +46,19 @@
         </td>
     </tr>
     <tr>
-        <td><?php echo $entry_notify; ?></td>
+        <td><?php echo $Language->get('entry_notify'); ?></td>
         <td><input type="checkbox" name="notify" value="1" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_append; ?></td>
+        <td><?php echo $Language->get('entry_append'); ?></td>
         <td><input type="checkbox" name="append" value="1" checked="checked" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_comment; ?></td>
+        <td><?php echo $Language->get('entry_comment'); ?></td>
         <td>
             <textarea name="comment" cols="40" rows="8" style="width: 99%"></textarea>
             <div style="margin-top: 10px; text-align: right;">
-            <a onclick="history();" id="history_button" class="button"><?php echo $button_add_history; ?></a>
+            <a onclick="history();" id="history_button" class="button"><?php echo $Language->get('button_add_history'); ?></a>
             </div>
         </td>
     </tr>
@@ -67,14 +67,14 @@
 function history() {
     $('.success, .warning').remove();
     $('#history_button').attr('disabled', 'disabled');
-	$('#tab_history .form').before('<div class="attention"><img src="image/loading_1.gif"><?php echo $text_wait; ?></div>');
+	$('#tab_history .form').before('<div class="attention"><img src="image/loading_1.gif"><?php echo $Language->get('text_wait'); ?></div>');
     
     $.post('<?php echo $Url::createAdminUrl("sale/order/history",array('order_id'=>$order_id)); ?>',
     {
         'order_status_id':  encodeURIComponent($('select[name=\'order_status_id\']').val()),
         'notify':           encodeURIComponent($('input[name=\'notify\']').attr('checked') ? 1 : 0),
         'append':           encodeURIComponent($('input[name=\'append\']').attr('checked') ? 1 : 0),
-        'comment':          encodeURIComponent($('textarea[name=\'comment\']').val())
+        'comment':          $('textarea[name=\'comment\']').val()
     },
     function(response) {
         var data = $.parseJSON(response);
@@ -89,9 +89,9 @@ function history() {
 			html += '<table class="list">';
 			html += '<thead>';
 			html += '<tr>';
-			html += '<th><?php echo $column_date_added; ?></th>';
-			html += '<th><?php echo $column_status; ?></th>';
-			html += '<th><?php echo $column_notify; ?></th>';
+			html += '<th><?php echo $Language->get('column_date_added'); ?></th>';
+			html += '<th><?php echo $Language->get('column_status'); ?></th>';
+			html += '<th><?php echo $Language->get('column_notify'); ?></th>';
 			html += '</tr>';
 			html += '</thead>';
 			html += '<tbody>';
@@ -107,7 +107,7 @@ function history() {
                 html += '<table class="list">';
                 html += '<thead>';
 				html += '<tr>';
-				html += '<td colspan="3"><b><?php echo $column_comment; ?></b></td>';
+				html += '<td colspan="3"><b><?php echo $Language->get('column_comment'); ?></b></td>';
 				html += '</tr>';
 				html += '</thead>';
 				html += '<tbody>';

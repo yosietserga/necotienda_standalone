@@ -1,231 +1,170 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
-<div class="clear"></div>
-
-<?php if (isset($featured)) { ?>
-<section id="featured">
-    <div class="container_16">
-        <div class="grid_16"><?php echo $showslider; ?></div>
-    </div>
-</section>
-<div class="clear"></div>
-<?php } ?>
-
 <section id="maincontent">
-
-<?php if (isset($column_left)) { ?>
-    <aside id="column_left"><?php echo $column_left; ?></aside>
-<?php } ?>
-
     <section id="content">
-    
-        <?php if (isset($column_left) && isset($column_right)) { ?>
-        <div class="grid_4">
-        <?php } elseif (isset($column_left) || isset($column_right)) { ?>
-        <div class="grid_6">
-        <?php } else { ?>
-        <div class="grid_8">
-        <?php } ?>
-    
-            <div id="images">
+        <div class="clear"></div><br />
+        
+        <div class="grid_7" style="padding: 0px 40px;">
+            <div class="nt-editable" id="images">
                 <div id="popup">
-                    <ul id="productImages">
+                    <ul class="nt-editable" id="productImages">
                     <?php foreach ($images as $k => $image) { ?>
                     <li>
-                            <img class="etalage_thumb_image" src="<?php echo $image['preview']; ?>" alt="<?php echo $heading_title; ?>" />
-                            <img class="etalage_source_image" src="<?php echo $image['popup']; ?>" alt="<?php echo $heading_title; ?>" />
+                        <img class="etalage_thumb_image" src="<?php echo $image['preview']; ?>" alt="<?php echo $heading_title; ?>" />
+                        <img class="etalage_source_image" src="<?php echo $image['popup']; ?>" alt="<?php echo $heading_title; ?>" />
                     </li>
                     <?php } ?>
                     </ul>
                 </div>
             </div>
-        
         </div>
         
-        <?php if (isset($column_left) && isset($column_right)) { ?>
-        <div class="grid_5">
-        <?php } elseif (isset($column_left) || isset($column_right)) { ?>
         <div class="grid_7">
-        <?php } else { ?>
-        <div class="grid_8">
-        <?php } ?>
         
-            <h1><?php echo $heading_title; ?></h1>
+            <h1 class="nt-editable" id="productName"><?php echo $heading_title; ?></h1>
             
-            <div class="property">
-                <div class="model"><?php echo $model; ?></div>
+            <div class="clear"></div>
+            
+            <div class="property nt-editable" id="productSocial">
+                    <div class="grid_1" style="margin-right: 25px;">
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-url="<?php echo str_replace("&","&amp;",$href); ?>" data-count="vertical" data-via="lahoralocavzla" data-related="lahoralocavzla:Confites y Accesorios para Fiestas" data-lang="es">Tweet</a>
+                        <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+                    </div>
+                    <div class="grid_1">
+                        <script type="text/javascript" src="https://apis.google.com/js/plusone.js">{lang: 'es-419'}</script>
+                        <g:plusone size="tall" callback="googleMas1" href="<?php echo str_replace("&","&amp;",$href); ?>"></g:plusone>
+                    </div>
+                    <div class="grid_1" style="margin-right: 30px;">
+                        <div class="fb-like" data-href="<?php echo str_replace("&","&amp;",$href); ?>" data-layout="box_count" data-width="450" data-show-faces="true" data-font="verdana"></div>
+                    </div><div class="grid_1" style="margin-left: 15px;">
+                        <a href="http://pinterest.com/pin/create/button/?url=<?php echo rawurlencode($href); ?>&media=<?php echo rawurlencode($thumb); ?>&description=<?php echo rawurlencode($description); ?>" class="pin-it-button" count-layout="vertical"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" /></a>
+                    </div>
             </div>
+            
+            <div class="clear"></div>
+            
+            <div class="property model nt-editable" id="productModel"><?php echo $model; ?></div>
+            
+            <div class="clear"></div>
             
             <?php if ($display_price) { ?>
-            <div class="property">
                 <?php if (!$special) { ?>
-                <p class="price"><?php echo $price; ?></p>
+            <p class="price nt-editable" id="productPrice"><?php echo $price; ?></p>
                 <?php } else { ?>
-                <p class="old_price"><?php echo $price; ?></p>
-                <p class="new_price"><?php echo $special; ?></p>
+            <p class="old_price nt-editable" id="productOldPrice"><?php echo $price; ?></p>
+            <p class="new_price nt-editable" id="productNewPrice"><?php echo $special; ?></p>
                 <?php } ?>
-            </div>
             <?php } ?>
             
-            <div class="property">
+            <div class="clear"></div>
             
-                <div class="grid_1" style="margin-right: 25px;">
-                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="<?php echo str_replace("&","&amp;",$href); ?>" data-count="vertical" data-via="lahoralocavzla" data-related="lahoralocavzla:Confites y Accesorios para Fiestas" data-lang="es">Tweet</a>
-                    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-                </div>
-                    
-                <div class="grid_1">
-                    <script type="text/javascript" src="https://apis.google.com/js/plusone.js">{lang: 'es-419'}</script>
-                    <g:plusone size="tall" callback="googleMas1" href="<?php echo str_replace("&","&amp;",$href); ?>"></g:plusone>
-                </div>
-                    
-                <div class="grid_1" style="margin-right: 30px;">
-                    <div class="fb-like" data-href="<?php echo str_replace("&","&amp;",$href); ?>" data-layout="box_count" data-width="450" data-show-faces="true" data-font="verdana">
-                </div>
-                    
-                </div>
-                    <div class="grid_1" style="margin-left: 15px;">
-                    <a href="http://pinterest.com/pin/create/button/?url=<?php echo rawurlencode($href); ?>&media=<?php echo rawurlencode($thumb); ?>&description=<?php echo rawurlencode($description); ?>" class="pin-it-button" count-layout="vertical"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" /></a>
-                </div>
-                
-            </div>
-            
-            <div class="property">
-                <div class="availability">
-                    <p><b><?php echo $text_availability; ?></b>&nbsp;<?php echo $stock; ?></p>
-                </div>
+            <div class="property availability nt-editable" id="productAvailability">
+                <p><b><?php echo $Language->get('text_availability'); ?></b>&nbsp;<?php echo $stock; ?></p>
             </div>
             
             <?php if ($manufacturer) { ?>
-            <div class="property">
-                <div class="manufacturer">
-                    <p><b><?php echo $text_manufacturer; ?></b></p>
-                    <p><a title="<?php echo $manufacturer; ?>" href="<?php echo str_replace('&', '&amp;', $manufacturers); ?>"><?php echo $manufacturer; ?></a></p>
-                </div>
+            <div class="property manufacturer nt-editable" id="productManufacturer">
+                <p><b><?php echo $Language->get('text_manufacturer'); ?></b></p>
+                <p><a title="<?php echo $manufacturer; ?>" href="<?php echo str_replace('&', '&amp;', $manufacturers); ?>"><?php echo $manufacturer; ?></a></p>
             </div>
             <?php } ?>
             
             <?php if ($review_status) { ?>
-            <div class="property">
-                <div class="average">
-                    <p>
-                        <b><?php echo $text_average; ?></b>
-                        <?php if ($average) { ?>
-                        <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $average . '.png'; ?>" alt="<?php echo $text_stars; ?>" />
-                        <?php } else { ?>
-                        <?php echo $text_no_rating; ?>
-                        <?php } ?>
-                    </p>
-                </div>
+            <div class="property average nt-editable" id="productAverage">
+                <p><b><?php echo $Language->get('text_average'); ?></b>
+                <?php if ($average) { ?>
+                    <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $average . '.png'; ?>" alt="<?php echo $Language->get('text_stars'); ?>" />
+                <?php } else { ?>
+                    <?php echo $Language->get('text_no_rating'); ?>
+                <?php } ?>
+                </p>
             </div>
             <?php } ?>
             
             <?php if ($tags) { ?>
-            <div class="property">
-                <div class="tags">
-                    <p><b><?php echo $text_tags; ?></b></p>
-                    <ul>
-                    <?php foreach ($tags as $tag) { ?>
-                    <li><a title="<?php echo $tag['tag']; ?>" href="<?php echo str_replace('&', '&amp;', $tag['href']); ?>"><?php echo $tag['tag']; ?></a></li> 
-                    <?php } ?>
-                    </ul>
-                </div>
+            <div class="property tags nt-editable" id="productTags">
+                <p><b><?php echo $Language->get('text_tags'); ?></b></p>
+                <?php foreach ($tags as $tag) { ?>
+                    <a title="<?php echo $tag['tag']; ?>" href="<?php echo str_replace('&', '&amp;', $tag['href']); ?>"><?php echo $tag['tag']; ?></a>, 
+                <?php } ?>
             </div>
             <?php } ?>
             
             <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="product">
-            
-                <div class="property">
-                    <div class="quantity">
-                        <b><?php echo $text_qty; ?></b>
-                        <input type="text" id="quantity" name="quantity" size="3" value="<?php echo $minimum; ?>" />
-                        <?php if ($minimum> 1) { ?><br /><small><?php echo $text_minimum; ?></small><?php } ?>
-                        <a class="arrow-down">&nbsp;</a>
-                        <a class="arrow-up">&nbsp;</a>
-                        <a title="<?php echo $button_add_to_cart; ?>" onclick="$('#product').submit();" id="add_to_cart" class="button" style="float: none;margin-left:40px"><?php echo $button_add_to_cart; ?></a>
-                    </div>
+                <div class="property quantity nt-editable" id="productQty">
+                    <b><?php echo $Language->get('text_qty'); ?></b>
+                    <input type="text" id="quantity" name="quantity" size="3" value="<?php echo $minimum; ?>" />
+                    <?php if ($minimum> 1) { ?><br /><small><?php echo $Language->get('text_minimum'); ?></small><?php } ?>
+                    <a class="arrow-down" style="position:absolute;margin-top: 5px;margin-right: 5px;"></a>
+                    <a class="arrow-up" style="position:absolute;margin-top: 5px;margin-left:20px"></a>
+                    <a title="<?php echo $Language->get('button_add_to_cart'); ?>" <?php if (!$this->config->get("cart_ajax")) { ?>onclick="$('#product').submit();"<?php } else { ?>onclick="addToCart('<?php echo $product_id; ?>',$('#quantity').val())"<?php } ?> id="add_to_cart" class="button" style="float: none;margin-left:40px"><?php echo $Language->get('button_add_to_cart'); ?></a>
                 </div>
-            
                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
                 <input type="hidden" name="redirect" value="<?php echo str_replace('&', '&amp;', $redirect); ?>" />
-                
-                <?php if ($display_price) { ?>
-                <div class="property">
-                    <div class="options">
-                    <?php if ($options) { ?>
-                        <p><b><?php echo $text_options; ?></b></p>
-                        <ul>
-                        <?php foreach ($options as $option) { ?>
-                            <li>
-                                <div class="label"><?php echo $option['name']; ?>:</div>
-                                <select name="option[<?php echo $option['option_id']; ?>]">
-                                <?php foreach ($option['option_value'] as $option_value) { ?>
-                                    <option value="<?php echo $option_value['option_value_id']; ?>"><?php echo $option_value['name']; ?>
-                                    <?php if ($option_value['price']) { ?>
-                                    <?php echo $option_value['prefix']; ?><?php echo $option_value['price']; ?>
-                                    <?php } ?>
-                                    </option>
-                                <?php } ?>
-                                </select>
-                            </li>                
-                        <?php } ?>
-                        </ul>
+            
+                <?php if ($display_price && $options) { ?>
+                <div class="property options nt-editable" id="productOptions">
+                    <p><b><?php echo $Language->get('text_options'); ?></b></p>
+                     <div class="clear"></div>
+                    <ul>
+                    <?php foreach ($options as $option) { ?>
+                        <li>
+                            <div class="label"><?php echo $option['name']; ?>:</div>
+                            <select name="option[<?php echo $option['option_id']; ?>]">
+                            <?php foreach ($option['option_value'] as $option_value) { ?>
+                                <option value="<?php echo $option_value['option_value_id']; ?>"><?php echo $option_value['name']; ?>
+                                <?php if ($option_value['price']) { ?>(<?php echo $option_value['prefix']; ?><?php echo $option_value['price']; ?>)<?php } ?>
+                                </option>
+                            <?php } ?>
+                            </select>
+                        </li>                    
                     <?php } ?>
-                    </div>
+                    </ul>
                 </div>
                 <?php } ?>
-        
-                
             </form>
             
             <?php if ($discounts) { ?>
-            <div class="property">
-                <div class="discount">
-                    <p><b><?php echo $text_discount; ?></b></p>
-                    <p><b><?php echo $text_order_quantity; ?></b></p>
-                    <p><b><?php echo $text_price_per_item; ?></b></p>
-                    <?php foreach ($discounts as $discount) { ?>
-                        <p>
-                            <?php echo $discount['quantity']; ?>
-                            <?php echo $discount['price']; ?>
-                        </p>
-                    <?php } ?>
-                </div>
+            <div class="property discount nt-editable" id="productDiscount">
+                <p><b><?php echo $Language->get('text_discount'); ?></b></p>
+                <p><b><?php echo $Language->get('text_order_quantity'); ?></b></p>
+                <p><b><?php echo $Language->get('text_price_per_item'); ?></b></p>
+                <?php foreach ($discounts as $discount) { ?>
+                <p>
+                    <?php echo $discount['quantity']; ?>
+                    <?php echo $discount['price']; ?>
+                </p>
+                <?php } ?>
             </div>
             <?php } ?>
         
         </div>
         
-        <?php if (isset($column_left) && isset($column_right)) { ?>
-        <div class="grid_10">
-        <?php } elseif (isset($column_left) || isset($column_right)) { ?>
-        <div class="grid_12">
-        <?php } else { ?>
-        <div class="grid_16">
-        <?php } ?>
+        <div class="clear"></div>
         
-            <ul class="tabs">
+        <div class="grid_24 product_tabs nt-editable" id="productTabs">
+            <ul class="tabs nt-editable" id="pTabs">
                 <li class="tab" id="description">Descripci&oacute;n</li>
                 <li class="tab" id="attributes">Especificaci&oacute;n T&eacute;nica</li>
-                <li class="tab" id="comments">Comentarios</li>
-                <li class="tab" id="relateds">Productos Relacionados</li>
+                <li class="tab" id="comments">Preguntas</li>
+                <li class="tab" id="relateds">Esto Te Interesa</li>
                 <li class="tab" id="facebook">Facebook</li>
             </ul>
-            
+        
             <div class="clear"></div>
             
             <div id="_description">
-                <div class="product_description"><?php echo $description; ?></div>
+                <div class="product_description nt-editable" id="productDescription"><?php echo $description; ?></div>
             </div>
             
             <div id="_attributes">
-                <div class="product_attributes"><?php echo $attributes; ?></div>
+                <div class="product_attributes nt-editable" id="productAttributes"><?php echo $attributes; ?></div>
             </div>
             
             <div id="_comments">
-                <div id="review" class="content"><img src='<?php echo HTTP_IMAGE; ?>loader.gif' alt='Cargando...' /></div>
+                <div id="review" class="content nt-editable"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
                 <div class="clear"></div>
-                <div id="comment" class="box" style="border: none;"><img src='<?php echo HTTP_IMAGE; ?>loader.gif' alt='Cargando...' /></div>
+                <div id="comment" class="box nt-editable" style="border: none;"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
             </div>
             
             <div id="_facebook">
@@ -235,33 +174,26 @@
             
             <div id="_relateds">
                 <h2>Estos productos tambi&eacute;n te interesan</h2>
-                <div id="related" class="box"><img src='<?php echo HTTP_IMAGE; ?>loader.gif' alt='Cargando...' /></div>
+                <div id="related" class="box nt-editable"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
             </div>
-            
         </div>
-    
     </section>
     
-<?php if (isset($column_right)) { ?>
-    <aside id="column_right"><?php echo $column_right; ?></aside>
-<?php } ?>
-
 </section>
 
+<script type="text/javascript" src="<?php echo HTTP_JS; ?>vendor/jquery.etalage.js"></script>
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
+<script>
+(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {return;}
   js = d.createElement(s); js.id = id;
   js.src = "//connect.facebook.net/es_ES/all.js#xfbml=1&appId=223173687752863";
   fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-<div id="fb-root"></div>
-
-<script type="text/javascript" src="<?php echo HTTP_JS; ?>vendor/jquery.etalage.js"></script>
-<script type="text/javascript">
+}(document, 'script', 'facebook-jssdk'));
+</script>
+<script>
 $(function(){
-    
     $('.tab').each(function(){
         $(this).removeClass('active'); 
         $('#_' + this.id).hide(); 
@@ -277,11 +209,6 @@ $(function(){
         });
         $(this).addClass('active');
         $('#_' + this.id).show(); 
-    });
-    
-    $('#review .pagination a').live('click', function() {
-    	$('#review').slideUp('slow').load(this.href).slideDown('slow');
-    	return false;
     });
     
     $("a.arrow-up").click(function() {
@@ -301,34 +228,29 @@ $(function(){
         $(e).val(v);
     });
     
-    $("#productImages").etalage({
-        thumb_image_width: <?php echo $this->config->get('config_image_thumb_width'); ?>,
-        thumb_image_height: <?php echo $this->config->get('config_image_thumb_height'); ?>,
-        source_image_width: <?php echo $this->config->get('config_image_popup_width'); ?>,
-        source_image_height: <?php echo $this->config->get('config_image_popup_height'); ?>,
+    $('#review').load('<?php echo $Url::createUrl("store/product/review",array("product_id"=>$product_id)); ?>',function() {
+        $(this).find('.pagination a').on('click', function() {
+            $('#review').slideUp('slow');
+            $('#review').load(this.href);
+            $('#review').slideDown('slow');
+            return false;
+        });
+    });
+    
+    $('#related').load('<?php echo $Url::createUrl("store/product/related",array("product_id"=>$product_id)); ?>');
+    $('#comment').load('<?php echo $Url::createUrl("store/product/comment",array("product_id"=>$product_id)); ?>');
+    
+    $('#productImages').etalage({
+        thumb_image_width: <?php echo (int)$config_image_thumb_width; ?>,
+        thumb_image_height: <?php echo (int)$config_image_thumb_height; ?>,
+        source_image_width: <?php echo (int)$config_image_popup_width; ?>,
+        source_image_height: <?php echo (int)$config_image_popup_height; ?>,
         zoom_area_width: 400,
         zoom_area_height: 400,
         magnifier_invert: false,
         hide_cursor: true,
         speed: 400
     });
-    
-    /* TODO: utilizar clase URL y REWRITE */
-    $('#review').load('index.php?r=store/product/review&product_id=<?php echo $product_id; ?>');
-    $('#related').load('index.php?r=store/product/related&product_id=<?php echo $product_id; ?>');
-    $('#comment').load('index.php?r=store/product/comment&product_id=<?php echo $product_id; ?>');
-    
-    $("a[rel=product_images]").fancybox(
-        {
-            'transitionIn'		: 'elastic',
-            'transitionOut'		: 'elastic',
-            'titlePosition' 	: 'over',
-            'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) 
-            {
-                return '<span id="fancybox-title-over">Image ' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; ' + title : '') + '</span>';
-                }
-  		}
-    );
 });
 </script>
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

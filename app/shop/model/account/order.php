@@ -1,10 +1,16 @@
 <?php
 class ModelAccountOrder extends Model {
 	public function getOrder($order_id) {
-		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id> '0'");
+		$order_query = $this->db->query("SELECT * 
+        FROM `" . DB_PREFIX . "order` 
+        WHERE order_id = '" . (int)$order_id . "' 
+        AND customer_id = '" . (int)$this->customer->getId() . "' 
+        AND order_status_id> '0'");
 	
 		if ($order_query->num_rows) {
-			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
+			$country_query = $this->db->query("SELECT * 
+            FROM `" . DB_PREFIX . "country` 
+            WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
 			
 			if ($country_query->num_rows) {
 				$shipping_iso_code_2 = $country_query->row['iso_code_2'];
@@ -101,18 +107,78 @@ class ModelAccountOrder extends Model {
 		}
 	}
 	 
-	public function getOrders($start = 0, $limit = 20) {
-		if ($start < 0) {
-			$start = 0;
-		}
-		
-		$query = $this->db->query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, o.date_added, o.total, o.currency, o.value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id> '0' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);	
+	public function getOrders($data=array()) {
+		if ($start < 0) $start = 0;
+        
+		$sql = "SELECT *, os.name as status, o.date_added AS dateAdded 
+        FROM `" . DB_PREFIX . "order` o 
+        LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id)";	
+	
+        $criteria = array();
+        
+        $criteria[] = " customer_id = '" . (int)$this->customer->getId() . "' ";
+        $criteria[] = " o.order_status_id > '0' ";
+        $criteria[] = " os.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
+        
+        if ($data['order_status_id']) {
+            $criteria[] = " o.order_status_id = '" . (int)$data['order_status_id'] . "' ";
+        }
+        
+        if ($data['order_id']) {
+            $criteria[] = " o.order_id = '" . (int)$data['order_id'] . "' ";
+        }
+        
+        if ($criteria) {
+            $sql .= " WHERE " . implode(" AND ",$criteria);
+        }
+            
+        $sql .= "ORDER BY o.date_added DESC, o.order_id DESC ";
+    			
+	    if ($start < 0) {
+    	   $start = 0;
+        }
+    		
+        $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+        
+		$query = $this->db->query($sql);	
 	
 		return $query->rows;
 	}
 	
+	public function addOrderHistory($order_id, $data) {
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET 
+        order_status_id = '" . (int)$data['order_status_id'] . "', 
+        date_modified = NOW() 
+        WHERE order_id = '" . (int)$order_id . "'");
+
+		$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET 
+              order_id = '" . (int)$order_id . "', 
+              order_status_id = '" . (int)$data['order_status_id'] . "', 
+              notify = '1', 
+              comment = '" . $this->db->escape(strip_tags($data['comment'])) . "', 
+              date_added = NOW()");
+	}
+
+    public function updateStatus($order_id,$order_status_id) {
+		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET 
+        order_status_id = '" . (int)$order_status_id . "' 
+        WHERE order_id = '" . (int)$order_id . "'");
+    }
+
+    public function updatePaymentMethod($order_id,$method) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET 
+        payment_method = '" . $this->db->escape($method) . "' 
+        WHERE order_id = '" . (int)$order_id . "'");
+    }
+
 	public function getOrderProducts($order_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+	
+		return $query->rows;
+	}
+	
+	public function getOrderStatuses() {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 	
 		return $query->rows;
 	}
@@ -141,9 +207,29 @@ class ModelAccountOrder extends Model {
 		return $query->rows; 
 	}	
 
-	public function getTotalOrders() {
-      	$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` WHERE customer_id = '" . (int)$this->customer->getId() . "' AND order_status_id> '0'");
+	public function getTotalOrders($data) {
+      	$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o 
+        LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) ";
 		
+        $criteria = array();
+        
+        $criteria[] = " customer_id = '" . (int)$this->customer->getId() . "' ";
+        $criteria[] = " o.order_status_id > '0' ";
+        
+        if ($data['order_status_id']) {
+            $criteria[] = " o.order_status_id = '" . (int)$data['order_status_id'] . "' ";
+        }
+        
+        if ($data['order_id']) {
+            $criteria[] = " o.order_id = '" . (int)$data['order_id'] . "' ";
+        }
+        
+        if ($criteria) {
+            $sql .= " WHERE " . implode(" AND ",$criteria);
+        }
+        
+        $query = $this->db->query($sql);
+        
 		return $query->row['total'];
 	}
 		

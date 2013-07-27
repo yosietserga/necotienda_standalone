@@ -1,9 +1,10 @@
 <?php
 class ModelStoreReview extends Model {
-	public function addReview($data) {
+	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET 
         author = '" . $this->db->escape($data['author']) . "', 
-        product_id = '" . (int)$data['product_id'] . "', 
+        object_id = '" . (int)$data['product_id'] . "', 
+        object_type = '" . $this->db->escape($data['object_type']) . "', 
         text = '" . $this->db->escape(strip_tags($data['text'])) . "', 
         rating = '" . (int)$data['rating'] . "', 
         status = '1', 
@@ -11,54 +12,99 @@ class ModelStoreReview extends Model {
         return $this->db->getLastId();
 	}
 	
-	public function editReview($review_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "review SET author = '" . $this->db->escape($data['author']) . "', product_id = '" . $this->db->escape($data['product_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', date_added = NOW() WHERE review_id = '" . (int)$review_id . "'");
+	public function addReply($data) {
+        if (!(int)$data['review_id'] && !(int)$data['product_id']) return false;
+       
+		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET 
+        author      = '". $this->db->escape($this->user->getUserName()) ."', 
+        parent_id   = '". (int)$data['review_id'] ."', 
+        customer_id = '0', 
+        object_id = '" . (int)$data['product_id'] . "', 
+        object_type = '" . $this->db->escape($data['object_type']) . "', 
+        text        = '". $this->db->escape(strip_tags($data['text'])) ."', 
+        rating      = '0',
+        status      = '1', 
+        date_added  = NOW()");
+	}
+    
+	public function update($review_id, $data) {
+		$this->db->query("UPDATE " . DB_PREFIX . "review SET 
+        author = '" . $this->db->escape($data['author']) . "', 
+        object_id = '" . (int)$data['product_id'] . "', 
+        object_type = '" . $this->db->escape($data['object_type']) . "', 
+        text = '" . $this->db->escape(strip_tags($data['text'])) . "', 
+        rating = '" . (int)$data['rating'] . "', status = '" . (int)$data['status'] . "', 
+        date_added = NOW() 
+        WHERE review_id = '" . (int)$review_id . "'");
 	}
 	
 	public function delete($review_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE review_id = '" . (int)$review_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE parent_id = '" . (int)$review_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "review_likes WHERE review_id = '" . (int)$review_id . "'");
 	}
 	
-	public function getReview($review_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "review WHERE review_id = '" . (int)$review_id . "'");
+	public function getById($review_id) {
+		$query = $this->db->query("SELECT DISTINCT *, r.object_id AS pid, pd.name AS product, SUM(rl.`like`) AS likes, SUM(rl.`dislike`) AS dislikes 
+        FROM ". DB_PREFIX ."review r
+        LEFT JOIN ". DB_PREFIX ."product_description pd ON (r.object_id=pd.product_id) 
+        LEFT JOIN ". DB_PREFIX ."review_likes rl ON (r.review_id=rl.review_id) 
+        WHERE r.review_id = '" . (int)$review_id . "'
+        AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 		
 		return $query->row;
 	}
 
-	public function getReviews($data = array()) {
-		$sql = "SELECT *, r.status AS rstatus, r.date_added AS created FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.product_id = pd.product_id) 
-            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id)";																					
-			if (isset($data['filter_author'])) {
-				$sql .= " WHERE LCASE(name) LIKE '%" . $this->db->escape(strtolower($data['filter_author'])) . "%'";
-			}
-
-			if (isset($data['filter_date_start'],$data['filter_date_end'],$data['filter_author'])) {
-				$sql .= " AND r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
-			} elseif (isset($data['filter_date_start'],$data['filter_author'])) {
-				$sql .= " AND r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
-			} elseif (isset($data['filter_date_start'],$data['filter_date_end']) && !isset($data['filter_author'])) {
-				$sql .= " WHERE r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
-			} elseif (isset($data['filter_date_start']) && !isset($data['filter_author'])) {
-				$sql .= " WHERE r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
-			}
-
-            if (isset($data['filter_product'],$data['filter_author']) || isset($data['filter_product'],$data['filter_date_start'])) {
-                $sql .= " AND r.review_id IN (SELECT review_id 
-                    FROM " . DB_PREFIX . "review p2
-                        LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2.product_id=pd.product_id) 
-                    WHERE LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_product'])) . "%'
-                        AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
-            } elseif (isset($data['filter_product']) && !isset($data['filter_author'],$data['filter_date_start'])) {
-                $sql .= " WHERE r.review_id IN (SELECT review_id 
-                    FROM " . DB_PREFIX . "review p2
-                        LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2.product_id=pd.product_id) 
-                    WHERE LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_product'])) . "%'
-                        AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
-            }
-											  
+	public function getAllByProductId($product_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "review r 
+        LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id) 
+        WHERE r.object_id = '" . (int)$product_id . "' AND object_type = 'product'");
+		return $query->rows;
+	}
+    
+    public function getReplies($review_id) {
+		$query = $this->db->query("SELECT * 
+        FROM " . DB_PREFIX . "review r 
+        WHERE parent_id = ". (int)$review_id ." 
+        ORDER BY date_added DESC");
 		
-		$sort_data = array(
+		return $query->rows;
+	}
+    
+	public function getAll($data = array()) {
+		$sql = "SELECT *, r.status AS rstatus, r.date_added AS created, r.review_id AS rid, SUM(rl.`like`) AS likes, SUM(rl.`dislike`) AS dislikes 
+            FROM " . DB_PREFIX . "review r 
+            LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.object_id = pd.product_id) 
+            LEFT JOIN " . DB_PREFIX . "review_likes rl ON (r.review_id=rl.review_id) 
+            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id)";																		
+            
+        $criteria = array();
+            
+		if (!empty($data['filter_author'])) {
+            $criteria[] = " LCASE(name) LIKE '%" . $this->db->escape(strtolower($data['filter_author'])) . "%' ";
+		}
+
+		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $criteria[] = " r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "' ";
+		} elseif (!empty($data['filter_date_start'])) {
+            $criteria[] = " r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
+		}
+        
+        if (!empty($data['filter_product'])) {
+            $criteria[] = " r.review_id IN (SELECT review_id 
+                FROM " . DB_PREFIX . "review p2
+                    LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2.object_id=pd.product_id) 
+                WHERE LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_product'])) . "%'
+                    AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+        }
+            
+        if ($criteria) {
+            $sql .= " WHERE " . implode(" AND ",$criteria);
+        }
+		
+        $sql .= " GROUP BY r.review_id";					  
+		
+        $sort_data = array(
 			'pd.name',
 			'r.author',
 			'r.rating',
@@ -94,13 +140,13 @@ class ModelStoreReview extends Model {
 		return $query->rows;	
 	}
 	
-	public function getTotalReviews() {
+	public function getAllTotal() {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review");
 		
 		return $query->row['total'];
 	}
 	
-	public function getTotalReviewsAwaitingApproval() {
+	public function getAllTotalAwaitingApproval() {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review WHERE status = '0'");
 		
 		return $query->row['total'];

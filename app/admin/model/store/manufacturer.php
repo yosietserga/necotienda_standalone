@@ -2,7 +2,7 @@
 /**
  * ModelStoreManufacturer
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -11,14 +11,14 @@
  */
 class ModelStoreManufacturer extends Model {
 	/**
-	 * ModelStoreManufacturer::addManufacturer()
+	 * ModelStoreManufacturer::add()
 	 * 
 	 * @param mixed $data
      * @see DB
      * @see Cache
 	 * @return void 
 	 */
-	public function addManufacturer($data) {
+	public function add($data) {
       	$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET 
           name = '" . $this->db->escape($data['name']) . "', 
           sort_order = '" . (int)$data['sort_order'] . "', 
@@ -30,8 +30,22 @@ class ModelStoreManufacturer extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape($data['image']) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}
 		
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_store SET 
+                store_id  = '". intval($store) ."', 
+                manufacturer_id = '". intval($manufacturer_id) ."'");
+            }
+        
+		if (!empty($data['keyword'])) {
+            $languages = $this->db->query("SELECT * FROM ". DB_PREFIX ."language");
+            foreach ($languages->rows as $language) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
+                language_id = '" . (int)$language['language_id'] ."', 
+                object_id   = '" . (int)$manufacturer_id . "', 
+                object_type = 'manufacturer', 
+                query       = 'manufacturer_id=" . (int)$manufacturer_id . "', 
+                keyword     = '" . $this->db->escape($data['keyword']) . "'");
+            }
 		}
 		
         foreach ($data['Products'] as $product_id => $value) {
@@ -52,7 +66,7 @@ class ModelStoreManufacturer extends Model {
      * @see Cache
 	 * @return void 
 	 */
-	public function editManufacturer($manufacturer_id, $data) {
+	public function update($manufacturer_id, $data) {
       	$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET 
           name = '" . $this->db->escape($data['name']) . "', 
           sort_order = '" . (int)$data['sort_order'] . "' 
@@ -62,15 +76,36 @@ class ModelStoreManufacturer extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape($data['image']) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}
         
-		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id. "'");
-		
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+            $this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '". (int)$manufacturer_id ."'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_store SET 
+                store_id  = '". intval($store) ."', 
+                manufacturer_id = '". intval($manufacturer_id) ."'");
+            }
+        
+        
+		if (!empty($data['keyword'])) {
+            $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias 
+                WHERE object_id = '" . (int)$manufacturer_id . "' 
+                AND language_id = '" . (int)$language_id . "' 
+                AND object_type = 'manufacturer'");
+                
+            $languages = $this->db->query("SELECT * FROM ". DB_PREFIX ."language");
+            foreach ($languages->rows as $language) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
+                language_id = '" . (int)$language['language_id'] ."', 
+                object_id   = '" . (int)$manufacturer_id . "', 
+                object_type = 'manufacturer', 
+                query       = 'manufacturer_id=" . (int)$manufacturer_id . "', 
+                keyword     = '" . $this->db->escape($data['keyword']) . "'");
+            }
 		}
 		
-        foreach ($data['Products'] as $product_id => $value) {
-            if ($value == 0) continue;
-    		$this->db->query("UPDATE " . DB_PREFIX . "product SET manufacturer_id = '" . (int)$manufacturer_id."' WHERE product_id = '" . (int)$product_id."'");
+		if (!empty($data['Products'])) {
+            foreach ($data['Products'] as $product_id => $value) {
+                if ($value == 0) continue;
+        		$this->db->query("UPDATE " . DB_PREFIX . "product SET manufacturer_id = '" . (int)$manufacturer_id."' WHERE product_id = '" . (int)$product_id."'");
+            }
         }
         
 		$this->cache->delete('manufacturer');
@@ -87,35 +122,47 @@ class ModelStoreManufacturer extends Model {
 	 */
 	public function delete($manufacturer_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_stats WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE object_id='" . (int)$manufacturer_id. "' AND object_type = 'manufacturer'");
 			
 		$this->cache->delete('manufacturer');
 	}	
 	
+	public function getStores($id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$id . "'");
+		foreach ($query->rows as $result) {
+            $data[] = $result['store_id'];
+		}
+		return $data;
+	}	
+	
 	/**
-	 * ModelStoreManufacturer::getManufacturer()
+	 * ModelStoreManufacturer::getById()
 	 * 
 	 * @param int $manufacturer_id
      * @see DB
      * @see Cache
 	 * @return array sql record 
 	 */
-	public function getManufacturer($manufacturer_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "') AS keyword FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+	public function getById($manufacturer_id) {
+		$query = $this->db->query("SELECT DISTINCT *, (SELECT DISTINCT keyword FROM " . DB_PREFIX . "url_alias 
+        WHERE object_id = '" . (int)$manufacturer_id . "'
+        AND object_type = 'manufacturer') AS keyword FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		
 		return $query->row;
 	}
 	
 	/**
-	 * ModelStoreManufacturer::getManufacturers()
+	 * ModelStoreManufacturer::getAll()
 	 * 
 	 * @param mixed $data
      * @see DB
      * @see Cache
 	 * @return array sql records 
 	 */
-	public function getManufacturers($data = array()) {
+	public function getAll($data = array()) {
 		if ($data) {
 			$sql = "SELECT * FROM " . DB_PREFIX . "manufacturer m";
 			
@@ -192,25 +239,25 @@ class ModelStoreManufacturer extends Model {
 	}
 
 	/**
-	 * ModelStoreManufacturer::getTotalManufacturersByImageId()
+	 * ModelStoreManufacturer::getAllByImageId()
 	 * 
 	 * @param mixed $image_id
      * @see DB
 	 * @return int Count sql records 
 	 */
-	public function getTotalManufacturersByImageId($image_id) {
+	public function getAllTotalByImageId($image_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "manufacturer WHERE image_id = '" . (int)$image_id . "'");
 
 		return $query->row['total'];
 	}
 
 	/**
-	 * ModelStoreManufacturer::getTotalManufacturers()
+	 * ModelStoreManufacturer::getAll()
 	 * 
      * @see DB
 	 * @return int Count sql records 
 	 */
-	public function getTotalManufacturers() {
+	public function getAllTotal() {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "manufacturer");
 		
 		return $query->row['total'];

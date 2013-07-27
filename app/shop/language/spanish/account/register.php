@@ -3,6 +3,7 @@
 $_['heading_title']        = 'Crear Cuenta';
 
 // Text
+$_['text_welcome']         = 'Bienvenido(a)';
 $_['text_account']         = 'Cuenta';
 $_['text_create']          = 'Registrar';
 $_['text_account_already'] = 'Si ya posee una cuenta con nosotros, por favor inicie sesi&oacute;n <a href="%s">Aqu&iacute;</a>.';
@@ -10,7 +11,7 @@ $_['text_your_details']    = 'Datos Personales';
 $_['text_your_address']    = 'Direcci&oacute;n';
 $_['text_newsletter']      = 'Subscripci&oacute;n';
 $_['text_your_password']   = 'Contrase&ntilde;a';
-$_['text_agree']           = 'He lei&iacute;do y estoy de acuerdo con las <a onclick="window.open(\'%s\');">%s</a>';
+$_['text_agree']           = 'Al continuar con el registro, usted est&aacute; aceptando las <a href="%s">Condiciones de Uso</a> y las <a href="%s">Pol&iacute;ticas de Privacidad</a> de este sitio web.';
 $_['text_datos_fiscales']    = 'Datos Fiscales';
 
 // Entry
@@ -35,7 +36,7 @@ $_['entry_rif']            = 'RIF:';
 $_['entry_captcha']        = 'Ingrese el resultado de la ecuaci&oacute;n:';
 
 // Error
-$_['error_exists']         = 'Error: El E-Mail ya est&aacute; registrado!';
+$_['error_exists']         = 'El email ya existe! Si ya posees una cuenta con nosotros, por favor <a href="'. Url::createUrl("account/login") .'" title="Iniciar sesi&oacute;n" style="color:#000 !important">Ingresa Aqu&iacute;</a>';
 $_['error_firstname']      = 'El nombre debe poseer entre 3 y 32 caracteres!';
 $_['error_lastname']       = 'El apellido debe poseer entre 3 y 32 caracteres!';
 $_['error_sexo']           = 'Debe seleccionar su sexo!';

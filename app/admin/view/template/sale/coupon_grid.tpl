@@ -15,14 +15,14 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><?php echo $column_image; ?></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'cd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_name; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_code; ?>')"<?php if ($sort == 'c.code') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_code; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_discount; ?>')"<?php if ($sort == 'c.discount') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_discount; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_start; ?>')"<?php if ($sort == 'c.date_start') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_date_start; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_end; ?>')"<?php if ($sort == 'c.date_end') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_date_end; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"<?php if ($sort == 'c.status') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $column_status; ?></a></th>
-                <th><?php echo $column_action; ?></th>
+                <th><?php echo $Language->get('column_image'); ?></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'cd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_name'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_code; ?>')"<?php if ($sort == 'c.code') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_code'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_discount; ?>')"<?php if ($sort == 'c.discount') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_discount'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_start; ?>')"<?php if ($sort == 'c.date_start') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_date_start'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_end; ?>')"<?php if ($sort == 'c.date_end') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_date_end'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"<?php if ($sort == 'c.status') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $Language->get('column_status'); ?></a></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -56,7 +56,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

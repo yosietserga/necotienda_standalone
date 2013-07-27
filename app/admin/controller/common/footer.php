@@ -20,10 +20,77 @@ class ControllerCommonFooter extends Controller {
                         alert(data.msg);
                     }
                 });
+            }
+            
+            function saveAndExit() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+            }
+            
+            function saveAndKeep() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
+            }
+            
+            function saveAndNew() { 
+                window.onbeforeunload = null;
+                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
             }");
         $scripts[] = array('id'=>'footerScripts','method'=>'ready','script'=>
-            "$('#formFilter').hide();
+            "$('.trends').fancybox({
+        		maxWidth	: 640,
+        		maxHeight	: 600,
+        		fitToView	: false,
+        		width		: '70%',
+        		height		: '70%',
+        		autoSize	: false,
+        		closeClick	: false,
+        		openEffect	: 'none',
+        		closeEffect	: 'none'
+        	});
             
+            $('.htabs .htab').on('click',function() {
+                $(this).closest('.htabs').find('.htab').each(function(){
+                   $($(this).attr('tab')).hide();
+                   $(this).removeClass('selected'); 
+                });
+                $(this).addClass('selected');
+                $($(this).attr('tab')).show(); 
+            });
+            $('.htabs .htab:first-child').trigger('click');
+           
+            $('.sidebar .tab').on('click',function(){
+                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
+            });
+            $('.sidebar').mouseenter(function(){
+                clearTimeout($(this).data('timeoutId'));
+            }).mouseleave(function(){
+                var e = this;
+                var timeoutId = setTimeout(function(){
+                    if ($(e).hasClass('show')) {
+                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
+                    }
+                }, 600);
+                $(this).data('timeoutId', timeoutId); 
+            });
+            
+            $('#form').ntForm({
+                submitButton:false,
+                cancelButton:false,
+                lockButton:false
+            });
+            $('textarea').ntTextArea();
+            
+            $('#formFilter').hide();
+            
+            var form_clean = $('#form').serialize();  
+            
+            window.onbeforeunload = function (e) {
+                var form_dirty = $('#form').serialize();
+                if(form_clean != form_dirty) {
+                    return 'There is unsaved form data.';
+                }
+            };
             setTimeout(function(){
                 $('.message').fadeOut('slow');
             },5000);
@@ -75,6 +142,7 @@ class ControllerCommonFooter extends Controller {
         
         // javascript files
         
+        $javascripts[] = "js/vendor/jquery-ui.min.js";
         $javascripts[] = "js/plugins.js";
         $javascripts[] = "js/main.js";
         $javascripts[] = "js/necojs/neco.form.js";

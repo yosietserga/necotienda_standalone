@@ -24,6 +24,18 @@ $_['text_note']          = '<span style="color: #FF0000;">Nota:</span> HTML no s
 $_['text_success']       = 'Gracias por su comentario. Ha sido enviado para revisi&oacute;n y aprobaci&oacute;n.';
 $_['text_wait']          = 'Por favor Espere!';
 $_['text_search']        = 'Buscar';
+$_['text_keyword']      = 'Acceso r&aacute;pido';
+$_['text_category']     = 'Todas las categor&iacute;as';
+$_['text_critea']       = 'Criterios de B&uacute;squeda';
+$_['text_empty']        = 'No hay productos que cumplan los criterios de b&uacute;squeda.';
+$_['text_sort']         = 'Ordenado por:';
+$_['text_name_asc']     = 'Nombre A-Z';
+$_['text_name_desc']    = 'Nombre Z-A';
+$_['text_price_asc']    = 'Precio m&aacute;s bajo';
+$_['text_price_desc']   = 'Precio m&aacute;s alto';
+$_['text_rating_asc']   = 'Rating m&aacute;s bajo';
+$_['text_rating_desc']  = 'Rating m&aacute;s alto';
+$_['text_default']  = 'Predeterminado';
 
 // Entry
 $_['entry_name']         = 'Su Nombre:';
@@ -41,7 +53,6 @@ $_['tab_review']         = 'Comentarios (%s)';
 $_['tab_related']        = 'Productos Relacionados';
 
 // Error
-$_['error_name']         = 'Error: Su nombre debe ser m&aacute;s grande de 3 caracteres y menor de 25!';
-$_['error_text']         = 'Error: Su opini&oacute;n debe ser m&aacute;s grande de 25 caracteres y menos de 255!';
-$_['error_rating']       = 'Error: Por favor indique una valoraci&oacute;n!';
-$_['error_captcha']      = 'Error: El C&oacute;digo de Verificaci&oacute;n no coincide con la imagen!';
+$_['error_login']        = 'Error: Debes iniciar sesi&oacute;n primero';
+$_['error_text']         = 'Error: Debes esribir alg&uacute;n comentario o pregunta!';
+$_['error_product']      = 'Error: Hubo un error inesperado, por favor intente de nuevo m&aacute;s tarde!';

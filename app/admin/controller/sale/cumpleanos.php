@@ -57,7 +57,7 @@ class ControllerSaleCumpleanos extends Controller {
                 });
             } 
             function eliminar(e) {
-                if (confirm('¿Desea eliminar este objeto?')) {
+                if (confirm('\\xbfDesea eliminar este objeto?')) {
                 $('#tr_' + e).hide();
                 	$.getJSON('". Url::createAdminUrl("sale/cumpleanos/eliminar") ."',{
                             id:e

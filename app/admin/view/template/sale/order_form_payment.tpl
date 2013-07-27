@@ -4,23 +4,23 @@
 <input type="hidden" name="payment_company" value="<?php echo $payment_company; ?>" />
 <table class="form">
     <tr>
-        <td><?php echo $entry_address_1; ?></td>
-        <td><input  type="text" name="payment_address_1" value="<?php echo $payment_address_1; ?>" /></td>
+        <td><?php echo $Language->get('entry_address_1'); ?></td>
+        <td><input type="text" name="payment_address_1" value="<?php echo $payment_address_1; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_address_2; ?></td>
-        <td><input  type="text" name="payment_address_2" value="<?php echo $payment_address_2; ?>" /></td>
+        <td><?php echo $Language->get('entry_address_2'); ?></td>
+        <td><input type="text" name="payment_address_2" value="<?php echo $payment_address_2; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_city; ?></td>
-        <td><input  type="text" name="payment_city" value="<?php echo $payment_city; ?>" /></td>
+        <td><?php echo $Language->get('entry_city'); ?></td>
+        <td><input type="text" name="payment_city" value="<?php echo $payment_city; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_postcode; ?></td>
-        <td><input  type="text" name="payment_postcode" value="<?php echo $payment_postcode; ?>" /></td>
+        <td><?php echo $Language->get('entry_postcode'); ?></td>
+        <td><input type="text" name="payment_postcode" value="<?php echo $payment_postcode; ?>" /></td>
     </tr>
     <tr>
-        <td><?php echo $entry_country; ?></td>
+        <td><?php echo $Language->get('entry_country'); ?></td>
         <td>
             <select name="payment_country_id" id="payment_country" onchange="$('#payment_zone').load('<?php echo $Url::createAdminUrl("sale/order/zone",array("zone_id"=>$payment_zone_id,"type"=>"payment_zone")); ?>&country_id=' + this.value);">
             <?php foreach ($countries as $country) { ?>
@@ -31,7 +31,7 @@
         </td>
     </tr>
     <tr>
-        <td><?php echo $entry_zone; ?></td>
+        <td><?php echo $Language->get('entry_zone'); ?></td>
         <td id="payment_zone"></td>
     </tr>
 </table>

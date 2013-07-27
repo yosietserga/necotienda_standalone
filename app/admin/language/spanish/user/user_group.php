@@ -8,6 +8,11 @@ $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 // Column
 $_['column_name']      = 'Nombre del Grupo';
 $_['column_action']    = 'Acci&oacute;n';
+$_['column_module']    = 'Nombre del M&oacute;dulo';
+$_['column_access']    = 'Puede Acceder';
+$_['column_create']    = 'Puede Crear';
+$_['column_modidy']    = 'Puede Modificar';
+$_['column_delete']    = 'Puede Eliminar';
 
 // Entry
 $_['entry_name']       = 'Nombre del Grupo:';

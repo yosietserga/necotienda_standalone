@@ -2,7 +2,7 @@
 /**
  * ControllerToolUpdate
  * 
- * @package NecoTienda powered by opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -60,6 +60,8 @@ class ControllerToolUpdate extends Controller {
         $scripts[] = array('id'=>'updateScripts','method'=>'ready','script'=>
             "$('#form').ntForm({
                 lockButton:false,
+                submitButton:false,
+                cancelButton:false
             });");
              
         $this->scripts = array_merge($this->scripts,$scripts);

@@ -14,12 +14,12 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'pd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_product; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_author; ?>')"<?php if ($sort == 'r.author') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_author; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_rating; ?>')"<?php if ($sort == 'r.rating') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_rating; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"<?php if ($sort == 'r.status') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $column_status; ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_added; ?>')"<?php if ($sort == 'r.date_added') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $column_date_added; ?></a></th>
-                <th><?php echo $column_action; ?></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'pd.name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_product'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_author; ?>')"<?php if ($sort == 'r.author') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_author'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_rating; ?>')"<?php if ($sort == 'r.rating') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_rating'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"<?php if ($sort == 'r.status') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_status'); ?></a></th>
+                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_date_added; ?>')"<?php if ($sort == 'r.date_added') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $Language->get('column_date_added'); ?></a></th>
+                <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -52,7 +52,7 @@
             </tr>
             <?php } ?>
         <?php } else { ?>
-            <tr><td colspan="8" style="text-align:center"><?php echo $text_no_results; ?></td></tr>
+            <tr><td colspan="8" style="text-align:center"><?php echo $Language->get('text_no_results'); ?></td></tr>
         <?php } ?>
         </tbody>
     </table>

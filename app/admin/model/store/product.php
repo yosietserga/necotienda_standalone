@@ -2,7 +2,7 @@
 /**
  * ModelStoreProduct
  * 
- * @package NecoTienda powered opencart
+ * @package NecoTienda
  * @author Yosiet Serga
  * @copyright Inversiones Necoyoad, C.A.
  * @version 1.0.0
@@ -10,46 +10,15 @@
  * @see Model
  */
 class ModelStoreProduct extends Model {
-    /**
-     * Verifica el plan del cliente y limita la cantidad de registro que puede crear
-     * @return boolean
-     * */
-     public function checkPlan() {
-        if (!defined("C_PLAN")) return false;
-        $plans = array('demo','lite','pro','plus','premium');
-        $plan = C_PLAN;
-        if (empty($plan) || !in_array($plan,$plans)) return false;
-        $query = $this->db->query("SELECT COUNT(*) as total FROM ".DB_PREFIX."product");
-        switch (strtolower(C_PLAN)) {
-            case 'demo':
-                if ($query->row['total'] >= 20) return false;
-                break;
-            case 'lite':
-                if ($query->row['total'] >= 50) return false;
-                break;
-            case 'pro':
-                if ($query->row['total'] >= 100) return false;
-                break;
-            case 'plus':
-                if ($query->row['total'] >= 250) return false;
-                break;
-            case 'premium':
-                if ($query->row['total'] >= 500) return false;
-                break;
-        }
-        return true;
-     }
-    
 	/**
-	 * ModelStoreProduct::addProduct()
+	 * ModelStoreProduct::add()
 	 * 
 	 * @param mixed $data
      * @see DB
      * @see Cache
 	 * @return void
 	 */
-	public function addProduct($data) {
-        //if (!$this->checkPlan()) return false;
+	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "product SET 
         model = '" . $this->db->escape($data['model']) . "', 
         sku = '" . $this->db->escape($data['sku']) . "', 
@@ -80,7 +49,6 @@ class ModelStoreProduct extends Model {
 			$this->db->query("UPDATE " . DB_PREFIX . "product SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
 		}
 		
-        $tags = array();
 		foreach ($data['product_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET 
             product_id = '" . (int)$product_id . "', 
@@ -89,9 +57,31 @@ class ModelStoreProduct extends Model {
             meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "', 
             meta_description = '" . $this->db->escape($value['meta_description']) . "', 
             description = '" . $this->db->escape($value['description']) . "'");
-            $tags[$language_id] = $value['meta_keywords'];
+            
+            $tags = explode(',', $value['meta_keywords']);
+			foreach ($tags as $tag) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tags SET 
+                product_id = '" . (int)$product_id . "', 
+                language_id = '" . (int)$language_id . "', 
+                tag = '" . $this->db->escape(trim($tag)) . "'");
+			}
+            
+    		if (!empty($value['keyword'])) {
+    			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
+                language_id = '" . (int)$language_id . "', 
+                object_id    = '" . (int)$product_id . "', 
+                object_type = 'product', 
+                query       = 'product_id=" . (int)$product_id . "', 
+                keyword     = '" . $this->db->escape($value['keyword']) . "'");
+    		}
 		}
 		
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET 
+                store_id  = '". intval($store) ."', 
+                product_id = '". intval($product_id) ."'");
+            }
+        
 		if (isset($data['product_option'])) {
 			foreach ($data['product_option'] as $product_option) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET 
@@ -193,22 +183,6 @@ class ModelStoreProduct extends Model {
 			}
 		}
 		
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
-            query = 'product_id=" . (int)$product_id . "', 
-            keyword = '" . $this->db->escape($data['keyword']) . "'");
-		}
-		
-		foreach ($tags as $language_id => $value) {
-			$tags = explode(',', $value);
-			foreach ($tags as $tag) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tags SET 
-                product_id = '" . (int)$product_id . "', 
-                language_id = '" . (int)$language_id . "', 
-                tag = '" . $this->db->escape(trim($tag)) . "'");
-			}
-		}
-		
 		$this->cache->delete('product');
         
         return $product_id;
@@ -223,7 +197,7 @@ class ModelStoreProduct extends Model {
      * @see Cache
 	 * @return void
 	 */
-	public function editProduct($product_id, $data) {
+	public function update($product_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET 
         model = '" . $this->db->escape($data['model']) . "', 
         sku = '" . $this->db->escape($data['sku']) . "', 
@@ -257,7 +231,6 @@ class ModelStoreProduct extends Model {
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
 		
-        $tags = array();
 		foreach ($data['product_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET 
             product_id = '" . (int)$product_id . "', 
@@ -266,14 +239,43 @@ class ModelStoreProduct extends Model {
             meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "', 
             meta_description = '" . $this->db->escape($value['meta_description']) . "', 
             description = '" . $this->db->escape($value['description']) . "'");
-            $tags[$language_id] = $value['meta_keywords'];
+            
+            $tags = explode(',', $value['meta_keywords']);
+		    $this->db->query("DELETE FROM " . DB_PREFIX . "product_tags WHERE product_id = '" . (int)$product_id. "'");
+			foreach ($tags as $tag) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tags SET 
+                product_id = '" . (int)$product_id . "', 
+                language_id = '" . (int)$language_id . "', 
+                tag = '" . $this->db->escape(trim($tag)) . "'");
+			}
+            
+    		if (!empty($value['keyword'])) {
+                $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias 
+                WHERE object_id = '" . (int)$product_id . "' 
+                AND language_id = '" . (int)$language_id . "' 
+                AND object_type = 'product'");
+                
+    			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
+                language_id = '" . (int)$language_id . "', 
+                object_id    = '" . (int)$product_id . "', 
+                object_type = 'product', 
+                query       = 'product_id=" . (int)$product_id . "', 
+                keyword     = '" . $this->db->escape($value['keyword']) . "'");
+    		}
 		}
-
+		
+            $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '". (int)$product_id ."'");
+            foreach ($data['stores'] as $store) {
+        		$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET 
+                store_id  = '". intval($store) ."', 
+                product_id = '". intval($product_id) ."'");
+            }
+        
+        
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_description WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value_description WHERE product_id = '" . (int)$product_id . "'");
-		
 		if (isset($data['product_option'])) {
 			foreach ($data['product_option'] as $product_option) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET 
@@ -316,7 +318,6 @@ class ModelStoreProduct extends Model {
 		}
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_discount'])) {
 			foreach ($data['product_discount'] as $value) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET 
@@ -331,7 +332,6 @@ class ModelStoreProduct extends Model {
 		}
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
-		
 		if (isset($data['product_special'])) {
 			foreach ($data['product_special'] as $value) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET 
@@ -345,7 +345,6 @@ class ModelStoreProduct extends Model {
 		}
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
-		
 		if (isset($data['product_image'])) {
 			foreach ($data['product_image'] as $image) {
         		$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET 
@@ -355,7 +354,6 @@ class ModelStoreProduct extends Model {
 		}
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
-		
 		if (isset($data['product_download'])) {
 			foreach ($data['product_download'] as $download_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET 
@@ -365,7 +363,6 @@ class ModelStoreProduct extends Model {
 		}
 		
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
-		
 		if (isset($data['product_category'])) {
 			foreach ($data['product_category'] as $category_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET 
@@ -375,7 +372,6 @@ class ModelStoreProduct extends Model {
 		}
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
-
 		if (isset($data['product_related'])) {
 			foreach ($data['product_related'] as $related_id) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET 
@@ -393,26 +389,6 @@ class ModelStoreProduct extends Model {
 			}
 		}
 		
-		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
-		
-		if ($data['keyword']) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
-            query = 'product_id=" . (int)$product_id . "', 
-            keyword = '" . $this->db->escape($data['keyword']) . "'");
-		}
-		
-		$this->db->query("DELETE FROM " . DB_PREFIX . "product_tags WHERE product_id = '" . (int)$product_id. "'");
-		
-		foreach ($tags as $language_id => $value) {
-			$tags = explode(',', $value);
-			foreach ($tags as $tag) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_tags SET 
-                product_id = '" . (int)$product_id . "', 
-                language_id = '" . (int)$language_id . "', 
-                tag = '" . $this->db->escape(trim($tag)) . "'");
-			}
-		}
-		
 		$this->cache->delete('product');
 	}
 	
@@ -425,7 +401,6 @@ class ModelStoreProduct extends Model {
 	 * @return void
 	 */
 	public function copy($product_id) {
-	   //if (!$this->checkPlan()) return false;
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 		
 		if ($query->num_rows) {
@@ -433,29 +408,39 @@ class ModelStoreProduct extends Model {
 			
 			$data = $query->row;
 			
-			$data = array_merge($data, array('product_description' => $this->getProductDescriptions($product_id)));
-			$data = array_merge($data, array('product_option' => $this->getProductOptions($product_id)));
+			$data = array_merge($data, array('product_description' => $this->getDescriptions($product_id)));
+			$data = array_merge($data, array('product_option' => $this->getOptions($product_id)));
 						
 			$data['keyword'] = $data['keyword'] . uniqid("-");
+			$data['model'] = $data['model'] . uniqid("-");
 						
 			$data['product_image'] = array();
 			
-			$results = $this->getProductImages($product_id);
+			$results = $this->getImages($product_id);
 			
 			foreach ($results as $result) {
 				$data['product_image'][] = $result['image'];
 			}
 			
-			$data = array_merge($data, array('product_discount' => $this->getProductDiscounts($product_id)));
-			$data = array_merge($data, array('product_special' => $this->getProductSpecials($product_id)));
-			$data = array_merge($data, array('product_download' => $this->getProductDownloads($product_id)));
-			$data = array_merge($data, array('product_category' => $this->getProductCategories($product_id)));
-			$data = array_merge($data, array('product_related' => $this->getProductRelated($product_id)));
-			$data = array_merge($data, array('product_tags' => $this->getProductTags($product_id)));
+			$data = array_merge($data, array('product_discount' => $this->getDiscounts($product_id)));
+			$data = array_merge($data, array('product_special' => $this->getSpecials($product_id)));
+			$data = array_merge($data, array('product_download' => $this->getDownloads($product_id)));
+			$data = array_merge($data, array('product_category' => $this->getCategories($product_id)));
+			$data = array_merge($data, array('product_related' => $this->getRelated($product_id)));
+			$data = array_merge($data, array('product_tags' => $this->getTags($product_id)));
 			
-			$this->addProduct($data);
+			$this->add($data);
 		}
 	}
+	
+	public function getStores($id) {
+		$data = array();
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$id . "'");
+		foreach ($query->rows as $result) {
+            $data[] = $result['store_id'];
+		}
+		return $data;
+	}	
 	
 	/**
 	 * ModelStoreProduct::deleteProduct()
@@ -477,49 +462,46 @@ class ModelStoreProduct extends Model {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE object_id = '" . (int)$product_id . "' AND object_type = 'product'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_tags WHERE product_id='" . (int)$product_id. "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "product_stats WHERE product_id='" . (int)$product_id. "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "stat WHERE object_id='" . (int)$product_id. "' AND object_type = 'product'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE object_id='" . (int)$product_id. "' AND object_type = 'product'");
 		
 		$this->cache->delete('product');
 	}
 	
 	/**
-	 * ModelStoreProduct::getProduct()
+	 * ModelStoreProduct::getById()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql record
 	 */
-	public function getProduct($product_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id . "') AS keyword FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+	public function getById($product_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 				
 		return $query->row;
 	}
 	
 	/**
-	 * ModelStoreProduct::getProducts()
+	 * ModelStoreProduct::getAll()
 	 * 
 	 * @param mixed $data
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProducts($data = array()) {
+	public function getAll($data = array()) {
 		if ($data) {
-			$sql = "SELECT *,pd.description as pdescription,p.image as pimage,pd.name as pname, ss.name as ssname,m.name as mname,tc.title as tctitle,wc.title as wctitle,lc.title as lctitle FROM " . DB_PREFIX . "product p 
+			$sql = "SELECT *,p.product_id as pid,pd.description as pdescription,p.image as pimage,pd.name as pname, ss.name as ssname,m.name as mname,tc.title as tctitle, p.viewed AS pviewed FROM " . DB_PREFIX . "product p 
             LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
             LEFT JOIN " . DB_PREFIX . "stock_status ss ON (p.stock_status_id = ss.stock_status_id)
             LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
             LEFT JOIN " . DB_PREFIX . "tax_class tc ON (p.tax_class_id = tc.tax_class_id)
             LEFT JOIN " . DB_PREFIX . "weight_class_description wc ON (p.weight_class_id = wc.weight_class_id)
-            LEFT JOIN " . DB_PREFIX . "length_class_description lc ON (p.length_class_id = lc.length_class_id)
-            WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-            AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'
-            AND wc.language_id = '" . (int)$this->config->get('config_language_id') . "'
-            AND lc.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
+            WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
 		
 			if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
 				$sql .= " AND LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_name'])) . "%'";
@@ -542,6 +524,7 @@ class ModelStoreProduct extends Model {
 				'p.model',
 				'p.quantity',
 				'p.status',
+				'p.viewed',
 				'p.sort_order'
 			);	
 			
@@ -570,19 +553,19 @@ class ModelStoreProduct extends Model {
 			}	
 			
 			$query = $this->db->query($sql);
-		
+            $this->cache->set('product.' . $this->config->get('config_language_id'), $product_data);
 			return $query->rows;
 		} else {
-			$product_data = $this->cache->get('product.' . $this->config->get('config_language_id'));
-		
+            $product_data = $this->cache->get('admin.product.all.for.list.' . $this->config->get('config_language_id'));		
 			if (!$product_data) {
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY pd.name ASC");
-	
+				$query = $this->db->query("SELECT * 
+                FROM " . DB_PREFIX . "product p 
+                LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
+                WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+                ORDER BY pd.name ASC");
 				$product_data = $query->rows;
-			
-				$this->cache->set('product.' . $this->config->get('config_language_id'), $product_data);
-			}	
-	
+				$this->cache->set('admin.product.all.for.list.' . $this->config->get('config_language_id'), $product_data);
+			}
 			return $product_data;
 		}
 	}
@@ -606,13 +589,13 @@ class ModelStoreProduct extends Model {
 	}
 	
 	/**
-	 * ModelStoreProduct::getFeaturedProducts()
+	 * ModelStoreProduct::getAllFeatured()
 	 * 
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getFeaturedProducts() {
+	public function getAllFeatured() {
 		$query = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "product_featured");
 		
 		$featured = array();
@@ -624,14 +607,14 @@ class ModelStoreProduct extends Model {
 	}
 	
 	/**
-	 * ModelStoreProduct::getProductsByKeyword()
+	 * ModelStoreProduct::getAllByKeyword()
 	 * 
 	 * @param mixed $keyword
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductsByKeyword($keyword) {
+	public function getAllByKeyword($keyword) {
 		if ($keyword) {
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND (LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($keyword)) . "%' OR LCASE(p.model) LIKE '%" . $this->db->escape(strtolower($keyword)) . "%')");
 									  
@@ -642,28 +625,47 @@ class ModelStoreProduct extends Model {
 	} 
 	
 	/**
-	 * ModelStoreProduct::getProductsByCategoryId()
+	 * ModelStoreProduct::getAllByCategoryId()
 	 * 
 	 * @param int $category_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductsByCategoryId($id) {
+	public function getAllByStoreId($id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p 
+        LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
+        LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) 
+        WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+        AND p2s.store_id = '" . (int)$id . "' 
+        ORDER BY pd.name ASC");
+								  
+		return $query->rows;
+	} 
+	
+	/**
+	 * ModelStoreProduct::getAllByCategoryId()
+	 * 
+	 * @param int $category_id
+     * @see DB
+     * @see Cache
+	 * @return array sql records
+	 */
+	public function getAllByCategoryId($id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p2c.category_id = '" . (int)$id . "' ORDER BY pd.name ASC");
 								  
 		return $query->rows;
 	} 
 	
 	/**
-	 * ModelStoreProduct::getProductsByManufacturerId()
+	 * ModelStoreProduct::getAllByManufacturerId()
 	 * 
 	 * @param int $category_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductsByManufacturerId($id) {
+	public function getAllByManufacturerId($id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p 
         LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
         WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
@@ -673,39 +675,46 @@ class ModelStoreProduct extends Model {
 	} 
 	
 	/**
-	 * ModelStoreProduct::getProductDescriptions()
+	 * ModelStoreProduct::getDescriptions()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductDescriptions($product_id) {
+	public function getDescriptions($product_id) {
 		$product_description_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
 		
 		foreach ($query->rows as $result) {
-			$product_description_data[$result['language_id']] = array(
-				'name'             => $result['name'],
-				'meta_keywords'    => $result['meta_keywords'],
-				'meta_description' => $result['meta_description'],
-				'description'      => $result['description']
-			);
+			$product_description_data[$result['language_id']]['name'] = $result['name'];
+			$product_description_data[$result['language_id']]['description'] = $result['description'];
+			$product_description_data[$result['language_id']]['seo_title'] = $result['seo_title'];
+			$product_description_data[$result['language_id']]['meta_keywords'] = $result['meta_keywords'];
+			$product_description_data[$result['language_id']]['meta_description'] = $result['meta_description'];
+		}
+		
+		$keywords = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias
+        WHERE object_id = '" . (int)$product_id . "' 
+        AND object_type = 'product'");
+
+		foreach ($keywords->rows as $result) {
+			$product_description_data[$result['language_id']]['keyword'] = $result['keyword'];
 		}
 		
 		return $product_description_data;
 	}
 
 	/**
-	 * ModelStoreProduct::getProductOptions()
+	 * ModelStoreProduct::getOptions()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductOptions($product_id) {
+	public function getOptions($product_id) {
 		$product_option_data = array();
 		
 		$product_option = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order");
@@ -755,56 +764,56 @@ class ModelStoreProduct extends Model {
 	}
 	
 	/**
-	 * ModelStoreProduct::getProductImages()
+	 * ModelStoreProduct::getImages()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductImages($product_id) {
+	public function getImages($product_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
 		
 		return $query->rows;
 	}
 	
 	/**
-	 * ModelStoreProduct::getProductDiscounts()
+	 * ModelStoreProduct::getDiscounts()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductDiscounts($product_id) {
+	public function getDiscounts($product_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "' ORDER BY quantity, priority, price");
 		
 		return $query->rows;
 	}
 	
 	/**
-	 * ModelStoreProduct::getProductSpecials()
+	 * ModelStoreProduct::getSpecials()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductSpecials($product_id) {
+	public function getSpecials($product_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");
 		
 		return $query->rows;
 	}
 	
 	/**
-	 * ModelStoreProduct::getProductDownloads()
+	 * ModelStoreProduct::getDownloads()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductDownloads($product_id) {
+	public function getDownloads($product_id) {
 		$product_download_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
@@ -817,14 +826,14 @@ class ModelStoreProduct extends Model {
 	}
 
 	/**
-	 * ModelStoreProduct::getProductCategories()
+	 * ModelStoreProduct::getCategories()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductCategories($product_id) {
+	public function getCategories($product_id) {
 		$product_category_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
@@ -837,14 +846,14 @@ class ModelStoreProduct extends Model {
 	}
 
 	/**
-	 * ModelStoreProduct::getProductRelated()
+	 * ModelStoreProduct::getRelated()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductRelated($product_id) {
+	public function getRelated($product_id) {
 		$product_related_data = array();
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
@@ -857,14 +866,14 @@ class ModelStoreProduct extends Model {
 	}
     
 	/**
-	 * ModelStoreProduct::getProductTags()
+	 * ModelStoreProduct::getTags()
 	 * 
 	 * @param int $product_id
      * @see DB
      * @see Cache
 	 * @return array sql records
 	 */
-	public function getProductTags($product_id) {
+	public function getTags($product_id) {
 	   $query = $this->db->query("SELECT * 
             FROM " . DB_PREFIX . "product_tags 
             WHERE product_id = '" . (int)$product_id . "'");
@@ -884,14 +893,14 @@ class ModelStoreProduct extends Model {
 	}
 	
 	/**
-	 * ModelStoreProduct::getTotalProducts()
+	 * ModelStoreProduct::getAllTotal()
 	 * 
 	 * @param mixed $data
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProducts($data = array()) {
+	public function getAllTotal($data = array()) {
 		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		
 		if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
@@ -916,112 +925,112 @@ class ModelStoreProduct extends Model {
 	}	
 	
 	/**
-	 * ModelStoreProduct::getTotalProductsByStockStatusId()
+	 * ModelStoreProduct::getAllTotalByStockStatusId()
 	 * 
 	 * @param int $stock_status_id
      * @see DB
      * @see Cache
 	 * @return int Count sql record
 	 */
-	public function getTotalProductsByStockStatusId($stock_status_id) {
+	public function getAllTotalByStockStatusId($stock_status_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE stock_status_id = '" . (int)$stock_status_id . "'");
 
 		return $query->row['total'];
 	}
 	
 	/**
-	 * ModelStoreProduct::getTotalProductsByImageId()
+	 * ModelStoreProduct::getAllTotalByImageId()
 	 * 
 	 * @param int $image_id
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByImageId($image_id) {
+	public function getAllTotalByImageId($image_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE image_id = '" . (int)$image_id . "'");
 
 		return $query->row['total'];
 	}
 	
 	/**
-	 * ModelStoreProduct::getTotalProductsByTaxClassId()
+	 * ModelStoreProduct::getAllTotalByTaxClassId()
 	 * 
 	 * @param int $tax_class_id
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByTaxClassId($tax_class_id) {
+	public function getAllTotalByTaxClassId($tax_class_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE tax_class_id = '" . (int)$tax_class_id . "'");
 
 		return $query->row['total'];
 	}
 	
 	/**
-	 * ModelStoreProduct::getTotalProductsByWeightClassId()
+	 * ModelStoreProduct::getAllTotalByWeightClassId()
 	 * 
 	 * @param int $weight_class_id
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByWeightClassId($weight_class_id) {
+	public function getAllTotalByWeightClassId($weight_class_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE weight_class_id = '" . (int)$weight_class_id . "'");
 
 		return $query->row['total'];
 	}
 	
 	/**
-	 * ModelStoreProduct::getTotalProductsByLengthClassId()
+	 * ModelStoreProduct::getAllTotalByLengthClassId()
 	 * 
 	 * @param int $length_class_id
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByLengthClassId($length_class_id) {
+	public function getAllTotalByLengthClassId($length_class_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE length_class_id = '" . (int)$length_class_id . "'");
 
 		return $query->row['total'];
 	}
 	
 	/**
-	 * ModelStoreProduct::getTotalProductsByOptionId()
+	 * ModelStoreProduct::getAllTotalByOptionId()
 	 * 
 	 * @param int $option_id
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByOptionId($option_id) {
+	public function getAllTotalByOptionId($option_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_to_option WHERE option_id = '" . (int)$option_id . "'");
 
 		return $query->row['total'];
 	}
 
 	/**
-	 * ModelStoreProduct::getTotalProductsByDownloadId()
+	 * ModelStoreProduct::getAllTotalByDownloadId()
 	 * 
 	 * @param int $download_id
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByDownloadId($download_id) {
+	public function getAllTotalByDownloadId($download_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_to_download WHERE download_id = '" . (int)$download_id . "'");
 		
 		return $query->row['total'];
 	}
 	
 	/**
-	 * ModelStoreProduct::getTotalProductsByManufacturerId()
+	 * ModelStoreProduct::getAllTotalByManufacturerId()
 	 * 
 	 * @param int $manufacturer_id
      * @see DB
      * @see Cache
 	 * @return int Count sql records
 	 */
-	public function getTotalProductsByManufacturerId($manufacturer_id) {
+	public function getAllTotalByManufacturerId($manufacturer_id) {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		return $query->row['total'];
@@ -1064,72 +1073,5 @@ class ModelStoreProduct extends Model {
      public function desactivate($id) {
         $query = $this->db->query("UPDATE `" . DB_PREFIX . "product` SET `status` = '0' WHERE `product_id` = '" . (int)$id . "'");
         return $query;
-     }
-     
-     public function getAll($data=array()) {
-        //TODO: cargar cache de productos si existe
-        $sql = "SELECT *,pd.description as pdescription,p.image as pimage,pd.name as pname, ss.name as ssname,m.name as mname,tc.title as tctitle,wc.title as wctitle,lc.title as lctitle FROM " . DB_PREFIX . "product p 
-            LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
-            LEFT JOIN " . DB_PREFIX . "stock_status ss ON (p.stock_status_id = ss.stock_status_id)
-            LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
-            LEFT JOIN " . DB_PREFIX . "tax_class tc ON (p.tax_class_id = tc.tax_class_id)
-            LEFT JOIN " . DB_PREFIX . "weight_class_description wc ON (p.weight_class_id = wc.weight_class_id)
-            LEFT JOIN " . DB_PREFIX . "length_class_description lc ON (p.length_class_id = lc.length_class_id)
-            WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-            AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "'
-            AND wc.language_id = '" . (int)$this->config->get('config_language_id') . "'
-            AND lc.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
-		
-			if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-				$sql .= " AND LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_name'])) . "%'";
-			}
-
-			if (isset($data['filter_model']) && !is_null($data['filter_model'])) {
-				$sql .= " AND LCASE(p.model) LIKE '%" . $this->db->escape(strtolower($data['filter_model'])) . "%'";
-			}
-			
-			if (isset($data['filter_quantity']) && !is_null($data['filter_quantity'])) {
-				$sql .= " AND p.quantity = '" . $this->db->escape($data['filter_quantity']) . "'";
-			}
-			
-			if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-				$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";
-			}
-
-			$sort_data = array(
-				'pd.name',
-				'p.model',
-				'p.quantity',
-				'p.status',
-				'p.sort_order'
-			);	
-			
-			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-				$sql .= " ORDER BY " . $data['sort'];	
-			} else {
-				$sql .= " ORDER BY pd.name";	
-			}
-			
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
-				$sql .= " DESC";
-			} else {
-				$sql .= " ASC";
-			}
-		
-			if (isset($data['start']) || isset($data['limit'])) {
-				if ($data['start'] < 0) {
-					$data['start'] = 0;
-				}				
-
-				if ($data['limit'] < 1) {
-					$data['limit'] = 20;
-				}	
-			
-				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-			}	
-			
-			$query = $this->db->query($sql);
-		
-			return $query;
      }
 }

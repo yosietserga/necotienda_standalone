@@ -45,8 +45,12 @@ final class User {
         return true;
     }
 		
-  	public function login($username, $password) {
-    	$user_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "user WHERE username = '" . $this->db->escape($username) . "' AND password = '" . $this->db->escape(md5($password)) . "'");
+  	public function login($username, $password, $hash=true) {
+        if ($hash) {
+  	         $password = md5($password);
+  	    }
+        
+    	$user_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "user WHERE username = '" . $this->db->escape($username) . "' AND password = '" . $this->db->escape($password) . "'");
         
 
     	if ($user_query->num_rows) {

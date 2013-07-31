@@ -136,6 +136,10 @@
                                         <img src="image/menu/product.png" />
                                         <br /><span><?php echo $Language->get('text_product'); ?></span>
                                     </a>
+                                    <a title="<?php echo $Language->get('text_attribute'); ?>" href="<?php echo $Url::createAdminUrl('store/attribute',array('menu'=>'inicio')); ?>">
+                                        <img src="image/menu/attributes.png" />
+                                        <br /><span><?php echo $Language->get('text_attribute'); ?></span>
+                                    </a>
                                     <a title="<?php echo $Language->get('text_manufacturer'); ?>" href="<?php echo $Url::createAdminUrl('store/manufacturer',array('menu'=>'inicio')); ?>">
                                         <img src="image/menu/manufacture.png"  />
                                         <br /><span><?php echo $Language->get('text_manufacturer'); ?></span>

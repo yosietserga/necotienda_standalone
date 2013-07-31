@@ -411,7 +411,10 @@ class ModelStoreProduct extends Model {
 			$data = array_merge($data, array('product_description' => $this->getDescriptions($product_id)));
 			$data = array_merge($data, array('product_option' => $this->getOptions($product_id)));
 						
-			$data['keyword'] = $data['keyword'] . uniqid("-");
+            foreach ($data['product_description'] as $k => $v) {
+                $data['product_description'][$k]['keyword'] = $v['keyword'] . uniqid("-");
+            }
+            
 			$data['model'] = $data['model'] . uniqid("-");
 						
 			$data['product_image'] = array();

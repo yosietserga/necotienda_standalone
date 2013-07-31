@@ -35,7 +35,7 @@ class ControllerUserUser extends Controller {
   	public function update() {
     	$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelUser->editUser($this->request->get['user_id'], $this->request->post);
+			$this->modelUser->update($this->request->get['user_id'], $this->request->post);
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			

@@ -2,7 +2,7 @@
 class ControllerModuleSubscribe extends Controller {
 	protected function index($widget=null) {
         if (isset($widget)) {
-            $settings = (array)unserialize($widget['settings']);
+            $this->data['settings'] = $settings = (array)unserialize($widget['settings']);
             $this->data['widget_hook'] = $this->data['widgetName'] = $widget['name'];
         }
 		$this->language->load('module/subscribe');

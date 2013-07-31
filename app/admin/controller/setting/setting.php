@@ -195,6 +195,18 @@ class ControllerSettingSetting extends Controller {
 		$languages = $this->data['languages'] = $this->modelLanguage->getAll();
 		
 		foreach ($languages as $language) {
+			if (isset($this->request->post['config_title_' . $language['language_id']])) {
+				$this->data['config_title_' . $language['language_id']] = $this->request->post['config_title_' . $language['language_id']];
+			} else {
+				$this->data['config_title_' . $language['language_id']] = $this->config->get('config_title_' . $language['language_id']);
+			}
+            
+			if (isset($this->request->post['config_meta_description_' . $language['language_id']])) {
+				$this->data['config_meta_description_' . $language['language_id']] = $this->request->post['config_meta_description_' . $language['language_id']];
+			} else {
+				$this->data['config_meta_description_' . $language['language_id']] = $this->config->get('config_meta_description_' . $language['language_id']);
+			}
+            
 			if (isset($this->request->post['config_description_' . $language['language_id']])) {
 				$this->data['config_description_' . $language['language_id']] = $this->request->post['config_description_' . $language['language_id']];
 			} else {
@@ -357,12 +369,6 @@ class ControllerSettingSetting extends Controller {
 			$this->error['address'] = $this->language->get('error_address');
 		}
 
-		  
-		if (!$this->request->post['config_title']) {
-			$this->error['title'] = $this->language->get('error_title');
-		}	
-		
-		  
 		$pattern = '/^[A-Z0-9._%-]+@[A-Z0-9][A-Z0-9.-]{0,61}[A-Z0-9]\.[A-Z]{2,6}$/i';
 
 		  

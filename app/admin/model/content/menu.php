@@ -25,7 +25,7 @@ class ModelContentMenu extends Model {
         route       = '" . $this->db->escape($data['route']) . "', 
         sort_order  = '" . (int)$data['sort_order'] . "', 
         `default`      = '" . (int)$data['default'] . "', 
-        status      = '" . (int)$data['status'] . "', 
+        status      = '1', 
         date_added  = NOW()");
 
 		$menu_id = $this->db->getLastId();
@@ -85,7 +85,7 @@ class ModelContentMenu extends Model {
         route = '" . $this->db->escape($data['route']) . "', 
         sort_order = '" . (int)$data['sort_order'] . "', 
         `default`      = '" . (int)$data['default'] . "', 
-        status = '" . (int)$data['status'] . "', 
+        status = '1', 
         date_modified = NOW() 
         WHERE menu_id = '" . (int)$menu_id . "'");
 

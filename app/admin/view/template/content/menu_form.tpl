@@ -134,6 +134,8 @@
         <?php foreach ($stores as $store) { ?>
         <input type="checkbox" name="stores[]" value="<?php echo $store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> id="store<?php echo $store['store_id']; ?>" style="display: none;" />
         <?php } ?>
+        <?php } else { ?>
+        <input type="hidden" name="stores[]" value="0" />
         <?php } ?>
             <ol class="items">
                 <?php echo $links; ?>

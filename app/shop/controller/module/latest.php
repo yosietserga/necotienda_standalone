@@ -2,7 +2,7 @@
 class ControllerModuleLatest extends Controller {
 	protected function index($widget=null) {
         if (isset($widget)) {
-            $settings = (array)unserialize($widget['settings']);
+            $this->data['settings'] = $settings = (array)unserialize($widget['settings']);
             $this->data['widget_hook'] = $this->data['widgetName'] = $widget['name'];
         }
         

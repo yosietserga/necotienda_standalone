@@ -1,0 +1,583 @@
+a:24:{i:0;a:38:{s:10:"product_id";s:4:"6762";s:5:"model";s:7:"NT42009";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:73:"data/autos/plantilla-web-Joomla-42009-webtino-necotienda-42009-joom-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9512";s:11:"language_id";s:1:"1";s:4:"name";s:41:"Plantilla Web Joomla / NecoTienda NT42009";s:13:"meta_keywords";s:83:"Webtino, NecoTienda, Joomla, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:62:"Plantillas Web Premiun Joomla 42009 para tiendas virtuales y p";s:11:"description";s:1256:"<h1>Plantilla Web Joomla / NecoTienda NT42009</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Autos</li>
+            	<li>Sitios Web de Autos</li>
+            	<li>P&aacute;ginas Web de Autos</li>
+            	<li>Cualquier comercio ligado con el sector Autos</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>Joomla</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>Joomla</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1321";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:37:39";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:1;a:38:{s:10:"product_id";s:4:"6761";s:5:"model";s:7:"NT42800";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:73:"data/autos/plantilla-web-Joomla-42800-webtino-necotienda-42800-joom-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9511";s:11:"language_id";s:1:"1";s:4:"name";s:41:"Plantilla Web Joomla / NecoTienda NT42800";s:13:"meta_keywords";s:83:"Webtino, NecoTienda, Joomla, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:62:"Plantillas Web Premiun Joomla 42800 para tiendas virtuales y p";s:11:"description";s:1256:"<h1>Plantilla Web Joomla / NecoTienda NT42800</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Autos</li>
+            	<li>Sitios Web de Autos</li>
+            	<li>P&aacute;ginas Web de Autos</li>
+            	<li>Cualquier comercio ligado con el sector Autos</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>Joomla</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>Joomla</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1354";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:37:17";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:2;a:38:{s:10:"product_id";s:4:"6760";s:5:"model";s:7:"NT42075";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:73:"data/autos/plantilla-web-Joomla-42075-webtino-necotienda-42075-joom-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"0";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"0000-00-00";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"0";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"2014-01-16 12:46:46";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:5:"11729";s:11:"language_id";s:1:"1";s:4:"name";s:41:"Plantilla Web Joomla / NecoTienda NT42075";s:13:"meta_keywords";s:83:"Webtino, NecoTienda, Joomla, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:62:"Plantillas Web Premiun Joomla 42075 para tiendas virtuales y p";s:11:"description";s:1451:"&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/REC-html40/loose.dtd&quot;&gt;
+&lt;html&gt;&lt;body&gt;&lt;h1&gt;Plantilla Web Joomla / NecoTienda NT42075&lt;/h1&gt;
+
+&lt;h2&gt;Sector Comercial&lt;/h2&gt;
+
+&lt;p&gt;Esta plantilla est&amp;aacute; dise&amp;ntilde;ada para ser utilizado por los siguientes comercios:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;Tiendas Virtuales de Autos&lt;/li&gt;
+	&lt;li&gt;Sitios Web de Autos&lt;/li&gt;
+	&lt;li&gt;P&amp;aacute;ginas Web de Autos&lt;/li&gt;
+	&lt;li&gt;Cualquier comercio ligado con el sector Autos&lt;/li&gt;
+&lt;/ul&gt;&lt;h1&gt;Tecnolog&amp;iacute;as&lt;/h1&gt;
+
+&lt;p&gt;Las tecnolog&amp;iacute;as usadas en esta plantilla web son las siguientes:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;HTML5 &amp;amp; CSS3&lt;/li&gt;
+	&lt;li&gt;jQuery&lt;/li&gt;
+	&lt;li&gt;PHP&lt;/li&gt;
+	&lt;li&gt;MySQL&lt;/li&gt;
+	&lt;li&gt;Joomla&lt;/li&gt;
+&lt;/ul&gt;&lt;h1&gt;Plataformas&lt;/h1&gt;
+
+&lt;p&gt;Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&amp;oacute;nico:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;NecoTienda&lt;/li&gt;
+	&lt;li&gt;Joomla&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Si hay alguna plataforma de comercio electr&amp;oacute;nico que no se menciona aqu&amp;iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+";s:2:"id";s:4:"1475";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:36:57";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:3;a:38:{s:10:"product_id";s:4:"6759";s:5:"model";s:7:"NT43082";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:73:"data/autos/plantilla-web-Joomla-43082-webtino-necotienda-43082-joom-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9509";s:11:"language_id";s:1:"1";s:4:"name";s:41:"Plantilla Web Joomla / NecoTienda NT43082";s:13:"meta_keywords";s:83:"Webtino, NecoTienda, Joomla, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:62:"Plantillas Web Premiun Joomla 43082 para tiendas virtuales y p";s:11:"description";s:1256:"<h1>Plantilla Web Joomla / NecoTienda NT43082</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Autos</li>
+            	<li>Sitios Web de Autos</li>
+            	<li>P&aacute;ginas Web de Autos</li>
+            	<li>Cualquier comercio ligado con el sector Autos</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>Joomla</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>Joomla</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1367";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:36:37";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:4;a:38:{s:10:"product_id";s:4:"6758";s:5:"model";s:7:"NT43972";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:73:"data/autos/plantilla-web-Joomla-43972-webtino-necotienda-43972-joom-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9508";s:11:"language_id";s:1:"1";s:4:"name";s:41:"Plantilla Web Joomla / NecoTienda NT43972";s:13:"meta_keywords";s:83:"Webtino, NecoTienda, Joomla, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:62:"Plantillas Web Premiun Joomla 43972 para tiendas virtuales y p";s:11:"description";s:1256:"<h1>Plantilla Web Joomla / NecoTienda NT43972</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Autos</li>
+            	<li>Sitios Web de Autos</li>
+            	<li>P&aacute;ginas Web de Autos</li>
+            	<li>Cualquier comercio ligado con el sector Autos</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>Joomla</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>Joomla</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1410";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:36:17";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:5;a:38:{s:10:"product_id";s:4:"6757";s:5:"model";s:7:"NT44176";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:73:"data/autos/plantilla-web-Joomla-44176-webtino-necotienda-44176-joom-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9507";s:11:"language_id";s:1:"1";s:4:"name";s:41:"Plantilla Web Joomla / NecoTienda NT44176";s:13:"meta_keywords";s:83:"Webtino, NecoTienda, Joomla, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:62:"Plantillas Web Premiun Joomla 44176 para tiendas virtuales y p";s:11:"description";s:1256:"<h1>Plantilla Web Joomla / NecoTienda NT44176</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Autos</li>
+            	<li>Sitios Web de Autos</li>
+            	<li>P&aacute;ginas Web de Autos</li>
+            	<li>Cualquier comercio ligado con el sector Autos</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>Joomla</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>Joomla</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1428";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:35:46";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:6;a:38:{s:10:"product_id";s:4:"6756";s:5:"model";s:7:"NT40176";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:86:"data/cafes-y-restaurantes/plantilla-web-ZenCart-40176-webtino-necotienda-40176-z-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9506";s:11:"language_id";s:1:"1";s:4:"name";s:42:"Plantilla Web ZenCart / NecoTienda NT40176";s:13:"meta_keywords";s:84:"Webtino, NecoTienda, ZenCart, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:63:"Plantillas Web Premiun ZenCart 40176 para tiendas virtuales y p";s:11:"description";s:1319:"<h1>Plantilla Web ZenCart / NecoTienda NT40176</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>ZenCart</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>ZenCart</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1223";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:35:10";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:7;a:38:{s:10:"product_id";s:4:"6755";s:5:"model";s:7:"NT32221";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:90:"data/cafes-y-restaurantes/plantilla-web-VirtueMart-32221-webtino-necotienda-32221-vm-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9505";s:11:"language_id";s:1:"1";s:4:"name";s:45:"Plantilla Web VirtueMart / NecoTienda NT32221";s:13:"meta_keywords";s:87:"Webtino, NecoTienda, VirtueMart, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:66:"Plantillas Web Premiun VirtueMart 32221 para tiendas virtuales y p";s:11:"description";s:1328:"<h1>Plantilla Web VirtueMart / NecoTienda NT32221</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:3:"787";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:34:47";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:8;a:38:{s:10:"product_id";s:4:"6754";s:5:"model";s:7:"NT35688";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:90:"data/cafes-y-restaurantes/plantilla-web-VirtueMart-35688-webtino-necotienda-35688-vm-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9504";s:11:"language_id";s:1:"1";s:4:"name";s:45:"Plantilla Web VirtueMart / NecoTienda NT35688";s:13:"meta_keywords";s:87:"Webtino, NecoTienda, VirtueMart, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:66:"Plantillas Web Premiun VirtueMart 35688 para tiendas virtuales y p";s:11:"description";s:1328:"<h1>Plantilla Web VirtueMart / NecoTienda NT35688</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:3:"917";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:34:25";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";s:6:"0.0000";}i:9;a:38:{s:10:"product_id";s:4:"6753";s:5:"model";s:7:"NT35690";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:90:"data/cafes-y-restaurantes/plantilla-web-VirtueMart-35690-webtino-necotienda-35690-vm-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9503";s:11:"language_id";s:1:"1";s:4:"name";s:45:"Plantilla Web VirtueMart / NecoTienda NT35690";s:13:"meta_keywords";s:87:"Webtino, NecoTienda, VirtueMart, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:66:"Plantillas Web Premiun VirtueMart 35690 para tiendas virtuales y p";s:11:"description";s:1328:"<h1>Plantilla Web VirtueMart / NecoTienda NT35690</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:3:"918";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:33:55";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:10;a:38:{s:10:"product_id";s:4:"6752";s:5:"model";s:7:"NT40388";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:90:"data/cafes-y-restaurantes/plantilla-web-VirtueMart-40388-webtino-necotienda-40388-vm-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9502";s:11:"language_id";s:1:"1";s:4:"name";s:45:"Plantilla Web VirtueMart / NecoTienda NT40388";s:13:"meta_keywords";s:87:"Webtino, NecoTienda, VirtueMart, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:66:"Plantillas Web Premiun VirtueMart 40388 para tiendas virtuales y p";s:11:"description";s:1328:"<h1>Plantilla Web VirtueMart / NecoTienda NT40388</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>VirtueMart</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1249";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:33:29";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:11;a:38:{s:10:"product_id";s:4:"6751";s:5:"model";s:7:"NT34558";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-34558-webtino-necotienda-34558-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9501";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT34558";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 34558 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT34558</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:3:"848";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:32:44";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:12;a:38:{s:10:"product_id";s:4:"6750";s:5:"model";s:7:"NT35236";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-35236-webtino-necotienda-35236-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"0";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"0000-00-00";s:6:"weight";s:5:"50.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"0";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"2013-09-07 12:09:33";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:5:"11699";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT35236";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 35236 para tiendas virtuales y p";s:11:"description";s:1520:"&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/REC-html40/loose.dtd&quot;&gt;
+&lt;html&gt;&lt;body&gt;&lt;h1&gt;Plantilla Web WordPress / NecoTienda NT35236&lt;/h1&gt;
+
+&lt;h2&gt;Sector Comercial&lt;/h2&gt;
+
+&lt;p&gt;Esta plantilla est&amp;aacute; dise&amp;ntilde;ada para ser utilizado por los siguientes comercios:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;Tiendas Virtuales de Cafes_y_Restaurantes&lt;/li&gt;
+	&lt;li&gt;Sitios Web de Cafes_y_Restaurantes&lt;/li&gt;
+	&lt;li&gt;P&amp;aacute;ginas Web de Cafes_y_Restaurantes&lt;/li&gt;
+	&lt;li&gt;Cualquier comercio ligado con el sector Cafes_y_Restaurantes&lt;/li&gt;
+&lt;/ul&gt;&lt;h1&gt;Tecnolog&amp;iacute;as&lt;/h1&gt;
+
+&lt;p&gt;Las tecnolog&amp;iacute;as usadas en esta plantilla web son las siguientes:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;HTML5 &amp;amp; CSS3&lt;/li&gt;
+	&lt;li&gt;jQuery&lt;/li&gt;
+	&lt;li&gt;PHP&lt;/li&gt;
+	&lt;li&gt;MySQL&lt;/li&gt;
+	&lt;li&gt;WordPress&lt;/li&gt;
+&lt;/ul&gt;&lt;h1&gt;Plataformas&lt;/h1&gt;
+
+&lt;p&gt;Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&amp;oacute;nico:&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;NecoTienda&lt;/li&gt;
+	&lt;li&gt;WordPress&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Si hay alguna plataforma de comercio electr&amp;oacute;nico que no se menciona aqu&amp;iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+";s:2:"id";s:4:"1460";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:32:19";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:13;a:38:{s:10:"product_id";s:4:"6749";s:5:"model";s:7:"NT36390";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-36390-webtino-necotienda-36390-wp-p.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9499";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT36390";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 36390 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT36390</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:3:"948";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:27:14";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:14;a:38:{s:10:"product_id";s:4:"6748";s:5:"model";s:7:"NT38424";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-38424-webtino-necotienda-38424-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9498";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT38424";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 38424 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT38424</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1088";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:26:38";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:15;a:38:{s:10:"product_id";s:4:"6747";s:5:"model";s:7:"NT38550";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-38550-webtino-necotienda-38550-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9497";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT38550";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 38550 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT38550</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1100";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:26:00";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:16;a:38:{s:10:"product_id";s:4:"6746";s:5:"model";s:7:"NT38777";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-38777-webtino-necotienda-38777-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9496";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT38777";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 38777 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT38777</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1123";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:25:22";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:17;a:38:{s:10:"product_id";s:4:"6745";s:5:"model";s:7:"NT38856";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-38856-webtino-necotienda-38856-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9495";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT38856";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 38856 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT38856</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1124";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:24:52";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:18;a:38:{s:10:"product_id";s:4:"6744";s:5:"model";s:7:"NT39694";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-39694-webtino-necotienda-39694-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9494";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT39694";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 39694 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT39694</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1189";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:24:32";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:19;a:38:{s:10:"product_id";s:4:"6743";s:5:"model";s:7:"NT39962";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-39962-webtino-necotienda-39962-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9493";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT39962";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 39962 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT39962</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1208";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:24:10";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:20;a:38:{s:10:"product_id";s:4:"6742";s:5:"model";s:7:"NT40208";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-40208-webtino-necotienda-40208-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9492";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT40208";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 40208 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT40208</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1228";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:23:48";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:21;a:38:{s:10:"product_id";s:4:"6741";s:5:"model";s:7:"NT40356";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-40356-webtino-necotienda-40356-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9491";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT40356";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 40356 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT40356</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1242";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:23:29";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:22;a:38:{s:10:"product_id";s:4:"6740";s:5:"model";s:7:"NT40362";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-40362-webtino-necotienda-40362-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9490";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT40362";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 40362 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT40362</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1244";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:23:10";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}i:23;a:38:{s:10:"product_id";s:4:"6739";s:5:"model";s:7:"NT41592";s:3:"sku";s:0:"";s:8:"location";s:0:"";s:8:"quantity";s:1:"1";s:15:"stock_status_id";s:1:"1";s:5:"image";s:89:"data/cafes-y-restaurantes/plantilla-web-WordPress-41592-webtino-necotienda-41592-wp-b.jpg";s:15:"manufacturer_id";N;s:8:"shipping";s:1:"1";s:5:"price";s:9:"2400.0000";s:12:"tax_class_id";s:1:"1";s:14:"date_available";s:10:"2013-05-25";s:6:"weight";s:4:"0.00";s:15:"weight_class_id";s:1:"1";s:6:"length";s:4:"0.00";s:5:"width";s:4:"0.00";s:6:"height";s:4:"0.00";s:15:"length_class_id";s:1:"1";s:6:"status";s:1:"1";s:10:"date_added";N;s:13:"date_modified";s:19:"0000-00-00 00:00:00";s:6:"viewed";N;s:10:"sort_order";N;s:8:"subtract";s:1:"0";s:7:"minimum";s:1:"1";s:4:"cost";s:6:"0.0000";s:22:"product_description_id";s:4:"9489";s:11:"language_id";s:1:"1";s:4:"name";s:44:"Plantilla Web WordPress / NecoTienda NT41592";s:13:"meta_keywords";s:86:"Webtino, NecoTienda, WordPress, Tienda Virtual, Web Template, Plantilla Web, Venezuela";s:16:"meta_description";s:65:"Plantillas Web Premiun WordPress 41592 para tiendas virtuales y p";s:11:"description";s:1325:"<h1>Plantilla Web WordPress / NecoTienda NT41592</h1>
+            <h2>Sector Comercial</h2>
+            <p>Esta plantilla est&aacute; dise&ntilde;ada para ser utilizado por los siguientes comercios:</p>
+            <ul>
+            	<li>Tiendas Virtuales de Cafes_y_Restaurantes</li>
+            	<li>Sitios Web de Cafes_y_Restaurantes</li>
+            	<li>P&aacute;ginas Web de Cafes_y_Restaurantes</li>
+            	<li>Cualquier comercio ligado con el sector Cafes_y_Restaurantes</li>
+            </ul>
+            <h1>Tecnolog&iacute;as</h1>
+            <p>Las tecnolog&iacute;as usadas en esta plantilla web son las siguientes:</p>
+            <ul>
+            	<li>HTML5 &amp; CSS3</li>
+            	<li>jQuery</li>
+            	<li>PHP</li>
+            	<li>MySQL</li>
+            	<li>WordPress</li>
+            </ul>
+            <h1>Plataformas</h1>
+            <p>Esta plantilla se construye a pedido y puede ser adaptada a las siguientes plataformas de comercio electr&oacute;nico:</p>
+            <ul>
+            	<li>NecoTienda</li>
+            	<li>WordPress</li>
+            </ul>
+            <p>Si hay alguna plataforma de comercio electr&oacute;nico que no se menciona aqu&iacute;, puede realizar un comentario y preguntarnos si se puede adaptar a la plataforma que usted desea.</p>";s:2:"id";s:4:"1304";s:8:"store_id";s:1:"0";s:7:"created";s:19:"2013-05-25 15:22:48";s:12:"manufacturer";N;s:5:"stock";s:10:"Disponible";s:6:"rating";N;}}

@@ -202,7 +202,7 @@ jQuery.fn.gzoom = function(settings) {
 			// Perfomance the effect
 			$('#imagebox').animate({ width: intWidth, height: intHeight },settings.containerResizeSpeed,function() { _show_image(); });
 			if ( ( intDiffW == 0 ) && ( intDiffH == 0 ) ) {
-				if ( $.browser.msie ) {
+				if ( navigator.userAgent.indexOf('MSIE') > -1 ) {
 					___pause(250);
 				} else {
 					___pause(100);	

@@ -10,7 +10,7 @@ $mainPath       = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEP
 $protocol       = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === false ? 'http://' : 'https://';
 $httpDefaultPath= isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] : substr($_SERVER['PHP_SELF'],0,strrpos($_SERVER['PHP_SELF'],"/")+1);
 $httpPath = str_replace('/index.php',"",$httpDefaultPath);
-$httpPath = str_replace('/web/',"",$httpPath);
+//$httpPath = str_replace('/web/',"",$httpPath);
 
  // HTTP addresses
 define('HTTP_HOME',     "http://" . $httpPath . "/");

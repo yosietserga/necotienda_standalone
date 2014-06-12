@@ -80,20 +80,22 @@ class ControllerAccountReview extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/review.tpl')) {
-			$this->template = $this->config->get('config_template') . '/account/review.tpl';
-		} else {
-			$this->template = 'cuyagua/account/review.tpl';
-		}
+        $this->loadWidgets();
         
-
-		$this->children = array(
-			'common/nav',
-			'account/column_left',
-			'common/footer',
-			'common/header'
-		);
-
+        if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
+            
+    	$this->children[] = 'account/column_left';
+    	$this->children[] = 'common/nav';
+    	$this->children[] = 'common/header';
+    	$this->children[] = 'common/footer';
+            
+        $template = ($this->config->get('default_view_account_review')) ? $this->config->get('default_view_account_review') : 'account/review.tpl';
+   		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+            $this->template = $this->config->get('config_template') .'/'. $template;
+    	} else {
+            $this->template = 'choroni/'. $template;
+    	}
+        
 		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));		
 	}
     
@@ -235,36 +237,42 @@ class ControllerAccountReview extends Controller {
             }");
             
             $this->scripts = array_merge($this->scripts,$scripts);
+                
+            $this->loadWidgets();
             
-    		$this->children = array(
-    			'common/nav',
-    			'account/column_left',
-    			'common/footer',
-    			'common/header'
-    		);
-    
-    		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/review_read.tpl')) {
-    			$this->template = $this->config->get('config_template') . '/account/review_read.tpl';
-    		} else {
-    			$this->template = 'cuyagua/account/review_read.tpl';
-    		}
+            if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
+                
+        	$this->children[] = 'account/column_left';
+        	$this->children[] = 'common/nav';
+        	$this->children[] = 'common/header';
+        	$this->children[] = 'common/footer';
+                
+            $template = ($this->config->get('default_view_account_review_read')) ? $this->config->get('default_view_account_review_read') : 'account/review_read.tpl';
+       		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+                $this->template = $this->config->get('config_template') .'/'. $template;
+        	} else {
+                $this->template = 'choroni/'. $template;
+        	}
+            
         } else {
       		$this->document->title      = $this->data['heading_title'] = $this->language->get('text_error');
       		$this->data['continue']     = Url::createUrl('account/review');
 	  
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/error/not_found.tpl';
-			} else {
-				$this->template = 'cuyagua/error/not_found.tpl';
-			}
-			
-    		$this->children = array(
-    			'common/header',
-    			'common/nav',
-    			'common/column_left',
-    			'common/column_right',
-    			'common/footer'
-    		);
+            $this->loadWidgets();
+            
+            if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
+                
+        	$this->children[] = 'account/column_left';
+        	$this->children[] = 'common/nav';
+        	$this->children[] = 'common/header';
+        	$this->children[] = 'common/footer';
+                
+            $template = ($this->config->get('default_view_account_review_read_error')) ? $this->config->get('default_view_account_review_read_error') : 'error/not_found.tpl';
+       		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+                $this->template = $this->config->get('config_template') .'/'. $template;
+        	} else {
+                $this->template = 'choroni/'. $template;
+        	}
             
 			$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }
@@ -282,4 +290,70 @@ class ControllerAccountReview extends Controller {
 		}
      }
     
+    protected function loadWidgets() {
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
+       	} else {
+            $csspath = str_replace("%theme%","default",$csspath);
+       	}
+        if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
+            $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+        }
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        }
+        
+        $this->load->helper('widgets');
+        $widgets = new NecoWidget($this->registry,$this->Route);
+        foreach ($widgets->getWidgets('main') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+            
+        foreach ($widgets->getWidgets('featuredContent') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+    }
 }

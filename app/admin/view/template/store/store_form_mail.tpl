@@ -25,7 +25,7 @@
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_pop3_port'); ?></td>
-            <td><input title="Ingrese el n&uacute;mero de puerto del servidor de email" type="number" name="config_pop3_port" value="<?php echo $config_pop3_port; ?>"></td>
+            <td><input title="Ingrese el n&uacute;mero de puerto del servidor de email" type="necoNumber" name="config_pop3_port" value="<?php echo $config_pop3_port; ?>"></td>
             <?php if ($error_pop3_port) { ?>
               <span class="error"><?php echo $error_pop3_port; ?></span>
               <?php } ?>
@@ -78,7 +78,7 @@
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_smtp_port'); ?></td>
-            <td><input title="Ingrese el n&uacute;mero de puerto del servidor de email" type="number" name="config_smtp_port" value="<?php echo $config_smtp_port; ?>"></td>
+            <td><input title="Ingrese el n&uacute;mero de puerto del servidor de email" type="necoNumber" name="config_smtp_port" value="<?php echo $config_smtp_port; ?>"></td>
             <?php if ($error_smtp_port) { ?>
               <span class="error"><?php echo $error_smtp_port; ?></span>
               <?php } ?>
@@ -101,14 +101,14 @@
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_smtp_timeout'); ?></td>
-            <td><input title="Ingrese el tiempo de parada del servidor de email" type="number" name="config_smtp_timeout" value="<?php echo $config_smtp_timeout; ?>"></td>
+            <td><input title="Ingrese el tiempo de parada del servidor de email" type="necoNumber" name="config_smtp_timeout" value="<?php echo $config_smtp_timeout; ?>"></td>
             <?php if ($error_smtp_timeout) { ?>
               <span class="error"><?php echo $error_smtp_timeout; ?></span>
               <?php } ?>
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_email_max_size'); ?></td>
-            <td><input title="Ingrese el tama&ntilde;o m&aacute;ximo del email en Bytes, esto es utilizado para prevenir que se env&iacute;en emails con contenidos mayores a los permitidos" type="number" name="config_smtp_maxsize" value="<?php echo $config_smtp_maxsize; ?>"></td>
+            <td><input title="Ingrese el tama&ntilde;o m&aacute;ximo del email en Bytes, esto es utilizado para prevenir que se env&iacute;en emails con contenidos mayores a los permitidos" type="necoNumber" name="config_smtp_maxsize" value="<?php echo $config_smtp_maxsize; ?>"></td>
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_mail_parameter'); ?></td>

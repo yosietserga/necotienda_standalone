@@ -3,9 +3,6 @@
     <div class="box">
         <div class="header">
             <h1><?php echo $Language->get('heading_title'); ?></h1>
-            <div class="buttons">
-                <a onclick="location = '<?php echo $insert; ?>'" class="button">Agregar Nuevo</a>
-            </div>
         </div>    
           
         <div class="clear"></div><br />
@@ -32,15 +29,15 @@
             <div class="grid_11">
                 <div class="row">
                     <label>Fecha Inicial:</label>
-                    <input type="date" name="filter_date_start" value="" />
+                    <input type="necoDate" name="filter_date_start" value="" />
                 </div>
                 <div class="row">
                     <label>Fecha Final:</label>
-                    <input type="date" name="filter_date_end" value="" />
+                    <input type="necoDate" name="filter_date_end" value="" />
                 </div>
                 <div class="row">
                     <label>Mostrar:</label>
-                    <input type="number" name="limit" value="" />
+                    <input type="necoNumber" name="limit" value="" />
                 </div>
             </div>
                         

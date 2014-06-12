@@ -38,8 +38,8 @@ class ControllerToolUpdate extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             $this->modelSetting->editMaintenance(1);
             $backup = new Backup($this->registry);
-            $backup->run();
-            $update->run();
+            //$backup->run();
+            var_dump($update->run());
             $this->modelSetting->editMaintenance(0);
         }
         
@@ -81,7 +81,7 @@ class ControllerToolUpdate extends Controller {
         $backup = new Backup($this->registry);
         $update = new Update($this->registry);
         
-        $backup->run();
+        //$backup->run();
         $update->run();
         
     }

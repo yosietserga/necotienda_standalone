@@ -110,7 +110,19 @@ class Url {
     						}							
     					}
     					unset($data[$key]);
-    				} elseif ($data['r'] == 'page/sitemap') {
+    				}  elseif ($data['r'] == 'api/facebook') {
+    					$url_ .= '/api/facebook';
+    					unset($data[$key]);
+    				} elseif ($data['r'] == 'api/twitter') {
+    					$url_ .= '/api/twitter';
+    					unset($data[$key]);
+    				} elseif ($data['r'] == 'api/google') {
+    					$url_ .= '/api/google';
+    					unset($data[$key]);
+    				}  elseif ($data['r'] == 'api/live') {
+    					$url_ .= '/api/google';
+    					unset($data[$key]);
+    				}  elseif ($data['r'] == 'page/sitemap') {
     					$url_ .= '/sitemap';
     					unset($data[$key]);
     				} elseif ($data['r'] == 'page/contact') {

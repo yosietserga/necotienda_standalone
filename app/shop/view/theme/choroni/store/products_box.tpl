@@ -13,10 +13,12 @@
                     <p class="new_price"><?php echo $product['special']; ?></p>
                 <?php } ?>
             <a title="<?php echo $Language->get('button_see_product'); ?>" class="button_see_small" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $Language->get('button_see_product'); ?></a>
+            <?php if ($Config->get('config_store_mode')=='store') { ?>
             <a title="<?php echo $Language->get('button_add_to_cart'); ?>" class="button_add_small" href="<?php echo str_replace('&', '&amp;', $product['add']); ?>"><?php echo $Language->get('button_add_to_cart'); ?></a>
             <?php } ?>
+            <?php } ?>
             <?php if ($product['rating']) { ?>
-                <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $product['rating'] . '.png'; ?>" alt="<?php echo $product['stars']; ?>">
+                <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $product['rating'] . '.png'; ?>" alt="<?php echo $product['stars']; ?>" />
             <?php } ?>
         <?php } ?>
     <?php } ?>

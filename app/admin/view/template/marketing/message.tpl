@@ -10,62 +10,8 @@
     <div class="clear"></div>
              
     <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+        <h2>Mensajes de Pedidos y Carrito de Compra</h2>
         <table class="form">
-            <tr>
-                <td><?php echo $Language->get('entry_page_contact_id'); ?></td>
-                <td>
-                    <select name="marketing_page_contact_id" title="<?php echo $Language->get('help_page_contact_id'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($pages as $page) { ?>
-                        <option value="<?php echo $page['post_id']; ?>"<?php if ($page['post_id'] == $marketing_page_contact_id) { ?> selected="selected"<?php } ?>><?php echo $page['title']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $Language->get('entry_page_new_customer'); ?></td>
-                <td>
-                    <select name="marketing_email_new_customer" title="<?php echo $Language->get('help_page_new_customer'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($newsletters as $newsletter) { ?>
-                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_customer) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $Language->get('entry_page_happy_birthday'); ?></td>
-                <td>
-                    <select name="marketing_email_happy_birthday" title="<?php echo $Language->get('help_page_happy_birthday'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($newsletters as $newsletter) { ?>
-                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_happy_birthday) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $Language->get('entry_page_add_balance'); ?></td>
-                <td>
-                    <select name="marketing_email_add_balance" title="<?php echo $Language->get('help_page_add_balance'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($newsletters as $newsletter) { ?>
-                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_add_balance) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $Language->get('entry_page_subtract_balance'); ?></td>
-                <td>
-                    <select name="marketing_email_subtract_balance" title="<?php echo $Language->get('help_page_subtract_balance'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($newsletters as $newsletter) { ?>
-                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_subtract_balance) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
             <tr>
                 <td><?php echo $Language->get('entry_page_new_payment'); ?></td>
                 <td>
@@ -73,39 +19,6 @@
                         <option value="0"><?php echo $Language->get('text_none'); ?></option>
                         <?php foreach ($newsletters as $newsletter) { ?>
                         <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_payment) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $Language->get('entry_page_new_comment'); ?></td>
-                <td>
-                    <select name="marketing_email_new_comment" title="<?php echo $Language->get('help_page_new_comment'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($newsletters as $newsletter) { ?>
-                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_comment) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $Language->get('entry_page_new_reply'); ?></td>
-                <td>
-                    <select name="marketing_email_new_reply" title="<?php echo $Language->get('help_page_new_reply'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($newsletters as $newsletter) { ?>
-                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_reply) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                        <?php } ?>
-                  </select>
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo $Language->get('entry_page_new_contact'); ?></td>
-                <td>
-                    <select name="marketing_email_new_contact" title="<?php echo $Language->get('help_page_new_contact'); ?>">
-                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                        <?php foreach ($newsletters as $newsletter) { ?>
-                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_contact) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
                         <?php } ?>
                   </select>
                 </td>
@@ -154,6 +67,113 @@
                   </select>
                 </td>
             </tr>
+        </table>
+        
+        <h2>Mensajes de Clientes</h2>
+        <table class="form">
+            <tr>
+                <td><?php echo $Language->get('entry_page_new_customer'); ?></td>
+                <td>
+                    <select name="marketing_page_new_customer" title="<?php echo $Language->get('help_page_new_customer'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_page_new_customer) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_activate_customer'); ?></td>
+                <td>
+                    <select name="marketing_page_activate_customer" title="<?php echo $Language->get('help_page_activate_customer'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_page_activate_customer) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_email_new_customer'); ?></td>
+                <td>
+                    <select name="marketing_email_new_customer" title="<?php echo $Language->get('help_email_new_customer'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_customer) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_email_activate_customer'); ?></td>
+                <td>
+                    <select name="marketing_email_activate_customer" title="<?php echo $Language->get('help_email_activate_customer'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_activate_customer) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_happy_birthday'); ?></td>
+                <td>
+                    <select name="marketing_email_happy_birthday" title="<?php echo $Language->get('help_page_happy_birthday'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_happy_birthday) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_add_balance'); ?></td>
+                <td>
+                    <select name="marketing_email_add_balance" title="<?php echo $Language->get('help_page_add_balance'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_add_balance) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_subtract_balance'); ?></td>
+                <td>
+                    <select name="marketing_email_subtract_balance" title="<?php echo $Language->get('help_page_subtract_balance'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_subtract_balance) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_new_payment'); ?></td>
+                <td>
+                    <select name="marketing_email_new_payment" title="<?php echo $Language->get('help_page_new_payment'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_payment) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+        </table>
+        
+        <h2>Mensajes de Promociones y Marketing</h2>
+        <table class="form">
+            <tr>
+                <td><?php echo $Language->get('entry_page_new_contact'); ?></td>
+                <td>
+                    <select name="marketing_email_new_contact" title="<?php echo $Language->get('help_page_new_contact'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_contact) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
             <tr>
                 <td><?php echo $Language->get('entry_page_recommended_products'); ?></td>
                 <td>
@@ -161,6 +181,76 @@
                         <option value="0"><?php echo $Language->get('text_none'); ?></option>
                         <?php foreach ($newsletters as $newsletter) { ?>
                         <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_recommended_products) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_email_promote_product'); ?></td>
+                <td>
+                    <select name="marketing_email_promote_product" title="<?php echo $Language->get('help_email_promote_product'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_promote_product) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_email_invite_friends'); ?></td>
+                <td>
+                    <select name="marketing_email_invite_friends" title="<?php echo $Language->get('help_email_invite_friends'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_invite_friends) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+        </table>
+        
+        <h2>Mensajes de la Tienda</h2>
+        <table class="form">
+            <tr>
+                <td><?php echo $Language->get('entry_page_add_to_cart'); ?></td>
+                <td>
+                    <select name="marketing_page_add_to_cart" title="<?php echo $Language->get('help_page_add_to_cart'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_page_add_to_cart) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_new_comment'); ?></td>
+                <td>
+                    <select name="marketing_email_new_comment" title="<?php echo $Language->get('help_page_new_comment'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_comment) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_new_reply'); ?></td>
+                <td>
+                    <select name="marketing_email_new_reply" title="<?php echo $Language->get('help_page_new_reply'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_reply) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                        <?php } ?>
+                  </select>
+                </td>
+            </tr>
+            <tr>
+                <td><?php echo $Language->get('entry_page_new_contact'); ?></td>
+                <td>
+                    <select name="marketing_email_new_contact" title="<?php echo $Language->get('help_page_new_contact'); ?>">
+                        <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                        <?php foreach ($newsletters as $newsletter) { ?>
+                        <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_contact) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
                         <?php } ?>
                   </select>
                 </td>

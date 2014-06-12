@@ -42,6 +42,7 @@ class ControllerStoreManufacturer extends Controller {
     	$this->document->title = $this->language->get('heading_title');	
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$manufacturer_id = $this->modelManufacturer->add($this->request->post);
+            $this->modelManufacturer->setProperty($manufacturer_id,'style','view', $this->request->getPost('view'));
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -72,12 +73,13 @@ class ControllerStoreManufacturer extends Controller {
   	public function update() {
     	$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$manufacturer_id = $this->modelManufacturer->update($this->request->get['manufacturer_id'], $this->request->post);
+			$this->modelManufacturer->update($this->request->getQuery('manufacturer_id'), $this->request->post);
+            $this->modelManufacturer->setProperty($this->request->getQuery('manufacturer_id'),'style','view', $this->request->getPost('view'));
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
             if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('store/manufacturer/update',array('manufacturer_id'=>$manufacturer_id))); 
+                $this->redirect(Url::createAdminUrl('store/manufacturer/update',array('manufacturer_id'=>$this->request->getQuery('manufacturer_id')))); 
             } elseif ($_POST['to'] == "saveAndNew") {
                 $this->redirect(Url::createAdminUrl('store/manufacturer/insert')); 
             } else {
@@ -402,17 +404,35 @@ class ControllerStoreManufacturer extends Controller {
 		
 		$this->data['cancel'] = Url::createAdminUrl('store/manufacturer') . $url;
 
-    	if (isset($this->request->get['manufacturer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$manufacturer_info = $this->modelManufacturer->getById($this->request->get['manufacturer_id']);
+    	if ($this->request->hasQuery('manufacturer_id') && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+      		$manufacturer_info = $this->modelManufacturer->getById($this->request->getQuery('manufacturer_id'));
     	}
 
+        $this->setvar('manufacturer_id',$manufacturer_info,'');
         $this->setvar('name',$manufacturer_info,'');
         $this->setvar('keyword',$manufacturer_info,'');
         $this->setvar('image',$manufacturer_info,'');
         $this->setvar('sort_order',$manufacturer_info,'');
         
 		$this->data['stores'] = $this->modelStore->getAll();
-		$this->data['_stores'] = $this->modelManufacturer->getStores($this->request->get['manufacturer_id']);
+		$this->data['_stores'] = $this->modelManufacturer->getStores($this->request->getQuery('manufacturer_id'));
+        $this->data['layout'] = $this->modelManufacturer->getProperty($this->request->getQuery('manufacturer_id'),'style','view');
+        
+  		if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
+            $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';
+    	} else {
+    		$folderTPL = DIR_CATALOG . 'view/theme/default/';
+    	}
+        
+        $directories = glob($folderTPL . "*", GLOB_ONLYDIR);
+		$this->data['templates'] = array();
+		foreach ($directories as $key => $directory) {
+			$this->data['views'][$key]['folder'] = basename($directory);
+            $files = glob($directory . "/*.tpl", GLOB_NOSORT);
+            foreach ($files as $k => $file) {
+    			$this->data['views'][$key]['files'][$k] = str_replace("\\","/",$file) ;
+    		}
+		}
         
 		if (isset($manufacturer_info) && $manufacturer_info['image'] && file_exists(DIR_IMAGE . $manufacturer_info['image'])) {
 			$this->data['preview'] = NTImage::resizeAndSave($manufacturer_info['image'], 100, 100);
@@ -444,14 +464,33 @@ class ControllerStoreManufacturer extends Controller {
                             'manufacturer_id':'".$this->request->getQuery('manufacturer_id')."'
                         }, function(data) {
                             
-                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\"></ul>');
+                            var htmlOutput = '<div class=\"row\">';
+                            htmlOutput += '<label for=\"q\" style=\"float:left\">';
+                            htmlOutput += 'Filtrar listado de productos:';
+                            htmlOutput += '</label>';
+                            htmlOutput += '<input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" />';
+                            htmlOutput += '</div>';
+                            htmlOutput += '<div class=\"clear\"></div>';
+                            htmlOutput += '<br />';
+                            htmlOutput += '<a onclick=\"$(\'#adds b\').removeClass(\'added\').addClass(\'add\');$(\'#adds input[type=checkbox]\').attr(\'checked\',null);$(\'#adds\').append(\' <input type=\\\\\'hidden\\\\\' name=\\\\\'Products[0]\\\\\' value=\\\\\'0\\\\\' id=\\\\\'tempRelated\\\\\' /> \');\">Seleccionar Ninguno</a>';
+                            htmlOutput += '&nbsp;&nbsp;|&nbsp;&nbsp;';
+                            htmlOutput += '<a onclick=\"$(\'#adds b\').removeClass(\'add\').addClass(\'added\');$(\'#adds input[type=checkbox]\').attr(\'checked\',1);$(\'#tempRelated\').remove();\">Seleccionar Todos</a>';
+                            htmlOutput += '<br />';
+                            htmlOutput += '<ul id=\"adds\"></ul>';
+                            
+                            $('#addsWrapper').html(htmlOutput);
                             
                             $.each(data, function(i,item){
-                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"hidden\" name=\"Products[' + item.product_id + ']\" value=\"' + item.value + '\" /></li>');
+                                if (item.class == 'added') {
+                                    checked = ' checked=\"checked\"';
+                                } else {
+                                    checked = '';
+                                }
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"checkbox\" name=\"Products[' + item.product_id + ']\" value=\"' + item.product_id + '\" style=\"display:none\"'+ checked +' /></li>');
                                 
                             });
                             
-                            $('#q').on('change',function(e){
+                            $('#q').on('keyup',function(e){
                                 var that = this;
                                 var valor = $(that).val().toLowerCase();
                                 if (valor.length <= 0) {
@@ -471,10 +510,10 @@ class ControllerStoreManufacturer extends Controller {
                                 var b = $(this).find('b');
                                 if (b.hasClass('added')) {
                                     b.removeClass('added').addClass('add');
-                                    $(this).find('input').val(0);
+                                    $(this).find('input[type=checkbox]').removeAttr('checked');
                                 } else {
                                     b.removeClass('add').addClass('added');
-                                    $(this).find('input').val(1);
+                                    $(this).find('input[type=checkbox]').attr('checked','checked');
                                 }
                             });
                     });
@@ -643,37 +682,34 @@ class ControllerStoreManufacturer extends Controller {
         if ($cache) {
             $products = unserialize($cache);
         } else {
-            $model = $this->modelProduct->getAll();
-            $products = $model->obj;
+            $products = $this->modelProduct->getAll();
             $this->cache->set("products.for.manufacturer.form",serialize($products));
         }
         
         $this->data['Image'] = new NTImage();
-        $this->data['Url'] = new Url;
         
         $output = array();
         
         foreach ($products as $product) {
-            if (!empty($products_by_manufacturer) && in_array($product->product_id,$products_by_manufacturer)) {
+            if (!empty($products_by_manufacturer) && in_array($product['product_id'],$products_by_manufacturer)) {
                 $output[] = array(
-                    'product_id'=>$product->product_id,
-                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
-                    'pname'     =>$product->pname,
+                    'product_id'=>$product['product_id'],
+                    'pimage'    =>NTImage::resizeAndSave($product['image'],50,50),
+                    'pname'     =>$product['name'],
                     'class'     =>'added',
-                    'value'     =>1
+                    'value'     =>$product['product_id']
                 );
             } else {
                 $output[] = array(
-                    'product_id'=>$product->product_id,
-                    'pimage'    =>NTImage::resizeAndSave($product->pimage,50,50),
-                    'pname'     =>$product->pname,
+                    'product_id'=>$product['product_id'],
+                    'pimage'    =>NTImage::resizeAndSave($product['image'],50,50),
+                    'pname'     =>$product['name'],
                     'class'     =>'add',
-                    'value'     =>0
+                    'value'     =>$product['product_id']
                 );
             }
         }
         $this->load->auto('json');
         $this->response->setOutput(Json::encode($output), $this->config->get('config_compression'));
-            
      }
 }

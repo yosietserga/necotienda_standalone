@@ -113,7 +113,7 @@ class CronSend {
                     $count++;
                 }
                 
-                if (count($task->getTaskDos())) {
+                if (count($task->getTaskDos($task->task_id))) {
                     $task->addMinute(15);
                 } else {
                     $task->setTaskDone();
@@ -174,7 +174,7 @@ class CronSend {
                     $count++;
             }
             
-            if (count($task->getTaskDos())) {
+            if (count($task->getTaskDos($task->task_id))) {
                 $task->addMinute(15);
             } else {
                 $task->setTaskDone();
@@ -197,6 +197,7 @@ class CronSend {
             $campign_info = $query->row;
             
             $htmlbody = html_entity_decode($campign_info['htmlbody']);
+            
             $count = 0;
             foreach ($task->getTaskQueue() as $key => $queue) {
                 if ($count >= 50) {
@@ -208,12 +209,77 @@ class CronSend {
                 $cached = $this->cache->get("campaign.html.{$params['campaign_id']}.{$params['contact_id']}");
                 if ($cached) {
                     $htmlbody = html_entity_decode($cached);
+                } else {
+                    
+                    $htmlbody = str_replace("%7B","{",$htmlbody);
+                    $htmlbody = str_replace("%7D","}",$htmlbody);
+                    $htmlbody = str_replace("{%contact_id%}",$params['contact_id'],$htmlbody);
+                    $htmlbody = str_replace("{%campaign_id%}",$params['campaign_id'],$htmlbody);
+                    $htmlbody = str_replace("{%fullname%}",$params['name'],$htmlbody);
+                    $htmlbody = str_replace("{%rif%}",$params['rif'],$htmlbody);
+                    $htmlbody = str_replace("{%company%}",$params['company'],$htmlbody);
+                    $htmlbody = str_replace("{%email%}",$params['email'],$htmlbody);
+                    $htmlbody = str_replace("{%telephone%}",$params['telephone'],$htmlbody);
+                    $htmlbody = $this->prepareTemplate($htmlbody,$params);
+                     
+                    $dom = new DOMDocument;
+                    $dom->preserveWhiteSpace = false;
+                    $dom->loadHTML($htmlbody);
+                    /*
+                    if ($params['embed_image']) {
+                        $images = $dom->getElementsByTagName('img');
+                        foreach ($images as $image) {
+                            $src = $image->getAttribute('src');
+                            $src = str_replace(HTTP_IMAGE,DIR_IMAGE,$src);
+                            if (file_exists($src)) {
+                                $img    = file_get_contents($src);
+                                $ext    = substr($src,(strrpos($src,'.')+1));
+                                $embed  = base64_encode($img); 
+                                $image->setAttribute('src',"data:image/$ext;base64,$embed");
+                                $total_embed_images++;
+                            }
+                            $total_images++;
+                        }
+                    }
+                    */
+                    $vars = array(
+                        'contact_id'=>$params['contact_id'],
+                        'campaign_id'=>$params['campaign_id'],
+                        'referencedBy'=>$params['email'],
+                    );
+                    
+                    /* trace the email */
+                    $trace_url  = Url::createUrl("marketing/campaign/trace",$vars,'NONSSL',HTTP_HOME);
+                    $trackEmail = $dom->createElement('img');
+                    $trackEmail->setAttribute('src',$trace_url);
+                    $dom->appendChild($trackEmail);
+                    
+                    /* trace the clicks */
+                    $links = $dom->getElementsByTagName('a');
+                    foreach ($links as $link) {
+                        $href = $link->getAttribute('href');
+                        if (empty($href) || $href == "#" || strpos($href,"mailto:") || strpos($href,"callto:") || strpos($href,"skype:") || strpos($href,"tel:")) continue;
+                                
+                        //TODO: validar enlaces
+                        //TODO: sanitizar enlaces
+                                
+                        $vars['link_index'] = $link_index = md5(time().mt_rand(1000000,9999999).$href);
+                        $_link = Url::createUrl("marketing/campaign/link",$vars,'NONSSL',HTTP_HOME);
+                        
+                      	$this->db->query("INSERT INTO " . DB_PREFIX . "campaign_link SET 
+                          `campaign_id` = '" . (int)$params['campaign_id'] . "',
+                          `url`         = '" . $this->db->escape($_link) . "',
+                          `redirect`    = '" . $this->db->escape($href) . "',
+                          `link`        = '" . $this->db->escape($link_index) . "',
+                          `date_added`  = NOW()");
+          
+                        $link->setAttribute('href',$_link);
+                        
+                        //TODO: agregar valor a la etiqueta title si esta vacia
+                    }
+                    
+                    $htmlbody = html_entity_decode(htmlentities($dom->saveHTML()));
                 }
-                
-                $htmlbody = str_replace("%7B","{",$htmlbody);
-                $htmlbody = str_replace("%7D","}",$htmlbody);
-                $htmlbody = str_replace("{%contact_id%}",$params['contact_id'],$htmlbody);
-                $htmlbody = str_replace("{%campaign_id%}",$params['campaign_id'],$htmlbody);
                 
                 $this->mailer->AddAddress($params['email'],$params['name']);
                 $this->mailer->IsHTML();
@@ -228,12 +294,11 @@ class CronSend {
                 $count++;
             }
             
-            if (count($task->getTaskDos())) {
+            if (count($task->getTaskDos($task->task_id))) {
                 $task->addMinute(15);
             } else {
                 $task->setTaskDone();
             }
-            
         }
         
         $task->update();
@@ -278,9 +343,9 @@ class CronSend {
         return false;
     }
     
-    private function prepareTemplate($newsletter) {
+    private function prepareTemplate($newsletter,$params=array()) {
         if (!$newsletter) return false;
-        $message = $newsletter;
+        
         $this->load->library('url');
         $this->load->library('BarcodeQR');
         $this->load->library('Barcode39');
@@ -299,26 +364,60 @@ class CronSend {
             $barcode->draw(DIR_IMAGE . $eanStore);
         }
              
-        $message = str_replace("{%store_logo%}",'<img src="'. HTTP_IMAGE . $this->config->get('config_logo') .'" alt="'. $this->config->get('config_name') .'" />',$message);
-        $message = str_replace("{%store_url%}",HTTP_HOME,$message);
-        $message = str_replace("{%url_login%}",Url::createUrl("account/login"),$message);
-        $message = str_replace("{%store_owner%}",$this->config->get('config_owner'),$message);
-        $message = str_replace("{%store_name%}",$this->config->get('config_name'),$message);
-        $message = str_replace("{%store_rif%}",$this->config->get('config_rif'),$message);
-        $message = str_replace("{%store_email%}",$this->config->get('config_email'),$message);
-        $message = str_replace("{%store_telephone%}",$this->config->get('config_telephone'),$message);
-        $message = str_replace("{%store_address%}",$this->config->get('config_address'),$message);
+        $newsletter = str_replace("%7B","{",$newsletter);
+        $newsletter = str_replace("%7D","}",$newsletter);
+        $newsletter = str_replace("{%store_logo%}",'<img src="'. HTTP_IMAGE . $this->config->get('config_logo') .'" alt="'. $this->config->get('config_name') .'" />',$newsletter);
+        $newsletter = str_replace("{%store_url%}",HTTP_HOME,$newsletter);
+        $newsletter = str_replace("{%url_login%}",Url::createUrl("account/login"),$newsletter);
+        $newsletter = str_replace("{%store_owner%}",$this->config->get('config_owner'),$newsletter);
+        $newsletter = str_replace("{%store_name%}",$this->config->get('config_name'),$newsletter);
+        $newsletter = str_replace("{%store_rif%}",$this->config->get('config_rif'),$newsletter);
+        $newsletter = str_replace("{%store_email%}",$this->config->get('config_email'),$newsletter);
+        $newsletter = str_replace("{%store_telephone%}",$this->config->get('config_telephone'),$newsletter);
+        $newsletter = str_replace("{%store_address%}",$this->config->get('config_address'),$newsletter);
         /*
-        $message = str_replace("{%products%}",$product_html,$message);
+        $newsletter = str_replace("{%products%}",$product_html,$newsletter);
         */
-        $message = str_replace("{%date_added%}",date('d-m-Y h:i A'),$message);
-        $message = str_replace("{%ip%}",$_SERVER['REMOTE_ADDR'],$message);
-        $message = str_replace("{%qr_code_store%}",'<img src="'. HTTP_IMAGE . $qrStore .'" alt="QR Code" />',$message);
-        $message = str_replace("{%barcode_39_order_id%}",'<img src="'. HTTP_IMAGE . $eanStore .'" alt="NT Code" />',$message);
-                        
-        $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+        $newsletter = str_replace("{%date_added%}",date('d-m-Y h:i A'),$newsletter);
+        $newsletter = str_replace("{%ip%}",$_SERVER['REMOTE_ADDR'],$newsletter);
+        $newsletter = str_replace("{%qr_code_store%}",'<img src="'. HTTP_IMAGE . $qrStore .'" alt="QR Code" />',$newsletter);
+        $newsletter = str_replace("{%barcode_39_order_id%}",'<img src="'. HTTP_IMAGE . $eanStore .'" alt="NT Code" />',$newsletter);
         
-        return html_entity_decode(htmlspecialchars_decode($message));    
+        if ($params['product']) {
+            $newsletter = str_replace("{%product_name%}",'<h1><a href="'. $params['product']['url'] .'">'. $params['product']['name'] .'</a></h1>',$newsletter);
+            $newsletter = str_replace("{%product_model%}",'<b>'. $params['product']['model'] .'</b>',$newsletter);
+            $newsletter = str_replace("{%product_price%}",'<h2>'. $params['product']['price'] .'</h2>',$newsletter);
+            $newsletter = str_replace("{%product_special%}",'<h2>'. $params['product']['special'] .'</h2>',$newsletter);
+            $newsletter = str_replace("{%product_image%}",'<a href="'. $params['product']['url'] .'"><img src="'. $params['product']['image'] .'" alt="'. $params['product']['name'] .'" /></a>',$newsletter);
+            $newsletter = str_replace("{%product_manufacturer%}",$params['product']['manufacturer'],$newsletter);
+            $newsletter = str_replace("{%product_url%}",'<a href="'. $params['product']['url'] .'">Ver Detalles</a>',$newsletter);
+            
+            foreach ($params['product']['images'] as $key => $value) {
+                $product_images .= "<img src=\"". $value ."\" alt=\"". $product['name'] ."\" />";
+            }
+            $newsletter = str_replace("{%product_images%}",$product_images,$newsletter);
+            
+            if ($params['product']['discounts']) {
+                $product_discounts = "<table><tr><th>Cantidad</th><th>Precio</th></tr>";
+                foreach ($params['product']['discounts'] as $key => $value) {
+                    $product_discounts .= "<tr>";
+                    $product_discounts .= "<td>". $value['quantity'] ."</td>";
+                    $product_discounts .= "<td>". $value['price'] ."</td>";
+                    $product_discounts .= "</tr>";
+                }
+                $product_discounts .= "</table>";
+                $newsletter = str_replace("{%product_discounts%}",discounts,$newsletter);
+            }
+            
+            foreach ($params['product']['tags'] as $key => $value) {
+                $product_tags .= "<a href=\"". $value['href'] ."\">". $value['tag'] ."</a>";
+            }
+            $newsletter = str_replace("{%product_tags%}",$product_tags,$newsletter);
+        }
+        
+        $newsletter .= "<p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+        
+        return html_entity_decode(htmlspecialchars_decode($newsletter));    
     }
     
     public function escape($str) {

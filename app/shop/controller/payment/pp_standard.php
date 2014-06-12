@@ -1,12 +1,16 @@
 <?php
 class ControllerPaymentPPStandard extends Controller {
 	protected function index() {
+		$this->language->load('payment/pp_standard');
 	   if (!$this->config->get('pp_standard_test')) {
     		$this->data['action'] = 'https://www.paypal.com/cgi-bin/webscr';
   		} else {
 			$this->data['action'] = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 		}
-		
+        
+		$this->load->library('image');
+        $this->data['Image'] = new NTImage;
+        
 		$this->load->model('checkout/order');
         if ($this->request->hasQuery('order_id')) {
             $order_id = $this->request->getQuery('order_id');
@@ -49,12 +53,26 @@ class ControllerPaymentPPStandard extends Controller {
 		$this->data['custom'] = $encryption->encrypt($order_id);
 		$this->data['button_pay'] = 'PayPal Standard';
 		
+        $this->load->model("marketing/newsletter");
+        $result = $this->modelNewsletter->getById($this->config->get('pp_standard_newsletter_id'));
+        $this->data['instructions'] = html_entity_decode($result['htmlbody']);
+                
+        // style files
+        $csspath = defined("CDN") ? CDN.CSS : HTTP_CSS;
+            
+        $styles[] = array('media'=>'all','href'=>$csspath.'jquery-ui/jquery-ui.min.css');
+        $styles[] = array('media'=>'all','href'=>$csspath.'neco.form.css');
+            
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        }
+                
 		$this->id = 'payment';
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/pp_standard.tpl')) {
 			$this->template = $this->config->get('config_template') . '/payment/pp_standard.tpl';
 		} else {
-			$this->template = 'cuyagua/payment/pp_standard.tpl';
+			$this->template = 'choroni/payment/pp_standard.tpl';
 		}	
 		
 		$this->render();	

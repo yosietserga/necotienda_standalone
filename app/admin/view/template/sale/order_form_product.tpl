@@ -20,7 +20,7 @@
                 <br />&nbsp;<small> - <?php echo $option['name']; ?> <?php echo $option['value']; ?></small>
                 <?php } ?>
             </td>
-            <td><input type="number" name="product[<?php echo $key; ?>][quantity]" value="<?php echo $order_product['quantity']; ?>" size="4" showquick="off" /></td>
+            <td><input type="necoNumber" name="product[<?php echo $key; ?>][quantity]" value="<?php echo $order_product['quantity']; ?>" size="4" showquick="off" /></td>
             <td><input type="text" name="product[<?php echo $key; ?>][price]" value="<?php echo $order_product['price']; ?>" showquick="off" /></td>
             <td><input type="text" name="product[<?php echo $key; ?>][total]" value="<?php echo $order_product['total']; ?>" showquick="off" /></td>
         </tr>
@@ -91,7 +91,7 @@ function add() {
 	    html += '<span onclick="$(\'#product_' + orderProductRow + '\').remove();" class="remove">&nbsp;</span>';
 	    html += '<a href="<?php echo $Url::createAdminUrl("store/product/update"); ?>&product_id=' + $(this).val() + '">' + $(this).attr('text') + '</a>';
 	    html += '</td>';
-	    html += '<td><input type="number" name="product[' + orderProductRow + '][quantity]" value="" size="4" /></td>';
+	    html += '<td><input type="necoNumber" name="product[' + orderProductRow + '][quantity]" value="" size="4" /></td>';
 	    html += '<td><input type="text" name="product[' + orderProductRow + '][price]" value="" /></td>';
 	    html += '<td><input type="text" name="product[' + orderProductRow + '][total]" value="" /></td>';
         

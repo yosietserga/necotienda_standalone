@@ -48,7 +48,7 @@
                 });
             }
         }
- 
+
         var helpers = {
             _create: function() {                
                 var formCounter = 0;
@@ -206,7 +206,11 @@
                         }
                         
                         var pattern = new RegExp(/.["\\\/\{\}\[\]\+']/i);
-                        if (pattern.test($(this).val()) && !error && $(this).attr('type') != 'password' && $(this).attr('type') != 'hidden' && $(this).attr('type') != 'date') {
+                        if (pattern.test($(this).val()) && 
+                        !error && $(this).attr('type') != 'password' && 
+                        $(this).attr('type') != 'hidden' && 
+                        $(this).attr('type') != 'necoDate' && 
+                        $(this).attr('type') != 'date') {
                             error = true;
                             $("#tempError").remove();
                             msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('No se permiten ninguno de estos caracteres especiales ["#$/\'+}{\u003C\u003E] en este formulario');
@@ -446,15 +450,13 @@
                     });
                 }
                 
-                if (data.type == 'date') {
-                    if (!Modernizr.inputtypes['date']) {
-                        $(data.element).mask("99/99/9999",{placeholder:" "});
-                        $(data.element).datepicker({
-                            changeMonth: true,
-                            changeYear: true,
-                            dateFormat: 'dd/mm/yy'
-                        }); 
-                    }
+                if (data.type == 'necoDate') {
+                    $(data.element).mask("99/99/9999",{placeholder:" "});
+                    $(data.element).datepicker({
+                        changeMonth: true,
+                        changeYear: true,
+                        dateFormat: 'dd/mm/yy'
+                    });
                     settings.pattern = /^(0[1-9]|[12][0-9]|3[01])+[\-\/]+(0[1-9]|1[012])+[\-\/]+(19|20)[0-9]{2}/i;
                     settings.help = "Por favor ingrese una fecha valida";
                     data.element.on('change',function(event){
@@ -496,7 +498,7 @@
                     });
                 }
                 
-                if (data.type == 'number') {
+                if (data.type == 'necoNumber') {
                     settings.pattern = /^\d+$/i;
                     //TODO: agregar botones para sumar o restar
                     data.element.on('change',function(event){

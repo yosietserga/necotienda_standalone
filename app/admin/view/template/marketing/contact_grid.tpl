@@ -4,10 +4,22 @@
     <option value="editAll">Editar</option>
     <option value="addToList">Agregar a una lista</option>
     -->
+    <option value="addToList">Agregar A Lista</option>
     <option value="deleteAll">Eliminar</option>
 </select>
 <a href="#" title="Ejecutar acci&oacute;n por lote" onclick="if ($('#batch').val().length <= 0) { return false; } else { window[$('#batch').val()](); return false;}" style="margin-left: 10px;font-size: 10px;">[ Ejecutar ]</a>
 <div class="clear"></div><br />
+
+<div id="temp" style="display: none;">
+    <form id="contact_list_form">
+        <select name="contact_list_id" id="contact_list_id">
+            <option value=""><?php echo $Language->get('text_select'); ?></option>
+            <?php foreach ($lists as $list) { ?>
+            <option value="<?php echo $list['contact_list_id']; ?>"><?php echo $list['name']; ?> (<?php echo $list['total_contacts']; ?>)</option>
+            <?php } ?>
+        </select>
+    </form>
+</div>
 
 <div class="pagination"><?php echo $pagination; ?></div>
 <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">

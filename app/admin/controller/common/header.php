@@ -115,10 +115,8 @@ class ControllerCommonHeader extends Controller {
             
             $this->load->library('update');
             $update = new Update($this->registry);
-            $update_info = $update->getInfo();
-            if (version_compare(VERSION,$update_info['version'],'<')) {
-                $this->data['msg'] = "Hay una nueva versi&oacute;n disponible, Para instalarla haz click <a href=\"". Url::createAdminUrl("tool/update") ."\" title=\"Actualizar\">aqu&iacute;</a>";
-            }
+            $this->data['msg'] = $update->checkForUpdates();
+            //var_dump($update->getInfo());
             
             if ($this->session->has('success')) {
                 $this->data['success'] = $this->session->get('success');

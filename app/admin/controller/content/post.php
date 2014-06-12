@@ -87,7 +87,8 @@ class ControllerContentPost extends Controller {
             $this->request->post['date_publish_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0] .' 00:00:00';
             
 			$post_id = $this->modelPost->add($this->request->post);
-        
+            $this->modelPost->setProperty($post_id,'customer_groups','customer_groups', $this->request->getPost('customer_groups'));
+            $this->modelPost->setProperty($post_id,'style','view', $this->request->getPost('view'));
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
@@ -163,11 +164,13 @@ class ControllerContentPost extends Controller {
             $this->request->post['date_publish_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0] .' 00:00:00';
             
 			$post_id = $this->modelPost->update($this->request->get['post_id'], $this->request->post);
+            $this->modelPost->setProperty($this->request->getQuery('post_id'),'customer_groups','customer_groups', $this->request->getPost('customer_groups'));
+            $this->modelPost->setProperty($this->request->getQuery('post_id'),'style','view', $this->request->getPost('view'));
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
             if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('content/post/update',array('post_id'=>$this->request->get['post_id']))); 
+                $this->redirect(Url::createAdminUrl('content/post/update',array('post_id'=>$this->request->getQuery('post_id')))); 
             } elseif ($_POST['to'] == "saveAndNew") {
                 $this->redirect(Url::createAdminUrl('content/post/insert')); 
             } else {
@@ -541,11 +544,35 @@ class ControllerContentPost extends Controller {
 		
 		$this->data['cancel'] = Url::createAdminUrl('content/post') . $url;
 
-		if (isset($this->request->get['post_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+		if ($this->request->hasQuery('post_id') && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$post_info = $this->modelPost->getPost($this->request->get['post_id']);
 		}
         
+        $this->setvar('post_id',$post_info,'');
+        $this->setvar('parent_id',$post_info,'');
+        
 		$this->data['languages'] = $this->modelLanguage->getAll();
+		$this->data['stores'] = $this->modelStore->getAll();
+		$this->data['_stores'] = $this->modelPost->getStores($this->request->getQuery('post_id'));
+		$this->data['customerGroups'] = $this->modelCustomergroup->getAll();
+		$this->data['customer_groups'] = $this->modelPost->getProperty($this->request->getQuery('post_id'),'customer_groups','customer_groups');
+        $this->data['layout'] = $this->modelPost->getProperty($this->request->getQuery('post_id'),'style','view');
+        
+  		if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
+            $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';
+    	} else {
+    		$folderTPL = DIR_CATALOG . 'view/theme/default/';
+    	}
+        
+        $directories = glob($folderTPL . "*", GLOB_ONLYDIR);
+		$this->data['templates'] = array();
+		foreach ($directories as $key => $directory) {
+			$this->data['views'][$key]['folder'] = basename($directory);
+            $files = glob($directory . "/*.tpl", GLOB_NOSORT);
+            foreach ($files as $k => $file) {
+    			$this->data['views'][$key]['files'][$k] = str_replace("\\","/",$file) ;
+    		}
+		}
         
 		if (isset($this->request->post['post_description'])) {
 			$this->data['post_description'] = $this->request->post['post_description'];
@@ -571,9 +598,6 @@ class ControllerContentPost extends Controller {
 			$this->data['date_publish_end'] = '';
 		}
 
-		$this->data['stores'] = $this->modelStore->getAll();
-		$this->data['_stores'] = $this->modelPost->getStores($this->request->get['post_id']);
-        
         $scripts[] = array('id'=>'form','method'=>'ready','script'=>
             "$('#q').on('change',function(e){
                 var that = this;
@@ -582,6 +606,21 @@ class ControllerContentPost extends Controller {
                     $('#storesWrapper li').show();
                 } else {
                     $('#storesWrapper li b').each(function(){
+                        if ($(this).text().toLowerCase().indexOf( valor ) != -1) {
+                            $(this).closest('li').show();
+                        } else {
+                            $(this).closest('li').hide();
+                        }
+                    });
+                }
+            });
+            $('#qCustomerGroups').on('change',function(e){
+                var that = this;
+                var valor = $(that).val().toLowerCase();
+                if (valor.length <= 0) {
+                    $('#customerGroupsWrapper li').show();
+                } else {
+                    $('#customerGroupsWrapper li b').each(function(){
                         if ($(this).text().toLowerCase().indexOf( valor ) != -1) {
                             $(this).closest('li').show();
                         } else {

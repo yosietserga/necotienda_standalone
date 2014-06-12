@@ -1,8 +1,9 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
-<section id="maincontent">
-    <section id="content">
-        <div class="grid_16">
+<div class="container">
+    <section id="maincontent">
+        <section id="content">
+        <div class="grid_12 hideOnMobile">
             <ul id="breadcrumbs" class="nt-editable">
             <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -12,7 +13,15 @@
         
         <div class="clear"></div><br /><br />
         
-        <div class="grid_7" style="padding: 0px 40px;">
+        <div class="grid_12">
+            <div id="featuredContent">
+            <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+            </div>
+        </div>
+            
+        <div class="clear"></div>
+        
+        <div class="grid_5" style="padding: 0px 40px;">
             <div class="nt-editable" id="images">
                 <div id="popup">
                     <ul class="nt-editable" id="productImages">
@@ -28,17 +37,15 @@
             
             <div class="clear"></div>
             
-            <div class="property nt-editable" id="productSocial" style="display: none;">
-                
-            </div>
+            <div class="property nt-editable" id="productSocial"></div>
             
         </div>
         
-        <div class="grid_7">
+        <div class="grid_6">
         
             <h1 class="nt-editable" id="productName"><?php echo $heading_title; ?></h1>
             
-            <div class="clear"></div>
+            <div class="clear"></div><br />
             
             <div class="property model nt-editable" id="productModel"><?php echo $model; ?></div>
             
@@ -73,7 +80,7 @@
             
             <div class="clear"></div>
             
-            <?php if ($tags) { ?>
+            <?php if ($tags || $manufacturer || $categories) { ?>
             <ul class="tags nt-editable" id="productTags">
             <?php if ($manufacturer) { ?>
                 <li><a class="manufacturer nt-editable" id="productManufacturer" title="<?php echo $manufacturer; ?>" href="<?php echo str_replace('&', '&amp;', $manufacturers); ?>"><?php echo $manufacturer; ?></a></li>
@@ -87,9 +94,10 @@
             </ul>
             <?php } ?>
             
-            <div class="clear"></div><br /><hr /><br />
-            
-            <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="product">
+            <div class="clear"></div><br />
+            <?php if ($Config->get('config_store_mode')=='store') { ?>
+            <hr /><br />
+            <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="productForm">
                 
                 <?php if ($discounts) { ?>
                 <div class="property discount nt-editable" id="productDiscount">
@@ -140,18 +148,45 @@
                     <?php if ($minimum> 1) { ?><br /><small><?php echo $Language->get('text_minimum'); ?></small><?php } ?>
                     <a class="arrow-down" style="position:absolute;margin-top: 5px;margin-right: 5px;"></a>
                     <a class="arrow-up" style="position:absolute;margin-top: 5px;margin-left:20px"></a>
-                    <a title="<?php echo $Language->get('button_add_to_cart'); ?>" <?php if (!$this->config->get("cart_ajax")) { ?>onclick="$('#product').submit();"<?php } else { ?>onclick="addToCart('<?php echo $product_id; ?>',$('#quantity').val())"<?php } ?> id="add_to_cart" class="button" style="float: none;margin-left:40px"><?php echo $Language->get('button_add_to_cart'); ?></a>
                 </div>
                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
                 <input type="hidden" name="redirect" value="<?php echo str_replace('&', '&amp;', $redirect); ?>" />
             
-            </form>
+            <script type="text/javascript">
+            <?php
+            echo 'var data = '. json_encode(array(
+                'seller_id'=>$product_info['owner_id'],
+                'buyer_name'=>$this->customer->getFirstName() .' '. $this->customer->getLastName(),
+                'product_id'=>$product_id
+            )) .';';
+            echo($contactData);
+            ?>
+            </script>
+            <div class="property quantity">
+                <a title="Contactar" id="contact" class="button blue" onclick="productContact('<?php echo ($this->customer->isLogged()); ?>','<?php echo HTTP_HOME; ?>','<?php echo ($this->session->get('token')); ?>',data)">Contactar</a>
+                <a title="<?php echo $Language->get('button_add_to_cart'); ?>" onclick="addToCart('<?php echo $Url::createUrl("checkout/cart/json") .'&product_id='. $product_id; ?>')" id="add_to_cart" class="button blue"><?php echo $Language->get('button_add_to_cart'); ?></a>
+            </div>
             
+            </form>
+            <?php } ?>
+            
+            <div class="clear"></div><hr /><br />
+            
+        <?php if ($google_client_id) { ?><a class="socialSmallButton googleButton" href="<?php echo $Url::createUrl("api/google",array('redirect'=>'promoteproduct','product_id'=>$product_id)); ?>"><?php echo $Language->get('text_google_promote'); ?></a><?php } ?>
+                        
+        <?php if ($live_client_id) { ?><a class="socialSmallButton liveButton" href="<?php echo $Url::createUrl("api/live",array('redirect'=>'promoteproduct','product_id'=>$product_id)); ?>"><?php echo $Language->get('text_live_promote'); ?></a><?php } ?>
+                        
+        <?php if ($facebook_app_id) { ?><a class="socialSmallButton facebookButton" href="<?php echo $Url::createUrl("api/live",array('redirect'=>'promoteproduct','product_id'=>$product_id)); ?>"><?php echo $Language->get('text_facebook_promote'); ?></a><?php } ?>
+                        
+        <?php if ($twitter_oauth_token_secret) { ?><a class="socialSmallButton twitterButton" href="<?php echo $Url::createUrl("api/live",array('redirect'=>'promoteproduct','product_id'=>$product_id)); ?>"><?php echo $Language->get('text_twitter_promote'); ?></a><?php } ?>
+               
         </div>
         
         <div class="clear"></div>
         <?php if ($related) { ?>
         <div class="grid_16 nt-editable" id="productRelated">
+            <br /><hr />
+            <h2>Productos Relacionados</h2>
             <div id="related" class="box nt-editable"></div>
         </div>
         <?php } ?>
@@ -186,9 +221,9 @@
             <div class="clear"></div>
             
         </div>
+        </section>
     </section>
-    
-</section>
+</div>
 
 <script type="text/javascript" src="<?php echo HTTP_JS; ?>necojs/neco.carousel.js"></script>
 <script type="text/javascript" src="<?php echo HTTP_JS; ?>vendor/jquery.etalage.js"></script>
@@ -208,8 +243,8 @@ $(function(){
     $("#related").ntCarousel({
         url:'<?php echo $Url::createUrl("store/product/relatedJson",array("product_id"=>$product_id)); ?>',
         image: {
-          width:80,
-          height:80  
+          width:<?php echo ($Config->get("config_image_related_width")) ? $Config->get("config_image_related_width") : 100; ?>,
+          height:<?php echo ($Config->get("config_image_related_height")) ? $Config->get("config_image_related_height") : 100; ?>  
         },
         loading: {
           image: '<?php echo HTTP_IMAGE; ?>loader.gif'
@@ -255,7 +290,6 @@ $(function(){
     });
     
     $('#review').load('<?php echo $Url::createUrl("store/product/review",array("product_id"=>$product_id)); ?>');
-    
     $('#comment').load('<?php echo $Url::createUrl("store/product/comment",array("product_id"=>$product_id)); ?>');
     
     $('#productImages').etalage({

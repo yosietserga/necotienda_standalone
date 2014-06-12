@@ -1,9 +1,11 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
-<section id="maincontent">
-    <div id="content">
+<div class="container">
+    <section id="maincontent">
+        <section id="content">
+    <div id="contentWrapper">
     
-        <div class="grid_16">
+        <div class="grid_12 hideOnMobile">
             <ul id="breadcrumbs" class="nt-editable">
             <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -13,31 +15,34 @@
         
         <div class="clear"></div><br /><br />
         
-        <div class="grid_16">
+        <div class="grid_12">
             <div id="featuredContent">
-            <?php if($featuredWidgets) { ?><ul class="widgets"><?php foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
+            <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
             </div>
         </div>
+            
         <div class="clear"></div>
         
-        <div class="grid_16">
+        <div class="grid_12">
         <ul class="neco-wizard-controls">
-            <li>Carrito
-                <span>Agrega y elimina productos del carrito de compra</span>
+            <li><?php echo $Language->get('text_basket'); ?>
+                <span><?php echo $Language->get('text_step_cart'); ?></span>
             </li>
              <?php if (!$isLogged) { ?>
-            <li>Facturaci&oacute;n
-                <span>Ingresa los datos de facturaci&oacute;n</span>
+            <li><?php echo $Language->get('text_billing'); ?>
+                <span><?php echo $Language->get('text_step_billing'); ?></span>
             </li>
             <?php } ?>
-            <li>Despacho
-                <span>Configura las direcciones de faturaci&oacute;n y entrega</span>
+            <?php if ($shipping_methods || (!$isLogged || ($isLogged && !$shipping_country_id))) { ?>
+            <li><?php echo $Language->get('text_shipping'); ?>
+                <span><?php echo $Language->get('text_step_shipping'); ?></span>
             </li>
-            <li>Confirmaci&oacute;n y Pago
-                <span>Confirmar los datos del pedido y selecciona el m&eacute;todo de pago</span>
+            <?php } ?>
+            <li><?php echo $Language->get('text_confirm'); ?>
+                <span><?php echo $Language->get('text_step_confirm'); ?></span>
             </li>
-            <li>Procesar Pedido
-                <span>Procesar el pedido y registrarlo en tu cuenta</span>
+            <li><?php echo $Language->get('text_complete'); ?>
+                <span><?php echo $Language->get('text_step_success'); ?></span>
             </li>
         </ul>
         
@@ -55,20 +60,18 @@
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
-                            <th><?php echo $column_image; ?></th>
-                            <th><?php echo $column_name; ?></th>
-                            <th><?php echo $column_model; ?></th>
-                            <th><?php echo $column_quantity; ?></th>
-                            <th><?php echo $column_price; ?></th>
-                            <th><?php echo $column_total; ?></th>
+                            <th><?php echo $Language->get('column_image'); ?></th>
+                            <th><?php echo $Language->get('column_name'); ?></th>
+                            <th><?php echo $Language->get('column_model'); ?></th>
+                            <th><?php echo $Language->get('column_quantity'); ?></th>
+                            <th><?php echo $Language->get('column_price'); ?></th>
+                            <th><?php echo $Language->get('column_total'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $class = 'odd'; ?>
                         <?php foreach ($products as $product) { ?>
-                        <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-                        <tr class="<?php echo $class; ?>">
-                            <td><a class="delete-product" onclick="deleteCart(this,'<?php echo $product['key']; ?>')" title="Eliminar"></a></td>
+                        <tr>
+                            <td><a class="delete-product" onclick="deleteCart(this,'<?php echo $product['key']; ?>')" title="<?php echo $Language->get('text_delete'); ?>"></a></td>
                             <td><a title="<?php echo $product['name']; ?>" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a></td>
                             <td>
                                 <a title="<?php echo $product['name']; ?>" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $product['name']; ?></a>
@@ -78,7 +81,7 @@
                             <td><?php echo $product['model']; ?></td>
                             <td>
                                 <input type="text" name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" showquick="off" size="3" style="float:left;width:30px;" onchange="refreshCart(this,'<?php echo $product['key']; ?>')" />
-                                <a class="update-product" onclick="refreshCart(this,'<?php echo $product['key']; ?>')" title="Actualizar"></a>
+                                <a class="update-product" onclick="refreshCart(this,'<?php echo $product['key']; ?>')" title="<?php echo $Language->get('text_update'); ?>"></a>
                             </td>
                             <td><?php echo $product['price']; ?></td>
                             <td><?php echo $product['total']; ?></td>
@@ -87,7 +90,7 @@
                     </tbody>
                     </table>
                     
-                    <table id="totals" style="float: right;">
+                    <table id="totals">
                     <?php foreach ($totals as $total) { ?>
                         <tr>
                             <td><b><?php echo $total['title']; ?></b></td>
@@ -96,34 +99,43 @@
                     <?php } ?>
                     </table>
                     
-                    <a title="<?php echo $button_shopping; ?>" onclick="location = '<?php echo str_replace('&amp;', '&', $continue); ?>'" class="button"><?php echo $button_shopping; ?></a>
             </div>
 
             <?php if (!$isLogged) { ?>
             <div>
-                <div class="grid_16">
+                <div class="grid_12">
                         <fieldset>
-                            <div class="legend">Datos de Facturaci&oacute;n</div>
-                            <?php if ($isLogged) { ?><a href="index.php?r=account/account" title="Actualizar Datos">Actualizar Datos</a><?php } ?>
+                            <legend>Datos de Facturaci&oacute;n</legend>
+                            <?php if ($isLogged) { ?><a href="index.php?r=account/account" title="<?php echo $Language->get('text_update'); ?>"></a><?php } ?>
                             <div class="property">
-                                <label for="email">Email:</label>
-                                <input type="email" name="email" id="email" value="<?php echo isset($email) ? $email : ''; ?>" required="required" title="Ingrese su email, &eacute;ste ser&aacute; verificado contra su servidor para validarlo" style="width: 220px;" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
+                                <label for="email"><?php echo $Language->get('text_email'); ?>:</label>
+                                <input type="email" name="email" id="email" value="<?php echo isset($email) ? $email : ''; ?>" required="required" title="<?php echo $Language->get('help_email'); ?>" style="width: 220px;" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
                             </div>
                   
                             <div class="property">
-                                <label for="company">Nombre Completo o Raz&oacute;n Social:</label>
+                                <label for="firstname"><?php echo $Language->get('text_firstname'); ?>:</label>
+                                <input type="text" id="firstname" name="firstname" required="required" value="<?php echo isset($firstname) ? $firstname : ''; ?>" style="width: 220px;" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
+                            </div>
+                          
+                            <div class="property">
+                                <label for="lastname"><?php echo $Language->get('text_lastname'); ?>:</label>
+                                <input type="text" id="lastname" name="lastname" required="required" value="<?php echo isset($lastname) ? $lastname : ''; ?>" style="width: 220px;" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
+                            </div>
+                          
+                            <div class="property">
+                                <label for="company"><?php echo $Language->get('text_company'); ?>:</label>
                                 <input type="text" id="company" name="company" required="required" value="<?php echo isset($company) ? $company : ''; ?>" style="width: 220px;" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
                             </div>
                           
                             <div class="property">
-                                <label for="rif">RIF o C&eacute;dula:</label>
-                                <select name="riftype" title="Selecciona el tipo de documentaci&oacute;n">
+                                <label for="rif"><?php echo $Language->get('text_rif'); ?>:</label>
+                                <select name="riftype" title="<?php echo $Language->get('help_riftype'); ?>">
                                     <option value="V" <?php if (strtolower($rif_type) == 'v') echo 'selected="selected"'; ?>>V</option>
                                     <option value="J" <?php if (strtolower($rif_type) == 'j') echo 'selected="selected"'; ?>>J</option>
                                     <option value="E" <?php if (strtolower($rif_type) == 'e') echo 'selected="selected"'; ?>>E</option>
                                     <option value="G" <?php if (strtolower($rif_type) == 'g') echo 'selected="selected"'; ?>>G</option>
                                 </select>
-                                <input type="text" id="rif" name="rif" value="<?php echo isset($rif) ? $rif : ''; ?>" required="required" maxlength="10" title="Por favor ingresa tu RIF personal o el de la empresa. Si es persona natural y a&uacute;n no posee uno, ingresa tu n&uacute;mero de c&eacute;dula con un n&uacute;mero cero al final" quicktip="Ingresa tu número de cédula si eres una persona natural y no posees RIF. Ingresa solo números" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
+                                <input type="text" id="rif" name="rif" value="<?php echo isset($rif) ? $rif : ''; ?>" required="required" maxlength="10" title="<?php echo $Language->get('help_rif'); ?>" quicktip="Ingresa tu nï¿½mero de cï¿½dula si eres una persona natural y no posees RIF. Ingresa solo nï¿½meros" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
                             </div>
                           
                             <div class="property">
@@ -131,9 +143,14 @@
                                 <input type="text" id="telephone" name="telephone" required="required" value="<?php echo isset($telephone) ? $telephone : ''; ?>" style="width: 220px;" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
                             </div>
                             
+                            <div class="property"<?php if ($isLogged) echo ' style="display:hidden"'; ?>>
+                                <label for="referencedBy"><?php echo $Language->get('entry_referencedBy'); ?></label>
+                                <input type="text" id="referencedBy" name="referencedBy" value="<?php echo isset($referencedBy) ? $referencedBy : ''; ?>" style="width: 220px;" />
+                            </div>
+                            
                           <div class="property">
-                            <label for="payment_country_id"><?php echo $entry_country; ?></label>
-                            <select name="payment_country_id" id="payment_country_id" title="Selecciona el pa&iaacute;s de la facturaci&oacute;n" onchange="$('select[name=\'payment_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $payment_zone_id; ?>');">
+                            <label for="payment_country_id"><?php echo $Language->get('entry_country'); ?></label>
+                            <select name="payment_country_id" id="payment_country_id" title="<?php echo $Language->get('help_country'); ?>" onchange="$('select[name=\'payment_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $payment_zone_id; ?>');">
                                 <option value="false">-- Por Favor Seleccione --</option>
                                 <?php foreach ($countries as $country) { ?>
                                     <?php if ($country['country_id'] == $payment_country_id) { ?>
@@ -146,44 +163,50 @@
                         </div>
                       
                         <div class="property">
-                            <label for="payment_zone_id"><?php echo $entry_zone; ?></label>
-                            <select name="payment_zone_id" id="payment_zone_id" title="Selecciona el pa&iaacute;s de tu residencia">
+                            <label for="payment_zone_id"><?php echo $Language->get('entry_zone'); ?></label>
+                            <select name="payment_zone_id" id="payment_zone_id" title="<?php echo $Language->get('help_zone'); ?>">
                                 <option value="false">-- Seleccione un pa&iacute;s --</option>
                             </select>
                         </div>
                       
                         <div class="property">
-                            <label for="payment_city"><?php echo $entry_city; ?></label>
-                            <input type="text" id="payment_city" name="payment_city" value="<?php echo $payment_city; ?>" required="required" title="Ingrese su nombre y apellido si es persona natural sino ingrese el nombre de su organizaci&oacute;n" />
+                            <label for="payment_city"><?php echo $Language->get('entry_city'); ?></label>
+                            <input type="text" id="payment_city" name="payment_city" value="<?php echo $payment_city; ?>" required="required" title="<?php echo $Language->get('help_city'); ?>" />
                         </div>
                   
                         <div class="property">
-                            <label for="payment_postcode"><?php echo $entry_postcode; ?></label>
-                            <input type="number" id="payment_postcode" name="payment_postcode" value="<?php echo $payment_postcode; ?>" required="required" title="Ingrese su nombre y apellido si es persona natural sino ingrese el nombre de su organizaci&oacute;n" />
+                            <label for="payment_street"><?php echo $Language->get('entry_street'); ?></label>
+                            <input type="text" id="payment_street" name="payment_street" value="<?php echo $payment_street; ?>" required="required" title="<?php echo $Language->get('help_street'); ?>" />
                         </div>
                   
                         <div class="property">
-                            <label for="payment_address_1"><?php echo $entry_address_1; ?></label>
-                            <input type="text" id="payment_address_1" name="payment_address_1" value="<?php echo $payment_address_1; ?>" required="required" title="Ingrese su nombre y apellido si es persona natural sino ingrese el nombre de su organizaci&oacute;n" />
+                            <label for="payment_postcode"><?php echo $Language->get('entry_postcode'); ?></label>
+                            <input type="necoNumber" id="payment_postcode" name="payment_postcode" value="<?php echo $payment_postcode; ?>" required="required" title="<?php echo $Language->get('help_postcode'); ?>" />
+                        </div>
+                  
+                        <div class="property">
+                            <label for="payment_address_1"><?php echo $Language->get('entry_address_1'); ?></label>
+                            <input type="text" id="payment_address_1" name="payment_address_1" value="<?php echo $payment_address_1; ?>" required="required" title="<?php echo $Language->get('help_address'); ?>" />
                         </div>
                         </fieldset>
                         
-                        <p>Al continuar con el proceso de compra, usted est&aacute; aceptando los <a href="" title="">t&eacute;rminos legales y las condiciones de uso</a> de este sitio web.</p>
+                        <p>Al continuar con el proceso de compra, usted est&aacute; aceptando los <a href="<?php echo $Url::createUrl('content/page',array('page_id'=>$Config->get('config_checkout_id'))); ?>">t&eacute;rminos legales y las condiciones de uso</a> de este sitio web.</p>
                         
                 </div>
             </div>
             <?php } ?>
             
             <!-- begin shipping section -->
+            <?php if ($shipping_methods || (!$isLogged || ($isLogged && !$shipping_country_id))) { ?>
             <div>
-                <div class="grid_16">
+                <div class="grid_12">
                     <?php if (!$isLogged || ($isLogged && !$shipping_country_id)) { ?>
                     <fieldset>
-                        <div class="legend">Direcci&oacute;n de Entrega</div>
+                        <legend>Direcci&oacute;n de Entrega</legend>
                         
                         <div class="property">
-                            <label for="shipping_country_id"><?php echo $entry_country; ?></label>
-                            <select name="shipping_country_id" id="shipping_country_id" title="Selecciona el pa&iaacute;s de tu residencia" onchange="$('select[name=\'shipping_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $zone_id; ?>');">
+                            <label for="shipping_country_id"><?php echo $Language->get('entry_country'); ?></label>
+                            <select name="shipping_country_id" id="shipping_country_id" title="<?php echo $Language->get('help_country'); ?>" onchange="$('select[name=\'shipping_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $zone_id; ?>');">
                                 <option value="false">-- Por Favor Seleccione --</option>
                                 <?php foreach ($countries as $country) { ?>
                                     <?php if ($country['country_id'] == $shipping_country_id) { ?>
@@ -196,29 +219,35 @@
                         </div>
                       
                         <div class="property">
-                            <label for="shipping_zone_id"><?php echo $entry_zone; ?></label>
-                            <select name="shipping_zone_id" id="shipping_zone_id" title="Selecciona el pa&iaacute;s de tu residencia">
+                            <label for="shipping_zone_id"><?php echo $Language->get('entry_zone'); ?></label>
+                            <select name="shipping_zone_id" id="shipping_zone_id" title="<?php echo $Language->get('help_zone'); ?>">
                                 <option value="false">-- Seleccione un pa&iacute;s --</option>
                             </select>
                         </div>
                       
                         <div class="property">
-                            <label for="shipping_city"><?php echo $entry_city; ?></label>
-                            <input type="text" id="shipping_city" name="shipping_city" value="<?php echo $shipping_city; ?>" required="required" title="Ingrese su nombre y apellido si es persona natural sino ingrese el nombre de su organizaci&oacute;n" />
+                            <label for="shipping_city"><?php echo $Language->get('entry_city'); ?></label>
+                            <input type="text" id="shipping_city" name="shipping_city" value="<?php echo $shipping_city; ?>" required="required" title="<?php echo $Language->get('help_city'); ?>" />
                         </div>
                   
                         <div class="property">
-                            <label for="shipping_postcode"><?php echo $entry_postcode; ?></label>
-                            <input type="number" id="shipping_postcode" name="shipping_postcode" value="<?php echo $shipping_postcode; ?>" required="required" title="Ingrese su nombre y apellido si es persona natural sino ingrese el nombre de su organizaci&oacute;n" />
+                            <label for="shipping_street"><?php echo $Language->get('entry_street'); ?></label>
+                            <input type="text" id="shipping_street" name="shipping_street" value="<?php echo $shipping_street; ?>" required="required" title="<?php echo $Language->get('help_street'); ?>" />
                         </div>
                   
                         <div class="property">
-                            <label for="shipping_address_1"><?php echo $entry_address_1; ?></label>
-                            <input type="text" id="shipping_address_1" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" required="required" title="Ingrese su nombre y apellido si es persona natural sino ingrese el nombre de su organizaci&oacute;n" />
+                            <label for="shipping_postcode"><?php echo $Language->get('entry_postcode'); ?></label>
+                            <input type="necoNumber" id="shipping_postcode" name="shipping_postcode" value="<?php echo $shipping_postcode; ?>" required="required" title="<?php echo $Language->get('help_postcode'); ?>" />
+                        </div>
+                  
+                        <div class="property">
+                            <label for="shipping_address_1"><?php echo $Language->get('entry_address_1'); ?></label>
+                            <input type="text" id="shipping_address_1" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" required="required" title="<?php echo $Language->get('help_address'); ?>" />
                         </div>
                   
                         <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
                         <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
+                        <input type="hidden" name="payment_street" id="payment_street" value="<?php echo $payment_street; ?>" />
                         <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
                         <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
                         <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
@@ -227,65 +256,77 @@
                         <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
                         <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
                         <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
+                        <input type="hidden" name="payment_street" id="payment_street" value="<?php echo $payment_street; ?>" />
                         <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
                         <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
                         
                         <input type="hidden" name="shipping_country_id" id="shipping_country_id" value="<?php echo $shipping_country_id; ?>" />
                         <input type="hidden" name="shipping_zone_id" id="shipping_zone_id" value="<?php echo $shipping_zone_id; ?>" />
                         <input type="hidden" name="shipping_city" id="shipping_city" value="<?php echo $shipping_city; ?>" />
+                        <input type="hidden" name="shipping_street" id="shipping_street" value="<?php echo $shipping_street; ?>" />
                         <input type="hidden" name="shipping_postcode" id="shipping_postcode" value="<?php echo $shipping_postcode; ?>" />
                         <input type="hidden" name="shipping_address_1" id="shipping_address_1" value="<?php echo $shipping_address_1; ?>" />
                     <?php } ?>
                     
+                    <?php if ($shipping_methods) { ?>
                     <fieldset>
-                        <div class="legend">Formas de Env&iacute;o</div>
+                        <legend><?php echo $Language->get('text_shipping_methods'); ?></legend>
                         
                         <table>
-                    <?php foreach ($shipping_methods as $shipping_method) { ?>
-                        <tr>
-                            <td colspan="3"><h2><?php echo $shipping_method['title']; ?></h2></td>
-                        </tr>
-                        <?php foreach ($shipping_method['quote'] as $quote) { ?>
-                        <tr>
-                            <td><input type="radio" name="shipping_method" value="<?php echo $quote['id']; ?>" showquick="off" /></td>
-                            <td><b><?php echo $quote['title']; ?></b></td>
-                            <td><b style="font: bold 18px arial;"><?php echo $quote['text']; ?></b></td>
-                        </tr>
-                        <?php } ?>
-                    <?php } ?>
+                            <thead>
+                                <tr>
+                                    <th>Seleccionar</th>
+                                    <th>M&eacute;todo de Envï¿½o</th>
+                                    <th>Precio</th>
+                                </tr>
+                            </thead>
+                            </tbody>
+                            <?php foreach ($shipping_methods as $shipping_method) { ?>
+                                <?php foreach ($shipping_method['quote'] as $quote) { ?>
+                                <tr>
+                                    <td><input type="radio" name="shipping_method" value="<?php echo $quote['id']; ?>" showquick="off" /></td>
+                                    <td><b><?php echo $quote['title']; ?></b></td>
+                                    <td><b style="font: bold 18px arial;"><?php echo $quote['text']; ?></b></td>
+                                </tr>
+                                <?php } ?>
+                            <?php } ?>
+                            </tbody>
                         </table>
                     
                     </fieldset>
+                    <?php } ?>
                 </div>
-                
             </div>
+            <?php } ?>
             <!-- end shipping section -->
             
             <!-- begin payment section -->
             <div>
-                <div class="grid_16">
-                <h1>Confirmaci&oacute;n del Pedido</h1>
+                <div class="grid_12">
+                <h1><?php echo $Language->get('text_order_confirm'); ?></h1>
                     <h2>Datos de Facturaci&oacute;n</h2>
                     <table class="confirmOrder">
                         <tr>
-                            <td>Raz&oacute;n Social:</td>
+                            <td><?php echo $Language->get('text_company'); ?>:</td>
                             <td id="confirmCompany"><?php echo $company; ?></td>
                         </tr>
                         <tr>
-                            <td>RIF:</td>
-                            <td id="confirmRif"><?php echo $rif; ?></td>
+                            <td><?php echo $Language->get('text_rif'); ?>:</td>
+                            <td id="confirmRif"><?php echo $riff; ?></td>
                         </tr>
                         <tr>
-                            <td>Direcci&oacute;n:</td>
+                            <td><?php echo $Language->get('text_address'); ?>:</td>
                             <td id="confirmPaymentAddress"><?php echo $payment_address; ?></td>
                         </tr>
                     </table>
-                    <h2>Direcci&oacute;n y M&eacute;todo de Env&iacute;o</h2>
+                    <h2><?php echo $Language->get('text_shipping_address_and_method'); ?></h2>
                     <table class="confirmOrder">
+                        <?php if ($shipping_methods) { ?>
                         <tr>
                             <td>M&eacute;todo de Env&iacute;o:</td>
                             <td id="shipping_method"></td>
                         </tr>
+                        <?php } ?>
                         <tr>
                             <td>Direcci&oacute;n:</td>
                             <td id="confirmShippingAddress"><?php echo $shipping_address; ?></td>
@@ -303,21 +344,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $class = 'odd'; ?>
                             <?php foreach ($products as $product) { ?>
-                            <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-                            <tr class="<?php echo $class; ?>">
+                            <tr id="confirmItem<?php echo $product['product_id']; ?>">
                                 <td>
                                     <?php echo $product['name']; ?>
                                     <div><?php foreach ($product['option'] as $option) { ?>- <small><?php echo $option['name']; ?> <?php echo $option['value']; ?></small><br /><?php } ?></div>
                                 </td>
                                 <td><?php echo $product['model']; ?></td>
-                                <td><?php echo $product['quantity']; ?></td>
+                                <td id="confirmQty<?php echo $product['product_id']; ?>"><?php echo $product['quantity']; ?></td>
                                 <td><?php echo $product['price']; ?></td>
-                                <td><?php echo $product['total']; ?></td>
+                                <td id="confirmTotal<?php echo $product['product_id']; ?>"><?php echo $product['total']; ?></td>
                             </tr>
                             <?php } ?>
                         </tbody>
+                    </table>
+                    
+                    <table id="totalsConfirm">
+                    <?php foreach ($totals as $total) { ?>
+                        <tr>
+                            <td><b><?php echo $total['title']; ?></b></td>
+                            <td><?php echo $total['text']; ?></td>
+                        </tr>
+                    <?php } ?>
                     </table>
                     
                     <div class="clear"></div>
@@ -335,10 +383,12 @@
         
     </div>
     
+    </div>
     <div class="clear"></div>
-    <div class="grid_16">
+    <div class="grid_12">
             <?php if($widgets) { ?><ul class="widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
     </div>
-    </div>
-</section>
+        </section>
+    </section>
+</div>
 <?php echo $footer; ?> 

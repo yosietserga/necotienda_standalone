@@ -59,7 +59,7 @@
         
         <div class="row">
             <label><?php echo $Language->get('entry_total'); ?></label>
-            <input type="number" id="total" name="total" value="<?php echo isset($total) ? $total : ''; ?>" required="true" title="<?php echo $Language->get('help_total'); ?>" />
+            <input type="necoNumber" id="total" name="total" value="<?php echo isset($total) ? $total : ''; ?>" required="true" title="<?php echo $Language->get('help_total'); ?>" />
         </div>
         
         <div class="row">
@@ -76,28 +76,28 @@
             
         <div class="row">
             <label><?php echo $Language->get('entry_date_start'); ?></label>
-            <input type="date" title="<?php echo $Language->get('help_date_start'); ?>" name="date_start" value="<?php echo $date_start; ?>" size="12" />
+            <input type="necoDate" title="<?php echo $Language->get('help_date_start'); ?>" name="date_start" value="<?php echo $date_start; ?>" size="12" />
         </div>
             
         <div class="clear"></div>
             
         <div class="row">
             <label><?php echo $Language->get('entry_date_end'); ?></label>
-            <input type="date" title="<?php echo $Language->get('help_date_end'); ?>" name="date_end" value="<?php echo $date_end; ?>" size="12" />
+            <input type="necoDate" title="<?php echo $Language->get('help_date_end'); ?>" name="date_end" value="<?php echo $date_end; ?>" size="12" />
         </div>
             
         <div class="clear"></div>
             
         <div class="row">
             <label><?php echo $Language->get('entry_uses_total'); ?></label>
-            <input type="number" title="<?php echo $Language->get('help_uses_total'); ?>" name="uses_total" value="<?php echo $uses_total; ?>" />
+            <input type="necoNumber" title="<?php echo $Language->get('help_uses_total'); ?>" name="uses_total" value="<?php echo $uses_total; ?>" />
         </div>
             
         <div class="clear"></div>
         
         <div class="row">
             <label><?php echo $Language->get('entry_uses_customer'); ?></label>
-            <input type="number" title="<?php echo $Language->get('help_uses_customer'); ?>" name="uses_customer" value="<?php echo $uses_customer; ?>" />
+            <input type="necoNumber" title="<?php echo $Language->get('help_uses_customer'); ?>" name="uses_customer" value="<?php echo $uses_customer; ?>" />
         </div>
         
         <div class="clear"></div>

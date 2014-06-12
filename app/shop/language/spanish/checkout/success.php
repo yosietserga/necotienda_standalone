@@ -9,7 +9,7 @@ $_['text_shipping'] = 'Env&iacute;o';
 $_['text_payment']  = 'Pago';
 $_['text_guest']    = 'Pedido';
 $_['text_confirm']  = 'Confirmar';
-$_['text_success']  = 'Listo';
+$_['text_checkout_success']  = 'Listo';
 $_['text_new_order']  = 'Pedido';
 
 $_['column_description']  = 'Descripci&oacute;n';

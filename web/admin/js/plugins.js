@@ -150,150 +150,7 @@ this.update()},afterClose:function(a){this.overlay&&!b.isActive&&this.overlay.fa
 H&&d.width(d.width()),d.wrapInner('<span class="child"></span>'),b.current.margin[2]+=Math.abs(l(d.css("margin-bottom")))}d["top"===a.position?"prependTo":"appendTo"](c)}}};f.fn.fancybox=function(a){var d,e=f(this),c=this.selector||"",k=function(g){var h=f(this).blur(),j=d,k,l;!g.ctrlKey&&(!g.altKey&&!g.shiftKey&&!g.metaKey)&&!h.is(".fancybox-wrap")&&(k=a.groupAttr||"data-fancybox-group",l=h.attr(k),l||(k="rel",l=h.get(0)[k]),l&&(""!==l&&"nofollow"!==l)&&(h=c.length?f(c):e,h=h.filter("["+k+'="'+l+
 '"]'),j=h.index(this)),a.index=j,!1!==b.open(h,a)&&g.preventDefault())};a=a||{};d=a.index||0;!c||!1===a.live?e.unbind("click.fb-start").bind("click.fb-start",k):n.undelegate(c,"click.fb-start").delegate(c+":not('.fancybox-item, .fancybox-nav')","click.fb-start",k);this.filter("[data-fancybox-start=1]").trigger("click");return this};n.ready(function(){f.scrollbarWidth===r&&(f.scrollbarWidth=function(){var a=f('<div style="width:50px;height:50px;overflow:auto"><div/></div>').appendTo("body"),b=a.children(),
 b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});if(f.support.fixedPosition===r){var a=f.support,d=f('<div style="position:fixed;top:20px;"></div>').appendTo("body"),e=20===d[0].offsetTop||15===d[0].offsetTop;d.remove();a.fixedPosition=e}f.extend(b.defaults,{scrollbarWidth:f.scrollbarWidth(),fixed:f.support.fixedPosition,parent:f("body")})})})(window,document,jQuery);
-(function($) {
-	$.extend({
-		progressBar: new
-		function() {
-			this.defaults = {
-				steps: 20,
-				stepDuration: 20,
-				max: 100,
-				showText: true,
-				textFormat: 'percentage',
-				width: 120,
-				height: 12,
-				callback: null,
-				boxImage: 'images/progressbar.gif',
-				barImage: {
-					0: 'images/progressbg_red.gif',
-					30: 'images/progressbg_orange.gif',
-					70: 'images/progressbg_green.gif'
-				},
-				running_value: 0,
-				value: 0,
-				image: null
-			};
-			this.construct = function(arg1, arg2) {
-				var argvalue = null;
-				var argconfig = null;
-				if (arg1 != null) {
-					if (!isNaN(arg1)) {
-						argvalue = arg1;
-						if (arg2 != null) {
-							argconfig = arg2;
-						}
-					} else {
-						argconfig = arg1;
-					}
-				}
-				return this.each(function(child) {
-					var pb = this;
-					var config = this.config;
-					if (argvalue != null && this.bar != null && this.config != null) {
-						this.config.value = parseInt(argvalue)
-						if (argconfig != null) pb.config = $.extend(this.config, argconfig);
-						config = pb.config;
-					} else {
-						var $this = $(this);
-						var config = $.extend({}, $.progressBar.defaults, argconfig);
-						config.id = $this.attr('id') ? $this.attr('id') : Math.ceil(Math.random() * 100000);
-						if (argvalue == null) argvalue = $this.html().replace("%", "")
-						config.value = parseInt(argvalue);
-						config.running_value = 0;
-						config.image = getBarImage(config);
-						var numeric = ['steps', 'stepDuration', 'max', 'width', 'height', 'running_value', 'value'];
-						for (var i = 0; i < numeric.length; i++)
-						config[numeric[i]] = parseInt(config[numeric[i]]);
-						$this.html("");
-						var bar = document.createElement('img');
-						var text = document.createElement('span');
-						var $bar = $(bar);
-						var $text = $(text);
-						pb.bar = $bar;
-						$bar.attr('id', config.id + "_pbImage");
-						$text.attr('id', config.id + "_pbText");
-						$text.html(getText(config));
-						$bar.attr('title', getText(config));
-						$bar.attr('alt', getText(config));
-						$bar.attr('src', config.boxImage);
-						$bar.attr('width', config.width);
-						$bar.css("width", config.width + "px");
-						$bar.css("height", config.height + "px");
-						$bar.css("background-image", "url(" + config.image + ")");
-						$bar.css("background-position", ((config.width * -1)) + 'px 50%');
-						$bar.css("padding", "0");
-						$bar.css("margin", "0");
-						$this.append($bar);
-						$this.append($text);
-					}
 
-					function getPercentage(config) {
-						return config.running_value * 100 / config.max;
-					}
-
-					function getBarImage(config) {
-						var image = config.barImage;
-						if (typeof(config.barImage) == 'object') {
-							for (var i in config.barImage) {
-								if (config.running_value >= parseInt(i)) {
-									image = config.barImage[i];
-								} else {
-									break;
-								}
-							}
-						}
-						return image;
-					}
-
-					function getText(config) {
-						if (config.showText) {
-							if (config.textFormat == 'percentage') {
-								return " " + Math.round(config.running_value) + "%";
-							} else if (config.textFormat == 'fraction') {
-								return " " + config.running_value + '/' + config.max;
-							}
-						}
-					}
-					config.increment = Math.round((config.value - config.running_value) / config.steps);
-					if (config.increment < 0) config.increment *= -1;
-					if (config.increment < 1) config.increment = 1;
-					var t = setInterval(function() {
-						var pixels = config.width / 100;
-						if (config.running_value > config.value) {
-							if (config.running_value - config.increment < config.value) {
-								config.running_value = config.value;
-							} else {
-								config.running_value -= config.increment;
-							}
-						} else if (config.running_value < config.value) {
-							if (config.running_value + config.increment > config.value) {
-								config.running_value = config.value;
-							} else {
-								config.running_value += config.increment;
-							}
-						}
-						if (config.running_value == config.value) clearInterval(t);
-						var $bar = $("#" + config.id + "_pbImage");
-						var $text = $("#" + config.id + "_pbText");
-						var image = getBarImage(config);
-						if (image != config.image) {
-							$bar.css("background-image", "url(" + image + ")");
-							config.image = image;
-						}
-						$bar.css("background-position", (((config.width * -1)) + (getPercentage(config) * pixels)) + 'px 50%');
-						$bar.attr('title', getText(config));
-						$text.html(getText(config));
-						if (config.callback != null && typeof(config.callback) == 'function') config.callback(config);
-						pb.config = config;
-					}, config.stepDuration);
-				});
-			};
-		}
-	});
-	$.fn.extend({
-		progressBar: $.progressBar.construct
-	});
-})(jQuery);
 /* Copyright (c) 2006 Brandon Aaron (http://brandonaaron.net)
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) 
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
@@ -305,7 +162,7 @@ b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});if(f.support.fi
  */
 (function($) {
 	$.fn.bgIframe = $.fn.bgiframe = function(s) {
-		if ($.browser.msie && /6.0/.test(navigator.userAgent)) {
+		if (navigator.userAgent.indexOf('MSIE') > -1 && /6.0/.test(navigator.userAgent)) {
 			s = $.extend({
 				top: 'auto',
 				left: 'auto',
@@ -326,7 +183,7 @@ b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});if(f.support.fi
 	};
 })(jQuery);
 (function(a) {
-	var c = (a.browser.msie ? "paste" : "input") + ".mask";
+	var c = (navigator.userAgent.indexOf('MSIE') > -1 ? "paste" : "input") + ".mask";
 	var b = (window.orientation != undefined);
 	a.mask = {
 		definitions: {
@@ -1219,7 +1076,7 @@ $.widget("mjs.nestedSortable", $.extend({}, $.ui.sortable.prototype, {
 		c = "CRZ",
 		B = parseInt,
 		p = Math,
-		C = d.browser.msie,
+		C = navigator.userAgent.indexOf('MSIE') > -1,
 		g = false,
 		s = "mousemove.",
 		t = "mouseup.",
@@ -1408,8 +1265,8 @@ style_html(html_source);
 style_html(html_source, options);
 
 The options are:
-indent_size (default 4) — indentation size,
-indent_char (default space) — character to indent with,
+indent_size (default 4) ï¿½ indentation size,
+indent_char (default space) ï¿½ character to indent with,
 max_char (default 70) - maximum amount of characters per line,
 brace_style (default "collapse") - "collapse" | "expand" | "end-expand"
 put braces on the same line as control statements (default), or put braces on own line (Allman / ANSI style), or just put end braces on own line.
@@ -1865,8 +1722,8 @@ css_beautify(source_text);
 css_beautify(source_text, options);
 
 The options are:
-indent_size (default 4) — indentation size,
-indent_char (default space) — character to indent with,
+indent_size (default 4) ï¿½ indentation size,
+indent_char (default space) ï¿½ character to indent with,
 
 e.g
 
@@ -2028,95 +1885,6 @@ function css_beautify(source_text, options) {
 }
 if (typeof exports !== "undefined") exports.css_beautify = css_beautify;
 
-/*!
-* BigScreen
-* v1.0.1 - 2012-10-04
-* https://github.com/bdougherty/BigScreen
-* Copyright 2012 Brad Dougherty; Apache 2.0 License
-*/
-(function(e,t,n){"use strict";function s(e,t,n){var r;return function(){var i=this,s=arguments,o=function(){r=null,n||e.apply(i,s)},u=n&&!r;clearTimeout(r),r=setTimeout(o,t),u&&e.apply(i,s)}}function o(e){var t=null;if(e.tagName==="VIDEO")t=e;else{var n=e.getElementsByTagName("video");n[0]&&(t=n[0])}return t}function f(e){var t=o(e);if(t&&t.webkitEnterFullscreen){try{t.readyState<t.HAVE_METADATA?(t.addEventListener("loadedmetadata",function r(){t.removeEventListener("loadedmetadata",r,!1),t.webkitEnterFullscreen(),a=!!t.getAttribute("controls")},!1),t.load()):(t.webkitEnterFullscreen(),a=!!t.getAttribute("controls")),u=t,t.play(),d(),setTimeout(l,500)}catch(n){m.onerror.call(t)}return}m.onerror.call(e)}function l(){if(u){if(u.webkitDisplayingFullscreen===!0)return setTimeout(l,500);v()}}function c(){m.element||(v(),p())}function h(){n&&i.change==="webkitfullscreenchange"&&e.addEventListener("resize",c,!1)}function p(){n&&i.change==="webkitfullscreenchange"&&e.removeEventListener("resize",c,!1)}var r=typeof Element!="undefined"&&"ALLOW_KEYBOARD_INPUT"in Element,i=function(){var e=[{request:"requestFullscreen",exit:"exitFullscreen",enabled:"fullscreenEnabled",element:"fullscreenElement",change:"fullscreenchange",error:"fullscreenerror"},{request:"webkitRequestFullscreen",exit:"webkitExitFullscreen",enabled:"webkitFullscreenEnabled",element:"webkitFullscreenElement",change:"webkitfullscreenchange",error:"webkitfullscreenerror"},{request:"webkitRequestFullScreen",exit:"webkitCancelFullScreen",element:"webkitCurrentFullScreenElement",change:"webkitfullscreenchange",error:"webkitfullscreenerror"},{request:"mozRequestFullScreen",exit:"mozCancelFullScreen",enabled:"mozFullScreenEnabled",element:"mozFullScreenElement",change:"mozfullscreenchange",error:"mozfullscreenerror"}],n=!1,r=t.createElement("video");for(var i=0;i<e.length;i++)if(e[i].request in r){n=e[i];for(var s in n)!("on"+n[s]in t)&&!(n[s]in t)&&!(n[s]in r)&&delete n[s];break}return r=null,n}(),u=null,a=null,d=s(function(){m.onenter.call(m)},100,!0),v=s(function(){u&&!a&&(u.setAttribute("controls","controls"),u.removeAttribute("controls")),u=null,a=null,m.onexit.call(m)},200,!0),m={request:function(e){e=e||t.documentElement;if(i.request===undefined)return f(e);if(n&&t[i.enabled]===!1)return f(e);if(n&&i.enabled===undefined){i.enabled="webkitFullscreenEnabled",e[i.request](),setTimeout(function(){t[i.element]?t[i.enabled]=!0:(t[i.enabled]=!1,f(e))},250);return}try{e[i.request](r&&Element.ALLOW_KEYBOARD_INPUT),t[i.element]||e[i.request]()}catch(s){m.onerror.call(e)}},exit:function(){p(),t[i.exit]()},toggle:function(e){m.element?m.exit():m.request(e)},videoEnabled:function(e){if(m.enabled)return!0;var t=o(e);return!t||t.webkitSupportsFullscreen===undefined?!1:t.readyState<t.HAVE_METADATA?"maybe":t.webkitSupportsFullscreen},onenter:function(){},onexit:function(){},onerror:function(){}};try{Object.defineProperties(m,{element:{enumerable:!0,get:function(){return u&&u.webkitDisplayingFullscreen?u:t[i.element]||null}},enabled:{enumerable:!0,get:function(){return i.exit==="webkitCancelFullScreen"&&!n?!0:t[i.enabled]||!1}}})}catch(g){m.element=null,m.enabled=!1}i.change&&t.addEventListener(i.change,function(e){m.element?(d(),h()):v()},!1),i.error&&t.addEventListener(i.error,function(e){m.onerror.call(e.target)},!1),e.BigScreen=m})(window,document,self!==top);
-
-/* jQuery Widget Combobox */
-(function($) {
-	$.widget("ui.emailCombobox", {
-		_create: function() {
-			var input, that = this,
-				select = this.element.hide(),
-				selected = select.children(":selected"),
-				value = selected.val() ? selected.text() : "",
-				wrapper = this.wrapper = $("<span>").addClass("ui-combobox").insertAfter(select);
-			function removeIfInvalid(element) {
-				var value = $(element).val(),
-					matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(value) + "$", "i"),
-					valid = false;
-				select.children("option").each(function() {
-					if ($(this).text().match(matcher)) {
-						this.selected = valid = true;
-						return false;
-					}
-				});
-				if (!valid) {
-					$(element).val("").attr("title", value + " no coincide con ningun valor").tooltip("open");
-					select.val("");
-					setTimeout(function() {
-						input.tooltip("close").attr("title", "");
-					}, 2500);
-					input.data("autocomplete").term = "";
-					return false;
-				}
-			}
-			input = $("<input>").appendTo(wrapper).val(value).addClass("ui-combobox-input").autocomplete({
-				delay: 0,
-				minLength: 0,
-				source: function(request, response) {
-					var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
-					response(select.children("option").map(function() {
-						var text = $(this).text();
-						if (this.value && (!request.term || matcher.test(text))) return {
-							label: text.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + $.ui.autocomplete.escapeRegex(request.term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"),
-							value: text,
-							option: this
-						};
-					}));
-				},
-				select: function(event, ui) {
-					ui.item.option.selected = true;
-					that._trigger("selected", event, {
-						item: ui.item.option
-					});
-                    
-					$('#customer_id').val( ui.item.option.value );
-                    $('#email').val( $(ui.item.option).text() );
-                    $('#name').val( $(ui.item.option).attr('data-customer') );
-				}
-			}).addClass("ui-widget ui-widget-content ui-corner-left");
-			input.data("autocomplete")._renderItem = function(ul, item) {
-				return $("<li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);
-			};
-			$("<a>").attr("tabIndex", -1).attr("title", "Mostrar todas las categorias").tooltip().appendTo(wrapper).button({
-				icons: {
-					primary: "ui-icon-triangle-1-s"
-				},
-				text: false
-			}).removeClass("ui-corner-all").addClass("ui-corner-right ui-combobox-toggle").click(function() {
-				if (input.autocomplete("widget").is(":visible")) {
-					input.autocomplete("close");
-					removeIfInvalid(input);
-					return;
-				}
-				$(this).blur();
-				input.autocomplete("search", "");
-				input.focus();
-			});
-			input.tooltip({
-				position: {
-					of: this.button
-				},
-				tooltipClass: "ui-state-highlight"
-			});
-		}
-	});
-})(jQuery);
 /*
  * ----------------------------- JSTORAGE -------------------------------------
  * Simple local storage wrapper to save data on the browser side, supporting

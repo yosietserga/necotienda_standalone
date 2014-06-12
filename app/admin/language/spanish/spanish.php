@@ -100,8 +100,10 @@ $_['button_add_special']      = 'Añadir Oferta';
 $_['button_add_image']        = 'Añadir Imagen';
 $_['button_add_geo_zone']     = 'Añadir Geo Zone';
 $_['button_add_rate']         = 'Añadir Tipo Impuesto';
-$_['button_add_history']         = 'Añadir Historia';
-$_['button_add_store']         = 'Añadir Sucursal';
+$_['button_add_history']      = 'Añadir Historia';
+$_['button_add_store']        = 'Añadir Sucursal';
+$_['button_next']             = 'Siguiente';
+$_['button_prev']             = 'Atr&aacute;s';
 
 // Tab
 $_['tab_admin']               = 'Admin';

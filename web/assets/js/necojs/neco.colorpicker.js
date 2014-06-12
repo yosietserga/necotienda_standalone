@@ -23,7 +23,7 @@
             change:     function(){},
             update:     function(){},
             cancel:     function(){}
-        };
+        }
         
         var targetEl;
         var settings = {};
@@ -94,7 +94,7 @@
                     $('.neco-color-picker-wrapper').fadeOut();
                 });
             }
-        };
+        }
  
         var helpers = {
             _create: function() {
@@ -534,7 +534,7 @@
 			_HSBToHex: function (hsb) {
 				return helpers._RGBToHex(helpers._HSBToRGB(hsb));
 			}
-        };
+        }
         
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));

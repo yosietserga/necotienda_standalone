@@ -4,6 +4,8 @@ $_['heading_title']     = 'Art&iacute;culos';
 
 // Text
 $_['text_success']      = 'Se ha actualizado satisfactoriamente!';
+$_['text_see_post_in_frontstore']      = 'Ver Art&iacute;culo en la Tienda';
+$_['text_all_public']      = 'Todo P&uacute;blico';
 
 // Column
 $_['column_title']      = 'T&iacute;tulo de la P&aacute;gina';
@@ -14,11 +16,13 @@ $_['column_date_publish_end'] = 'Final de Publicaci&oacute;n';
 $_['column_action']     = 'Acci&oacute;n';
 
 // Entry
+$_['entry_customer_group']     = 'Grupos de Clientes:';
 $_['entry_title']       = 'T&iacute;tulo de la P&aacute;gina';
 $_['entry_description'] = 'Contenido:';
 $_['entry_keyword']     = 'Slug:';
 $_['entry_status']      = 'Estado:';
 $_['entry_store']       = 'Tienda:';
+$_['entry_view']     = 'Vista:';
 $_['entry_meta_keywords']     = 'Palabras Claves:';
 $_['entry_meta_description'] = 'Resumen:';
 $_['entry_parent']      = 'P&aacute;gina Superior:';

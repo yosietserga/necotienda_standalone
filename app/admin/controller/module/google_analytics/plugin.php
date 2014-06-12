@@ -35,24 +35,7 @@ class ControllerModuleGoogleAnalyticsPlugin extends Controller {
                 $this->redirect(Url::createAdminUrl('extension/module')); 
             }
 		}
-				
-		$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		
-		$this->data['entry_code'] = $this->language->get('entry_code');
-		$this->data['entry_status'] = $this->language->get('entry_status');
-		
-		$this->data['help_code'] = $this->language->get('help_code');
-		$this->data['help_status'] = $this->language->get('help_status');
-		
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
-
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -118,54 +101,7 @@ class ControllerModuleGoogleAnalyticsPlugin extends Controller {
 			'title'    => $this->language->get('text_home'),
 		);
 		
-        $this->data['Url'] = new Url;
-        
-        $scripts[] = array('id'=>'featuredForm','method'=>'ready','script'=>
-            "$('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
-            
-        $scripts[] = array('id'=>'featuredFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }");
-            
-        $this->scripts = array_merge($this->scripts,$scripts);
-        
-		$this->template = 'module/google_analytics.tpl';
+		$this->template = 'module/google_analytics/plugin.tpl';
 		$this->children = array(
 			'common/header',	
 			'common/footer'	

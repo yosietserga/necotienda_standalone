@@ -87,7 +87,7 @@
             <ul id="pagesWrapper" class="scrollbox" style="width:96%;"><?php echo $pages; ?></ul>
         </div>
         <div class="clear"></div>
-        <a class="button" onclick="add('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
+        <a class="button" onclick="addPage('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
     </div>
         
     <div class="clear"></div>
@@ -101,7 +101,7 @@
             <ul id="categoriesWrapper" class="scrollbox" style="width:96%;"><?php echo $categories; ?></ul>
         </div>
         <div class="clear"></div>
-        <a class="button" onclick="add('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
+        <a class="button" onclick="addCategory('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
     </div>
         
     <div class="clear"></div>
@@ -115,7 +115,7 @@
             <ul id="post_categoriesWrapper" class="scrollbox" style="width:96%;"><?php echo $post_categories; ?></ul>
         </div>
         <div class="clear"></div>
-        <a class="button" onclick="add('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
+        <a class="button" onclick="addPostCategory('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
     </div>
         
     <div class="clear"></div>

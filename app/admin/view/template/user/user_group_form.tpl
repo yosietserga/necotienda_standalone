@@ -30,7 +30,6 @@
                         <th><?php echo $Language->get('column_module'); ?></th>
                         <th><?php echo $Language->get('column_access'); ?></th>
                         <th><?php echo $Language->get('column_create') ." / ". $Language->get('column_modidy'); ?></th>
-                        <th><?php echo $Language->get('column_delete'); ?></th>
                     </tr>
                 </thead>
                 
@@ -40,7 +39,6 @@
                         <td><?php echo $permission; ?></td>
                         <td style="text-align: center;"><input type="checkbox" name="permission[access][]" value="<?php echo $permission; ?>"<?php if (in_array($permission, $access)) { ?> checked="checked"<?php } ?> showquick="off" /></td>
                         <td style="text-align: center;"><input type="checkbox" name="permission[modify][]" value="<?php echo $permission; ?>"<?php if (in_array($permission, $modify)) { ?> checked="checked"<?php } ?> showquick="off" /></td>
-                        <td style="text-align: center;"><input type="checkbox" name="permission[delete][]" value="<?php echo $permission; ?>"<?php if (in_array($permission, $delete)) { ?> checked="checked"<?php } ?> showquick="off" /></td>
                     </tr>
               <?php } ?>
                 </tbody>

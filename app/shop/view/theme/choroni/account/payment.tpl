@@ -1,14 +1,22 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
-
-<section id="maincontent">
-
-    <section id="content">
+<div class="container">
+    <section id="maincontent">
+        <section id="content">
     
-        <aside id="column_left"><?php echo $column_left; ?></aside>
+        <?php if ($column_left) { ?><aside id="column_left" class="grid_3"><?php echo $column_left; ?></aside><?php } ?>
         
-        <div class="grid_13">
+        <?php if ($column_left && $column_right) { ?>
+        <div class="grid_6">
+        <?php } elseif ($column_left || $column_right) { ?>
+        <div class="grid_9">
+        <?php } else { ?>
+        <div class="grid_12">
+        <?php } ?>
+            
             <h1 style="float: left !important;"><?php echo $heading_title; ?></h1>
+            <?php if ($success) { ?><div class="success"><?php echo $success; ?></div><?php } ?>
+            <?php if ($error) { ?><div class="warning"><?php echo $error; ?></div><?php } ?>
             <a href="<?php echo $Url::createUrl("account/payment/register"); ?>" style="float: right !important;">Registrar Pago</a>
             
             <div class="clear"></div><br />
@@ -66,9 +74,11 @@
             </form>
         </div>
         
+        <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
+
+        </section>
     </section>
-    
-</section>
+</div>
 <script>
 function filter() {
      var url = '';

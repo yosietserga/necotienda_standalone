@@ -8,69 +8,42 @@ class ControllerAccountLogin extends Controller {
     	}
         
         $this->activarUser();
-        
     	$this->language->load('account/login');
-
     	$this->document->title = $this->language->get('heading_title');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
-            if (isset($this->request->post['account'])) {
-                $this->session->set('account',$this->request->post['account']);
-    				
-    			if ($this->request->post['account'] == 'guest') {
-    				$this->redirect(Url::createUrl("checkout/guest_step_1"));
-    			}
-  			}
-            if (isset($this->request->post['email']) && isset($this->request->post['password']) && $this->validate()) {
-                $this->session->clear('guest');
-                    
-                if (isset($this->request->post['redirect'])) {
-                    $this->redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
-      			} else {
-                    $this->redirect(Url::createUrl("common/home"));
-      			} 
-       		}
+        if ($this->request->server['REQUEST_METHOD'] == 'POST' 
+        && !empty($this->request->post['email']) 
+        && !empty($this->request->post['password']) 
+        && $this->validate()) 
+        {
+            if (isset($this->request->post['redirect'])) {
+                $this->redirect($this->request->post['redirect']);
+      		} elseif ($this->session->has('redirect')) {
+                $this->redirect($this->session->get('redirect'));
+      		} else {
+                $this->redirect(Url::createUrl("common/home"));
+      		}
     	}  
 		
       	$this->document->breadcrumbs = array();
-
       	$this->document->breadcrumbs[] = array(
         	'href'      => Url::createUrl("common/home"),
         	'text'      => $this->language->get('text_home'),
         	'separator' => false
       	);
- 
       	$this->document->breadcrumbs[] = array(
         	'href'      => Url::createUrl("account/account"),
         	'text'      => $this->language->get('text_account'),
         	'separator' => $this->language->get('text_separator')
       	);
-		
       	$this->document->breadcrumbs[] = array(
         	'href'      => Url::createUrl("account/login"),
         	'text'      => $this->language->get('text_login'),
         	'separator' => $this->language->get('text_separator')
       	);
-				
-    	$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['text_new_customer'] = $this->language->get('text_new_customer');
-    	$this->data['text_i_am_new_customer'] = $this->language->get('text_i_am_new_customer');
-		$this->data['text_checkout'] = $this->language->get('text_checkout');
-    	$this->data['text_account'] = $this->language->get('text_account');
-    	$this->data['text_guest'] = $this->language->get('text_guest');   	
-    	$this->data['text_create_account'] = $this->language->get('text_create_account');
-		$this->data['text_returning_customer'] = $this->language->get('text_returning_customer');
-		$this->data['text_i_am_returning_customer'] = $this->language->get('text_i_am_returning_customer');
-    	$this->data['text_forgotten_password'] = $this->language->get('text_forgotten_password');
-
-    	$this->data['entry_email'] = $this->language->get('entry_email_address');
-    	$this->data['entry_password'] = $this->language->get('entry_password');
-
-    	$this->data['button_continue'] = $this->language->get('button_continue');
-		$this->data['button_guest'] = $this->language->get('button_guest');
-		$this->data['button_login'] = $this->language->get('button_login');
-
+		
+		$this->data['breadcrumbs'] = $this->document->breadcrumbs;
+        
 		$this->data['error'] = isset($this->error['message']) ? $this->error['message'] : '';
 		$this->data['action'] = Url::createUrl("account/login");
 		$this->data['register'] = Url::createUrl("account/register");
@@ -78,8 +51,7 @@ class ControllerAccountLogin extends Controller {
     	if (isset($this->request->post['redirect'])) {
 			$this->data['redirect'] = $this->request->post['redirect'];
 		} elseif ($this->session->has('redirect')) {
-      		$this->data['redirect'] = $this->session->get('redirect');
-	  		$this->session->clear('redirect');		  	
+      		$this->data['redirect'] = $this->session->get('redirect');	  	
     	} else {
 			$this->data['redirect'] = '';
 		}
@@ -101,82 +73,36 @@ class ControllerAccountLogin extends Controller {
 			$this->data['account'] = 'register';
 		}
 		
-        $this->data['Url'] = new Url($this->registry);
+        $this->load->model('localisation/country');
+       	$this->data['countries'] = $this->modelCountry->getCountries();
+        $this->data['page_legal_terms_id'] = ($this->config->get('config_account_id')) ? $this->config->get('config_account_id') : 0;
+        $this->data['page_privacy_terms_id'] = ($this->config->get('config_account_id')) ? $this->config->get('config_account_id') : 0;
         
         $this->session->set('state',md5(rand()));
+        $this->data['live_client_id'] = $this->config->get('social_live_client_id');
         $this->data['google_client_id'] = $this->config->get('social_google_client_id');
-        $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
+        $this->data['facebook_app_id']  = $this->config->get('social_facebook_app_id');
         $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
         
     	$this->data['forgotten'] = Url::createUrl("account/forgotten");
-		$this->data['guest_checkout'] = ($this->config->get('config_guest_checkout') && $this->cart->hasProducts() && !$this->cart->hasDownload());
 
-            $this->load->helper('widgets');
-            $widgets = new NecoWidget($this->registry,$this->Route);
-            foreach ($widgets->getWidgets('main') as $widget) {
-                $settings = (array)unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id'=>$widget['name'],
-                        'method'=>'ready',
-                        'script'=>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'".$widget['name']."'
-                        })
-                        .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
+        $this->loadWidgets();
+
+        if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
             
-            foreach ($widgets->getWidgets('featuredContent') as $widget) {
-                $settings = (array)unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id'=>$widget['name'],
-                        'method'=>'ready',
-                        'script'=>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'".$widget['name']."'
-                        })
-                        .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-            
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/login.tpl')) {
-			$this->template = $this->config->get('config_template') . '/account/login.tpl';
-		} else {
-			$this->template = 'cuyagua/account/login.tpl';
-		}
-		
-		$this->children = array(
-			'common/header',
-			'common/nav',
-			'common/column_left',
-			'common/column_right',
-			'common/footer'
-		);
-		
+    	$this->children[] = 'common/column_left';
+    	$this->children[] = 'common/column_right';
+    	$this->children[] = 'common/nav';
+    	$this->children[] = 'common/header';
+    	$this->children[] = 'common/footer';
+        
+        $template = ($this->config->get('default_view_account_login')) ? $this->config->get('default_view_account_login') : 'account/login.tpl';
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+            $this->template = $this->config->get('config_template') .'/'. $template;
+       	} else {
+            $this->template = 'choroni/'. $template;
+       	}
+        
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
   	}
     
@@ -243,5 +169,71 @@ class ControllerAccountLogin extends Controller {
         
         $this->load->auto('json');
 		$this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));  
+    }
+    
+    protected function loadWidgets() {
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
+       	} else {
+            $csspath = str_replace("%theme%","default",$csspath);
+       	}
+        if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
+            $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+        }
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        }
+        $this->load->helper('widgets');
+        $widgets = new NecoWidget($this->registry,$this->Route);
+        foreach ($widgets->getWidgets('main') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+            
+        foreach ($widgets->getWidgets('featuredContent') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
     }
 }

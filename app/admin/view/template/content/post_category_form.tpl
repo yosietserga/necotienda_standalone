@@ -2,6 +2,7 @@
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
+        <?php if ($post_category_id) { ?><a href="<?php echo $Url::createUrl("content/category",array('post_category_id'=>$post_category_id),'NONSSL',HTTP_CATALOG); ?>" target="_blank"><?php echo $Language->get('text_see_category_in_storefront'); ?></a><?php } ?>
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
             <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
@@ -12,6 +13,23 @@
         <div class="clear"></div>
                                 
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+            
+            <div class="row">
+                <label><?php echo $Language->get('entry_view'); ?></label>
+                <select name="view">
+                    <option value=""<?php if (empty($layout)) { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_default'); ?></option>
+                    <?php foreach ($views as $key => $value) { ?>
+                    <optgroup label="<?php echo $value['folder']; ?>">
+                        <?php foreach ($value['files'] as $k => $v) { ?>
+                        <option value="<?php echo basename($value['folder']) ."/". basename($v); ?>"<?php if ($layout==basename($value['folder']) ."/". basename($v)) { echo ' selected="selected"'; } ?>><?php echo basename($v); ?></option>
+                        <?php } ?>
+                    </optgroup>
+                    <?php } ?>
+                </select>
+            </div>
+            
+            <div class="clear"></div>
+            
             <div class="row">
                 <label><?php echo $Language->get('entry_category'); ?></label>
                 <select name="parent_id" style="width:40%">

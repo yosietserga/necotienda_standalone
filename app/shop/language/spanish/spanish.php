@@ -28,6 +28,7 @@ $_['tab_contact']          = 'Contacto';
 
 // Text
 $_['text_register']         = 'Registrarse';
+$_['text_new_comment']      = 'Nuevo Comentario';
 $_['text_home']             = 'Inicio';
 $_['text_time']             = 'P&aacute;gina creada en %s segundos';
 $_['text_yes']              = 'Si';
@@ -99,11 +100,22 @@ $_['error_captcha']        = 'El resultado de la ecuaci&oacute;n es incorrecta!'
 
 
 // Buttons
-$_['button_pay']       = 'Pagar';
+$_['button_login_with_google'] = 'Login con <b>Google</b>';
+$_['button_login_with_live'] = 'Login con <b>Outlook</b>';
+$_['button_login_with_facebook'] = 'Login con <b>Facebook</b>';
+$_['button_login_with_twitter'] = 'Login con <b>Twitter</b>';
+$_['button_promote_in_google'] = 'Promocionar en <b>Google</b>';
+$_['button_promote_in_live'] = 'Promocionar en <b>Outlook</b>';
+$_['button_promote_in_facebook'] = 'Promocionar en <b>Facebook</b>';
+$_['button_promote_in_twitter'] = 'Promocionar en <b>Twitter</b>';
+$_['button_pay']            = 'Pagar';
+$_['button_next']            = 'Siguiente';
+$_['button_prev']            = 'Anterior';
 $_['button_continue']       = 'Continuar';
 $_['button_back']           = 'Volver';
-$_['button_add_to_cart']    = 'Agregar Al Carrito';
-$_['button_see_product']    = 'Ver Detalles';
+$_['button_close']           = 'Cerrar';
+$_['button_add_to_cart']    = 'Carrito';
+$_['button_see_product']    = 'Detalles';
 $_['button_add_address']    = 'A&ntilde;adir Direcci&oacute;n';
 $_['button_new_address']    = 'Nueva Direcci&oacute;n';
 $_['button_change_address'] = 'Cambiar Direcci&oacute;n';

@@ -52,7 +52,7 @@ class ControllerLocalisationZone extends Controller {
 		$this->load->model('localisation/zone');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_localisation_zone->update($this->request->get['zone_id'], $this->request->post);			
+			$this->modelZone->update($this->request->get['zone_id'], $this->request->post);			
 			
 			$this->session->data['success'] = $this->language->get('text_success');
 			

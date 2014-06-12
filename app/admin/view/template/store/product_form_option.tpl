@@ -51,7 +51,7 @@
                         </td>
                         
                         <td>
-                            <input showquick="off" title="<?php echo $Language->get('help_quantity'); ?>" type="number" name="product_option[<?php echo (int)$_row; ?>][product_option_value][<?php echo (int)$option_value_row; ?>][quantity]" value="<?php echo $product_option_value['quantity']; ?>" size="2" style="width:40px" />
+                            <input showquick="off" title="<?php echo $Language->get('help_quantity'); ?>" type="necoNumber" name="product_option[<?php echo (int)$_row; ?>][product_option_value][<?php echo (int)$option_value_row; ?>][quantity]" value="<?php echo $product_option_value['quantity']; ?>" size="2" style="width:40px" />
                         </td>
                         
                         <td>
@@ -73,7 +73,7 @@
                         </td>
                         
                         <td>
-                            <input showquick="off" title="<?php echo $Language->get('help_sort_order'); ?>" type="number" name="product_option[<?php echo (int)$_row; ?>][product_option_value][<?php echo (int)$option_value_row; ?>][sort_order]" value="<?php echo $product_option_value['sort_order']; ?>" size="2" style="width:40px" />
+                            <input showquick="off" title="<?php echo $Language->get('help_sort_order'); ?>" type="necoNumber" name="product_option[<?php echo (int)$_row; ?>][product_option_value][<?php echo (int)$option_value_row; ?>][sort_order]" value="<?php echo $product_option_value['sort_order']; ?>" size="2" style="width:40px" />
                         </td>
                         
                         <td>
@@ -179,7 +179,7 @@ function addValue(_row) {
     html += '</td>';
                     
     html += '<td>';
-    html += '<input title="<?php echo $Language->get('help_quantity'); ?>" type="number" name="product_option['+ _row +'][product_option_value]['+ _value_row +'][quantity]" value="" size="2" style="width:40px" />';
+    html += '<input title="<?php echo $Language->get('help_quantity'); ?>" type="necoNumber" name="product_option['+ _row +'][product_option_value]['+ _value_row +'][quantity]" value="" size="2" style="width:40px" />';
     html += '</td>';
     
     html += '<td>';
@@ -201,7 +201,7 @@ function addValue(_row) {
     html += '</td>';
     
     html += '<td>';
-    html += '<input title="<?php echo $Language->get('help_sort_order'); ?>" type="number" name="product_option['+ _row +'][product_option_value]['+ _value_row +'][sort_order]" value="" size="2" style="width:40px" />';
+    html += '<input title="<?php echo $Language->get('help_sort_order'); ?>" type="necoNumber" name="product_option['+ _row +'][product_option_value]['+ _value_row +'][sort_order]" value="" size="2" style="width:40px" />';
     html += '</td>';
     
     html += '<td>';

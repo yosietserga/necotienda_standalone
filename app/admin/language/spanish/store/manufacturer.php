@@ -5,6 +5,7 @@ $_['heading_title']     = 'Fabricante';
 // Text
 $_['text_success']      = 'Se ha actualizado satisfactoriamente!';
 $_['text_image_manager']= 'Gestor de Im&aacute;genes';
+$_['text_see_manufacturer_in_storefront']   = 'Ver Fabricante en la tienda';
 
 // Column
 $_['column_name']       = 'Nombre del Fabricante';
@@ -15,6 +16,7 @@ $_['column_image']      = 'Imagen';
 // Entry
 $_['entry_name']        = 'Nombre del Fabricante:';
 $_['entry_image']       = 'Imagen:';
+$_['entry_view']     = 'Vista:';
 $_['entry_store']       = 'Tienda:';
 $_['entry_sort_order']  = 'Posici&oacute;n:';
 $_['entry_meta_keywords']     = 'SEO Keyword:';

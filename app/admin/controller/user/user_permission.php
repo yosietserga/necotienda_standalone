@@ -324,25 +324,6 @@ class ControllerUserUserPermission extends Controller {
  	}
 
 	private function getForm() {
-		$this->data['heading_title'] = $this->language->get('heading_title');
-		
-		$this->data['entry_name'] = $this->language->get('entry_name');
-		$this->data['entry_access'] = $this->language->get('entry_access');
-		$this->data['entry_modify'] = $this->language->get('entry_modify');
-        
-		$this->data['column_module'] = $this->language->get('column_module');
-		$this->data['column_access'] = $this->language->get('column_access');
-		$this->data['column_create'] = $this->language->get('column_create');
-		$this->data['column_modidy'] = $this->language->get('column_modidy');
-		$this->data['column_delete'] = $this->language->get('column_delete');
-		
-		$this->data['button_save'] = $this->language->get('button_save');
-		$this->data['button_save_and_exit'] = $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep'] = $this->language->get('button_save_and_keep');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
-
-		$this->data['tab_general'] = $this->language->get('tab_general');
-
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -451,60 +432,7 @@ class ControllerUserUserPermission extends Controller {
 		} else { 
 			$this->data['modify'] = array();
 		}
-			
-		if (isset($this->request->post['permission'])) {
-			$this->data['delete'] = $this->request->post['permission']['delete'];
-		} elseif (isset($user_group_info['permission']['delete'])) {
-			$this->data['delete'] = $user_group_info['permission']['delete'];
-		} else { 
-			$this->data['delete'] = array();
-		}
-			
-        $scripts[] = array('id'=>'scriptForm','method'=>'ready','script'=>
-            "$('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
-            
-        $scripts[] = array('id'=>'scriptFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }");
-            
-        $this->scripts = array_merge($this->scripts,$scripts);
-        
+		
 		$this->template = 'user/user_group_form.tpl';
 		$this->children = array(
 			'common/header',	

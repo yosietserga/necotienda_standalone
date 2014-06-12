@@ -4,29 +4,26 @@ class ControllerPageSitemap extends Controller {
         $cached = $this->cache->get('sitemap.' . 
                 $this->config->get('config_language_id') . "." . 
                 $this->config->get('config_currency') . "." . 
-                (int)$this->config->get('config_store_id')
+                $this->config->get('config_store_id')
         );
         $this->load->library('user');
        	if ($cached && !$this->user->isLogged()) {
             $this->response->setOutput($cached, $this->config->get('config_compression'));
    	    } else {
         	$this->language->load('page/sitemap');
-     
-    		$this->document->title = $this->language->get('heading_title'); 
-    
+    		$this->document->title = $this->language->get('heading_title');
+            
           	$this->document->breadcrumbs = array();
-    
           	$this->document->breadcrumbs[] = array(
             	'href'      => Url::createUrl("common/home"),
             	'text'      => $this->language->get('text_home'),
             	'separator' => false
           	);
-    
           	$this->document->breadcrumbs[] = array(
             	'href'      => Url::createUrl("page/sitemap"),
             	'text'      => $this->language->get('heading_title'),
             	'separator' => $this->language->get('text_separator')
-          	);	
+          	);
     		$this->data['breadcrumbs'] = $this->document->breadcrumbs;
         	$this->data['heading_title'] = $this->language->get('heading_title');
     
@@ -48,92 +45,30 @@ class ControllerPageSitemap extends Controller {
     		$this->data['category'] = $this->getCategories(0);
     		$this->data['pages'] = $this->modelPage->getAll();
         	
-                // style files
-                $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-                
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-        		  $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
-        		} else {
-        		  $csspath = str_replace("%theme%","default",$csspath);
-        		}
-                
-                if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
-                    $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
-                }
-                
-                if (count($styles)) {
-                    $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
-                }
-                
-            $this->load->helper('widgets');
-            $widgets = new NecoWidget($this->registry,$this->Route);
-            foreach ($widgets->getWidgets('main') as $widget) {
-                $settings = (array)unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id'=>$widget['name'],
-                        'method'=>'ready',
-                        'script'=>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'".$widget['name']."'
-                        })
-                        .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
+            $this->loadWidgets();
+        
+            if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
+            
+            if (!$this->user->isLogged()) {
+        		$this->cacheId = 'sitemap.' . 
+                $this->config->get('config_language_id') . "." . 
+                $this->config->get('config_currency') . "." . 
+                $this->config->get('config_store_id');
             }
             
-            foreach ($widgets->getWidgets('featuredContent') as $widget) {
-                $settings = (array)unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id'=>$widget['name'],
-                        'method'=>'ready',
-                        'script'=>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'".$widget['name']."'
-                        })
-                        .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-            
-    		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/page/sitemap.tpl')) {
-    			$this->template = $this->config->get('config_template') . '/page/sitemap.tpl';
-    		} else {
-    			$this->template = 'cuyagua/page/sitemap.tpl';
-    		}
-		
     		$this->children[] = 'common/column_left';
     		$this->children[] = 'common/column_right';
     		$this->children[] = 'common/nav';
     		$this->children[] = 'common/header';
     		$this->children[] = 'common/footer';
-            if (!$this->user->isLogged()) {
-        		$this->cacheId = 'sitemap.' . 
-                    $this->config->get('config_language_id') . "." . 
-                    $this->config->get('config_currency') . "." . 
-                    (int)$this->config->get('config_store_id');
-            }        
+            
+            $template = ($this->config->get('default_view_sitemap')) ? $this->config->get('default_view_sitemap') : 'page/sitemap.tpl';
+        	if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+                $this->template = $this->config->get('config_template') .'/'. $template;
+       		} else {
+                $this->template = 'choroni/'. $template;
+        	}
+                
             $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }		
 	}
@@ -168,5 +103,91 @@ class ControllerPageSitemap extends Controller {
 		}
 		
 		return $output;
-	}	
+	}
+    
+    protected function loadWidgets() {
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
+            $cssFolder = str_replace("%theme%",$this->config->get('config_template'),DIR_THEME_CSS);
+            
+            $jspath = str_replace("%theme%",$this->config->get('config_template'),$jspath);
+            $jsFolder = str_replace("%theme%",$this->config->get('config_template'),DIR_THEME_JS);
+        } else {
+            $csspath = str_replace("%theme%","default",$csspath);
+            $cssFolder = str_replace("%theme%","default",DIR_THEME_CSS);
+            
+            $jspath = str_replace("%theme%","default",$jspath);
+            $jsFolder = str_replace("%theme%","default",DIR_THEME_JS);
+        }
+        
+        if (file_exists($cssFolder.str_replace('controller','',strtolower(__CLASS__) . '.css'))) {
+            $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+        }
+        
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        }
+        
+        if (file_exists($jsFolder.str_replace('controller','',strtolower(__CLASS__) . '.js'))) {
+            $javascripts[] = $jspath.str_replace('controller','',strtolower(__CLASS__) . '.js');
+        }
+        
+        if (count($javascripts)) {
+            $this->javascripts = array_merge($this->javascripts,$javascripts);
+        }
+        
+        $this->load->helper('widgets');
+        $widgets = new NecoWidget($this->registry,$this->Route);
+        foreach ($widgets->getWidgets('main') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+            
+        foreach ($widgets->getWidgets('featuredContent') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+    }
 }

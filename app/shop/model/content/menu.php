@@ -102,5 +102,55 @@ class ModelContentMenu extends Model {
         WHERE `default` = '1'
         AND m2s.store_id = '". (int)STORE_ID ."' ");
 		return $query->row;
-	} 
+	}
+    
+    /**
+     * ModelContentMenu::getProperty()
+     * 
+     * Obtener una propiedad del menu
+     * 
+     * @param int $id menu_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return mixed value of property
+     * */
+    public function getProperty($id, $group, $key) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_property 
+        WHERE `menu_id` = '" . (int)$id . "' 
+        AND `group` = '". $this->db->escape($group) ."'
+        AND `key` = '". $this->db->escape($key) ."'");
+  
+		return unserialize(str_replace("\'","'",$query->row['value']));
+	}
+    
+    /**
+     * ModelContentMenu::getAllProperties()
+     * 
+     * Obtiene todas las propiedades del menu
+     * 
+     * Si quiere obtener todos los grupos de propiedades
+     * utilice * como nombre del grupo, ejemplo:
+     * 
+     * $properties = getAllProperties($menu_id, '*');
+     * 
+     * Sino coloque el nombre del grupo de las propiedades
+     * 
+     * $properties = getAllProperties($menu_id, 'NombreDelGrupo');
+     * 
+     * @param int $id menu_id
+     * @param varchar $group
+     * @return array all properties
+     * */
+	public function getAllProperties($id, $group='*') {
+        if ($group=='*') {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_property 
+            WHERE `menu_id` = '" . (int)$id . "'");
+        } else {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "menu_property 
+            WHERE `menu_id` = '" . (int)$id . "' 
+            AND `group` = '". $this->db->escape($group) ."'");
+        }
+        
+		return $query->rows;
+	}
 }

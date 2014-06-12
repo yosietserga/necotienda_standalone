@@ -5,7 +5,7 @@
     <div class="box">
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="formLogin">
             <label><?php echo $Language->get('entry_username'); ?></label>
-            <input type="text" name="username" value="<?php echo $username; ?>" showquick="off" />
+            <input type="text" name="username" value="<?php echo $username; ?>" showquick="off" autofocus="autofocus" />
             
             <div class="clear"></div>
             

@@ -13,6 +13,29 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
  
             <div class="row">
+                <label><?php echo $Language->get('entry_image'); ?></label>
+                <input type="hidden" name="free_checkout_image" value="<?php echo $free_checkout_image; ?>" id="image" />
+                <img alt="Logo" src="<?php echo $preview; ?>" id="preview" class="image" onclick="image_upload('image', 'preview');" width="100" height="100" />
+                <br />
+                <a onclick="image_upload('image', 'preview');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+                <a onclick="image_delete('image', 'preview');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
+            </div>
+                   
+            <div class="clear"></div>
+            
+            <div class="row">
+                <label><?php echo $Language->get('entry_newsletter'); ?></label>
+                <select name="free_checkout_newsletter_id" title="<?php echo $Language->get('help_newsletter_id'); ?>">
+                    <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                    <?php foreach ($newsletters as $newsletter) { ?>
+                    <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $free_checkout_newsletter_id) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+
+            <div class="clear"></div>
+            
+            <div class="row">
                 <label><?php echo $Language->get('entry_order_status'); ?></label>
                 <select name="free_checkout_order_status_id">
                 <?php foreach ($order_statuses as $order_status) { ?>

@@ -24,28 +24,28 @@
         
         <div class="row">
             <label>Cant. de Pedidos Mensuales</label>
-            <input type="number" title="<?php echo $Language->get('help_qty_orders'); ?>" name="Params[qty_orders]" value="<?php echo ($params['qty_orders']) ? $params['qty_orders'] : 0; ?>" />
+            <input type="necoNumber" title="<?php echo $Language->get('help_qty_orders'); ?>" name="Params[qty_orders]" value="<?php echo ($params['qty_orders']) ? $params['qty_orders'] : 0; ?>" />
         </div>
                         
         <div class="clear"></div>
         
         <div class="row">
             <label>Cant. de Compras Mensuales</label>
-            <input type="number" title="<?php echo $Language->get('help_qty_invoices'); ?>" name="Params[qty_invoices]" value="<?php echo ($params['qty_invoices']) ? $params['qty_invoices'] : 0; ?>" />
+            <input type="necoNumber" title="<?php echo $Language->get('help_qty_invoices'); ?>" name="Params[qty_invoices]" value="<?php echo ($params['qty_invoices']) ? $params['qty_invoices'] : 0; ?>" />
         </div>
                         
         <div class="clear"></div>
         
         <div class="row">
             <label>Cant. de Comentarios Mensuales</label>
-            <input type="number" title="<?php echo $Language->get('help_qty_reviews'); ?>" name="Params[qty_reviews]" value="<?php echo ($params['qty_reviews']) ? $params['qty_reviews'] : 0; ?>" />
+            <input type="necoNumber" title="<?php echo $Language->get('help_qty_reviews'); ?>" name="Params[qty_reviews]" value="<?php echo ($params['qty_reviews']) ? $params['qty_reviews'] : 0; ?>" />
         </div>
                         
         <div class="clear"></div>
         
         <div class="row">
             <label>Cant. de Referencias Mensuales</label>
-            <input type="number" title="<?php echo $Language->get('help_qty_references'); ?>" name="Params[qty_references]" value="<?php echo ($params['qty_references']) ? $params['qty_references'] : 0; ?>" />
+            <input type="necoNumber" title="<?php echo $Language->get('help_qty_references'); ?>" name="Params[qty_references]" value="<?php echo ($params['qty_references']) ? $params['qty_references'] : 0; ?>" />
         </div>
                  
     </form>

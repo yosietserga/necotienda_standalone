@@ -2,22 +2,33 @@
     <h2>Opciones</h2>
     <table class="form">
         <tr>
+            <td><?php echo $Language->get('entry_store_mode'); ?></td>
+            <td>
+                <select name="config_store_mode">
+                    <option value="store"<?php if ($config_store_mode=='store') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_store'); ?></option>
+                    <option value="catalog"<?php if ($config_store_mode=='catalog') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_catalog'); ?></option>
+                    <option value="blog"<?php if ($config_store_mode=='blog') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_blog'); ?></option>
+                    <option value="company_website"<?php if ($config_store_mode=='company_website') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_company_website'); ?></option>
+                </select>
+            </td>
+          </tr>
+        <tr>
             <td><?php echo $Language->get('entry_admin_limit'); ?></td>
-            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la administraci&oacute;n" type="number" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" required="true"<?php if (isset($error_admin_limit)) echo ' class="neco-input-error'; ?>>
+            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la administraci&oacute;n" type="necoNumber" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" required="true"<?php if (isset($error_admin_limit)) echo ' class="neco-input-error'; ?>>
               <?php if ($error_admin_limit) { ?>
               <span class="error"><?php echo $error_admin_limit; ?></span>
               <?php } ?></td>
           </tr>
 		  <tr>
             <td><?php echo $Language->get('entry_catalog_limit'); ?></td>
-            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la tienda" type="number" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" required="true"<?php if (isset($error_catalog_limit)) echo ' class="neco-input-error'; ?>>
+            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la tienda" type="necoNumber" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" required="true"<?php if (isset($error_catalog_limit)) echo ' class="neco-input-error'; ?>>
               <?php if ($error_catalog_limit) { ?>
               <span class="error"><?php echo $error_catalog_limit; ?></span>
               <?php } ?></td>
           </tr>
 		  <tr>
             <td><?php echo $Language->get('entry_new_days'); ?></td>
-            <td><input title="<?php echo $Language->get('help_new_days'); ?>" type="number" name="config_new_days" value="<?php echo $config_new_days; ?>" size="3" required="true"<?php if (isset($error_new_days)) echo ' class="neco-input-error'; ?> /></td>
+            <td><input title="<?php echo $Language->get('help_new_days'); ?>" type="necoNumber" name="config_new_days" value="<?php echo $config_new_days; ?>" size="3" required="true"<?php if (isset($error_new_days)) echo ' class="neco-input-error'; ?> /></td>
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_tax'); ?></td>
@@ -77,10 +88,98 @@
               <input title="Seleccione si desea que el cliente pueda comprar, a&uacute;n cuando el producto est&eacute; agotado" type="checkbox" showquick="off" name="config_stock_checkout" value="1"<?php if ($config_stock_checkout) { ?> checked="checked"<?php } ?>></td>
           </tr>
           <tr>
+            <td><?php echo $Language->get('entry_order_payment_status'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_payment_status_id" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_payment_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_payment_status_id']; ?>"<?php if ($order_status['order_payment_status_id'] == $config_order_payment_status_id) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_payment_status_approved'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_payment_status_approved" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_payment_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_payment_status_id']; ?>"<?php if ($order_status['order_payment_status_id'] == $config_order_payment_status_approved) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_payment_status_returned'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_payment_status_returned" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_payment_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_payment_status_id']; ?>"<?php if ($order_status['order_payment_status_id'] == $config_order_payment_status_returned) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_payment_status_no_approved'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_payment_status_no_approved" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_payment_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_payment_status_id']; ?>"<?php if ($order_status['order_payment_status_id'] == $config_order_payment_status_no_approved) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
             <td><?php echo $Language->get('entry_order_status'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
             <td><select name="config_order_status_id" title="Seleccione el estado predeterminado de los pedidos">
                 <?php foreach ($order_statuses as $order_status) { ?>
                 <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_id) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_status_paid'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_status_paid" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_paid) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_status_loading'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_status_loading" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_loading) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_status_shipping'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_status_shipping" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_shipping) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_status_delivered'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_status_delivered" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_delivered) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_status_nulled'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_status_nulled" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_nulled) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_status_aborted'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_status_aborted" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_aborted) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+              </select></td>
+          </tr>
+          <tr>
+            <td><?php echo $Language->get('entry_order_status_returned'); ?><br><span class="help">Establecer el estado predeterminado cuando un pedido es realizada.</span></td>
+            <td><select name="config_order_status_returned" title="Seleccione el estado predeterminado de los pedidos">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"<?php if ($order_status['order_status_id'] == $config_order_status_returned) { ?> selected="selected"<?php } ?>><?php echo $order_status['name']; ?></option>
                 <?php } ?>
               </select></td>
           </tr>

@@ -1,10 +1,11 @@
 <?php echo $header; ?>
-<section id="maincontent">
-    <section id="content">
+<div class="container">
+    <section id="maincontent">
+        <section id="content">
         
         <div class="clear"></div><br /><br />
             
-        <div class="grid_16">
+        <div class="grid_12">
             <h1 style="background:#900;font:bold 24px Arial;color:#fff;width:96%;padding: 10px 5px;"><?php echo $heading_title; ?></h1>
         </div>
             
@@ -43,6 +44,7 @@
             <a href="http://windows.microsoft.com/es-es/windows-8/internet-explorer" class="button">Descargar Internet Explorer</a>
         </div>
             
+        </section>
     </section>
-</section>
+</div>
 <?php echo $footer; ?>

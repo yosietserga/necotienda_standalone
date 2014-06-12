@@ -24,10 +24,8 @@ class ModelSaleCustomer extends Model {
           company = '" . $this->db->escape($data['company']) . "', 
           rif = '" . $this->db->escape($data['rif']) . "', 
           email = '" . $this->db->escape($data['email']) . "', 
-          sexo = '" . $this->db->escape($data['sexo']) . "', 
+          sex = '" . $this->db->escape($data['sexo']) . "', 
           telephone = '" . $this->db->escape($data['telephone']) . "', 
-          fax = '" . $this->db->escape($data['fax']) . "', 
-          newsletter = '" . (int)$data['newsletter'] . "', 
           customer_group_id = '" . (int)$data['customer_group_id'] . "', 
           password = '" . $this->db->escape(md5($data['password'])) . "', 
           approved = '1', 
@@ -68,10 +66,8 @@ class ModelSaleCustomer extends Model {
             company = '" . $this->db->escape($data['company']) . "', 
             rif = '" . $this->db->escape($data['rif']) . "', 
             email = '" . $this->db->escape($data['email']) . "', 
-            sexo = '" . $this->db->escape($data['sexo']) . "', 
+            sex = '" . $this->db->escape($data['sexo']) . "', 
             telephone = '" . $this->db->escape($data['telephone']) . "', 
-            fax = '" . $this->db->escape($data['fax']) . "', 
-            newsletter = '" . (int)$data['newsletter'] . "', 
             customer_group_id = '" . (int)$data['customer_group_id'] . "'
         WHERE customer_id = '" . (int)$customer_id . "'");
 	
@@ -170,6 +166,8 @@ class ModelSaleCustomer extends Model {
 	public function delete($customer_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$customer_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$customer_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "balance WHERE customer_id = '" . (int)$customer_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "order_payment WHERE customer_id = '" . (int)$customer_id . "'");
 	}
 	
 	/**

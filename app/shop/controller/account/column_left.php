@@ -62,7 +62,7 @@ class ControllerAccountColumnLeft extends Controller {
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/column_left.tpl')) {
 			$this->template = $this->config->get('config_template') . '/account/column_left.tpl';
 		} else {
-			$this->template = 'cuyagua/account/column_left.tpl';
+			$this->template = 'choroni/account/column_left.tpl';
 		}
 		
 		$this->render();

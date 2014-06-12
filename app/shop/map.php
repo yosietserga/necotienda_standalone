@@ -1,4 +1,5 @@
-<?php $loader->auto('url');
+<?php
+$loader->auto('url');
 $loader->auto('user');
 $loader->auto('customer');
 $loader->auto('currency');
@@ -29,6 +30,9 @@ $registry->set('tax', new Tax($registry));
 $registry->set('weight', new Weight($registry));
 $registry->set('length', new Length($registry));
 $registry->set('cart', new Cart($registry));
+$registry->set('javascripts', array());
+$registry->set('styles', array());
+$registry->set('scripts', array());
 
 // Default
 $language->load('common/header');

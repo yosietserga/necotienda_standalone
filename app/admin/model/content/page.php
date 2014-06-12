@@ -21,8 +21,8 @@ class ModelContentPage extends Model {
 	public function add($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "post SET 
         parent_id   = '" . (int)$this->request->post['parent_id'] . "', 
-        date_publish_start = '" . date('Y-m-d h:i:s',strtotime($this->db->escape($data['date_publish_start']))) . "', 
-        date_publish_end = '" . date('Y-m-d h:i:s',strtotime($this->db->escape($data['date_publish_end']))) . "', 
+        date_publish_start = '" . $this->db->escape($data['date_publish_start']) . "', 
+        date_publish_end = '" . $this->db->escape($data['date_publish_end']) . "', 
         template    = '" . $this->db->escape($data['template']) . "', 
         post_type   = 'page', 
         status      = 1, 
@@ -30,7 +30,7 @@ class ModelContentPage extends Model {
         date_added  = NOW()");
 
 		$post_id = $this->db->getLastId(); 
-			
+		
 		foreach ($data['page_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "post_description SET 
             post_id     = '" . (int)$post_id . "', 
@@ -57,7 +57,7 @@ class ModelContentPage extends Model {
                 post_id = '". intval($post_id) ."'");
             }
         
-		$this->cache->delete("post");
+		$this->cache->delete("page");
         return $post_id;
 	}
 	
@@ -82,7 +82,6 @@ class ModelContentPage extends Model {
         WHERE post_id = '" . (int)$post_id . "'");
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "post_description WHERE post_id = '" . (int)$post_id . "'");
-					
 		foreach ($data['page_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "post_description SET 
             post_id     = '" . (int)$post_id . "', 
@@ -108,14 +107,14 @@ class ModelContentPage extends Model {
     		}
 		}
 		
-            $this->db->query("DELETE FROM " . DB_PREFIX . "post_to_store WHERE post_id = '". (int)$post_id ."'");
-            foreach ($data['stores'] as $store) {
-        		$this->db->query("INSERT INTO " . DB_PREFIX . "post_to_store SET 
+        $this->db->query("DELETE FROM " . DB_PREFIX . "post_to_store WHERE post_id = '". (int)$post_id ."'");
+        foreach ($data['stores'] as $store) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "post_to_store SET 
                 store_id  = '". intval($store) ."', 
                 post_id = '". intval($post_id) ."'");
-            }
+        }
         
-		$this->cache->delete("post");
+		$this->cache->delete("page");
         return $post_id;
 	}
 	
@@ -183,11 +182,11 @@ class ModelContentPage extends Model {
                 FROM " . DB_PREFIX . "post 
                 WHERE parent_id = '" . (int)$post_id . "' AND post_type = 'page')");
                 
-    		$this->db->query("DELETE FROM " . DB_PREFIX . "post WHERE parent_id = '" . (int)$category_id . "'");
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post WHERE parent_id = '" . (int)$post_id . "'");
         }
         
 		$this->cache->delete("page");
-	}	
+	}
 
 	public function getStores($id) {
 		$data = array();
@@ -196,8 +195,8 @@ class ModelContentPage extends Model {
             $data[] = $result['store_id'];
 		}
 		return $data;
-	}	
-	
+	}
+    
 	/**
 	 * ModelContentPage::getPage()
 	 * 
@@ -319,7 +318,7 @@ class ModelContentPage extends Model {
     		}
     		
     		if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
-    			$implode[] = "parent_id = (SELECT post_id FROM " . DB_PREFIX . "post pa 
+    			$implode[] = "parent_id = (SELECT pa.post_id FROM " . DB_PREFIX . "post pa 
                 LEFT JOIN " . DB_PREFIX . "post_description pad ON (pa.post_id = pad.post_id) 
                 WHERE pad.language_id = '" . (int)$this->config->get('config_language_id') . "' 
                 AND post_type = 'page' 
@@ -385,7 +384,8 @@ class ModelContentPage extends Model {
 		
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_description pd
         LEFT JOIN " . DB_PREFIX . "post p ON (pd.post_id =p.post_id) 
-        WHERE pd.post_id = '" . (int)$post_id . "' AND p.`post_type` = 'page'");
+        WHERE pd.post_id = '" . (int)$post_id . "' 
+        AND p.`post_type` = 'page'");
         
 		foreach ($query->rows as $result) {
 			$post_description_data[$result['language_id']]['title'] = $result['title'];
@@ -397,7 +397,7 @@ class ModelContentPage extends Model {
 		
 		$keywords = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias
         WHERE object_id = '" . (int)$post_id . "' 
-        AND object_type = 'post'");
+        AND object_type = 'page'");
 
 		foreach ($keywords->rows as $result) {
 			$post_description_data[$result['language_id']]['keyword'] = $result['keyword'];
@@ -456,4 +456,152 @@ class ModelContentPage extends Model {
         $query = $this->db->query("UPDATE `" . DB_PREFIX . "post` SET `status` = '0' WHERE `post_id` = '" . (int)$id . "' AND post_type = 'page'");
         return $query;
      }
+
+    /**
+     * ModelContentPage::getProperty()
+     * 
+     * Obtener una propiedad de la pagina
+     * 
+     * @param int $id post_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return mixed value of property
+     * */
+    public function getProperty($id, $group, $key) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_property 
+        WHERE `post_id` = '" . (int)$id . "' 
+        AND `group` = '". $this->db->escape($group) ."'
+        AND `key` = '". $this->db->escape($key) ."'");
+  
+		return unserialize(str_replace("\'","'",$query->row['value']));
+	}
+	
+    /**
+     * ModelContentPage::setProperty()
+     * 
+     * Asigna una propiedad de la pagina
+     * 
+     * @param int $id post_id
+     * @param varchar $group
+     * @param varchar $key
+     * @param mixed $value
+     * @return void
+     * */
+	public function setProperty($id, $group, $key, $value) {
+		$this->deleteProperty($id, $group, $key);
+		$this->db->query("INSERT INTO " . DB_PREFIX . "post_property SET
+        `post_id`   = '" . (int)$id . "',
+        `group`     = '" . $this->db->escape($group) . "',
+        `key`       = '" . $this->db->escape($key) . "',
+        `value`     = '" . $this->db->escape(str_replace("'","\'",serialize($value))) . "'");
+	}
+	
+    /**
+     * ModelContentPage::deleteProperty()
+     * 
+     * Elimina una propiedad de la pagina
+     * 
+     * @param int $id post_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return void
+     * */
+	public function deleteProperty($id, $group, $key) {
+		$this->db->query("DELETE FROM " . DB_PREFIX . "post_property 
+        WHERE `post_id` = '" . (int)$id . "' 
+        AND `group` = '". $this->db->escape($group) ."'
+        AND `key` = '". $this->db->escape($key) ."'");
+	}
+	
+    /**
+     * ModelContentPage::getAllProperties()
+     * 
+     * Obtiene todas las propiedades de la pagina
+     * 
+     * Si quiere obtener todos los grupos de propiedades
+     * utilice * como nombre del grupo, ejemplo:
+     * 
+     * $properties = getAllProperties($post_id, '*');
+     * 
+     * Sino coloque el nombre del grupo de las propiedades
+     * 
+     * $properties = getAllProperties($post_id, 'NombreDelGrupo');
+     * 
+     * @param int $id post_id
+     * @param varchar $group
+     * @return array all properties
+     * */
+	public function getAllProperties($id, $group='*') {
+        if ($group=='*') {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_property 
+            WHERE `post_id` = '" . (int)$id . "'");
+        } else {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_property 
+            WHERE `post_id` = '" . (int)$id . "' 
+            AND `group` = '". $this->db->escape($group) ."'");
+        }
+        
+		return $query->rows;
+	}
+	
+    /**
+     * ModelContentPage::setAllProperties()
+     * 
+     * Asigna todas las propiedades de la pagina
+     * 
+     * Pase un array con todas las propiedades y sus valores
+     * eneplo:
+     * 
+     * $data = array(
+     *    'key1'=>'abc',
+     *    'key2'=>123,
+     *    'key3'=>array(
+     *       'subkey1'=>'value1'
+     *    ),
+     *    'key4'=>$object,
+     * );
+     * 
+     * @param int $id post_id
+     * @param varchar $group
+     * @param array $data
+     * @return void
+     * */
+	public function setAllProperties($id, $group, $data) {
+        if (is_array($data) && !empty($data)) {
+    		$this->deleteAllProperties($id, $group);
+            foreach ($data as $key=>$value) {
+                $this->setProperty($id, $group, $key, $value);
+            }
+        }
+	}	
+	
+    /**
+     * ModelContentPage::deleteAllProperties()
+     * 
+     * Elimina todas las propiedades de la pagina
+     * 
+     * Si quiere eliminar todos los grupos de propiedades
+     * utilice * como nombre del grupo, ejemplo:
+     * 
+     * $properties = deleteAllProperties($post_id, '*');
+     * 
+     * Sino coloque el nombre del grupo de las propiedades
+     * 
+     * $properties = deleteAllProperties($post_id, 'NombreDelGrupo');
+     * 
+     * @param int $id post_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return void
+     * */
+	public function deleteAllProperties($id, $group='*') {
+        if ($group=='*') {
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post_property 
+            WHERE `post_id` = '" . (int)$id . "'");
+        } else {
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post_property 
+            WHERE `post_id` = '" . (int)$id . "' 
+            AND `group` = '". $this->db->escape($group) ."'");
+        }
+	}
 }

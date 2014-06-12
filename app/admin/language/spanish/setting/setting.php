@@ -13,8 +13,13 @@ $_['text_pop']              = 'POP3';
 $_['text_true']             = 'Si';
 $_['text_false']            = 'No';
 $_['text_nosure']           = 'No Estoy Seguro';
+$_['text_store']            = 'Tienda Virtual';
+$_['text_blog']             = 'Magazine Virtual';
+$_['text_company_website']  = 'Sitio Web Corporativo';
+$_['text_catalog']          = 'Cat&aacute;logo';
 
 // Entry
+$_['entry_store_mode']          = 'Modo de la Tienda:';
 $_['entry_new_days']          = 'D&iacute;as para considerar producto nuevo:';
 $_['entry_store']             = 'Nombre de la tienda:';
 $_['entry_admin_limit']       = 'L&iacute;mite del items por p&aacute;gina admin:';

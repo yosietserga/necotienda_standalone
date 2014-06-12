@@ -20,43 +20,20 @@ class ControllerPaymentCod extends Controller {
                 $this->redirect(Url::createAdminUrl('extension/payment')); 
             }
 		}
-		
-		$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_all_zones'] = $this->language->get('text_all_zones');
-				
-		$this->data['entry_order_status'] = $this->language->get('entry_order_status');		
-		$this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
-		$this->data['entry_status'] = $this->language->get('entry_status');
-		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		
-		$this->data['button_save'] = $this->language->get('button_save');$this->data['button_save_and_keep'] = $this->language->get('button_save_and_keep');$this->data['button_save_and_exit'] = $this->language->get('button_save_and_exit');
-		$this->data['button_cancel'] = $this->language->get('button_cancel');
-
-		$this->data['tab_general'] = $this->language->get('tab_general');
-
- 		if (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
+        
+ 		$this->data['error_warning'] =  (isset($this->error['warning'])) ? $this->error['warning'] : '';
 
   		$this->document->breadcrumbs = array();
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => HTTP_HOME . 'index.php?r=common/home&token=' . $this->session->data['token'],
        		'text'      => $this->language->get('text_home'),
       		'separator' => FALSE
    		);
-
    		$this->document->breadcrumbs[] = array(
        		'href'      => HTTP_HOME . 'index.php?r=extension/payment&token=' . $this->session->data['token'],
        		'text'      => $this->language->get('text_payment'),
       		'separator' => ' :: '
    		);
-		
    		$this->document->breadcrumbs[] = array(
        		'href'      => HTTP_HOME . 'index.php?r=payment/cod&token=' . $this->session->data['token'],
        		'text'      => $this->language->get('heading_title'),
@@ -64,85 +41,64 @@ class ControllerPaymentCod extends Controller {
    		);
 		
 		$this->data['action'] = HTTP_HOME . 'index.php?r=payment/cod&token=' . $this->session->data['token'];
-
 		$this->data['cancel'] = HTTP_HOME . 'index.php?r=extension/payment&token=' . $this->session->data['token'];	
 		
-		if (isset($this->request->post['cod_order_status_id'])) {
-			$this->data['cod_order_status_id'] = $this->request->post['cod_order_status_id'];
+        $this->setvar('cod_image');
+        $this->setvar('cod_order_status_id');
+        $this->setvar('cod_newsletter_id');
+        $this->setvar('cod_geo_zone_id');
+        $this->setvar('cod_status');
+        $this->setvar('cod_sort_order');
+        
+		if ($this->data['cod_image'] && file_exists(DIR_IMAGE . $this->data['cod_image'])) {
+			$this->data['preview'] = NTImage::resizeAndSave($this->data['cod_image'], 100, 100);
 		} else {
-			$this->data['cod_order_status_id'] = $this->config->get('cod_order_status_id'); 
-		} 
+			$this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+		}
 		
 		$this->load->model('localisation/orderstatus');
-		
 		$this->data['order_statuses'] = $this->modelOrderstatus->getAll();
 		
-		if (isset($this->request->post['cod_geo_zone_id'])) {
-			$this->data['cod_geo_zone_id'] = $this->request->post['cod_geo_zone_id'];
-		} else {
-			$this->data['cod_geo_zone_id'] = $this->config->get('cod_geo_zone_id'); 
-		} 
-		
-		$this->load->model('localisation/geo_zone');						
-		
+		$this->load->model('localisation/geozone');						
 		$this->data['geo_zones'] = $this->modelGeozone->getAll();
 		
-		if (isset($this->request->post['cod_status'])) {
-			$this->data['cod_status'] = $this->request->post['cod_status'];
-		} else {
-			$this->data['cod_status'] = $this->config->get('cod_status');
-		}
-		
-		if (isset($this->request->post['cod_sort_order'])) {
-			$this->data['cod_sort_order'] = $this->request->post['cod_sort_order'];
-		} else {
-			$this->data['cod_sort_order'] = $this->config->get('cod_sort_order');
-		}
-		
-        $this->data['Url'] = new Url;
+		$this->load->model('marketing/newsletter');
+		$this->data['newsletters']    = $this->modelNewsletter->getAll();
         
-        $scripts[] = array('id'=>'scriptForm','method'=>'ready','script'=>
-            "$('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
-            
-        $scripts[] = array('id'=>'scriptFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
+        $scripts[] = array('id'=>'categoryFunctions','method'=>'function','script'=>
+            "function image_delete(field, preview) {
+                $('#' + field).val('');
+                $('#' + preview).attr('src','". HTTP_IMAGE ."cache/no_image-100x100.jpg');
             }
             
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }");
+            function image_upload(field, preview) {
+                var height = $(window).height() * 0.8;
+                var width = $(window).width() * 0.8;
+                
+            	$('#dialog').remove();
+            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+                
+                $('#dialog').dialog({
+            		title: '".$this->data['text_image_manager']."',
+            		close: function (event, ui) {
+            			if ($('#' + field).attr('value')) {
+            				$.ajax({
+            					url: '". Url::createAdminUrl("common/filemanager/image") ."',
+            					type: 'POST',
+            					data: 'image=' + encodeURIComponent($('#' + field).val()),
+            					dataType: 'text',
+            					success: function(data) {
+            						$('#' + preview).replaceWith('<img src=\"' + data + '\" id=\"' + preview + '\" class=\"image\" onclick=\"image_upload(\'' + field + '\', \'' + preview + '\');\">');
+            					}
+            				});
+            			}
+            		},	
+            		bgiframe: false,
+            		width: width,
+            		height: height,
+            		resizable: false,
+            		modal: false
+            	});}");
             
         $this->scripts = array_merge($this->scripts,$scripts);
         

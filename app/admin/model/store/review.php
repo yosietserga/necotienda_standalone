@@ -80,8 +80,12 @@ class ModelStoreReview extends Model {
             
         $criteria = array();
             
+		if (!empty($data['filter_customer_id'])) {
+            $criteria[] = " c.customer_id = '" . (int)$data['filter_customer_id'] . "' ";
+		}
+
 		if (!empty($data['filter_author'])) {
-            $criteria[] = " LCASE(name) LIKE '%" . $this->db->escape(strtolower($data['filter_author'])) . "%' ";
+            $criteria[] = " LCASE(CONCAT(c.firstname,' ', c.lastname)) LIKE '%" . $this->db->escape(strtolower($data['filter_author'])) . "%' ";
 		}
 
 		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
@@ -140,9 +144,41 @@ class ModelStoreReview extends Model {
 		return $query->rows;	
 	}
 	
-	public function getAllTotal() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review");
-		
+	public function getAllTotal($data = array()) {
+		$sql = "SELECT COUNT(r.review_id) AS total 
+            FROM " . DB_PREFIX . "review r 
+            LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.object_id = pd.product_id) 
+            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id)";																		
+            
+        $criteria = array();
+            
+		if (!empty($data['filter_customer_id'])) {
+            $criteria[] = " c.customer_id = '" . (int)$data['filter_customer_id'] . "' ";
+		}
+
+		if (!empty($data['filter_author'])) {
+            $criteria[] = " LCASE(CONCAT(c.firstname,' ', c.lastname)) LIKE '%" . $this->db->escape(strtolower($data['filter_author'])) . "%' ";
+		}
+
+		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $criteria[] = " r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "' ";
+		} elseif (!empty($data['filter_date_start'])) {
+            $criteria[] = " r.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
+		}
+        
+        if (!empty($data['filter_product'])) {
+            $criteria[] = " r.review_id IN (SELECT review_id 
+                FROM " . DB_PREFIX . "review p2
+                    LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2.object_id=pd.product_id) 
+                WHERE LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_product'])) . "%'
+                    AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+        }
+            
+        if ($criteria) {
+            $sql .= " WHERE " . implode(" AND ",$criteria);
+        }
+																									  
+		$query = $this->db->query($sql);																																				
 		return $query->row['total'];
 	}
 	

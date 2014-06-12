@@ -190,6 +190,7 @@ class ControllerStoreReview extends Controller {
 
 	public function grid() {
 	   
+		$filter_customer_id = isset($this->request->get['filter_customer_id']) ? $this->request->get['filter_customer_id'] : null;
 		$filter_author = isset($this->request->get['filter_author']) ? $this->request->get['filter_author'] : null;
 		$filter_product = isset($this->request->get['filter_product']) ? $this->request->get['filter_product'] : null;
 		$filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
@@ -201,6 +202,7 @@ class ControllerStoreReview extends Controller {
 		
 		$url = '';
 			
+		if (isset($this->request->get['filter_customer_id'])) { $url .= '&filter_customer_id=' . $this->request->get['filter_customer_id']; } 
 		if (isset($this->request->get['filter_author'])) { $url .= '&filter_author=' . $this->request->get['filter_author']; } 
 		if (isset($this->request->get['filter_product'])) { $url .= '&filter_product=' . $this->request->get['filter_product']; } 
 		if (isset($this->request->get['filter_date_start'])) { $url .= '&filter_date_start=' . $this->request->get['filter_date_start']; }
@@ -213,6 +215,7 @@ class ControllerStoreReview extends Controller {
 		$this->data['reviews'] = array();
 
 		$data = array(
+			'filter_customer_id' => $filter_customer_id,
 			'filter_author'    => $filter_author,
 			'filter_product'   => $filter_product,
 			'filter_date_start'=> $filter_date_start, 
@@ -223,7 +226,7 @@ class ControllerStoreReview extends Controller {
 			'limit' => $limit
 		);
 		
-		$review_total = $this->modelReview->getAllTotal();
+		$review_total = $this->modelReview->getAllTotal($data);
         
         if ($review_total) {
             $results = $this->modelReview->getAll($data);
@@ -315,26 +318,6 @@ class ControllerStoreReview extends Controller {
 	}
 
 	private function getForm() {
-		$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_none'] = $this->language->get('text_none');
-		$this->data['text_select'] = $this->language->get('text_select');
-
-		$this->data['entry_product'] = $this->language->get('entry_product');
-		$this->data['entry_author'] = $this->language->get('entry_author');
-		$this->data['entry_rating'] = $this->language->get('entry_rating');
-		$this->data['entry_status'] = $this->language->get('entry_status');
-		$this->data['entry_text'] = $this->language->get('entry_text');
-		$this->data['entry_good'] = $this->language->get('entry_good');
-		$this->data['entry_bad'] = $this->language->get('entry_bad');
-
-		$this->data['button_save_and_new']= $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-
  		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
  		$this->data['error_product'] = ($this->error['product']) ? $this->error['product'] : '';
  		$this->data['error_author']  = ($this->error['author']) ? $this->error['author'] : '';
@@ -379,58 +362,6 @@ class ControllerStoreReview extends Controller {
         
         if ($this->request->hasQuery('review_id') && $this->request->getQuery('review_id') > 0)
             $this->data['replies'] = $this->modelReview->getReplies($this->request->get['review_id']);
-        
-        $this->data['Url'] = new Url;
-        
-        $scripts[] = array('id'=>'reviewScripts','method'=>'ready','script'=>
-            "$('#form').ntForm({
-                submitButton:false,
-                cancelButton:false,
-                lockButton:false
-            });
-            $('textarea').ntTextArea();
-            
-            var form_clean = $('#form').serialize();  
-            
-            window.onbeforeunload = function (e) {
-                var form_dirty = $('#form').serialize();
-                if(form_clean != form_dirty) {
-                    return 'There is unsaved form data.';
-                }
-            };
-            
-            $('.sidebar .tab').on('click',function(){
-                $(this).closest('.sidebar').addClass('show').removeClass('hide').animate({'right':'0px'});
-            });
-            $('.sidebar').mouseenter(function(){
-                clearTimeout($(this).data('timeoutId'));
-            }).mouseleave(function(){
-                var e = this;
-                var timeoutId = setTimeout(function(){
-                    if ($(e).hasClass('show')) {
-                        $(e).removeClass('show').addClass('hide').animate({'right':'-400px'});
-                    }
-                }, 600);
-                $(this).data('timeoutId', timeoutId); 
-            });");
-            
-        $scripts[] = array('id'=>'reviewFunctions','method'=>'function','script'=>
-            "function saveAndExit() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
-            }
-            
-            function saveAndKeep() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndKeep'>\").submit(); 
-            }
-            
-            function saveAndNew() { 
-                window.onbeforeunload = null;
-                $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
-            }");
-            
-        $this->scripts = array_merge($this->scripts,$scripts);
         
 		$this->template = 'store/review_form.tpl';
 		$this->children = array(

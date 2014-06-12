@@ -23,14 +23,14 @@
                    
             <div class="row">
                 <label><?php echo $Language->get('entry_date_start'); ?></label>
-                <input type="date" name="publish_date_start" value="<?php echo !empty($publish_date_start) ? date('d-m-Y',strtotime($publish_date_start)) : date('d/m/Y'); ?>" style="width:40%" />
+                <input type="necoDate" name="publish_date_start" value="<?php echo !empty($publish_date_start) ? date('d-m-Y',strtotime($publish_date_start)) : date('d/m/Y'); ?>" style="width:40%" />
             </div>
             
             <div class="clear"></div>
             
             <div class="row">
                 <label><?php echo $Language->get('entry_date_end'); ?></label>
-                <input type="date" name="publish_date_end" value="<?php echo isset($publish_date_end) ? $publish_date_end : ''; ?>" style="width:40%" />
+                <input type="necoDate" name="publish_date_end" value="<?php echo isset($publish_date_end) ? $publish_date_end : ''; ?>" style="width:40%" />
             </div>
             
             <div class="clear"></div><br />
@@ -39,10 +39,9 @@
                 <label><?php echo $Language->get('entry_engine'); ?></label>
                 <select name="jquery_plugin" style="width:40%">
                     <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                    <option value="vertical"<?php if ($jquery_plugin == 'vertical') {?> selected="selected"<?php } ?>>Im&aacute;genes En Vertical</option>
-                    <option value="horizontal"<?php if ($jquery_plugin == 'horizontal') {?> selected="selected"<?php } ?>>Im&aacute;genes En Horizontal</option>
-                    <option value="neco-carousel"<?php if ($jquery_plugin == 'neco-carousel') {?> selected="selected"<?php } ?>>Neco Carousel</option>
-                    <option value="nivo-slider"<?php if ($jquery_plugin == 'nivo-slider') {?> selected="selected"<?php } ?>>Nivo Slider</option>
+                    <?php foreach ($sliders as $slider) { ?>
+                    <option value="<?php echo $slider; ?>"<?php if ($jquery_plugin == $slider) {?> selected="selected"<?php } ?>><?php echo $slider; ?></option>
+                    <?php } ?>
                </select>
             </div>
             

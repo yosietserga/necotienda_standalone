@@ -5,6 +5,7 @@ class ModelAccountCustomer extends Model {
             $suffix =  base_convert(rand(10e16, 10e20), 10, 36); //TODO: agregar sufijo a las contrasenas
             $result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET 
               `store_id`    = '" . (int)STORE_ID . "', 
+              `referenced_by`= '" . (int)$data['referenced_by'] . "', 
               `firstname`   = '" . $this->db->escape($data['firstname']) . "', 
               `lastname`    = '" . $this->db->escape($data['lastname']) . "', 
               `telephone`   = '" . $this->db->escape($data['telephone']) . "', 
@@ -45,6 +46,89 @@ class ModelAccountCustomer extends Model {
         }
 	}
 	
+	public function addCustomerFromGoogle($data) {
+        if (!$this->getTotalCustomersByEmail($data['email'])) {
+            $password = substr(md5(mt_rand()),0,6);
+            $result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET 
+              `store_id`    = '" . (int)STORE_ID . "', 
+              `firstname`   = '" . $this->db->escape($data['firstname']) . "', 
+              `lastname`    = '" . $this->db->escape($data['lastname']) . "', 
+              `telephone`   = '" . $this->db->escape($data['telephone']) . "', 
+              `email`       = '" . $this->db->escape($data['email']) . "',
+              `birthday`    = '" . $this->db->escape($data['birthday']) . "', 
+              `company`     = '" . $this->db->escape($data['company']) . "', 
+              `sex`         = '" . $this->db->escape($data['sex']) . "', 
+              `password`    = '" . $this->db->escape(md5($password)) . "',
+              `activation_code` = '" . $this->db->escape(md5($data['email'])) . "',
+              `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "', 
+              `status`      = '1', 
+              `approved`    = '1', 
+              `photo`       = '" . $this->db->escape($data['photo']) . "', 
+              `google_oauth_id`    = '" . $this->db->escape($data['google_oauth_id']) . "', 
+              `google_oauth_token` = '" . $this->db->escape($data['google_oauth_token']) . "', 
+              `google_oauth_refresh` = '" . $this->db->escape($data['google_oauth_refresh']) . "', 
+              `google_code` = '" . $this->db->escape($data['google_code']) . "', 
+              `date_added`  = NOW()");
+              
+    		$customer_id = $this->db->getLastId();
+            
+            if ((int)STORE_ID == 0) {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int)STORE_ID . "', 
+                  customer_id   = '" . (int)$customer_id . "'");
+            } else {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int)STORE_ID . "', 
+                  customer_id   = '" . (int)$customer_id . "'");
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '0', 
+                  customer_id   = '" . (int)$customer_id . "'");
+            }
+            return array('customer_id'=>$customer_id,'password'=>$password);	
+        }
+	}
+	
+	public function addCustomerFromLive($data) {
+        if (!$this->getTotalCustomersByEmail($data['email'])) {
+            $password = substr(md5(mt_rand()),0,6);
+            $result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET 
+              `store_id`    = '" . (int)STORE_ID . "', 
+              `firstname`   = '" . $this->db->escape($data['firstname']) . "', 
+              `lastname`    = '" . $this->db->escape($data['lastname']) . "', 
+              `telephone`   = '" . $this->db->escape($data['telephone']) . "', 
+              `email`       = '" . $this->db->escape($data['email']) . "',
+              `birthday`    = '" . $this->db->escape($data['birthday']) . "', 
+              `company`     = '" . $this->db->escape($data['company']) . "', 
+              `sex`         = '" . $this->db->escape($data['sex']) . "', 
+              `password`    = '" . $this->db->escape(md5($password)) . "',
+              `activation_code` = '" . $this->db->escape(md5($data['email'])) . "',
+              `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "', 
+              `status`      = '1', 
+              `approved`    = '1', 
+              `photo`       = '" . $this->db->escape($data['photo']) . "', 
+              `live_oauth_id`    = '" . $this->db->escape($data['live_oauth_id']) . "', 
+              `live_oauth_token` = '" . $this->db->escape($data['live_oauth_token']) . "',
+              `live_code` = '" . $this->db->escape($data['live_code']) . "', 
+              `date_added`  = NOW()");
+              
+    		$customer_id = $this->db->getLastId();
+            
+            if ((int)STORE_ID == 0) {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int)STORE_ID . "', 
+                  customer_id   = '" . (int)$customer_id . "'");
+            } else {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int)STORE_ID . "', 
+                  customer_id   = '" . (int)$customer_id . "'");
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '0', 
+                  customer_id   = '" . (int)$customer_id . "'");
+            }
+            return array('customer_id'=>$customer_id,'password'=>$password);	
+        }
+	}
+	
 	public function editCustomer($data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer SET 
         firstname = '" . $this->db->escape($data['firstname']) . "', 
@@ -78,6 +162,7 @@ class ModelAccountCustomer extends Model {
           company = '" . $this->db->escape($data['company']) . "', 
           address_1 = '" . $this->db->escape($data['address_1']) . "',
           city = '" . $this->db->escape($data['city']) . "', 
+          street = '" . $this->db->escape($data['street']) . "', 
           postcode = '" . $this->db->escape($data['postcode']) . "', 
           country_id = '" . (int)$data['country_id'] . "', 
           zone_id = '" . (int)$data['zone_id'] . "'");
@@ -163,16 +248,19 @@ class ModelAccountCustomer extends Model {
         WHERE LCASE(company) LIKE '%". $this->db->escape(strtolower($company)) ."%'");
 		return $query->rows;
 	}
-		
+	
 	public function getCustomer($customer_id) {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$customer_id . "'");
-		
+		return $query->row;
+	}
+    
+	public function getCustomerByEmail($email) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "'");
 		return $query->row;
 	}
 	
 	public function getTotalCustomersByEmail($email) {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "'");
-		
 		return $query->row['total'];
 	}
     
@@ -186,11 +274,30 @@ class ModelAccountCustomer extends Model {
 	}
     
 	public function getCustomerByGoogle($data) {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "customer 
-        WHERE google_oauth_provider = 'google' 
-        AND google_oauth_id = '". intval($data['oauth_id']) ."' 
-        AND company = '". $this->db->escape($data['displayName']) ."'");
-		
+		$sql = "SELECT COUNT(*) AS total 
+        FROM " . DB_PREFIX . "customer ";
+        
+        if (!empty($data['email'])) {
+            $sql .= " WHERE email = '". $this->db->escape($data['email']) ."'";
+        } else {
+            $sql .= " WHERE google_oauth_id = '". $this->db->escape($data['google_oauth_id']) ."'";
+        }
+        
+		$query = $this->db->query($sql);
+		return $query->row['total'];
+	}
+    
+	public function getCustomerByLive($data) {
+		$sql = "SELECT COUNT(*) AS total 
+        FROM " . DB_PREFIX . "customer ";
+        
+        if (!empty($data['email'])) {
+            $sql .= " WHERE email = '". $this->db->escape($data['email']) ."'";
+        } else {
+            $sql .= " WHERE live_oauth_id = '". $this->db->escape($data['live_oauth_id']) ."'";
+        }
+        
+		$query = $this->db->query($sql);
 		return $query->row['total'];
 	}
     

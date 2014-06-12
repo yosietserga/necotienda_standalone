@@ -36,6 +36,10 @@ $_['text_price_desc']   = 'Precio m&aacute;s alto';
 $_['text_rating_asc']   = 'Rating m&aacute;s bajo';
 $_['text_rating_desc']  = 'Rating m&aacute;s alto';
 $_['text_default']  = 'Predeterminado';
+$_['text_google_promote']  = 'Promocionar en Google';
+$_['text_live_promote']  = 'Promocionar en Outlook';
+$_['text_facebook_promote']  = 'Promocionar en Facebook';
+$_['text_twitter_promote']  = 'Promocionar en Twitter';
 
 // Entry
 $_['entry_name']         = 'Su Nombre:';

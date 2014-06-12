@@ -92,6 +92,16 @@ class ModelLocalisationLanguage extends Model {
 		}
 		$this->cache->delete('order_status');
 		
+		// Order Status
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_payment_status WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		foreach ($query->rows as $order_status) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "order_payment_status SET 
+            order_payment_status_id = '" . (int)$order_status['order_payment_status_id'] . "', 
+            language_id = '" . (int)$language_id . "', 
+            name = '" . $this->db->escape($order_status['name']) . "'");
+		}
+		$this->cache->delete('order_status');
+		
 		// Product
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
 		foreach ($query->rows as $product) {
@@ -213,6 +223,9 @@ class ModelLocalisationLanguage extends Model {
         
 		$this->db->query("DELETE FROM " . DB_PREFIX . "order_status WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('order_status');
+        
+		$this->db->query("DELETE FROM " . DB_PREFIX . "order_payment_status WHERE language_id = '" . (int)$language_id . "'");
+		$this->cache->delete('order_payment_status');
         
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_description WHERE language_id = '" . (int)$language_id . "'");

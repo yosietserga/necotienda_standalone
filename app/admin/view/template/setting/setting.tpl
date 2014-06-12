@@ -78,7 +78,7 @@ function bounce() {
 				'type'				: 'ajax',
 				'showCloseButton'   : true,
 				'hideOnOverlayClick': false,
-				'href'				: '<?php echo $Url::createAdminUrl("email/bounce/test"); ?>&config_bounce_server=' + encodeURIComponent(jQuery("input[name='config_bounce_server']").val()) 
+				'href'				: '<?php echo $Url::createAdminUrl("marketing/bounce/test"); ?>&config_bounce_server=' + encodeURIComponent(jQuery("input[name='config_bounce_server']").val()) 
 				+ '&config_bounce_username=' + encodeURIComponent(jQuery("input[name='config_bounce_username']").val()) 
 				+ '&config_bounce_password=' + encodeURIComponent(jQuery("input[name='config_bounce_password']").val()) 
 				+ '&config_bounce_protocol=' + encodeURIComponent(jQuery("select[name='config_bounce_protocol']").val()) 

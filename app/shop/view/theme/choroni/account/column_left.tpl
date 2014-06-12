@@ -41,6 +41,7 @@
 		</ul>
 	</div>
 </div>
+-->
 <div class="box">
 	<div class="header"><?php echo $text_messages; ?></div>
 	<div class="content">
@@ -57,7 +58,6 @@
 		</ul>
 	</div>
 </div>
--->
 <div class="box">
 	<div class="header">
 		Cuenta

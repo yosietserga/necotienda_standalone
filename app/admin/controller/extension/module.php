@@ -137,16 +137,6 @@ class ControllerExtensionModule extends Controller {
 		 
 		$filter_name = !empty($this->request->get['filter_name']) ? $this->request->get['filter_name'] : "";
         
-        
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-		$this->data['text_confirm'] = $this->language->get('text_confirm');
-
-		$this->data['column_name'] = $this->language->get('column_name');
-		$this->data['column_position'] = $this->language->get('column_position');
-		$this->data['column_status'] = $this->language->get('column_status');
-		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
-		$this->data['column_action'] = $this->language->get('column_action');
-
 		$extensions = $this->modelExtension->getInstalled('module');
 		$this->data['extensions'] = array();
 		$modules = glob(DIR_APPLICATION . "controller/module/$filter_name*", GLOB_ONLYDIR);
@@ -171,7 +161,6 @@ class ControllerExtensionModule extends Controller {
     						'text' => $this->language->get('text_edit'),
     						'href' => Url::createAdminUrl('module/' . $extension . '/plugin')
     					);
-				    }
                     $status = $this->config->get($extension . '_status') ? 'activate' : 'desactivate';
 					$action[] = array(
 						'action' => $status,
@@ -179,6 +168,7 @@ class ControllerExtensionModule extends Controller {
 						'text' => $this->config->get($extension . '_status') ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
 						'href' => Url::createAdminUrl('extension/module/'. $status) . '&extension=' . $extension
 					);
+				    }
 					$action[] = array(
 						'action' => 'install',
 						'img' => 'uninstall.png',

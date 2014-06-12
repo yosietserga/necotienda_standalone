@@ -1,8 +1,18 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
-<section id="maincontent">
-    <section id="content">
-        <div class="grid_13">
+<div class="container">
+    <section id="maincontent">
+        <section id="content">
+        <?php if ($column_left) { ?><aside id="column_left" class="grid_3"><?php echo $column_left; ?></aside><?php } ?>
+        
+        <?php if ($column_left && $column_right) { ?>
+        <div class="grid_6">
+        <?php } elseif ($column_left || $column_right) { ?>
+        <div class="grid_9">
+        <?php } else { ?>
+        <div class="grid_12">
+        <?php } ?>
+            
         
             <h1><?php echo $heading_title; ?></h1>
             <?php if ($error_warning) { ?><div class="message warning"><?php echo $error_warning; ?></div><?php } ?>
@@ -106,6 +116,14 @@
                         <?php if ($error_telephone) { ?><div class="msg_error"><span class="error" id="error_telephone"><?php echo $error_telephone; ?></span></div><?php } ?>
                     </div>
                     
+                    <div class="clear"></div>
+                    
+                    <div class="row">
+                        <label><?php echo $Language->get('entry_referencedBy'); ?></label>
+                        <input type="text" name="referencedBy" id="referencedBy" value="<?php echo $referencedBy; ?>" title="Ingrese el email del cliente que lo referenci&oacute;" />
+                        <?php if ($error_referencedBy) { ?><div class="msg_error"><span class="error" id="error_referencedBy"><?php echo $error_referencedBy; ?></span></div><?php } ?>
+                    </div>
+                  
                 </fieldset>
                     
                 <fieldset>
@@ -139,8 +157,15 @@
                     <div class="clear"></div>
 
                     <div class="row">
+                        <label for="street"><?php echo $Language->get('entry_street'); ?></label>
+                        <input type="text" id="street" name="street" value="<?php echo $street; ?>" required="required" title="Ingrese el nombre de la ciudad donde reside" />
+                    </div>
+                  
+                    <div class="clear"></div>
+
+                    <div class="row">
                         <label for="postcode"><?php echo $Language->get('entry_postcode'); ?></label>
-                        <input type="number" id="postcode" name="postcode" value="<?php echo $postcode; ?>" required="required" title="Ingrese el c&oacute;digo postal de su residencia" />
+                        <input type="necoNumber" id="postcode" name="postcode" value="<?php echo $postcode; ?>" required="required" title="Ingrese el c&oacute;digo postal de su residencia" />
                     </div>
                   
                     <div class="clear"></div>
@@ -185,9 +210,47 @@
             
         </div>
         
-        <aside id="column_right"><?php echo $column_right; ?></aside>
-        
+        <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
+
+        </section>
     </section>
-    
-</section>
+</div>
+<script>
+$(function(){
+    $('#create').ntForm({
+        lockButton:false
+    });
+    $('#email').on('change',function(e){
+        $.post('". Url::createUrl("account/register/checkemail") ."', {email: $(this).val()},
+            function(response){
+                $('#tempLink').remove();
+              	var data = $.parseJSON(response);
+                if (typeof data.error != 'undefined') {
+                    $('#email')
+                    .removeClass('neco-input-success')
+                    .addClass('neco-input-error')
+                    .parent()
+                        .find('.neco-form-error')
+                        .attr({'title':"Este email ya existe!"});
+                    $('#email')
+                    .closest('.row')
+                        .after('<p id="tempLink" class="error">'+ data.msg +'</p>');
+                } else {
+                    $('#email')
+                    .addClass('neco-input-success')
+                    .removeClass('neco-input-error')
+                    .parent().find('.neco-form-error')
+                        .attr({'title':"No hay errores en este campo"});
+                    $('#tempLink').remove();
+          		}
+            });
+        }
+    );
+    $('#firstname,#lastname').on('change',function(e){
+        if (($('#firstname').val().length != 0) && ($('#lastname').val().length != 0) && ($('#company').val().length == 0)) {
+            $('#company').val($('#firstname').val() +' '+ $('#lastname').val());
+        }
+    });
+});
+</script>
 <?php echo $footer; ?>

@@ -757,4 +757,29 @@ class ControllerContentMenu extends Controller {
         
 		$this->response->setOutput(Json::encode($data));       
      }
+     
+     public function postcategory() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
+        header("Cache-Control: no-cache, must-revalidate"); 
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        
+        $data = array();
+        if ($this->request->server['REQUEST_METHOD'] == 'POST' && isset($this->request->post['post_categories'])) {
+    		$this->load->model('content/post_category');
+    		$this->load->library('url');
+    		$this->load->library('json');
+            foreach ($this->request->post['post_categories'] as $key => $value) {
+                $result = $this->modelPost_category->getById($value);
+                if (!$result) continue;
+                $path = ($result['parent_id']) ? $result['parent_id'] ."_". $result['post_category_id'] : $result['post_category_id'];
+                
+                $data[$value]['title']  = $result['name'];
+                $data[$value]['href']   = Url::createUrl('content/category',array('path' => $path),'NONSSL',HTTP_CATALOG);
+            }
+        } 
+        
+		$this->response->setOutput(Json::encode($data));       
+     }
 }

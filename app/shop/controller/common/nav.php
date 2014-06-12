@@ -14,7 +14,7 @@ class ControllerCommonNav extends Controller {
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/nav.tpl')) {
 			$this->template = $this->config->get('config_template') . '/common/nav.tpl';
 		} else {
-			$this->template = 'cuyagua/common/nav.tpl';
+			$this->template = 'choroni/common/nav.tpl';
 		}
 		
 		$this->render();

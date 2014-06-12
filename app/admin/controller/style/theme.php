@@ -56,7 +56,7 @@ class ControllerStyleTheme extends Controller {
             
             if ($this->request->post['default']) {
                 $this->load->model('setting/setting');
-                $this->modelSetting->update('theme',array('theme_default_id'=>$theme_id));
+                $this->modelSetting->updateProperty('theme','theme_default_id',$theme_id);
             }
             
 			$this->session->set('success',$this->language->get('text_success'));
@@ -100,10 +100,13 @@ class ControllerStyleTheme extends Controller {
             $this->request->post['date_publish_start'] = date('Y-m-d h:i:s',strtotime($dps[2] ."-". $dps[1] ."-". $dps[0]));
             
             $theme_id = $this->modelTheme->update($this->request->get['theme_id'], $this->request->post);
-
+            
+            $this->load->model('setting/setting');
             if ($this->request->post['default']) {
-                $this->load->model('setting/setting');
-                $this->modelSetting->update('theme',array('theme_default_id'=>$this->request->get['theme_id']));
+                $this->modelSetting->updateProperty('theme', 'theme_default_id', $this->request->get['theme_id']);
+            } elseif ($this->config->get('theme_default_id') == $this->request->getQuery('theme_id')) {
+                $this->modelSetting->updateProperty('theme', 'theme_default_id', 0);
+                
             }
             
 			$this->session->set('success',$this->language->get('text_success'));
@@ -281,50 +284,52 @@ class ControllerStyleTheme extends Controller {
                 && empty($properties['border']['rightcolor']) 
                 && empty($properties['border']['bottomcolor']) 
                 && empty($properties['border']['leftcolor'])) {
-                    $css .= "\tborder-color:". $properties['border']['color'] .";\n";
-                    $css .= "\tborder-style:". $properties['border']['style'] .";\n";
-                    $css .= "\tborder-width:". $properties['border']['width'] .";\n";
-                    $data[$selector]['border-color'] = $properties['border']['color'];
-                    $data[$selector]['border-style'] = $properties['border']['style'];
-                    $data[$selector]['border-width'] = $properties['border']['width'];
+                    if (!empty($properties['border']['color'])) $css .= "\tborder-color:". $properties['border']['color'] .";\n";
+                    if (!empty($properties['border']['style'])) $css .= "\tborder-style:". $properties['border']['style'] .";\n";
+                    if (!empty($properties['border']['width'])) $css .= "\tborder-width:". $properties['border']['width'] .";\n";
+                    if (!empty($properties['border']['color'])) $data[$selector]['border-color'] = $properties['border']['color'];
+                    if (!empty($properties['border']['style'])) $data[$selector]['border-style'] = $properties['border']['style'];
+                    if (!empty($properties['border']['width'])) $data[$selector]['border-width'] = $properties['border']['width'];
                 } else {
-                    $css .= "\tborder-top-color:". $properties['border']['topcolor'] .";\n";
-                    $css .= "\tborder-top-style:". $properties['border']['topstyle'] .";\n";
-                    $css .= "\tborder-top-width:". $properties['border']['topwidth'] .";\n";
-                    $data[$selector]['border-top-color'] = $properties['border']['topcolor'];
-                    $data[$selector]['border-top-style'] = $properties['border']['topstyle'];
-                    $data[$selector]['border-top-width'] = $properties['border']['topwidth'];
+                    if (!empty($properties['border']['topcolor'])) $css .= "\tborder-top-color:". $properties['border']['topcolor'] .";\n";
+                    if (!empty($properties['border']['topstyle'])) $css .= "\tborder-top-style:". $properties['border']['topstyle'] .";\n";
+                    if (!empty($properties['border']['topwidth'])) $css .= "\tborder-top-width:". $properties['border']['topwidth'] .";\n";
+                    if (!empty($properties['border']['topcolor'])) $data[$selector]['border-top-color'] = $properties['border']['topcolor'];
+                    if (!empty($properties['border']['topstyle'])) $data[$selector]['border-top-style'] = $properties['border']['topstyle'];
+                    if (!empty($properties['border']['topwidth'])) $data[$selector]['border-top-width'] = $properties['border']['topwidth'];
                     
-                    $css .= "\tborder-right-color:". $properties['border']['rightcolor'] .";\n";
-                    $css .= "\tborder-right-style:". $properties['border']['rightstyle'] .";\n";
-                    $css .= "\tborder-right-width:". $properties['border']['rightwidth'] .";\n";
-                    $data[$selector]['border-right-color'] = $properties['border']['rightcolor'];
-                    $data[$selector]['border-right-style'] = $properties['border']['rightstyle'];
-                    $data[$selector]['border-right-width'] = $properties['border']['rightwidth'];
+                    if (!empty($properties['border']['rightcolor'])) $css .= "\tborder-right-color:". $properties['border']['rightcolor'] .";\n";
+                    if (!empty($properties['border']['rightstyle'])) $css .= "\tborder-right-style:". $properties['border']['rightstyle'] .";\n";
+                    if (!empty($properties['border']['rightwidth'])) $css .= "\tborder-right-width:". $properties['border']['rightwidth'] .";\n";
+                    if (!empty($properties['border']['rightcolor'])) $data[$selector]['border-right-color'] = $properties['border']['rightcolor'];
+                    if (!empty($properties['border']['rightstyle'])) $data[$selector]['border-right-style'] = $properties['border']['rightstyle'];
+                    if (!empty($properties['border']['rightwidth'])) $data[$selector]['border-right-width'] = $properties['border']['rightwidth'];
                     
-                    $css .= "\tborder-bottom-color:". $properties['border']['bottomcolor'] .";\n";
-                    $css .= "\tborder-bottom-style:". $properties['border']['bottomstyle'] .";\n";
-                    $css .= "\tborder-bottom-width:". $properties['border']['bottomwidth'] .";\n";
-                    $data[$selector]['border-bottom-color'] = $properties['border']['bottomcolor'];
-                    $data[$selector]['border-bottom-style'] = $properties['border']['bottomstyle'];
-                    $data[$selector]['border-bottom-width'] = $properties['border']['bottomwidth'];
+                    if (!empty($properties['border']['bottomcolor'])) $css .= "\tborder-bottom-color:". $properties['border']['bottomcolor'] .";\n";
+                    if (!empty($properties['border']['bottomstyle'])) $css .= "\tborder-bottom-style:". $properties['border']['bottomstyle'] .";\n";
+                    if (!empty($properties['border']['bottomwidth'])) $css .= "\tborder-bottom-width:". $properties['border']['bottomwidth'] .";\n";
+                    if (!empty($properties['border']['bottomcolor'])) $data[$selector]['border-bottom-color'] = $properties['border']['bottomcolor'];
+                    if (!empty($properties['border']['bottomstyle'])) $data[$selector]['border-bottom-style'] = $properties['border']['bottomstyle'];
+                    if (!empty($properties['border']['bottomwidth'])) $data[$selector]['border-bottom-width'] = $properties['border']['bottomwidth'];
                     
-                    $css .= "\tborder-left-color:". $properties['border']['leftcolor'] .";\n";
-                    $css .= "\tborder-left-style:". $properties['border']['leftstyle'] .";\n";
-                    $css .= "\tborder-left-width:". $properties['border']['leftwidth'] .";\n";
-                    $data[$selector]['border-left-color'] = $properties['border']['leftcolor'];
-                    $data[$selector]['border-left-style'] = $properties['border']['leftstyle'];
-                    $data[$selector]['border-left-width'] = $properties['border']['leftwidth'];
+                    if (!empty($properties['border']['leftcolor'])) $css .= "\tborder-left-color:". $properties['border']['leftcolor'] .";\n";
+                    if (!empty($properties['border']['leftstyle'])) $css .= "\tborder-left-style:". $properties['border']['leftstyle'] .";\n";
+                    if (!empty($properties['border']['leftwidth'])) $css .= "\tborder-left-width:". $properties['border']['leftwidth'] .";\n";
+                    if (!empty($properties['border']['leftcolor'])) $data[$selector]['border-left-color'] = $properties['border']['leftcolor'];
+                    if (!empty($properties['border']['leftstyle'])) $data[$selector]['border-left-style'] = $properties['border']['leftstyle'];
+                    if (!empty($properties['border']['leftwidth'])) $data[$selector]['border-left-width'] = $properties['border']['leftwidth'];
                 }
                 
                 if (empty($properties['borderradius']['topleft']) 
                 && empty($properties['borderradius']['topright']) 
                 && empty($properties['borderradius']['bottomleft']) 
                 && empty($properties['borderradius']['bottomright'])) {
-                    $css .= "\t-moz-border-radius:". $properties['borderradius']['all'] .";\n";
-                    $css .= "\t-webkit-border-radius:". $properties['borderradius']['all'] .";\n";
-                    $css .= "\tborder-radius:". $properties['borderradius']['all'] .";\n";
-                    $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                    if (!empty($properties['borderradius']['all'])) {
+                        $css .= "\t-moz-border-radius:". $properties['borderradius']['all'] .";\n";
+                        $css .= "\t-webkit-border-radius:". $properties['borderradius']['all'] .";\n";
+                        $css .= "\tborder-radius:". $properties['borderradius']['all'] .";\n";
+                        $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                    }
                 } else {
                     $css .= "\t-moz-border-radius:". $properties['borderradius']['topleft'] ." ". 
                         $properties['borderradius']['topright'] ." ". 
@@ -348,8 +353,10 @@ class ControllerStyleTheme extends Controller {
                 && empty($properties['margin']['right']) 
                 && empty($properties['margin']['bottom']) 
                 && empty($properties['margin']['left'])) {
-                    $css .= "\tmargin:". $properties['margin']['all'] .";\n";
-                    $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                    if (!empty($properties['margin']['all'])) {
+                        $css .= "\tmargin:". $properties['margin']['all'] .";\n";
+                        $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                    }
                 } else {
                     $css .= "\tmargin:". $properties['margin']['top'] ." ". 
                         $properties['margin']['right'] ." ". 
@@ -365,8 +372,10 @@ class ControllerStyleTheme extends Controller {
                 && empty($properties['padding']['right']) 
                 && empty($properties['padding']['bottom']) 
                 && empty($properties['padding']['left'])) {
-                    $css .= "\tpadding:". $properties['padding']['all'] .";\n";
-                    $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                    if (!empty($properties['padding']['all'])) {
+                        $css .= "\tpadding:". $properties['padding']['all'] .";\n";
+                        $data[$selector]['border-radius'] = $properties['borderradius']['all'];
+                    }
                 } else {
                     $css .= "\tpadding:". $properties['padding']['top'] ." ". 
                         $properties['padding']['right'] ." ". 
@@ -498,7 +507,8 @@ class ControllerStyleTheme extends Controller {
                 if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
                 	$.getJSON('". Url::createAdminUrl("style/theme/delete") ."',{
-                        id:e
+                        id:e,
+                        template:$('#tr_' + e).data('template')
                     });
                 }
                 return false;

@@ -10,8 +10,8 @@
     <div class="buttons"><a onclick=" if (confirm('Se borrará toda la información. ¿Desea continuar?')) {location = '<?php echo $reset; ?>';}" class="button"><span><?php echo $Language->get('button_reset; ?></span></a></div>  
   </div>
   <div class="content">  
-            <label>Fecha Inicial:</label><input type="date" name="filter_sdate" value="<?php echo $filter_sdate; ?>" id="sdate">
-            <label>Fecha Final:</label><input type="date" name="filter_fdate" value="<?php echo $filter_fdate; ?>" id="fdate">
+            <label>Fecha Inicial:</label><input type="necoDate" name="filter_sdate" value="<?php echo $filter_sdate; ?>" id="sdate">
+            <label>Fecha Final:</label><input type="necoDate" name="filter_fdate" value="<?php echo $filter_fdate; ?>" id="fdate">
     <table class="list">
     <thead>
           <tr>

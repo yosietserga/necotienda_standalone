@@ -40,13 +40,22 @@ class ModelMarketingList extends Model {
         }
 	}
     
+    public function addContact($id,$contact_id) {
+        $this->db->query("REPLACE INTO " . DB_PREFIX . "contact_to_list SET 
+            `contact_id` = '" . (int)$contact_id . "',
+            `contact_list_id` = '" . (int)$id . "',
+            `date_added` = NOW()");
+    }
+    
     public function getById($contact_list_id){
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "contact_list WHERE `contact_list_id` = ".(int)$contact_list_id);
         return $query->row;
     }
     
     public function getAll($data = array()) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "contact_list cl";
+		$sql = "SELECT *, 
+        (SELECT COUNT(*) FROM " . DB_PREFIX . "contact_to_list c2ll WHERE c2ll.contact_list_id = cl.contact_list_id) AS total_contacts 
+        FROM " . DB_PREFIX . "contact_list cl";
         if ($data) {
     		$implode = array();
     		

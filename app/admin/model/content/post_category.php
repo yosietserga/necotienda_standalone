@@ -213,7 +213,9 @@ class ModelContentPostCategory extends Model {
 	 * @return array sql record
 	 */
 	public function getById($post_category_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "post_category WHERE post_category_id = '" . (int)$post_category_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "post_category pc 
+        LEFT JOIN " . DB_PREFIX . "post_category_description pcd ON (pcd.post_category_id=pc.post_category_id) 
+        WHERE pc.post_category_id = '" . (int)$post_category_id . "'");
 		
 		return $query->row;
 	} 
@@ -473,4 +475,152 @@ class ModelContentPostCategory extends Model {
         $query = $this->db->query("UPDATE `" . DB_PREFIX . "post_category` SET `status` = '0' WHERE `post_category_id` = '" . (int)$id . "'");
         return $query;
      }
+
+    /**
+     * ModelContentPostCategory::getProperty()
+     * 
+     * Obtener una propiedad de la categoria
+     * 
+     * @param int $id post_category_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return mixed value of property
+     * */
+    public function getProperty($id, $group, $key) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_category_property 
+        WHERE `post_category_id` = '" . (int)$id . "' 
+        AND `group` = '". $this->db->escape($group) ."'
+        AND `key` = '". $this->db->escape($key) ."'");
+  
+		return unserialize(str_replace("\'","'",$query->row['value']));
+	}
+	
+    /**
+     * ModelContentPostCategory::setProperty()
+     * 
+     * Asigna una propiedad de la categoria
+     * 
+     * @param int $id post_category_id
+     * @param varchar $group
+     * @param varchar $key
+     * @param mixed $value
+     * @return void
+     * */
+	public function setProperty($id, $group, $key, $value) {
+		$this->deleteProperty($id, $group, $key);
+		$this->db->query("INSERT INTO " . DB_PREFIX . "post_category_property SET
+        `post_category_id`   = '" . (int)$id . "',
+        `group`     = '" . $this->db->escape($group) . "',
+        `key`       = '" . $this->db->escape($key) . "',
+        `value`     = '" . $this->db->escape(str_replace("'","\'",serialize($value))) . "'");
+	}
+	
+    /**
+     * ModelContentPostCategory::deleteProperty()
+     * 
+     * Elimina una propiedad de la categoria
+     * 
+     * @param int $id post_category_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return void
+     * */
+	public function deleteProperty($id, $group, $key) {
+		$this->db->query("DELETE FROM " . DB_PREFIX . "post_category_property 
+        WHERE `post_category_id` = '" . (int)$id . "' 
+        AND `group` = '". $this->db->escape($group) ."'
+        AND `key` = '". $this->db->escape($key) ."'");
+	}
+	
+    /**
+     * ModelContentPostCategory::getAllProperties()
+     * 
+     * Obtiene todas las propiedades de la categoria
+     * 
+     * Si quiere obtener todos los grupos de propiedades
+     * utilice * como nombre del grupo, ejemplo:
+     * 
+     * $properties = getAllProperties($post_category_id, '*');
+     * 
+     * Sino coloque el nombre del grupo de las propiedades
+     * 
+     * $properties = getAllProperties($post_category_id, 'NombreDelGrupo');
+     * 
+     * @param int $id post_category_id
+     * @param varchar $group
+     * @return array all properties
+     * */
+	public function getAllProperties($id, $group='*') {
+        if ($group=='*') {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_category_property 
+            WHERE `post_category_id` = '" . (int)$id . "'");
+        } else {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_category_property 
+            WHERE `post_category_id` = '" . (int)$id . "' 
+            AND `group` = '". $this->db->escape($group) ."'");
+        }
+        
+		return $query->rows;
+	}
+	
+    /**
+     * ModelContentPostCategory::setAllProperties()
+     * 
+     * Asigna todas las propiedades de la categoria
+     * 
+     * Pase un array con todas las propiedades y sus valores
+     * eneplo:
+     * 
+     * $data = array(
+     *    'key1'=>'abc',
+     *    'key2'=>123,
+     *    'key3'=>array(
+     *       'subkey1'=>'value1'
+     *    ),
+     *    'key4'=>$object,
+     * );
+     * 
+     * @param int $id post_category_id
+     * @param varchar $group
+     * @param array $data
+     * @return void
+     * */
+	public function setAllProperties($id, $group, $data) {
+        if (is_array($data) && !empty($data)) {
+    		$this->deleteAllProperties($id, $group);
+            foreach ($data as $key=>$value) {
+                $this->setProperty($id, $group, $key, $value);
+            }
+        }
+	}	
+	
+    /**
+     * ModelContentPostCategory::deleteAllProperties()
+     * 
+     * Elimina todas las propiedades de la categoria
+     * 
+     * Si quiere eliminar todos los grupos de propiedades
+     * utilice * como nombre del grupo, ejemplo:
+     * 
+     * $properties = deleteAllProperties($post_category_id, '*');
+     * 
+     * Sino coloque el nombre del grupo de las propiedades
+     * 
+     * $properties = deleteAllProperties($post_category_id, 'NombreDelGrupo');
+     * 
+     * @param int $id post_category_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return void
+     * */
+	public function deleteAllProperties($id, $group='*') {
+        if ($group=='*') {
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post_category_property 
+            WHERE `post_category_id` = '" . (int)$id . "'");
+        } else {
+    		$this->db->query("DELETE FROM " . DB_PREFIX . "post_category_property 
+            WHERE `post_category_id` = '" . (int)$id . "' 
+            AND `group` = '". $this->db->escape($group) ."'");
+        }
+	}
 }

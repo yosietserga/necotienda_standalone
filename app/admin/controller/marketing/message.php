@@ -23,6 +23,7 @@ class ControllerMarketingMessage extends Controller {
         
         $this->setvar('marketing_page_contact_id');
         $this->setvar('marketing_email_new_customer');
+        $this->setvar('marketing_email_activate_customer');
         $this->setvar('marketing_email_new_order');
         $this->setvar('marketing_email_order_pdf');
         $this->setvar('marketing_email_new_comment');
@@ -35,6 +36,12 @@ class ControllerMarketingMessage extends Controller {
         $this->setvar('marketing_email_subtract_balance');
         $this->setvar('marketing_email_happy_birthday');
         $this->setvar('marketing_email_recommended_products');
+        $this->setvar('marketing_email_promote_product');
+        $this->setvar('marketing_email_invite_friends');
+        
+        $this->setvar('marketing_page_new_customer');
+        $this->setvar('marketing_page_activate_customer');
+        $this->setvar('marketing_page_add_to_cart');
         
   		$this->document->breadcrumbs = array();
 

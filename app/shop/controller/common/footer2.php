@@ -38,7 +38,7 @@
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/footer2.tpl')) {
 			$this->template = $this->config->get('config_template') . '/common/footer2.tpl';
 		} else {
-			$this->template = 'cuyagua/common/footer2.tpl';
+			$this->template = 'choroni/common/footer2.tpl';
 		}
 		
 		$this->render();

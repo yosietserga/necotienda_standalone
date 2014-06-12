@@ -44,7 +44,7 @@
         var helpers = {
             _create: function() {
 
-                if ($(data.element).length > 0) { //is a form, so let´s get it
+                if ($(data.element).length > 0) {
                     $(data.element).addClass('neco-wizard');
                     
                     data.navCount = data.stepCount = 0;
@@ -73,7 +73,7 @@
                         data.stepCount++;
                     });
                     
-                    //if (navCount == stepCount) {
+                    /* if (navCount == stepCount) { */
                         
                         var nextBtn = $(document.createElement('a')).attr({
                             'class':'button neco-wizard-next'
@@ -99,12 +99,12 @@
                             helpers._ignore(e);
                         });
                         
-                        data.element.append(nextBtn);
                         data.element.append(prevBtn);
+                        data.element.append(nextBtn);
                         if (settings.ignoreShow) {data.element.append(ignoreBtn);}
-                    //} else {
+                    /*} else {
                         //TODO: error, no cargar wizard
-                    //}
+                    }*/
                     
                 }
                 if (typeof settings.create == 'function') {

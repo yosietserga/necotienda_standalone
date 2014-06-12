@@ -12,6 +12,7 @@
 
 require_once('xhttp/xhttp.php');
 require_once('pclzip.php');
+require_once('language.php');
 
 /**
  * Update
@@ -24,10 +25,36 @@ require_once('pclzip.php');
  */
 class Update
 {
+    /**
+     * @param $db wrapper for db object
+     * */
     protected $db;
+    
+    /**
+     * @param $load wrapper for load object
+     * */
     protected $load;
+    
+    /**
+     * @param $handler wrapper for xhttp object
+     * */
     protected $handler;
+    
+    /**
+     * @param $language wrapper for language object
+     * */
+    protected $language;
+    
+    /**
+     * @param $updateAvailable bool check for update available
+     * */
+    protected $updateAvailable;
+    
+    /**
+     * @param $update_info array que se retorna
+     * */
     public $update_info = "";
+    
     /**
      * Update::__construct()
      * 
@@ -38,7 +65,12 @@ class Update
         $this->db = $registry->get('db');
         $this->load = $registry->get('load');
         
-        $this->update_info = "http://www.necotienda.com/index.php?r=update/info&p=" . PACKAGE;
+        $this->update_info = "http://www.necotienda.com/index.php?r=update/info"
+        ."&p=".urlencode(PACKAGE)
+        ."&v=".urlencode(VERSION)
+        ."&c=".urlencode(C_CODE)
+        ."&i=".urlencode($_SERVER['SERVER_ADDR'])
+        ."&d=".urlencode(HTTP_HOME);
         
         if (in_array('curl', get_loaded_extensions())) {
             $this->handler = new xhttp;
@@ -54,8 +86,26 @@ class Update
      */
     public function run() {
         $info = $this->getInfo();
+        $this->checkForUpdates();
         
-        if (version_compare(VERSION,$info['version'],'<')) {
+        if ($this->updateAvailable) {
+            
+            /**
+             * 3. obtener información de la actualización
+             *  - url de descarga
+             *  - array de requerimientos (php, mysql, extensiones apache, permisos)
+             *  - checksum del zip
+             * 5. descargar zip
+             * 6. validar checksum del zip descargado para validar que está bien y completo
+             * 7. descomprimir zip
+             * 8. verificar que exista el archivo update.php
+             * 9. importar update.php y ejecutar el proceso
+             * */
+            $requirements = $this->checkRequirements($info['requirements']);
+            if ($requirements) {
+                return $requirements;
+            }
+            
             $response = $this->handler->fetch($info['url_update']);
             if (isset($response['body']) && $response['successful']) {
                 $file_update = $response['body'];
@@ -63,12 +113,12 @@ class Update
                 $file_update = $response;
             }
             
-            $file_saved = DIR_ROOT . "update.zip";
+            $file_saved = DIR_ROOT . "updates/update.zip";
             
             $f = fopen($file_saved,'wb');
             fwrite($f,$file_update);
             fclose($f);
-            
+            /*
             if (file_exists($file_saved) && sha1_file($file_saved) == $info['checksum']) {
                 $zip = new PclZip();
                 $zip->setZipName($file_saved);
@@ -80,6 +130,7 @@ class Update
             } else {
                 return false;
             }
+            */
         } else {
             //TODO: Ya esta actualizada
         }
@@ -109,6 +160,69 @@ class Update
         } else {
             return unserialize($file_info);
         }
+    }
+    
+    public function checkRequirements($requirements) {
+        $return = array();
+        
+    	if(version_compare(phpversion(), $requirements['php_version'], '<')) {
+            $return['requirements_error'] = true;
+    		$return['php_version'] = 'Se necesita la versi&oacute;n de PHP mayor o igual a '. $requirements['php_version'] .' y actualmente posee la versi&oacute;n '. phpversion();
+    	}
+        
+    	
+
+        if(!ini_get('safe_mode')) {
+    		preg_match('/[0-9]\.[0-9]+\.[0-9]+/', shell_exec('mysql -V'), $version);
+            
+            if(version_compare($version[0], $requirements['mysql_version'], '<')) {
+                $return['requirements_error'] = true;
+        		$return['php_version'] = 'Se necesita la versi&oacute;n de MySQL mayor o igual a '. $requirements['mysql_version'] .' y actualmente posee la versi&oacute;n '. $version[0];
+        	}
+        } else {
+            $return['requirements_error'] = true;
+            $return['safe_mode'] = 'Debe desactivar el status Safe Mode de PHP';
+        }
+
+    	foreach($requirements['php_extensions'] as $extension) {
+    		if(!extension_loaded($extension)) {
+                $return['requirements_error'] = true;
+                $return[$extension] = 'Debe instalar y activar en PHP la extensi&oacute;n '.$extension;
+    		}
+    	}
+
+    	foreach($requirements['file_permissions'] as $path => $permission) {
+    		if(!file_exists(DIR_ROOT . $path)) {
+                $return['requirements_error'] = true;
+                $return[$extension] = 'La Carpeta o Archivo '. $path .' no existe';
+    		}
+            $fileperm = substr(sprintf('%o', fileperms(DIR_ROOT . $path)), -4);
+    		if($fileperm != $permission) {
+                $return['requirements_error'] = true;
+                $return[$extension] = 'La Carpeta o Archivo '. $path .' no posee los permisos requeridos ('. $permission .')';
+    		}
+    	}
+    }
+    
+    public function checkForUpdates() {
+        $info = $this->getInfo();
+        $error = "Hay una nueva versi&oacute;n disponible, Para instalarla haz click <a href=\"". Url::createAdminUrl("tool/update") ."\" title=\"Actualizar\">aqu&iacute;</a>";
+        
+        if (version_compare(VERSION,$info['version'],'>=')) {
+            $error='La versi&oacute;n de NecoTienda que est&aacute; usando actualmente, es la &uacute;ltima versi&oacute;n disponible.';
+        }
+        
+        if (PACKAGE != $info['package']) {
+            $error='No hay actualizaciones disponibles para este paquete de NecoTienda.';
+        }
+        
+        if ($info['license'] !== true) {
+            $error='Debe comprar una licencia comercial de NecoTienda para disfrutar de las actualizaciones automáticas.';
+        }
+        
+        $this->updateAvailable = true;
+        
+        return $error;
     }
 }
 

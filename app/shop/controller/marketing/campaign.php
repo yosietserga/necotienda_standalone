@@ -6,22 +6,26 @@ class ControllerMarketingCampaign extends Controller {
 	}
     
 	public function trace() {
-	   $campaign_id = ($this->request->hasQuery('campaign_id')) ? $this->request->getQuery('campaign_id') : null;
-	   $contact_id = ($this->request->hasQuery('contact_id')) ? $this->request->getQuery('contact_id') : null;
-       if ($campaign_id && $contact_id) {
+        header('Cache-Control: no-cache');
+        header('Content-type: image/gif');
+        header('Content-length: 43');
+        if ($this->request->hasQuery('campaign_id')) {
             $this->load->model('marketing/campaign');
-            $this->modelCampaign->trackEmail($campaign_id, $contact_id);
-       }
+            $this->modelCampaign->trackEmail($this->request->getQuery('campaign_id'), $this->request->getQuery('contact_id'));
+        }
+        echo base64_decode('R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
 	}
     
 	public function link() {
-	   $campaign_id = ($this->request->hasQuery('campaign_id')) ? $this->request->getQuery('campaign_id') : null;
-	   $contact_id = ($this->request->hasQuery('contact_id')) ? $this->request->getQuery('contact_id') : null;
-	   $link_index = ($this->request->hasQuery('link_index')) ? $this->request->getQuery('link_index') : null;
-       if ($campaign_id && $contact_id) {
+        if ($this->request->hasQuery('campaign_id')) {
             $this->load->model('marketing/campaign');
-            $this->modelCampaign->trackLink($campaign_id, $contact_id, $link_index);
-            $this->redirect($this->modelCampaign->getLink($link_index));
-       }
+            $this->modelCampaign->trackLink($this->request->getQuery('campaign_id'), $this->request->getQuery('contact_id'), $this->request->getQuery('link_index'));
+            $redirectTo = $this->modelCampaign->getLink($this->request->getQuery('link_index'));
+            if ($redirectTo) {
+                $this->redirect($redirectTo);
+            } else {
+                $this->redirect(HTTP_HOME);
+            }
+        }
 	}
 }

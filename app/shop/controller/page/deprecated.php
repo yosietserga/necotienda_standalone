@@ -21,7 +21,7 @@ class ControllerPageDeprecated extends Controller {
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/page/deprecated.tpl')) {
 			$this->template = $this->config->get('config_template') . '/page/deprecated.tpl';
 		} else {
-			$this->template = 'cuyagua/page/deprecated.tpl';
+			$this->template = 'choroni/page/deprecated.tpl';
 		}
 		
 		$this->children[] = 'common/header2';

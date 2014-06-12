@@ -6,10 +6,9 @@
                 <th></th>
             </tr>
         </thead>
-        <?php $image_row = 0; ?>
-        <tbody id="image_row<?php echo $image_row; ?>">
-        <?php foreach ($product_images as $product_image) { ?>
-            <tr>
+        <tbody>
+        <?php foreach ($product_images as $image_row => $product_image) { ?>
+            <tr id="image_row<?php echo $image_row; ?>">
                 <td>
                     <input type="hidden" name="product_image[<?php echo $image_row; ?>]" value="<?php echo $product_image['file']; ?>" id="image<?php echo $image_row; ?>">
                     <img src="<?php echo $product_image['preview']; ?>" id="preview<?php echo $image_row; ?>" class="image" onclick="image_upload('image<?php echo $image_row; ?>', 'preview<?php echo $image_row; ?>');">
@@ -28,17 +27,15 @@
     </table>
 </div>
 <script type="text/javascript">
-var image_row = <?php echo $image_row; ?>;
+var image_row = <?php echo (int)$image_row++; ?>;
 
 function addImage() {
-    html  = '<tbody id="image_row' + image_row + '">';
-	html += '<tr>';
+    html  = '<tr id="image_row' + image_row + '">';
 	html += '<td class="left"><input type="hidden" name="product_image[' + image_row + ']" value="" id="image' + image_row + '"><img src="<?php echo $no_image; ?>" id="preview' + image_row + '" class="image" onclick="image_upload(\'image' + image_row + '\', \'preview' + image_row + '\');"></td>';
 	html += '<td class="left"><a onclick="$(\'#image_row' + image_row  + '\').remove();" class="button"><span><?php echo $Language->get('button_remove'); ?></span></a></td>';
 	html += '</tr>';
-	html += '</tbody>';
 	
-	$('#images tfoot').before(html);
+	$('#images tbody').append(html);
 	
 	image_row++;
 }

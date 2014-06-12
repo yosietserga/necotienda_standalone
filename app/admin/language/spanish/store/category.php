@@ -5,6 +5,7 @@ $_['heading_title']     = 'Categor&iacute;a';
 // Text
 $_['text_success']      = 'Se ha actualizado satisfactoriamente!';
 $_['text_image_manager']= 'Gestor de Im&aacute;genes';
+$_['text_see_category_in_storefront']= 'Ver Categor&iacute;a en la tienda';
 
 // Column
 $_['column_name']       = 'Nombre de la categor&iacute;a';
@@ -18,6 +19,7 @@ $_['entry_meta_description'] = 'Resumen:';
 $_['entry_description']      = 'Descripci&oacute;n:';
 $_['entry_category']    = 'Categor&iacute;a Superior:';
 $_['entry_image']       = 'Imagen:';
+$_['entry_view']     = 'Vista:';
 $_['entry_sort_order']  = 'Posici&oacute;n';
 $_['entry_store']  = 'Tienda:';
 $_['entry_keyword']  = 'Slug:';

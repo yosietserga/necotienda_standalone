@@ -1,6 +1,6 @@
 <?php
 /**
- * ModelStoreTheme
+ * ModelStyleTheme
  * 
  * @package NecoTienda
  * @author Yosiet Serga
@@ -11,7 +11,7 @@
  */
 class ModelStyleTheme extends Model {
 	/**
-	 * ModelStoreTheme::add()
+	 * ModelStyleTheme::add()
 	 * 
 	 * @param mixed $data
      * @see DB
@@ -57,7 +57,7 @@ class ModelStyleTheme extends Model {
 	}
 	
 	/**
-	 * ModelStoreTheme::editTheme()
+	 * ModelStyleTheme::editTheme()
 	 * 
 	 * @param int $theme_id
 	 * @param mixed $data
@@ -99,11 +99,12 @@ class ModelStyleTheme extends Model {
               `value`       = '" . $this->db->escape($data['value']) . "'");
         }
         
+		$this->cache->delete('theme');
         return $theme_id;
 	}
 	
 	/**
-	 * ModelStoreTheme::editTheme()
+	 * ModelStyleTheme::editTheme()
 	 * 
 	 * @param int $theme_id
 	 * @param mixed $data
@@ -138,7 +139,7 @@ class ModelStyleTheme extends Model {
 	}
 	
 	/**
-	 * ModelStoreTheme::deleteTheme()
+	 * ModelStyleTheme::deleteTheme()
 	 * 
 	 * @param int $theme_id
      * @see DB
@@ -176,7 +177,7 @@ class ModelStyleTheme extends Model {
 	}
 	
 	/**
-	 * ModelStoreTheme::getTheme()
+	 * ModelStyleTheme::getTheme()
 	 * 
 	 * @param int $theme_id
      * @see DB
@@ -190,7 +191,7 @@ class ModelStyleTheme extends Model {
 	}
 	
 	/**
-	 * ModelStoreTheme::getThemes()
+	 * ModelStyleTheme::getThemes()
 	 * 
 	 * @param mixed $data
      * @see DB
@@ -270,7 +271,7 @@ class ModelStyleTheme extends Model {
 	}
 
 	/**
-	 * ModelStoreTheme::getTotalThemes()
+	 * ModelStyleTheme::getTotalThemes()
 	 * 
      * @see DB
 	 * @return int Count sql records 
@@ -303,7 +304,7 @@ class ModelStyleTheme extends Model {
 		return $query->row['total'];
 	}	
 	/**
-	 * ModelStoreProduct::sortProduct()
+	 * ModelStyleProduct::sortProduct()
 	 * @param array $data
      * @see DB
      * @see Cache
@@ -320,7 +321,7 @@ class ModelStyleTheme extends Model {
 	}
 	
     /**
-     * ModelStoreProduct::activate()
+     * ModelStyleProduct::activate()
      * activar un objeto
      * @param integer $id del objeto
      * @return boolean
@@ -331,7 +332,7 @@ class ModelStyleTheme extends Model {
      }
     
     /**
-     * ModelStoreProduct::desactivate()
+     * ModelStyleProduct::desactivate()
      * desactivar un objeto
      * @param integer $id del objeto
      * @return boolean

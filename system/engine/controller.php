@@ -100,7 +100,8 @@
 	}
 
 	protected function redirect($url) {
-		header('Location: ' . str_replace('&amp;', '&', $url));
+		header('Status: ' . $status);
+		header('Location: ' . str_replace(array('&amp;', "\n", "\r"), array('&', '', ''), $url));
         //echo "<script> window.location = '".str_replace('&amp;', '&', $url)."'; </script>";
 		exit();
 	}
@@ -157,7 +158,7 @@
 	protected function fetch($filename) {
 		$file = DIR_TEMPLATE . $filename;
 		if (file_exists($file)) {
-            $this->data['Config'] = $this->registry->get('config');
+            $this->data['Config']   = $this->registry->get('config');
             $this->data['Language'] = $this->registry->get('language');
             $this->data['Url']      = new Url($this->registry);
             
@@ -176,9 +177,9 @@
             $content = preg_replace('/\s{2,}/', "",$content);
             $content = preg_replace('/\n\s*\n/', "\n", $content);
             
-      		return $content;
+            return $content;
     	} else {
-      		exit('Error: Could not load template ' . $file . '!');
+            exit('Error: Could not load template ' . $file . '!');
     	}
 	}
     

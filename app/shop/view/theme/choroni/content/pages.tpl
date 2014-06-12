@@ -1,20 +1,35 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
-<section id="maincontent">
-    <section id="content">
-        <div class="grid_16">
+<div class="container">
+    <section id="maincontent">
+        <section id="content">
+        <div class="grid_12 hideOnMobile">
             <ul id="breadcrumbs" class="nt-editable">
             <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-                <li><?php echo $breadcrumb['separator']; ?><a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>"><?php echo $breadcrumb['text']; ?></a></li>
+                <li><a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>"><?php echo $breadcrumb['text']; ?></a></li>
             <?php } ?>
             </ul>
         </div>
         
         <div class="clear"></div><br /><br />
         
-        <aside id="column_left"><?php echo $column_left; ?></aside>
+        <div class="grid_12">
+            <div id="featuredContent">
+            <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+            </div>
+        </div>
+            
+        <div class="clear"></div>
         
-        <div class="grid_13">
+        <?php if ($column_left) { ?><aside id="column_left" class="grid_3"><?php echo $column_left; ?></aside><?php } ?>
+        
+        <?php if ($column_left && $column_right) { ?>
+        <div class="grid_6">
+        <?php } elseif ($column_left || $column_right) { ?>
+        <div class="grid_9">
+        <?php } else { ?>
+        <div class="grid_12">
+        <?php } ?>
             <?php if ($page_info) { ?>
             <div id="pagePreview">
                 <a href="<?php echo $Url::createUrl("content/page",array('page_id'=>$page_info['page_id'])); ?>" title="<?php echo $page_info['title']; ?>"><h1><?php echo $page_info['title']; ?></h1></a>
@@ -90,7 +105,8 @@
             
         </div>
         
+        <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
+        </section>
     </section>
-    
-</section>
+</div>
 <?php echo $footer; ?>

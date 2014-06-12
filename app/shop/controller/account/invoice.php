@@ -208,7 +208,7 @@ class ControllerAccountInvoice extends Controller {
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/invoice.tpl')) {
 				$this->template = $this->config->get('config_template') . '/account/invoice.tpl';
 			} else {
-				$this->template = 'cuyagua/account/invoice.tpl';
+				$this->template = 'choroni/account/invoice.tpl';
 			}
 			
         // style files
@@ -266,7 +266,7 @@ class ControllerAccountInvoice extends Controller {
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
 				$this->template = $this->config->get('config_template') . '/error/not_found.tpl';
 			} else {
-				$this->template = 'cuyagua/error/not_found.tpl';
+				$this->template = 'choroni/error/not_found.tpl';
 			}
 			
 			$this->children = array(

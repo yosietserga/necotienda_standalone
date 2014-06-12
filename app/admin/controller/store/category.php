@@ -69,6 +69,7 @@ class ControllerStoreCategory extends Controller {
                 $this->request->post['category_description'][$language_id] = $description;
               }
 			$category_id = $this->modelCategory->add($this->request->post);
+            $this->modelCategory->setProperty($category_id,'style','view', $this->request->getPost('view'));
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -132,7 +133,9 @@ class ControllerStoreCategory extends Controller {
                 $this->request->post['category_description'][$language_id] = $description;
             }
               
-            $this->modelCategory->update($this->request->get['category_id'], $this->request->post);
+            $this->modelCategory->update($this->request->getQuery('category_id'), $this->request->post);
+            $this->modelCategory->setProperty($this->request->getQuery('category_id'),'style','view', $this->request->getPost('view'));
+            
     		$this->session->set('success',$this->language->get('text_success'));
     		if ($this->request->post['to'] == "saveAndKeep") {
                 $this->redirect(Url::createAdminUrl('store/category/update',array('category_id'=>$this->request->get['category_id']))); 
@@ -520,13 +523,30 @@ class ControllerStoreCategory extends Controller {
 		
 		$this->data['cancel'] = Url::createAdminUrl('store/category');
 
-		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$category_info = $this->modelCategory->getById($this->request->get['category_id']);
+		if ($this->request->hasQuery('category_id') && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+      		$category_info = $this->modelCategory->getById($this->request->getQuery('category_id'));
     	}
 		
 		$this->data['languages'] = $this->modelLanguage->getAll();
 		$this->data['stores'] = $this->modelStore->getAll();
-		$this->data['_stores'] = $this->modelCategory->getStores($this->request->get['category_id']);
+		$this->data['_stores'] = $this->modelCategory->getStores($this->request->getQuery('category_id'));
+        $this->data['layout'] = $this->modelCategory->getProperty($this->request->getQuery('category_id'),'style','view');
+        
+  		if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
+            $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';
+    	} else {
+    		$folderTPL = DIR_CATALOG . 'view/theme/default/';
+    	}
+        
+        $directories = glob($folderTPL . "*", GLOB_ONLYDIR);
+		$this->data['templates'] = array();
+		foreach ($directories as $key => $directory) {
+			$this->data['views'][$key]['folder'] = basename($directory);
+            $files = glob($directory . "/*.tpl", GLOB_NOSORT);
+            foreach ($files as $k => $file) {
+    			$this->data['views'][$key]['files'][$k] = str_replace("\\","/",$file) ;
+    		}
+		}
         
 		if (isset($this->request->post['category_description'])) {
 			$this->data['category_description'] = $this->request->post['category_description'];
@@ -536,6 +556,7 @@ class ControllerStoreCategory extends Controller {
 			$this->data['category_description'] = array();
 		}
 
+        $this->setvar('category_id',$category_info);
         $this->setvar('status',$category_info,1);
         $this->setvar('parent_id',$category_info,0);
         $this->setvar('keyword',$category_info,'');
@@ -562,14 +583,33 @@ class ControllerStoreCategory extends Controller {
                             'category_id':'".$this->request->getQuery('category_id')."'
                         }, function(data) {
                             
-                            $('#addsWrapper').html('<div class=\"row\"><label for=\"q\" style=\"float:left\">Filtrar listado de productos:</label><input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" /></div><div class=\"clear\"></div><br /><ul id=\"adds\"></ul>');
+                            var htmlOutput = '<div class=\"row\">';
+                            htmlOutput += '<label for=\"q\" style=\"float:left\">';
+                            htmlOutput += 'Filtrar listado de productos:';
+                            htmlOutput += '</label>';
+                            htmlOutput += '<input type=\"text\" value=\"\" name=\"q\" id=\"q\" placeholder=\"Filtrar Productos\" />';
+                            htmlOutput += '</div>';
+                            htmlOutput += '<div class=\"clear\"></div>';
+                            htmlOutput += '<br />';
+                            htmlOutput += '<a onclick=\"$(\'#adds b\').removeClass(\'added\').addClass(\'add\');$(\'#adds input[type=checkbox]\').attr(\'checked\',null);$(\'#adds\').append(\' <input type=\\\\\'hidden\\\\\' name=\\\\\'Products[0]\\\\\' value=\\\\\'0\\\\\' id=\\\\\'tempRelated\\\\\' /> \');\">Seleccionar Ninguno</a>';
+                            htmlOutput += '&nbsp;&nbsp;|&nbsp;&nbsp;';
+                            htmlOutput += '<a onclick=\"$(\'#adds b\').removeClass(\'add\').addClass(\'added\');$(\'#adds input[type=checkbox]\').attr(\'checked\',1);$(\'#tempRelated\').remove();\">Seleccionar Todos</a>';
+                            htmlOutput += '<br />';
+                            htmlOutput += '<ul id=\"adds\"></ul>';
+                            
+                            $('#addsWrapper').html(htmlOutput);
                             
                             $.each(data, function(i,item){
-                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"checkbox\" name=\"Products[' + item.product_id + ']\" value=\"' + item.product_id + '\" style=\"display:none\" /></li>');
+                                if (item.class == 'added') {
+                                    checked = ' checked=\"checked\"';
+                                } else {
+                                    checked = '';
+                                }
+                                $('#adds').append('<li><img src=\"' + item.pimage + '\" alt=\"' + item.pname + '\" /><b class=\"' + item.class + '\">' + item.pname + '</b><input type=\"checkbox\" name=\"Products[' + item.product_id + ']\" value=\"' + item.product_id + '\" style=\"display:none\"'+ checked +' /></li>');
                                 
                             });
                             
-                            $('#q').on('change',function(e){
+                            $('#q').on('keyup',function(e){
                                 var that = this;
                                 var valor = $(that).val().toLowerCase();
                                 if (valor.length <= 0) {

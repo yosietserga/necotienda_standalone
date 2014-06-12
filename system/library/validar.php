@@ -1,11 +1,10 @@
 <?php
-
 /**
  * @author Inversiones Necoyoad, C.A.
  * @copyright 2010
  */
-
-final class Validar {
+final class Validar 
+{
     private $error                          = '<ul>';
     private $esValido                       = true;
     private $patSoloTexto                   = '/^\D+$/'; // return true
@@ -31,7 +30,8 @@ final class Validar {
     private $pattern;
     
     
-    public function mostrarError() {
+    public function mostrarError() 
+    {
         $this->error .= '</ul>';
         if (!$this->esValido){
            return "
@@ -57,7 +57,8 @@ final class Validar {
         }
     }
     
-    public function esMayorDeEdad($datFecha,$strCampo) {
+    public function esMayorDeEdad($datFecha,$strCampo) 
+    {
         $ahora = getdate();
         $datCurrentYear = $ahora['year'];
         $datHace18anos  = $datCurrentYear - 18;
@@ -96,7 +97,8 @@ final class Validar {
         }
     }
         
-    public function longitudMinMax($strTexto,$intMin,$intMax,$strCampo) {
+    public function longitudMinMax($strTexto,$intMin,$intMax,$strCampo) 
+    {
         $longitud = strlen($strTexto);
         if (($longitud < $intMin) || ($longitud> $intMax) || ($intMin> $intMax)) {
             $this->esValido = false;
@@ -105,7 +107,8 @@ final class Validar {
         return $this->esValido;
     }
     
-    public function longitudMax($strTexto,$intMax,$strCampo) {
+    public function longitudMax($strTexto,$intMax,$strCampo) 
+    {
         $longitud = strlen($strTexto);
         if ($longitud> $intMax) {
             $this->esValido = false;
@@ -113,7 +116,9 @@ final class Validar {
         }
         return $this->esValido;
     }
-    public function longitudMin($strTexto,$intMin,$strCampo) {
+    
+    public function longitudMin($strTexto,$intMin,$strCampo) 
+    {
         $longitud = strlen($strTexto);
         if ($longitud < $intMin) {
             $this->esValido = false;
@@ -121,7 +126,9 @@ final class Validar {
         }
         return $this->esValido;
     }
-    public function validEmail($email)  {
+    
+    public function validEmail($email) 
+    {
            $atIndex = strrpos($email, "@");
            if (is_bool($atIndex) && !$atIndex)
            {
@@ -186,7 +193,8 @@ final class Validar {
            return $this->esValido;
     }
     
-    public function custom($strErrorMsg,$strCampo="",$strPattern="/^\D+$/")  {
+    public function custom($strErrorMsg,$strCampo="",$strPattern="/^\D+$/")  
+    {
         if (preg_match($strPattern,$strCampo)) {
             return $this->esValido;
         }
@@ -194,7 +202,8 @@ final class Validar {
         $this->error .= "$strErrorMsg";
     }
     
-    public function esMsn($strEmail)  {
+    public function esMsn($strEmail)  
+    {
         if (preg_match($this->patMsn,$strEmail)) {
             return $this->esValido;
         }
@@ -202,7 +211,8 @@ final class Validar {
         $this->error .= "<li>No es un correo de MSN</li>";
     }
     
-    public function esGmail($strEmail)  {
+    public function esGmail($strEmail)  
+    {
         if (preg_match($this->patGmail,$strEmail)) {
             return $this->esValido;
         }
@@ -210,7 +220,8 @@ final class Validar {
         $this->error .= "<li>No es un correo de Gmail</li>";
     }
     
-    public function esYahoo($strEmail)  {
+    public function esYahoo($strEmail)  
+    {
         if (preg_match($this->patYahoo,$strEmail)) {
             return $this->esValido;
         }
@@ -218,84 +229,107 @@ final class Validar {
         $this->error .= "<li>No es un correo de Yahoo</li>";
     }
         
-    public function esSoloTexto($strTexto,$strCampo){
+    public function esSoloTexto($strTexto,$strCampo)
+    {
         if (preg_match($this->patSoloTexto,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>En el campo <b>$strCampo</b> deben ser solo caracteres alfabéticos.</li>";
     }
-    public function esSoloTextoSinEspacios($strTexto,$strCampo){
+    
+    public function esSoloTextoSinEspacios($strTexto,$strCampo)
+    {
         if (preg_match($this->patSoloTextoSinEspacios,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>No se permiten espacios en blanco en el campo <b>$strCampo</b>.</li>";
     }
-    public function esSinCharEspeciales($strTexto,$strCampo){
+    
+    public function esSinCharEspeciales($strTexto,$strCampo)
+    {
         if (!preg_match($this->patSinCharEspeciales,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>No se permiten caracteres especiales en el campo <b>$strCampo</b>.</li>";
     }
-    public function esSinEspaciosSinCharEspeciales($strTexto,$strCampo){
+    
+    public function esSinEspaciosSinCharEspeciales($strTexto,$strCampo)
+    {
         if (!preg_match($this->patSinEspaciosSinCharEspeciales,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>No se permiten caracteres especiales ni espacios en blanco en el campo <b>$strCampo</b>.</li>";
     }
-    public function esSoloNumeros($strTexto,$strCampo){
+    
+    public function esSoloNumeros($strTexto,$strCampo)
+    {
         if (preg_match($this->patSoloNumeros,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>En el campo <b>$strCampo</b> deben ser solo números enteros.</li>";
     }
-    public function esSoloNumerosConDecimales($strTexto,$strCampo){
+    
+    public function esSoloNumerosConDecimales($strTexto,$strCampo)
+    {
         if (preg_match($this->patSoloNumerosConDecimales,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>En el campo <b>$strCampo</b> deben ser solo números con dos decimales máximos.</li>";
     }
-    public function esFechaCorta($datTexto,$strCampo){
+    
+    public function esFechaCorta($datTexto,$strCampo)
+    {
         if (preg_match($this->patFechaCorta,$datTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>El formato de la fecha del campo <b>$strCampo</b> debe ser dd/mm/yyyy.</li>";
     }
-    public function esFechaLarga($datTexto,$strCampo){
+    
+    public function esFechaLarga($datTexto,$strCampo)
+    {
         if (preg_match($this->patFechaLarga,$datTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>El formato de la fecha del campo <b>$strCampo</b> debe ser dd/mm/yyyy hh:mm:ss a.m. ó dd/mm/yyyy hh:mm:ss p.m.</li>";
     }    
-    public function esTelefonoLocal($strTexto){
+    
+    public function esTelefonoLocal($strTexto)
+    {
         if (preg_match($this->patTelefonoLocal,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>El formato del teléfono debe ser (000)000-00-00, donde el código de área debe ir entre los paréntesis.</li>";
     }
-    public function esTelefonoGlobal ($strTexto){
+    
+    public function esTelefonoGlobal ($strTexto)
+    {
         if (preg_match($this->patTelefonoGlobal,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>El formato del teléfono debe ser internacional (p.ej. +584240000000)</li>";
     }
-    public function esPassword($strTexto){
+    
+    public function esPassword($strTexto)
+    {
         if (preg_match($this->patPassword,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>La contrase&ntilde;a debe tener un m&iacute;nimo de 6 caracteres, contener al menos una may&uacute;scula, una min&uacute;scula, un n&uacute;mero y un caracter especial (#$%&@-_+*).</li>";
     }
-    public function esNoTabCrtl($strTexto,$strCampo){
+    
+    public function esNoTabCrtl($strTexto,$strCampo)
+    {
         // TODO: integrar con javascript para detectar el trigger y ejecutar una acción
         if (preg_match($this->patNoTabCrtl,$strTexto)) {
             return $this->esValido;
@@ -303,28 +337,36 @@ final class Validar {
         $this->esValido = false;
         $this->error .= "<li>Por su seguridad no están permitidas las teclas Ctrl, Alt y Tab.</li>";
     }
-    public function esCedula($strTexto){
+    
+    public function esCedula($strTexto)
+    {
         if (preg_match($this->patCedula,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>La cédula debe tener el formato V-00.000.000</li>";
     }
-    public function esCedulaSinEspacios($strTexto){
+    
+    public function esCedulaSinEspacios($strTexto)
+    {
         if (preg_match($this->patCedulaSinEspacios,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>La cédula debe tener el formato V00000000</li>";
     }
-    public function esRif($strTexto){
+    
+    public function esRif($strTexto)
+    {
         if (preg_match($this->patRif,$strTexto)) {
             return $this->esValido;
         }
         $this->esValido = false;
         $this->error .= "<li>Solo se aceptan n&uacute;meros en campo del RIF</li>";
     }
-    public function esRifSinEspacios($strTexto){
+    
+    public function esRifSinEspacios($strTexto)
+    {
         if (preg_match($this->patRifSinEspacios,$strTexto)) {
             return $this->esValido;
         }
@@ -332,5 +374,3 @@ final class Validar {
         $this->error .= "<li>El RIF debe tener el formato J000000000</li>";
     }
 }
-
-

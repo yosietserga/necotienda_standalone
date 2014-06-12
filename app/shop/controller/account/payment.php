@@ -30,19 +30,6 @@ class ControllerAccountPayment extends Controller {
 
 		$this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
 
-      		$this->data['text_order'] = $this->language->get('text_order');
-      		$this->data['text_status'] = $this->language->get('text_status');
-     		$this->data['text_date_added'] = $this->language->get('text_date_added');
-      		$this->data['text_customer'] = $this->language->get('text_customer');
-      		$this->data['text_products'] = $this->language->get('text_products');
-      		$this->data['text_total'] = $this->language->get('text_total');
-            $this->data['text_transferencia'] = $this->language->get('text_transferencia');
-            $this->data['text_deposito'] = $this->language->get('text_deposito'); 
-
-      		$this->data['button_view'] = $this->language->get('button_view');
-      		$this->data['button_continue'] = $this->language->get('button_continue');
-            $this->data['button_back'] = $this->language->get('button_back');
-            
 	   $data['page']   = $page = ($this->request->get['page']) ? $this->request->get['page'] : 1;
 	   $data['sort']   = $sort =  ($this->request->get['sort']) ? $this->request->get['sort'] : 'op.date_added';
 	   $data['order']  = $payment =  ($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
@@ -95,16 +82,22 @@ class ControllerAccountPayment extends Controller {
                   
         }  
         
-		$this->children[] = 'common/nav';
-		$this->children[] = 'account/column_left';
-		$this->children[] = 'common/footer';
-		$this->children[] = 'common/header';
+        $this->loadWidgets();
         
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/payment.tpl')) {
-			$this->template = $this->config->get('config_template') . '/account/payment.tpl';
-		} else {
-			$this->template = 'cuyagua/account/payment.tpl';
-		}
+        if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
+            
+    	$this->children[] = 'account/column_left';
+    	$this->children[] = 'common/nav';
+    	$this->children[] = 'common/header';
+    	$this->children[] = 'common/footer';
+            
+        $template = ($this->config->get('default_view_account_payment')) ? $this->config->get('default_view_account_payment') : 'account/payment.tpl';
+   		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+            $this->template = $this->config->get('config_template') .'/'. $template;
+    	} else {
+            $this->template = 'choroni/'. $template;
+    	}
+        
 		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));		
   	}
     
@@ -161,16 +154,22 @@ class ControllerAccountPayment extends Controller {
             $this->data['amount'] = $this->currency->format($this->data['amount']);
         }
         
-		$this->children[] = 'common/nav';
-		$this->children[] = 'account/column_left';
-		$this->children[] = 'common/footer';
-		$this->children[] = 'common/header';
+        $this->loadWidgets();
         
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/payment_receipt.tpl')) {
-			$this->template = $this->config->get('config_template') . '/account/payment_receipt.tpl';
-		} else {
-			$this->template = 'cuyagua/account/payment_receipt.tpl';
-		}
+        if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
+            
+    	$this->children[] = 'account/column_left';
+    	$this->children[] = 'common/nav';
+    	$this->children[] = 'common/header';
+    	$this->children[] = 'common/footer';
+            
+        $template = ($this->config->get('default_view_account_payment_receipt')) ? $this->config->get('default_view_account_payment_receipt') : 'account/payment_receipt.tpl';
+   		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+            $this->template = $this->config->get('config_template') .'/'. $template;
+    	} else {
+            $this->template = 'choroni/'. $template;
+    	}
+        
 		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));	
     }
     
@@ -204,27 +203,93 @@ class ControllerAccountPayment extends Controller {
             $this->data['order_id'] = 0;
         }
 		
-		$this->children[] = 'common/nav';
-		$this->children[] = 'account/column_left';
-		$this->children[] = 'common/footer';
-		$this->children[] = 'common/header';
     	foreach ($method_data as $key => $value) {
             $this->children[$key] = 'payment/'.$key;
     	}
         
-        $csspath = defined('CDN_CSS') ? CDN_CSS : HTTP_CSS;
+        $this->loadWidgets();
         
-        $styles[] = array(
-            'media'=>'all',
-            'href'=>$csspath.'neco.form.css'
-        );
-        $this->styles = array_merge($styles,$this->styles);
+        if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
+            
+    	$this->children[] = 'account/column_left';
+    	$this->children[] = 'common/nav';
+    	$this->children[] = 'common/header';
+    	$this->children[] = 'common/footer';
+            
+        $template = ($this->config->get('default_view_account_order_payment')) ? $this->config->get('default_view_account_order_payment') : 'account/order_payment.tpl';
+   		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+            $this->template = $this->config->get('config_template') .'/'. $template;
+    	} else {
+            $this->template = 'choroni/'. $template;
+    	}
         
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/order_payment.tpl')) {
-			$this->template = $this->config->get('config_template') . '/account/order_payment.tpl';
-		} else {
-			$this->template = 'cuyagua/account/order_payment.tpl';
-		}
 		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));	
+    }
+    
+    protected function loadWidgets() {
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
+       	} else {
+            $csspath = str_replace("%theme%","default",$csspath);
+       	}
+        if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
+            $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+        }
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        }
+        
+        $this->load->helper('widgets');
+        $widgets = new NecoWidget($this->registry,$this->Route);
+        foreach ($widgets->getWidgets('main') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+            
+        foreach ($widgets->getWidgets('featuredContent') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
     }
 }

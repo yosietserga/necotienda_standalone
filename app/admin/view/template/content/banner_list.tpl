@@ -32,11 +32,11 @@
             <div class="grid_11">
                 <div class="row">
                     <label>Fecha Inicial:</label>
-                    <input type="date" name="filter_date_start" value="" />
+                    <input type="necoDate" name="filter_date_start" value="" />
                 </div>
                 <div class="row">
                     <label>Fecha Final:</label>
-                    <input type="date" name="filter_date_end" value="" />
+                    <input type="necoDate" name="filter_date_end" value="" />
                 </div>
                 <div class="row">
                     <label>Mostrar:</label>

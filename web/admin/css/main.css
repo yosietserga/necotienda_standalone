@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*================================================================================
                             JQUERY UI
 ================================================================================*/
@@ -738,7 +739,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /*==============================================================================
                         FORMULARIOS
 ===============================================================================*/
-@charset "utf-8";
 .neco-form {
     margin:8px;
     padding:4px;
@@ -1009,7 +1009,7 @@ box-shadow: 0 1px 0 #4f565a;
 
 /* ===== Top navigation ===== */
 
-#header_logo {margin-top:5px;background:url(../image/logo.png) no-repeat;width:282px;height:32px;display:inline-block;float:left;}
+#header_logo {margin-top:5px;background:url(../image/logo.png) no-repeat;width:153px;height:32px;display:inline-block;float:left;}
 #topNav { height: 36px; display: block; }
 .fixed { position: fixed; background: url(../image/topNav.jpg) repeat; width: 100%; color: #eeeeee; border-bottom: 1px solid #4a4f51; z-index: 999; }
 
@@ -1312,7 +1312,7 @@ ul.right {
 	background: rgba(0,0,0,0.7);
 }
 .box tr:hover {
-	background: rgba(0,0,0,1);
+	background: transparent;
 }
 .box .move, .box .actions {text-align:center}
 .actions a {margin:0px 5px} 
@@ -2010,6 +2010,7 @@ div.item div.actions {
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {
 	#logo {background:url(../image/logo-small.png) no-repeat;width:24px;height:24px;}
+    #topNav .fixed {position: relative;}
 	.userNav ul li span { display: none; }
 	.userNav ul li { margin:5px;padding:0px; }
 	.userNav ul li img { padding: 10px 14px; margin: 0px; }
@@ -2032,6 +2033,7 @@ div.item div.actions {
 @media only screen and (min-width: 320px) and (max-width: 479px) {
 	#logo {display:none;}
     .BigScreen {display:none}
+    #topNav .fixed {position: relative;}
 	.userNav ul li span { display: none; }
 	.userNav ul li { margin:5px;padding:0px; }
 	.userNav ul li img { padding: 10px 14px; margin: 0px; }
@@ -2048,6 +2050,7 @@ div.item div.actions {
     .BigScreen {display:none}
     
 	#logo {display:none;}
+    #topNav .fixed {position: relative;}
 	.userNav ul li { margin:5px;padding:0px; }
 	.userNav ul li span { display: none; }
 	.userNav ul li img { padding: 10px 4px; margin: 0px; }

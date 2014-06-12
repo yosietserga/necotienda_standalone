@@ -4,6 +4,8 @@ $_['heading_title']     = 'P&aacute;ginas';
 
 // Text
 $_['text_success']      = 'Se ha actualizado satisfactoriamente!';
+$_['text_see_page_in_frontstore']      = 'Ver P&aacute;gina en la Tienda';
+$_['text_all_public']      = 'Todo P&uacute;blico';
 
 // Column
 $_['column_title']      = 'T&iacute;tulo de la P&aacute;gina';
@@ -20,6 +22,8 @@ $_['entry_keyword']     = 'Slug:';
 $_['entry_status']      = 'Estado:';
 $_['entry_store']       = 'Tienda:';
 $_['entry_meta_keywords']     = 'Palabras Claves:';
+$_['entry_customer_group']     = 'Grupos de Clientes:';
+$_['entry_view']     = 'Vista:';
 $_['entry_meta_description'] = 'Resumen:';
 $_['entry_parent']      = 'P&aacute;gina Superior:';
 $_['entry_date_start']      = 'Fecha Inicio de la Publicaci&oacute;n';

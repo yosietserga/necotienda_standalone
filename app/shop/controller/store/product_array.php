@@ -46,7 +46,7 @@
 			}
 						
 			$options = $this->modelProduct->getProductOptions($result['product_id']);
-			
+            
 			if ($options) {
 				$add = Url::createUrl('store/product',array('product_id'=>$result['product_id']));
 			} else {

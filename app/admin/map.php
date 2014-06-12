@@ -14,7 +14,7 @@ $registry->set('language', $language);
 $registry->set('user', new User($registry));
 $route = strtolower($request->get['r']);
 switch ($route) {
-    case 'common/home':    
+    case 'common/home':
         //Languages
         $language->load('common/home');
         //Models
@@ -168,6 +168,7 @@ switch ($route) {
     case 'content/page/update':
         $language->load('content/page');
         $loader->auto('content/page');
+        $loader->auto('sale/customergroup');
         $loader->auto('store/store');
         $loader->auto('localisation/language');
         break;
@@ -241,6 +242,7 @@ switch ($route) {
         $language->load('content/post');
         $loader->auto('content/post');
         $loader->auto('store/store');
+        $loader->auto('sale/customergroup');
         $loader->auto('localisation/language');
         $loader->auto('url');
         $loader->auto('image');
@@ -280,6 +282,19 @@ switch ($route) {
     case 'localisation/order_status/update':
         $language->load('localisation/order_status');
         $loader->auto('localisation/orderstatus');
+		$loader->auto('localisation/language');
+        break;
+    case 'localisation/order_payment_status':
+    case 'localisation/order_payment_status/grid':
+    case 'localisation/order_payment_status/delete':
+        $language->load('localisation/order_payment_status');
+        $loader->auto('localisation/orderpaymentstatus');
+        $loader->auto('pagination');
+        break;
+    case 'localisation/order_payment_status/insert':
+    case 'localisation/order_payment_status/update':
+        $language->load('localisation/order_payment_status');
+        $loader->auto('localisation/orderpaymentstatus');
 		$loader->auto('localisation/language');
         break;
     case 'localisation/stock_status':
@@ -400,6 +415,42 @@ switch ($route) {
         $loader->auto('sale/bank');
 		$loader->auto('image'); 
         break;
+    case 'sale/payment':
+    case 'sale/payment/grid':
+    case 'sale/payment/delete':
+        $language->load('sale/payment');
+        $loader->auto('sale/payment');
+        $loader->auto('sale/customer');
+        $loader->auto('sale/bank');
+        $loader->auto('localisation/orderpaymentstatus');
+		$loader->auto('currency'); 
+        $loader->auto('pagination');
+        
+        // registry set
+        $registry->set('currency', new Currency($registry));
+        break;
+    case 'sale/payment/insert':
+    case 'sale/payment/update':
+        $language->load('sale/payment');
+        $loader->auto('sale/payment');
+        break;
+    case 'sale/balance':
+    case 'sale/balance/grid':
+    case 'sale/balance/delete':
+        $language->load('sale/balance');
+        $loader->auto('sale/balance');
+        $loader->auto('sale/customer');
+		$loader->auto('currency'); 
+        $loader->auto('pagination');
+        
+        // registry set
+        $registry->set('currency', new Currency($registry));
+        break;
+    case 'sale/balance/insert':
+    case 'sale/balance/update':
+        $language->load('sale/balance');
+        $loader->auto('sale/balance');
+        break;
     case 'sale/bank_account':
     case 'sale/bank_account/grid':
     case 'sale/bank_account/delete':
@@ -508,6 +559,7 @@ switch ($route) {
 		$loader->auto('localisation/lengthclass');
 		$loader->auto('localisation/weightclass');
 		$loader->auto('localisation/orderstatus');
+		$loader->auto('localisation/orderpaymentstatus');
 		$loader->auto('localisation/stockstatus');
         $loader->auto('image');
         $loader->auto('valid_forms');

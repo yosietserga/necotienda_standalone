@@ -23,12 +23,11 @@ class ControllerSettingCache extends Controller
         $res = $this->rrmdir(DIR_CACHE);
         $this->load->model('store/store');
         $stores = $this->modelStore->getAll();
+        $this->session->clear('ntConfig_0');
         foreach ($stores as $store) {
             $this->session->clear('ntConfig_'.(int)$store['store_id']);
         }
         
-        $this->session->clear('ntconfig');
-        $this->session->clear('config');
         $this->session->clear('language');
         $this->session->clear('fkey');
         

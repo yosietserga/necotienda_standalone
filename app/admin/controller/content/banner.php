@@ -474,6 +474,13 @@ class ControllerContentBanner extends Controller {
 		$this->data['stores'] = $this->modelStore->getAll();
 		$this->data['NTImage'] = new NTImage;
 		
+        $folderJS = DIR_JS . 'sliders/';
+        $directories = glob($folderJS . "*", GLOB_ONLYDIR);
+		$this->data['sliders'] = array();
+		foreach ($directories as $key => $directory) {
+			$this->data['sliders'][$key] = basename($directory);
+		}
+        
         /*
         $products = $this->cache->get("banner.products");
         if (!$products) {

@@ -110,7 +110,7 @@
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header2.tpl')) {
 			$this->template = $this->config->get('config_template') . '/common/header2.tpl';
 		} else {
-			$this->template = 'cuyagua/common/header2.tpl';
+			$this->template = 'choroni/common/header2.tpl';
 		}
     	$this->render();
 	}

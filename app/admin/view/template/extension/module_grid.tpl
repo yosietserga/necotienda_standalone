@@ -4,7 +4,6 @@
         <thead>
             <tr>
                 <th><?php echo $Language->get('column_name'); ?></th>
-                <th><?php echo $Language->get('column_status'); ?></th>
                 <th><?php echo $Language->get('column_action'); ?></th>
             </tr>
         </thead>
@@ -12,7 +11,6 @@
         <?php if ($modules) { ?>
             <?php foreach ($modules as $module) { ?>
                 <td><?php echo $module['name']; ?></td>
-                <td><?php echo $module['status'] ?></td>
                 <td>
                 <?php foreach ($module['action'] as $action) { ?>
                 <?php 
@@ -20,7 +18,10 @@
                         $href = "href='" . $action['href'] ."'";
                         $jsfunction = "";
                     } elseif ($action['action'] == "activate") {
-                        $jsfunction = "activate(". $customer['customer_id'] .")";
+                        $jsfunction = "activate(". $module['extension_id'] .")";
+                        $href = $action['href'];
+                    }  elseif ($action['action'] == "desactivate") {
+                        $jsfunction = "desactivate(". $module['extension_id'] .")";
                         $href = $action['href'];
                     } elseif ($action['action'] == "edit") {
                         $href = "href='" . $action['href'] ."'";

@@ -12,7 +12,7 @@ final class Cart {
       		$this->session->set('cart',array());
     	}
 	}
-	      
+ 
   	public function getProducts() {
 		$product_data = array();
 		
@@ -188,6 +188,7 @@ final class Cart {
     	}
     	
         //TODO: Acomodar el metodo session->set para aceptar subkeys o reescribir este bloque de código
+        //TODO: agregar actividad del carrito en bd para CRM 
 		if ((int)$qty && ((int)$qty> 0)) {
     		if (!$this->session->has('cart',$key)) {
       			$this->session->data[C_CODE."_".'cart'][$key] = (int)$qty;
@@ -204,6 +205,7 @@ final class Cart {
     	} else {
 	  		$this->remove($key);
 		}
+        //TODO: agregar actividad del carrito en bd para CRM 
 		$this->setMinQty();
   	}
 

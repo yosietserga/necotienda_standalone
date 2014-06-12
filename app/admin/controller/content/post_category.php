@@ -73,6 +73,7 @@ class ControllerContentPostCategory extends Controller {
             }
               
 			$category_id = $this->modelPost_category->add($this->request->post);
+            $this->modelPost_category->setProperty($category_id,'style','view', $this->request->getPost('view'));
 
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -137,7 +138,8 @@ class ControllerContentPostCategory extends Controller {
                 $this->request->post['category_description'][$language_id] = $description;
             }
               
-			$this->modelPost_category->update($this->request->get['category_id'], $this->request->post);
+			$this->modelPost_category->update($this->request->getQuery('category_id'), $this->request->post);
+            $this->modelPost_category->setProperty($this->request->getQuery('category_id'),'style','view', $this->request->getPost('view'));
 			
 			$this->session->set('success',$this->language->get('text_success'));
 			
@@ -525,16 +527,36 @@ class ControllerContentPostCategory extends Controller {
 		if (!isset($this->request->get['category_id'])) {
 			$this->data['action'] = Url::createAdminUrl('content/post_category/insert');
 		} else {
-			$this->data['action'] = Url::createAdminUrl('content/post_category/update',array('category_id'=>$this->request->get['category_id']));
+			$this->data['action'] = Url::createAdminUrl('content/post_category/update',array('category_id'=>$this->request->getQuery('category_id')));
 		}
 		
 		$this->data['cancel'] = Url::createAdminUrl('content/post_category');
 
-		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$category_info = $this->modelPost_category->getById($this->request->get['category_id']);
+		if ($this->request->hasQuery('category_id') && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+      		$category_info = $this->modelPost_category->getById($this->request->getQuery('category_id'));
     	}
 		
+        $this->setvar('post_category_id',$category_info,'');
+        $this->setvar('parent_id',$category_info,'');
+        
 		$this->data['languages'] = $this->modelLanguage->getAll();
+        $this->data['layout'] = $this->modelPost_category->getProperty($this->request->getQuery('category_id'),'style','view');
+        
+  		if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
+            $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';
+    	} else {
+    		$folderTPL = DIR_CATALOG . 'view/theme/default/';
+    	}
+        
+        $directories = glob($folderTPL . "*", GLOB_ONLYDIR);
+		$this->data['templates'] = array();
+		foreach ($directories as $key => $directory) {
+			$this->data['views'][$key]['folder'] = basename($directory);
+            $files = glob($directory . "/*.tpl", GLOB_NOSORT);
+            foreach ($files as $k => $file) {
+    			$this->data['views'][$key]['files'][$k] = str_replace("\\","/",$file) ;
+    		}
+		}
         
 		if (isset($this->request->post['category_description'])) {
 			$this->data['category_description'] = $this->request->post['category_description'];

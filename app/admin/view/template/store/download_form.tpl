@@ -51,7 +51,7 @@
             
             <div class="row">
                 <label><?php echo $Language->get('entry_remaining'); ?></label>
-                <input type="number" name="remaining" id="remaining" value="<?php echo $remaining; ?>" title="<?php echo $Language->get('help_remaining'); ?>" size="6" />
+                <input type="necoNumber" name="remaining" id="remaining" value="<?php echo $remaining; ?>" title="<?php echo $Language->get('help_remaining'); ?>" size="6" />
             </div>
             
             <div class="clear"></div>

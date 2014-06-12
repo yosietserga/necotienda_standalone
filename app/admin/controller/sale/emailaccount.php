@@ -11,12 +11,7 @@
  */
 class ControllerSaleEmailAccount extends Controller { 
 	private $error = array();
-    private $ip = "localhost";
-    private $user = "andycorp";
-    private $password = "PevrX01uRkxzxbPYXGEP";
-    private $domain = "andycorporacion.com";
-    private $port =2083;                 // cpanel secure authentication port unsecure port# 2082
-    private $quota = 25; // default amount of space in megabytes
+    
   	/**
   	 * ControllerSaleEmailAccount::index()
   	 * 
@@ -32,21 +27,17 @@ class ControllerSaleEmailAccount extends Controller {
 		$this->document->title = $this->language->get('heading_title');
 		
 		$this->load->library('cpxmlapi');
-        
-        $cp = new xmlapi($this->ip);
-		
-            $cp->set_port($this->port);  //set port number. cpanel client class allow you to access WHM as well using WHM port.
+        $cp = new xmlapi(CPANEL_HOST);
+		$cp->set_port(CPANEL_PORT);  //set port number. cpanel client class allow you to access WHM as well using WHM port.
+        $cp->password_auth(CPANEL_USER,CPANEL_PWD);   // authorization with password. not as secure as hash.
     
-            $cp->password_auth($this->user, $this->password);   // authorization with password. not as secure as hash.
+        // cpanel email addpop function Parameters
+        $call = array('domain'=>CPANEL_DOMAIN, 'email'=>$this->request->post['email'], 'password'=>$this->request->post['password'], 'quota'=>CPANEL_EMAIL_QUOTA);
+        $cp->set_debug(0);      //output to error file  set to 1 to see error_log.
     
-            // cpanel email addpop function Parameters
-            $call = array('domain'=>$this->domain, 'email'=>$this->request->post['email'], 'password'=>$this->request->post['password'], 'quota'=>$this->quota);
-    
-            $cp->set_debug(0);      //output to error file  set to 1 to see error_log.
-    
-            $result = $cp->api2_query($this->user, "Email", "listpopswithdisk" ); // making call to cpanel api
+        $result = $cp->api2_query(CPANEL_USER, "Email", "listpopswithdisk" ); // making call to cpanel api
             
-            $this->data['accounts'] = $result;
+        $this->data['accounts'] = $result;
     	$this->getList();
   	}
     
@@ -63,37 +54,23 @@ class ControllerSaleEmailAccount extends Controller {
   	 */
   	public function insert() {
 		$this->load->language('sale/emailaccount');
-
     	$this->document->title = $this->language->get('heading_title');
-		
 		$this->load->library('cpxmlapi');
-			
-        $cp = new xmlapi($this->ip);
-        
+        $cp = new xmlapi(CPANEL_HOST);
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') /* && $this->validateForm() */) {
-			
-		  
-            $cp->set_port($this->port);  //set port number. cpanel client class allow you to access WHM as well using WHM port.
-    
-            $cp->password_auth($this->user, $this->password);   // authorization with password. not as secure as hash.
-    
+			$cp->set_port(CPANEL_PORT);  //set port number. cpanel client class allow you to access WHM as well using WHM port.
+            $cp->password_auth(CPANEL_USER, CPANEL_PWD);   // authorization with password. not as secure as hash.
             // cpanel email addpop function Parameters
-            $call = array('domain'=>$this->domain, 'email'=>$this->request->post['email'], 'password'=>$this->request->post['password'], 'quota'=>$this->quota);
-    
+            $call = array('domain'=>CPANEL_DOMAIN, 'email'=>$this->request->post['email'], 'password'=>$this->request->post['password'], 'quota'=>CPANEL_EMAIL_QUOTA);
             $cp->set_debug(0);      //output to error file  set to 1 to see error_log.
-    
-            $result = $cp->api2_query($this->user, "Email", "addpop", $call ); // making call to cpanel api
-    
+            $result = $cp->api2_query(CPANEL_USER, "Email", "addpop", $call ); // making call to cpanel api
             if ($result->data->result == 1){
-                $this->session->data['success'] = " La cuenta " . $this->request->post['email'] .'@'. $this->domain.' ha sido creada con &eacute;xito';
+                $this->session->data['success'] = " La cuenta " . $this->request->post['email'] .'@'. CPANEL_DOMAIN.' ha sido creada con &eacute;xito';
             } else {
                 $this->session->data['error'] = "No se pudo crear la cuenta de correo: " . $result->data->reason;
             }
-			$this->redirect(HTTPS_SERVER . 'index.php?route=sale/emailaccount&token=' . $this->session->data['token'] . $url);
+			$this->redirect(Url::createAdminUrl('sale/emailaccount') . $url);
 		}
-        
-    	
-
     	$this->getForm();
   	} 
 
@@ -109,37 +86,25 @@ class ControllerSaleEmailAccount extends Controller {
   	 * @return void 
   	 */
   	public function delete() {
-		
 		$this->load->library('cpxmlapi');
-        
-        $cp = new xmlapi($this->ip);
-			
+        $cp = new xmlapi(CPANEL_HOST);
     	if (isset($this->request->post['selected']) /* && $this->validateDelete() */) {
-    	   
-                $cp->set_port($this->port);  //set port number. cpanel client class allow you to access WHM as well using WHM port.
-        
-                $cp->password_auth($this->user, $this->password);   // authorization with password. not as secure as hash.
-        
-                $cp->set_debug(0);      //output to error file  set to 1 to see error_log.
-                
-    			foreach ($this->request->post['selected'] as $user) {
-    				
-                    // cpanel email addpop function Parameters
-                    $call = array('domain'=>$this->domain, 'email'=>$user);
-                    
-                    $result = $cp->api2_query($this->user, "Email", "delpop", $call ); // making call to cpanel api
-            
-    			}
+            $cp->set_port(CPANEL_PORT);  //set port number. cpanel client class allow you to access WHM as well using WHM port.
+            $cp->password_auth(CPANEL_USER, CPANEL_PWD);   // authorization with password. not as secure as hash.
+            $cp->set_debug(0);      //output to error file  set to 1 to see error_log.
+    		foreach ($this->request->post['selected'] as $user) {
+                // cpanel email addpop function Parameters
+                $call = array('domain'=>CPANEL_DOMAIN, 'email'=>$user);
+                $result = $cp->api2_query(CPANEL_USER, "Email", "delpop", $call ); // making call to cpanel api
+   			}
 			
-                if ($result->data->result == 1){
-                    $this->session->data['success'] = " La(s) cuenta(s) han sido eliminada(s) con &eacute;xito";
-                } else {
-                    $this->session->data['error'] = "No se pudo eliminar la cuenta de correo: " . $result->data->reason;
-                }
-                
+            if ($result->data->result == 1){
+                $this->session->data['success'] = " La(s) cuenta(s) han sido eliminada(s) con &eacute;xito";
+            } else {
+                $this->session->data['error'] = "No se pudo eliminar la cuenta de correo: " . $result->data->reason;
+            } 
     	}
-    
-			$this->redirect(HTTPS_SERVER . 'index.php?route=sale/emailaccount&token=' . $this->session->data['token'] . $url);
+		$this->redirect(Url::createAdminUrl('sale/emailaccount') . $url);
   	}  
     
   	/**
@@ -154,43 +119,22 @@ class ControllerSaleEmailAccount extends Controller {
   	 * @return void 
   	 */
   	private function getList() {
-  	 
   		$this->document->breadcrumbs = array();
-
    		$this->document->breadcrumbs[] = array(
-       		'href'      => HTTPS_SERVER . 'index.php?route=common/home&token=' . $this->session->data['token'],
+       		'href'      => Url::createAdminUrl('common/home'),
        		'text'      => $this->language->get('text_home'),
       		'separator' => FALSE
    		);
-
    		$this->document->breadcrumbs[] = array(
-       		'href'      => HTTPS_SERVER . 'index.php?route=sale/emailaccount&token=' . $this->session->data['token'] . $url,
+       		'href'      => Url::createAdminUrl('sale/emailaccount') . $url,
        		'text'      => $this->language->get('heading_title'),
       		'separator' => ' :: '
    		);
 		
-		$this->data['insert'] = HTTPS_SERVER . 'index.php?route=sale/emailaccount/insert&token=' . $this->session->data['token'] . $url;
-		$this->data['delete'] = HTTPS_SERVER . 'index.php?route=sale/emailaccount/delete&token=' . $this->session->data['token'] . $url;
-		
-		$this->data['heading_title'] = $this->language->get('heading_title');
-
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_yes'] = $this->language->get('text_yes');
-		$this->data['text_no'] = $this->language->get('text_no');		
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-
-		$this->data['column_email'] = $this->language->get('column_email');
-		$this->data['column_action'] = $this->language->get('column_action');		
-		
-		$this->data['button_insert'] = $this->language->get('button_insert');
-		$this->data['button_delete'] = $this->language->get('button_delete');
-
-		$this->data['token'] = $this->session->data['token'];
+		$this->data['insert'] = Url::createAdminUrl('sale/emailaccount/insert') . $url;
 
 		if (isset($this->session->data['error'])) {
 			$this->data['error_warning'] = $this->session->data['error'];
-			
 			unset($this->session->data['error']);
 		} elseif (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -200,7 +144,6 @@ class ControllerSaleEmailAccount extends Controller {
 		
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
-		
 			unset($this->session->data['success']);
 		} else {
 			$this->data['success'] = '';
@@ -212,9 +155,9 @@ class ControllerSaleEmailAccount extends Controller {
 			'common/footer'	
 		);
 		
-		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
   	}
-    //TODO: colocar controles para exportar a pdf
+    
   	/**
   	 * ControllerSaleEmailAccount::getForm()
   	 * 
@@ -227,23 +170,6 @@ class ControllerSaleEmailAccount extends Controller {
   	 * @return void 
   	 */
   	private function getForm() {
-    	$this->data['heading_title'] = $this->language->get('heading_title');
- 
-    	$this->data['entry_email'] = $this->language->get('entry_email');
-    	$this->data['entry_password'] = $this->language->get('entry_password');
-    	$this->data['entry_confirm'] = $this->language->get('entry_confirm');
-    	
-    	$this->data['help_email'] = $this->language->get('help_email');
-    	$this->data['help_password'] = $this->language->get('help_password');
-    	$this->data['help_confirm'] = $this->language->get('help_confirm');
- 
-		$this->data['button_save'] = $this->language->get('button_save');
-    	$this->data['button_cancel'] = $this->language->get('button_cancel');
-    	$this->data['button_add'] = $this->language->get('button_add');
-    	$this->data['button_remove'] = $this->language->get('button_remove');
-
-		$this->data['token'] = $this->session->data['token'];
-
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -268,24 +194,21 @@ class ControllerSaleEmailAccount extends Controller {
 			$this->data['error_confirm'] = '';
 		}
 		
-
   		$this->document->breadcrumbs = array();
-
    		$this->document->breadcrumbs[] = array(
-       		'href'      => HTTPS_SERVER . 'index.php?route=common/home&token=' . $this->session->data['token'],
+       		'href'      => Url::createAdminUrl('common/home'),
        		'text'      => $this->language->get('text_home'),
       		'separator' => FALSE
    		);
 
    		$this->document->breadcrumbs[] = array(
-       		'href'      => HTTPS_SERVER . 'index.php?route=sale/emailaccount&token=' . $this->session->data['token'] . $url,
+       		'href'      => Url::createAdminUrl('sale/emailaccount') . $url,
        		'text'      => $this->language->get('heading_title'),
       		'separator' => ' :: '
    		);
         
-        $this->data['action'] = HTTPS_SERVER . 'index.php?route=sale/emailaccount/insert&token=' . $this->session->data['token'] . $url;
-		
-    	$this->data['cancel'] = HTTPS_SERVER . 'index.php?route=sale/emailaccount&token=' . $this->session->data['token'] . $url;
+        $this->data['action'] = Url::createAdminUrl('sale/emailaccount/insert') . $url;
+    	$this->data['cancel'] = Url::createAdminUrl('sale/emailaccount') . $url;
 
     	if (isset($this->request->post['email'])) {
       		$this->data['email'] = $this->request->post['email'];
@@ -293,14 +216,12 @@ class ControllerSaleEmailAccount extends Controller {
       		$this->data['email'] = '';
     	}
 		
-		
 		$this->template = 'sale/emailaccount_form.tpl';
 		$this->children = array(
 			'common/header',	
 			'common/footer'	
 		);
-		
-		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
 	}
 	
   	/**
@@ -330,9 +251,9 @@ class ControllerSaleEmailAccount extends Controller {
     	}
 
 		if (!$this->error) {
-	  		return TRUE;
+	  		return true;
 		} else {
-	  		return FALSE;
+	  		return false;
 		}
   	}    
 
@@ -347,10 +268,9 @@ class ControllerSaleEmailAccount extends Controller {
     	}	
 	  	 
 		if (!$this->error) {
-	  		return TRUE;
+	  		return true;
 		} else {
-	  		return FALSE;
+	  		return false;
 		}  
   	} 	
 }
-?>

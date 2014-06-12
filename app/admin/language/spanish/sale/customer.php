@@ -9,6 +9,19 @@ $_['text_activated']       = 'Has activado %s cuentas!';
 $_['text_man']       = 'Hombre';
 $_['text_woman']       = 'Mujer';
 $_['text_sexo']       = 'Seleccione el Sexo';
+$_['text_profile']       = 'Perfil';
+$_['text_reviews']       = 'Comentarios';
+$_['text_balances']       = 'Saldos';
+$_['text_orders']       = 'Pedidos';
+$_['text_payments']       = 'Pagos';
+$_['text_shopping_carts']       = 'Carritos';
+$_['text_visits']       = 'Visitas';
+$_['text_activities']       = 'Actividades';
+$_['text_messages']       = 'Mensajes';
+$_['text_clients_referred']       = 'Clientes Referidos';
+$_['text_customer_groups']       = 'Grupos de Clientes';
+$_['text_promotions']       = 'Items Promovidos';
+$_['text_shareds']       = 'Items Compartidos';
 
 // Column
 $_['column_name']          = 'Nombre del Cliente';

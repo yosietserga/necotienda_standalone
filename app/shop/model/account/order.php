@@ -152,11 +152,11 @@ class ModelAccountOrder extends Model {
         WHERE order_id = '" . (int)$order_id . "'");
 
 		$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET 
-              order_id = '" . (int)$order_id . "', 
-              order_status_id = '" . (int)$data['order_status_id'] . "', 
-              notify = '1', 
-              comment = '" . $this->db->escape(strip_tags($data['comment'])) . "', 
-              date_added = NOW()");
+        order_id = '" . (int)$order_id . "', 
+        order_status_id = '" . (int)$data['order_status_id'] . "', 
+        notify = '1', 
+        comment = '" . $this->db->escape(strip_tags($data['comment'])) . "', 
+        date_added = NOW()");
 	}
 
     public function updateStatus($order_id,$order_status_id) {

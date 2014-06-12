@@ -87,6 +87,8 @@ class ControllerContentPage extends Controller {
             $this->request->post['date_publish_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0] .' 00:00:00';
             
 			$post_id = $this->modelPage->add($this->request->post);
+            $this->modelPage->setProperty($post_id,'customer_groups','customer_groups', $this->request->getPost('customer_groups'));
+            $this->modelPage->setProperty($post_id,'style','view', $this->request->getPost('view'));
             
 			$this->session->set('success',$this->language->get('text_success'));
 
@@ -162,7 +164,9 @@ class ControllerContentPage extends Controller {
             $dps = explode("/",$this->request->post['date_publish_start']);
             $this->request->post['date_publish_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0] .' 00:00:00';
             
-			$post_id = $this->modelPage->update($this->request->get['page_id'], $this->request->post);
+			$post_id = $this->modelPage->update($this->request->getQuery('page_id'), $this->request->post);
+            $this->modelPage->setProperty($this->request->getQuery('page_id'),'customer_groups','customer_groups', $this->request->getPost('customer_groups'));
+            $this->modelPage->setProperty($this->request->getQuery('page_id'),'style','view', $this->request->getPost('view'));
 			
 			$this->session->set('success',$this->language->get('text_success'));
 
@@ -548,27 +552,49 @@ class ControllerContentPage extends Controller {
       		'separator' => ' :: '
    		);
 							
-		if (!isset($this->request->get['page_id'])) {
+		if (!$this->request->hasQuery('page_id')) {
 			$this->data['action'] = Url::createAdminUrl('content/page/insert') . $url;
 		} else {
-			$this->data['action'] = Url::createAdminUrl('content/page/update') . '&page_id=' . $this->request->get['page_id'] . $url;
+			$this->data['action'] = Url::createAdminUrl('content/page/update') . '&page_id=' . $this->request->getQuery('page_id') . $url;
 		}
 		
 		$this->data['cancel'] = Url::createAdminUrl('content/page') . $url;
 
-		if (isset($this->request->get['page_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$page_info = $this->modelPage->getPage($this->request->get['page_id']);
+		if ($this->request->hasQuery('page_id') && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+			$page_info = $this->modelPage->getPage($this->request->getQuery('page_id'));
 		}
+        
+        $this->setvar('post_id',$page_info,'');
+        $this->setvar('parent_id',$page_info,'');
         
 		$this->data['languages'] = $this->modelLanguage->getAll();
 		$this->data['pages'] = $this->modelPage->getAll();
 		$this->data['stores'] = $this->modelStore->getAll();
-		$this->data['_stores'] = $this->modelPage->getStores($this->request->get['page_id']);
+		$this->data['_stores'] = $this->modelPage->getStores($this->request->getQuery('page_id'));
+		$this->data['customerGroups'] = $this->modelCustomergroup->getAll();
+		$this->data['customer_groups'] = $this->modelPage->getProperty($this->request->getQuery('page_id'),'customer_groups','customer_groups');
+		$this->data['layout'] = $this->modelPage->getProperty($this->request->getQuery('page_id'),'style','view');
+        
+  		if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
+            $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';
+    	} else {
+    		$folderTPL = DIR_CATALOG . 'view/theme/default/';
+    	}
+        
+        $directories = glob($folderTPL . "*", GLOB_ONLYDIR);
+		$this->data['templates'] = array();
+		foreach ($directories as $key => $directory) {
+			$this->data['views'][$key]['folder'] = basename($directory);
+            $files = glob($directory . "/*.tpl", GLOB_NOSORT);
+            foreach ($files as $k => $file) {
+    			$this->data['views'][$key]['files'][$k] = str_replace("\\","/",$file) ;
+    		}
+		}
         
 		if (isset($this->request->post['page_description'])) {
 			$this->data['page_description'] = $this->request->post['page_description'];
-		} elseif (isset($this->request->get['page_id'])) {
-			$this->data['page_description'] = $this->modelPage->getDescriptions($this->request->get['page_id']);
+		} elseif ($this->request->hasQuery('page_id')) {
+			$this->data['page_description'] = $this->modelPage->getDescriptions($this->request->getQuery('page_id'));
 		} else {
 			$this->data['page_description'] = array();
 		}
@@ -590,7 +616,21 @@ class ControllerContentPage extends Controller {
 		}
 
         $scripts[] = array('id'=>'pageForm','method'=>'ready','script'=>
-            "");
+            "$('#q').on('change',function(e){
+                var that = this;
+                var valor = $(that).val().toLowerCase();
+                if (valor.length <= 0) {
+                    $('#customerGroupsWrapper li').show();
+                } else {
+                    $('#customerGroupsWrapper li b').each(function(){
+                        if ($(this).text().toLowerCase().indexOf( valor ) != -1) {
+                            $(this).closest('li').show();
+                        } else {
+                            $(this).closest('li').hide();
+                        }
+                    });
+                }
+            });");
             
         foreach ($this->data['languages'] as $language) {
             $scripts[] = array('id'=>'pageLanguage'.$language["language_id"],'method'=>'ready','script'=>

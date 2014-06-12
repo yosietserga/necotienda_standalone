@@ -126,6 +126,8 @@ class Cron {
         
         $query = $this->db->query("SELECT * 
         FROM ". DB_PREFIX ."task 
+        WHERE date_start_exec <= NOW()
+        AND status = 1
         ORDER BY sort_order ASC, time_exec ASC");
         
         foreach ($query->rows as $key => $row) {
@@ -178,7 +180,8 @@ class Cron {
 	}
     
     private function initConfig() {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting");
+        //TODO: condicionar de que store obtiene la configuracion
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE store_id = 0");
         foreach ($query->rows as $setting) {
         	$this->config->set($setting['key'], $setting['value']);
         }

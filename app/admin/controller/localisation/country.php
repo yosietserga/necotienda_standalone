@@ -52,7 +52,7 @@ class ControllerLocalisationCountry extends Controller {
 		$this->load->model('localisation/country');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_localisation_country->update($this->request->get['country_id'], $this->request->post);
+			$this->modelCountry->update($this->request->get['country_id'], $this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 

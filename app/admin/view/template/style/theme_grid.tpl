@@ -26,7 +26,7 @@
         <tbody>
         <?php if ($themes) { ?>
             <?php foreach ($themes as $theme) { ?>
-            <tr id="tr_<?php echo $theme['theme_id']; ?>">
+            <tr id="tr_<?php echo $theme['theme_id']; ?>" data-template="<?php echo $theme['template']; ?>">
                 <td><input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $theme['theme_id']; ?>" <?php if ($theme['selected']) { ?>checked="checked"<?php } ?>/></td>
                 <td><?php if ($theme['default']) { ?><img src="image/asterisk_orange.png" alt="Predeterminado" /><?php } ?></a></td>
                 <td><?php echo $theme['name']; ?></td>

@@ -22,17 +22,17 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_totalconnection'); ?></label>
-        <input title="<?php echo $Language->get('help_totalconnection'); ?>" type="number" name="Widgets[<?php echo $name; ?>][settings][fblike_totalconnection]" value="<?php echo isset($settings['fblike_totalconnection']) ? $settings['fblike_totalconnection'] : 8; ?>" style="width: 40px;" />
+        <input title="<?php echo $Language->get('help_totalconnection'); ?>" type="necoNumber" name="Widgets[<?php echo $name; ?>][settings][fblike_totalconnection]" value="<?php echo isset($settings['fblike_totalconnection']) ? $settings['fblike_totalconnection'] : 8; ?>" style="width: 40px;" />
     </div>
     
     <div class="row">
         <label><?php echo $Language->get('entry_width'); ?></label>
-        <input title="<?php echo $Language->get('help_width'); ?>" type="number" name="Widgets[<?php echo $name; ?>][settings][fblike_width]" value="<?php echo isset($settings['fblike_width']) ? $settings['fblike_width'] : 200; ?>" style="width: 40px;" />
+        <input title="<?php echo $Language->get('help_width'); ?>" type="necoNumber" name="Widgets[<?php echo $name; ?>][settings][fblike_width]" value="<?php echo isset($settings['fblike_width']) ? $settings['fblike_width'] : 200; ?>" style="width: 40px;" />
     </div>
     
     <div class="row">
         <label><?php echo $Language->get('entry_height'); ?></label>
-        <input title="<?php echo $Language->get('help_height'); ?>" type="number" name="Widgets[<?php echo $name; ?>][settings][fblike_height]" value="<?php echo isset($settings['fblike_height']) ? $settings['fblike_height'] : 250; ?>" style="width: 40px;" />
+        <input title="<?php echo $Language->get('help_height'); ?>" type="necoNumber" name="Widgets[<?php echo $name; ?>][settings][fblike_height]" value="<?php echo isset($settings['fblike_height']) ? $settings['fblike_height'] : 250; ?>" style="width: 40px;" />
     </div>
     
     <div class="row">

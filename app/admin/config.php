@@ -11,7 +11,7 @@ $protocol  = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ?
 $httpAdminPath = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] : substr($_SERVER['PHP_SELF'],0,strrpos($_SERVER['PHP_SELF'],"/")+1);
 $httppath = $httpAdminPath = str_replace('/index.php',"",$httpAdminPath);
 $httppath = substr($httppath,0,strrpos($httppath,"/",1));
-$httppath = str_replace("/web","",$httppath);
+//$httppath = str_replace("/web","",$httppath);
 
 
 define('HTTP_HOME',   $protocol.$httpAdminPath . "/");

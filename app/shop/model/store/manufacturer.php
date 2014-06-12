@@ -46,4 +46,54 @@ class ModelStoreManufacturer extends Model {
         `ip`            = '". $this->db->escape($_SERVER['REMOTE_ADDR']) ."',
         `date_added`    = NOW()");
 	}
+    
+    /**
+     * ModelStoreManufacturer::getProperty()
+     * 
+     * Obtener una propiedad de la pagina
+     * 
+     * @param int $id manufacturer_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return mixed value of property
+     * */
+    public function getProperty($id, $group, $key) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_property 
+        WHERE `manufacturer_id` = '" . (int)$id . "' 
+        AND `group` = '". $this->db->escape($group) ."'
+        AND `key` = '". $this->db->escape($key) ."'");
+  
+		return unserialize(str_replace("\'","'",$query->row['value']));
+	}
+    
+    /**
+     * ModelStoreManufacturer::getAllProperties()
+     * 
+     * Obtiene todas las propiedades de la pagina
+     * 
+     * Si quiere obtener todos los grupos de propiedades
+     * utilice * como nombre del grupo, ejemplo:
+     * 
+     * $properties = getAllProperties($manufacturer_id, '*');
+     * 
+     * Sino coloque el nombre del grupo de las propiedades
+     * 
+     * $properties = getAllProperties($manufacturer_id, 'NombreDelGrupo');
+     * 
+     * @param int $id manufacturer_id
+     * @param varchar $group
+     * @return array all properties
+     * */
+	public function getAllProperties($id, $group='*') {
+        if ($group=='*') {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_property 
+            WHERE `manufacturer_id` = '" . (int)$id . "'");
+        } else {
+    		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_property 
+            WHERE `manufacturer_id` = '" . (int)$id . "' 
+            AND `group` = '". $this->db->escape($group) ."'");
+        }
+        
+		return $query->rows;
+	}
 }

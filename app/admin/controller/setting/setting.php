@@ -3,7 +3,6 @@ class ControllerSettingSetting extends Controller {
 	private $error = array();
  
 	public function index() {
-	   $this->load->library('url');
 		$this->document->title = $this->language->get('heading_title');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 		  
@@ -13,16 +12,12 @@ class ControllerSettingSetting extends Controller {
 		  
 			$this->modelSetting->update('config', $this->request->post);
 
-		  
 			if ($this->config->get('config_currency_auto')) {
 				$this->modelCurrency->updateAll();
 			}	
 		  
-			
 			$this->session->set('success',$this->language->get('text_success'));
-		  
 			$this->redirect(Url::createAdminUrl('setting/setting'));
-		  
 		}
         
         if (isset($this->request->post['config_maintenance'])) { 
@@ -110,11 +105,25 @@ class ControllerSettingSetting extends Controller {
         $this->setvar('config_customer_price');
         $this->setvar('config_customer_approval');
         $this->setvar('config_account_id');
+        $this->setvar('config_store_mode');
         $this->setvar('config_checkout_id');
         $this->setvar('config_stock_display');
         $this->setvar('config_stock_checkout');
+        
         $this->setvar('config_order_status_id');
-        $this->setvar('config_stock_status_id');
+        $this->setvar('config_order_status_paid');
+        $this->setvar('config_order_status_nulled');
+        $this->setvar('config_order_status_shipping');
+        $this->setvar('config_order_status_delivered');
+        $this->setvar('config_order_status_aborted');
+        $this->setvar('config_order_status_loading');
+        $this->setvar('config_order_status_returned');
+        
+        $this->setvar('config_order_payment_status_id');
+        $this->setvar('config_order_payment_status_approved');
+        $this->setvar('config_order_payment_status_no_approved');
+        $this->setvar('config_order_payment_status_returned');
+        
         $this->setvar('config_shipping_session');
         $this->setvar('config_admin_limit');
         $this->setvar('config_catalog_limit');
@@ -218,6 +227,7 @@ class ControllerSettingSetting extends Controller {
 		$this->data['currencies']     = $this->modelCurrency->getAll();
 		$this->data['customer_groups']= $this->modelCustomergroup->getAll();
 		$this->data['order_statuses'] = $this->modelOrderstatus->getAll();
+		$this->data['order_payment_statuses'] = $this->modelOrderpaymentstatus->getAll();
 		$this->data['stock_statuses'] = $this->modelStockstatus->getAll();
 		
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {

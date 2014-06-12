@@ -1,19 +1,35 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
-<section id="maincontent">
-    <section id="content">
-        <div class="grid_16">
+<div class="container">
+    <section id="maincontent">
+        <section id="content">
+        <div class="grid_12 hideOnMobile">
             <ul id="breadcrumbs" class="nt-editable">
             <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-                <li><?php echo $breadcrumb['separator']; ?><a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>"><?php echo $breadcrumb['text']; ?></a></li>
+                <li><a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>"><?php echo $breadcrumb['text']; ?></a></li>
             <?php } ?>
             </ul>
         </div>
         
         <div class="clear"></div><br /><br />
         
-        <aside id="column_left"><?php echo $column_left; ?></aside>
-        <div class="grid_13">
+        <div class="grid_12">
+            <div id="featuredContent">
+            <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+            </div>
+        </div>
+            
+        <div class="clear"></div>
+        
+        <?php if ($column_left) { ?><aside id="column_left" class="grid_3"><?php echo $column_left; ?></aside><?php } ?>
+        
+        <?php if ($column_left && $column_right) { ?>
+        <div class="grid_6">
+        <?php } elseif ($column_left || $column_right) { ?>
+        <div class="grid_9">
+        <?php } else { ?>
+        <div class="grid_12">
+        <?php } ?>
             <h1><?php echo $heading_title; ?></h1>
             <p><small><?php echo $Language->get('text_posted') ." ". $date_added; ?></small></p>
             <?php echo $description; ?>
@@ -35,20 +51,12 @@
             <div class="clear"></div>
             
         </div>
+        <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
+        </section>
     </section>
-    
-</section>
+</div>
 <script type="text/javascript" src="<?php echo HTTP_JS; ?>necojs/neco.carousel.js"></script>
 <div id="fb-root"></div>
-<script>
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/es_ES/all.js#xfbml=1&appId=223173687752863";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-</script>
 <script>
 $(window).load(function(){
     <?php if ($related) { ?>

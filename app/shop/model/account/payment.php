@@ -8,6 +8,7 @@ class ModelAccountPayment extends Model {
          `bank_account_id` = '". (int)$data['bank_account_id'] ."',
          `order_payment_status_id` = '". (int)$data['order_payment_status_id'] ."',
          `transac_number` = '". $this->db->escape($data['transac_number']) ."',
+         `transac_date` = '". $this->db->escape($data['transac_date']) ."',
          `bank_from`    = '". $this->db->escape($data['bank_from']) ."',
          `payment_method` = '". $this->db->escape($data['payment_method']) ."',
          `amount`       = '". round((float)$data['amount'],2) ."',
@@ -72,6 +73,9 @@ class ModelAccountPayment extends Model {
     			
 	    if ($data['start'] < 0) {
     	   $data['start'] = 0;
+        }
+	    if (!$data['limit'] || $data['limit'] < 1) {
+    	   $data['limit'] = 50;
         }
     			
         $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];

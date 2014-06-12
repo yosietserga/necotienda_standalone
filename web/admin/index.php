@@ -1,6 +1,6 @@
 <?php
 define('PACKAGE','standalone');
-define('VERSION','2.0.3');
+define('VERSION','1.0.2');
 
 $config_path = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
 if (!file_exists($config_path . 'cconfig.php')) {
@@ -8,6 +8,12 @@ if (!file_exists($config_path . 'cconfig.php')) {
 	exit;
 } else {
     require_once($config_path . 'app/admin/config.php');
+    if (file_exists($config_path . 'app/install')) {
+        rename($config_path . 'app/install', $config_path . 'app/delete_'. md5(mt_rand()));
+    }
+    if (file_exists($config_path . 'web/install')) {
+        rename($config_path . 'web/install', $config_path . 'web/delete_'. md5(mt_rand()));
+    }
 }
 
 require_once(DIR_SYSTEM . 'startup.php');

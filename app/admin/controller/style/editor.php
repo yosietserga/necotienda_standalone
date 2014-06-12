@@ -52,7 +52,7 @@ class ControllerStyleEditor extends Controller {
                 $folder = DIR_CATALOG . 'view/theme/default/';
            	}
         }
-            
+        
 		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             $fopen = fopen($folder . $f,'w+');
             fputs($fopen,html_entity_decode($this->request->post['code']));

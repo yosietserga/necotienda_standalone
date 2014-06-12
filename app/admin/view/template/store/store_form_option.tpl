@@ -3,21 +3,21 @@
     <table class="form">
         <tr>
             <td><?php echo $Language->get('entry_admin_limit'); ?></td>
-            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la administraci&oacute;n" type="number" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" required="true"<?php if (isset($error_admin_limit)) echo ' class="neco-input-error'; ?>>
+            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la administraci&oacute;n" type="necoNumber" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" required="true"<?php if (isset($error_admin_limit)) echo ' class="neco-input-error'; ?>>
               <?php if ($error_admin_limit) { ?>
               <span class="error"><?php echo $error_admin_limit; ?></span>
               <?php } ?></td>
           </tr>
 		  <tr>
             <td><?php echo $Language->get('entry_catalog_limit'); ?></td>
-            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la tienda" type="number" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" required="true"<?php if (isset($error_catalog_limit)) echo ' class="neco-input-error'; ?>>
+            <td><input title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la tienda" type="necoNumber" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" required="true"<?php if (isset($error_catalog_limit)) echo ' class="neco-input-error'; ?>>
               <?php if ($error_catalog_limit) { ?>
               <span class="error"><?php echo $error_catalog_limit; ?></span>
               <?php } ?></td>
           </tr>
 		  <tr>
             <td><?php echo $Language->get('entry_new_days'); ?></td>
-            <td><input title="<?php echo $Language->get('help_new_days'); ?>" type="number" name="config_new_days" value="<?php echo $config_new_days; ?>" size="3" required="true"<?php if (isset($error_new_days)) echo ' class="neco-input-error'; ?> /></td>
+            <td><input title="<?php echo $Language->get('help_new_days'); ?>" type="necoNumber" name="config_new_days" value="<?php echo $config_new_days; ?>" size="3" required="true"<?php if (isset($error_new_days)) echo ' class="neco-input-error'; ?> /></td>
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_tax'); ?></td>

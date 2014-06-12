@@ -16,6 +16,15 @@ class ControllerAccountRegister extends Controller {
     	if (($this->request->server['REQUEST_METHOD'] == 'POST' ) && $this->validate()) {
             $this->request->post['rif'] = $this->request->post['riftype'] . $this->request->post['rif'];
             $this->request->post['birthday'] = $this->request->post['bday'] ."/". $this->request->post['bmonth'] ."/". $this->request->post['byear'];
+            
+            if ($this->request->hasPost('referencedBy')) {
+                $promotor = $this->modelCustomer->getCustomerByEmail($this->request->getPost('referencedBy'));
+                $this->request->post['referenced_by'] = ($promotor['customer_id']) ? $promotor['customer_id'] : 0;
+            }
+            
+            $email = $this->request->getPost('email');
+            $password = $this->request->getPost('password');
+            
     	    $result = $this->modelCustomer->addCustomer($this->request->post);
             if ($result) {
                 $this->session->clear('guest');
@@ -93,7 +102,11 @@ class ControllerAccountRegister extends Controller {
         		    $mailer->Body = html_entity_decode(htmlspecialchars_decode($message));
             		$mailer->Send();
                 }
-        	  	$this->redirect(Url::createUrl("account/success"));
+                if ($this->customer->login($email,$password) && $this->session->has('redirect')) {
+                    $this->redirect($this->session->get('redirect'));
+                } else {
+                    $this->redirect(Url::createUrl("account/success"));
+                }
             }
         } 
 
@@ -142,11 +155,13 @@ class ControllerAccountRegister extends Controller {
         $this->setvar('bmonth');
         $this->setvar('bday');
         $this->setvar('telephone');
+        $this->setvar('referencedBy');
         
         $this->setvar('country_id');
         $this->setvar('zone_id');
         $this->setvar('address_1');
         $this->setvar('postcode');
+        $this->setvar('street');
         $this->setvar('city');
         
         $this->load->model('localisation/country');
@@ -154,34 +169,6 @@ class ControllerAccountRegister extends Controller {
         $this->data['page_legal_terms_id'] = ($this->config->get('config_account_id')) ? $this->config->get('config_account_id') : 0;
         $this->data['page_privacy_terms_id'] = ($this->config->get('config_account_id')) ? $this->config->get('config_account_id') : 0;
         
-        // scripts
-        $scripts[] = array('id'=>'scriptsRegister','method'=>'ready','script'=>
-            "$('#create').ntForm();
-            $('#email').on('change',function(e){
-           	    $.post('". Url::createUrl("account/register/checkemail") ."', {email: $(this).val()},
-                    function(response){
-                        $('#tempLink').remove();
-              	        var data = $.parseJSON(response);
-                        if (typeof data.error != 'undefined') {
-                            $('#email').removeClass('neco-input-success').addClass('neco-input-error');
-                            $('#email').parent().find('.neco-form-error').attr({'title':\"Este email ya existe!\"});
-                            $('#email').closest('.row').after('<p id=\"tempLink\" class=\"error\">'+ data.msg +'</p>');
-             			} else {
-                            $('#email').addClass('neco-input-success').removeClass('neco-input-error');
-                            $('#email').parent().find('.neco-form-error').attr({'title':\"No hay errores en este campo\"});
-                            $('#tempLink').remove();
-             			}
-                  	});
-                });
-            $('#firstname,#lastname').on('change',function(e){
-                if (($('#firstname').val().length != 0) && ($('#lastname').val().length != 0) && ($('#company').val().length == 0)) {
-                    $('#company').val($('#firstname').val() +' '+ $('#lastname').val());
-                }
-            });
-            ");
-            
-        $this->scripts = array_merge($this->scripts,$scripts);
-            
         // javascript files
         $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
         $javascripts[] = $jspath."necojs/neco.form.js";
@@ -194,70 +181,23 @@ class ControllerAccountRegister extends Controller {
         $styles[] = array('media'=>'all','href'=>$csspath.'neco.form.css');
         $this->styles = array_merge($this->styles,$styles);
 
-            $this->load->helper('widgets');
-            $widgets = new NecoWidget($this->registry,$this->Route);
-            foreach ($widgets->getWidgets('main') as $widget) {
-                $settings = (array)unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id'=>$widget['name'],
-                        'method'=>'ready',
-                        'script'=>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'".$widget['name']."'
-                        })
-                        .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
+        $this->loadWidgets();
+        
+        if ($scripts) $this->scripts = array_merge($this->scripts,$scripts);
             
-            foreach ($widgets->getWidgets('featuredContent') as $widget) {
-                $settings = (array)unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}",$settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id'=>$widget['name'],
-                        'method'=>'ready',
-                        'script'=>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'".$widget['name']."'
-                        })
-                        .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
+        $this->children[] = 'common/column_left';
+        $this->children[] = 'common/column_right';
+    	$this->children[] = 'common/nav';
+    	$this->children[] = 'common/header';
+    	$this->children[] = 'common/footer';
             
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/register.tpl')) {
-			$this->template = $this->config->get('config_template') . '/account/register.tpl';
-		} else {
-			$this->template = 'cuyagua/account/register.tpl';
-		}
-		
-    		$this->children[] = 'common/column_left';
-    		$this->children[] = 'common/column_right';
-    		$this->children[] = 'common/nav';
-    		$this->children[] = 'common/header';
-    		$this->children[] = 'common/footer';
-            
+        $template = ($this->config->get('default_view_account_register')) ? $this->config->get('default_view_account_register') : 'account/register.tpl';
+   		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
+            $this->template = $this->config->get('config_template') .'/'. $template;
+    	} else {
+            $this->template = 'choroni/'. $template;
+    	}
+        
 		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));	
   	}
 
@@ -349,8 +289,16 @@ class ControllerAccountRegister extends Controller {
             $this->request->post['rif'] = $this->request->post['riftype'] . $this->request->post['rif'];
             $this->request->post['password'] = substr(md5(rand(11111111,99999999)),0,8);
             
+            if ($this->request->hasPost('referencedBy')) {
+                $promotor = $this->modelCustomer->getCustomerByEmail($this->request->getPost('referencedBy'));
+                $this->request->post['referenced_by'] = ($promotor['customer_id']) ? $promotor['customer_id'] : 0;
+            }
+            
             if ($this->modelCustomer->addCustomer($this->request->post)) {
                 $this->customer->login($this->request->post['email'], $this->request->post['password'], true);
+                if ($this->request->post['session_address_var']) {
+                    $this->session->set($this->request->post['session_address_var'],$this->customer->getAddressId());
+                }
                 $this->session->clear('guest');
                 if ($this->config->get('marketing_email_register_customer')) {
                     $newsletter = $this->modelNewsletter->getById($this->config->get('marketing_email_register_customer'));
@@ -401,6 +349,9 @@ class ControllerAccountRegister extends Controller {
             $this->request->post['lastname']  = $this->customer->getLastName();
             $this->request->post['company']   = $this->customer->getCompany();
             $address_id = $this->modelCustomer->addAddress($this->customer->getId(),$this->request->post);
+            if ($this->request->post['session_address_var']) {
+                $this->session->set($this->request->post['session_address_var'],$address_id);
+            }
             $this->response->setOutput($address_id, $this->config->get('config_compression'));
         }
     }
@@ -427,4 +378,71 @@ class ControllerAccountRegister extends Controller {
 	
 		$this->response->setOutput($output, $this->config->get('config_compression'));
   	}  
+    
+    protected function loadWidgets() {
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
+       	} else {
+            $csspath = str_replace("%theme%","default",$csspath);
+       	}
+        if (fopen($csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'),'r')) {
+            $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+        }
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+        }
+        
+        $this->load->helper('widgets');
+        $widgets = new NecoWidget($this->registry,$this->Route);
+        foreach ($widgets->getWidgets('main') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+            
+        foreach ($widgets->getWidgets('featuredContent') as $widget) {
+            $settings = (array)unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id'=>$widget['name'],
+                    'method'=>'ready',
+                    'script'=>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'".$widget['name']."'
+                        })
+                        .html(makeWaiting())
+                        .load('". $url . "')
+                        .appendTo('".$settings['target']."');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                    $this->children[$widget['name']] = $settings['route'];
+                    $this->widget[$widget['name']] = $widget;
+                }
+            }
+        }
+    }
 }

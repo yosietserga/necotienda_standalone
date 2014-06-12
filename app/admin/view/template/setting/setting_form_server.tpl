@@ -36,7 +36,7 @@
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_compression'); ?><br><span class="help">Comprime todos los ficheros con GZIP para mejores rendimiento de la tienda. El nivel de compresi&oacute;n deber&iacute;a estar entre 0 - 9</span></td>
-            <td><input title="Ingrese el nivel de compresi&oacute;n de los archivos de sistema de la tienda. Esto es utilizado para mejorar el rendimiento de la tienda" type="number" name="config_compression" value="<?php echo $config_compression; ?>" size="3"></td>
+            <td><input title="Ingrese el nivel de compresi&oacute;n de los archivos de sistema de la tienda. Esto es utilizado para mejorar el rendimiento de la tienda" type="necoNumber" name="config_compression" value="<?php echo $config_compression; ?>" size="3"></td>
           </tr>
           <tr>
             <td><?php echo $Language->get('entry_error_display'); ?></td>

@@ -49,9 +49,9 @@
 					new_zoomy = 0;
 
 				// IE specifics
-				if($.browser.msie){
+				if(navigator.userAgent.indexOf('MSIE') > -1){
 					preview = false;
-					if($.browser.version < 7){
+					if(/6.0/.test(navigator.userAgent)){
 						ie6_iframe_fix = true;
 					}
 				}
@@ -499,7 +499,7 @@
 
 				if(images > 1 || !o.smallthumb_hide_single){
 					// Smallthumbs slide left
-					$container.find('.etalage_smallthumb_first').live('click', function(){
+					$container.find('.etalage_smallthumb_first').on('click', function(){
 						// If not already moving
 						if(!st_moving){
 							st_moving = true;
@@ -527,7 +527,7 @@
 					});
 
 					// Smallthumbs slide right
-					$container.find('.etalage_smallthumb_last').live('click', function(){
+					$container.find('.etalage_smallthumb_last').on('click', function(){
 						// If not already moving
 						if(!st_moving){
 							st_moving = true;

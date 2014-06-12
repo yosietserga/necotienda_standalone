@@ -65,7 +65,8 @@ class NecoWidget {
         $widgets = $this->db->query("SELECT * 
             FROM `" . DB_PREFIX . "widget` w 
             WHERE w.`position` = '". $this->db->escape($position)."'
-                AND w.`store_id` = '". (int)STORE_ID."'
+                AND w.`store_id` = '". (int)STORE_ID ."'
+                AND w.`app` = '". $this->db->escape($this->app) ."'
                 AND w.`widget_id` IN (SELECT widget_id FROM ". DB_PREFIX ."widget_landing_page WHERE landing_page = '". $this->db->escape($this->landing_page)."' OR landing_page = 'all')
             ORDER BY `order` ASC");
         $this->widgets = $widgets->rows;

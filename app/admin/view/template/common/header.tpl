@@ -56,31 +56,31 @@
                 <div class="userNav">
                     <ul>
                         <li>
-                            <a href="<?php echo $Url::createAdminUrl("setting/cache"); ?>" title="Borrar Cache">
-                                <img src="image/icons/topnav/smallBrush.png" alt="Borrar Cache" />
-                                <span>Borrar Cache</span>
+                            <a href="<?php echo $Url::createAdminUrl("setting/cache"); ?>" title="<?php echo $Language->get('text_delete_cache'); ?>">
+                                <img src="image/icons/topnav/smallBrush.png" alt="<?php echo $Language->get('text_delete_cache'); ?>" />
+                                <span><?php echo $Language->get('text_delete_cache'); ?></span>
                             </a>
                         </li>
-                        <li class="dd"><img src="image/icons/topnav/register.png" alt="" /><span>Crear &darr;</span>
+                        <li class="dd"><img src="image/icons/topnav/register.png" alt="" /><span><?php echo $Language->get('text_create'); ?>  &darr;</span>
                             <ul class="menu_body">
-                                <li><a href="<?php echo $Url::createAdminUrl('store/product/insert'); ?>" title="Crear Producto">Producto</a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('content/page/insert'); ?>" title="Crear Producto">P&aacute;gina</a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('content/post/insert'); ?>" title="Crear Producto">Art&iacute;culo</a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('store/manufacturer/insert'); ?>" title="Crear Producto">Fabricante</a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('store/category/insert'); ?>" title="Crear Producto">Categor&iacute;a de Productos</a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('content/post_category/insert'); ?>" title="Crear Producto">Categor&iacute;a de Art&iacute;los</a></li>
+                                <li><a href="<?php echo $Url::createAdminUrl('store/product/insert'); ?>" title="<?php echo $Language->get('text_product'); ?>"><?php echo $Language->get('text_product'); ?></a></li>
+                                <li><a href="<?php echo $Url::createAdminUrl('content/page/insert'); ?>" title="<?php echo $Language->get('text_page'); ?>"><?php echo $Language->get('text_page'); ?></a></li>
+                                <li><a href="<?php echo $Url::createAdminUrl('content/post/insert'); ?>" title="<?php echo $Language->get('text_post'); ?>"><?php echo $Language->get('text_post'); ?></a></li>
+                                <li><a href="<?php echo $Url::createAdminUrl('store/manufacturer/insert'); ?>" title="<?php echo $Language->get('text_manufacturer'); ?>"><?php echo $Language->get('text_manufacturer'); ?></a></li>
+                                <li><a href="<?php echo $Url::createAdminUrl('store/category/insert'); ?>" title="<?php echo $Language->get('text_product_category'); ?>"><?php echo $Language->get('text_product_category'); ?></a></li>
+                                <li><a href="<?php echo $Url::createAdminUrl('content/post_category/insert'); ?>" title="<?php echo $Language->get('text_post_category'); ?>"><?php echo $Language->get('text_post_category'); ?></a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="<?php echo $Url::createAdminUrl("sale/customer"); ?>" title="Clientes Nuevos"><img src="image/icons/topnav/profile.png" alt="Clientes Nuevos" />
-                                <span>Clientes</span>
+                            <a href="<?php echo $Url::createAdminUrl("sale/customer"); ?>" title="<?php echo $Language->get('text_customers'); ?>"><img src="image/icons/topnav/profile.png" alt="<?php echo $Language->get('text_customers'); ?>" />
+                                <span><?php echo $Language->get('text_customers'); ?></span>
                                 <?php if ($new_customers) { ?><span class="numberTop"><?php echo (int)$new_customers; ?></span><?php } ?>
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo $Url::createAdminUrl("sale/order"); ?>" title="Pedidos Nuevos">
-                                <img src="image/icons/topnav/cart.png" alt="Pedidos Nuevos" />
-                                <span>Pedidos</span>
+                            <a href="<?php echo $Url::createAdminUrl("sale/order"); ?>" title="<?php echo $Language->get('text_orders'); ?>">
+                                <img src="image/icons/topnav/cart.png" alt="<?php echo $Language->get('text_orders'); ?>" />
+                                <span><?php echo $Language->get('text_orders'); ?></span>
                                 <?php if ($new_orders) { ?><span class="numberTop"><?php echo (int)$new_orders; ?></span><?php } ?>
                             </a>
                         </li>
@@ -93,21 +93,21 @@
                                 <li><a href="#" title="" class="sTrash">Papelera</a></li>
                             </ul>
                         </li>
-                        -->
                         <li><a href="<?php echo $Url::createAdminUrl("tool/task"); ?>" title="Tareas Programadas"><img src="image/icons/topnav/todo.png" alt="" /><span>Tareas</span></a></li>
+                        -->
                         <li class="dd">
-                            <img src="image/icons/topnav/bag.png" alt="Tiendas" />
-                            <span>Tiendas &darr;</span>
+                            <img src="image/icons/topnav/bag.png" alt="<?php echo $Language->get('text_stores'); ?>" />
+                            <span><?php echo $Language->get('text_stores'); ?> &darr;</span>
                             <ul class="menu_body">
-                                <li><a href="<?php echo HTTP_CATALOG; ?>" title="Tienda Principal" target="_blank">Tienda Principal</a></li>
+                                <li><a href="<?php echo HTTP_CATALOG; ?>" title="<?php echo $Language->get('text_main_store'); ?>" target="_blank"><?php echo $Language->get('text_main_store'); ?></a></li>
                                 <?php foreach ($stores as $store) { ?>
                                 <li><a href="<?php echo str_replace("www",$store['folder'],HTTP_CATALOG); ?>" target="_blank" title="Ir a la tienda"><?php echo $store['name']; ?></a></li>
                                 <?php } ?>
                             </ul>
                         </li>
-                        <li><a href="<?php echo $Url::createAdminUrl("setting/setting"); ?>" title="Configuraci&oacute;n"><img src="image/icons/topnav/settings.png" alt="" /><span>Configuraci&oacute;n</span></a></li>
+                        <li><a href="<?php echo $Url::createAdminUrl("setting/setting"); ?>" title="<?php echo $Language->get('text_setting'); ?>"><img src="image/icons/topnav/settings.png" alt="" /><span><?php echo $Language->get('text_setting'); ?></span></a></li>
                         <li class="BigScreen"><a onclick="if (BigScreen.enabled) { BigScreen.toggle(); } else { alert('No est\u00E1 habilitado esta opci\u00F3n en su navegador'); }"><img src="image/icons/color/arrow-in-out.png" alt="Full Screen" /></a></li>
-                        <li><a href="<?php echo $Url::createAdminUrl('common/logout'); ?>" title=""><img src="image/icons/topnav/logout.png" alt="" /><span>Logout</span></a></li>
+                        <li><a href="<?php echo $Url::createAdminUrl('common/logout'); ?>" title="<?php echo $Language->get('text_logout'); ?>"><img src="image/icons/topnav/logout.png" alt="<?php echo $Language->get('text_logout'); ?>" /><span><?php echo $Language->get('text_logout'); ?></span></a></li>
                     </ul>
                 </div>
                 <div class="fix"></div>
@@ -119,7 +119,7 @@
             <ul class="ribbon">
                 <li>
                     <ul class="menu">
-                        <li id="inicio" class="on" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/home.png" alt="Inicio" /><span><?php echo $Language->get('tab_home'); ?></span></a>
+                        <li id="inicio" class="on" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/home.png" alt="<?php echo $Language->get('tab_home'); ?>" /><span><?php echo $Language->get('tab_home'); ?></span></a>
                             <ul>
                                 <li>
                                     <a title="<?php echo $Language->get('text_home'); ?>" href="<?php echo $Url::createAdminUrl('common/home'); ?>" accesskey="2">
@@ -136,10 +136,12 @@
                                         <img src="image/menu/product.png" />
                                         <br /><span><?php echo $Language->get('text_product'); ?></span>
                                     </a>
-                                    <a title="<?php echo $Language->get('text_attribute'); ?>" href="<?php echo $Url::createAdminUrl('store/attribute',array('menu'=>'inicio')); ?>">
-                                        <img src="image/menu/attributes.png" />
-                                        <br /><span><?php echo $Language->get('text_attribute'); ?></span>
+                                    <!--
+                                    <a title="<?php echo $Language->get('text_attributes'); ?>" href="<?php echo $Url::createAdminUrl('store/attribute',array('menu'=>'inicio')); ?>">
+                                        <img src="image/menu/attributes.png" alt="<?php echo $Language->get('text_attributes'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_attributes'); ?></span>
                                     </a>
+                                    -->
                                     <a title="<?php echo $Language->get('text_manufacturer'); ?>" href="<?php echo $Url::createAdminUrl('store/manufacturer',array('menu'=>'inicio')); ?>">
                                         <img src="image/menu/manufacture.png"  />
                                         <br /><span><?php echo $Language->get('text_manufacturer'); ?></span>
@@ -224,6 +226,10 @@
                                         <img src="image/menu/client_group.png" alt="<?php echo $Language->get('text_customer_group'); ?>" />
                                         <br /><span><?php echo $Language->get('text_customer_group'); ?></span>
                                     </a>
+                                    <a title="<?php echo $Language->get('text_balances'); ?>" href="<?php echo $Url::createAdminUrl('sale/balance',array('menu'=>'admon')); ?>">
+                                        <img src="image/menu/account_balances.png" alt="<?php echo $Language->get('text_balances'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_balances'); ?></span>
+                                    </a>
                                 </li>
                                 <li>
                                     <a title="<?php echo $Language->get('text_bank'); ?>" href="<?php echo $Url::createAdminUrl('sale/bank',array('menu'=>'admon')); ?>">
@@ -240,13 +246,13 @@
                         <li id="herramientas" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/dropbox.png" alt="Herramientas" /><span><?php echo $Language->get('tab_tools'); ?></span></a>
                             <ul>
                                 <li>
-                                    <a title="Respaldar" href="<?php echo $Url::createAdminUrl('tool/backup',array('menu'=>'herramientas')); ?>">
+                                    <a title="<?php echo $Language->get('text_backup'); ?>" href="<?php echo $Url::createAdminUrl('tool/backup',array('menu'=>'herramientas')); ?>">
                                         <img src="image/menu/backup.png" alt="<?php echo $Language->get('text_backup'); ?>">
-                                        <br /><span>Respaldar</span>
+                                        <br /><span><?php echo $Language->get('text_backup'); ?></span>
                                     </a>
-                                    <a title="Restaurar" href="<?php echo $Url::createAdminUrl('tool/backup',array('menu'=>'herramientas')); ?>">
-                                        <img src="image/menu/restore.png" alt="Restaurar" />
-                                        <br /><span>Restaurar</span>
+                                    <a title="<?php echo $Language->get('text_restore'); ?>" href="<?php echo $Url::createAdminUrl('tool/backup',array('menu'=>'herramientas')); ?>">
+                                        <img src="image/menu/restore.png" alt="<?php echo $Language->get('text_restore'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_restore'); ?></span>
                                     </a>
                                 </li>
                                 <li>
@@ -269,36 +275,36 @@
                                 </li>
                             </ul>
                         </li>
-                        <li id="reportes" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/monitor.png" alt="Reportes" /><span><?php echo $Language->get('tab_report'); ?></span></a>
+                        <li id="reportes" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/monitor.png" alt="<?php echo $Language->get('tab_report'); ?>" /><span><?php echo $Language->get('tab_report'); ?></span></a>
                             <ul>
                                 <li>
-                                    <a href="<?php echo $Url::createAdminUrl('report/viewed',array('menu'=>'reportes')); ?>" title="M&aacute;s Vistos">
-                                        <img src="image/menu/p_mas_visto.png" alt="M&aacute;s Vistos">
-                                        <br /><span>Productos</span>
+                                    <a href="<?php echo $Url::createAdminUrl('store/product/see',array('menu'=>'reportes')); ?>" title="<?php echo $Language->get('text_product'); ?>">
+                                        <img src="image/menu/product-stats.png" alt="<?php echo $Language->get('text_product'); ?>">
+                                        <br /><span><?php echo $Language->get('text_product'); ?></span>
                                     </a>
-                                    <a title="Por Visitas" href="<?php echo $Url::createAdminUrl('report/visited',array('menu'=>'reportes')); ?>">
-                                        <img src="image/menu/c_mas_visitas.png" alt="Con M&aacute;s Visitas">
-                                        <br /><span>Clientes</span>
+                                    <a title="<?php echo $Language->get('text_customer'); ?>" href="<?php echo $Url::createAdminUrl('report/visited',array('menu'=>'reportes')); ?>">
+                                        <img src="image/menu/c_mas_visitas.png" alt="<?php echo $Language->get('text_customer'); ?>">
+                                        <br /><span><?php echo $Language->get('text_customer'); ?></span>
                                     </a>
-                                    <a title="Por Pedidos" href="<?php echo $Url::createAdminUrl('report/cupurchased',array('menu'=>'reportes')); ?>">
-                                        <img src="image/menu/c_mas_pedidos.png" alt="Con M&aacute;s Pedidos">
-                                        <br /><span>Cat. Produuctos</span>
+                                    <a title="<?php echo $Language->get('tab_category'); ?>" href="<?php echo $Url::createAdminUrl('store/category/see',array('menu'=>'reportes')); ?>">
+                                        <img src="image/menu/category-stats.png" alt="<?php echo $Language->get('tab_category'); ?>">
+                                        <br /><span><?php echo $Language->get('text_categories'); ?></span>
                                     </a>
-                                    <a title="Por Pedidos" href="<?php echo $Url::createAdminUrl('report/cupurchased',array('menu'=>'reportes')); ?>">
-                                        <img src="image/menu/c_mas_pedidos.png" alt="Con M&aacute;s Pedidos">
-                                        <br /><span>Fabricantes</span>
+                                    <a title="<?php echo $Language->get('text_manufacturer'); ?>" href="<?php echo $Url::createAdminUrl('store/manufacturer/see',array('menu'=>'reportes')); ?>">
+                                        <img src="image/menu/manufacturer-stats.png" alt="<?php echo $Language->get('text_manufacturer'); ?>">
+                                        <br /><span><?php echo $Language->get('text_manufacturer'); ?></span>
                                     </a>
-                                    <a title="Por Pedidos" href="<?php echo $Url::createAdminUrl('report/cupurchased',array('menu'=>'reportes')); ?>">
-                                        <img src="image/menu/c_mas_pedidos.png" alt="Con M&aacute;s Pedidos">
-                                        <br /><span>P&aacute;ginas</span>
+                                    <a title="<?php echo $Language->get('text_page'); ?>" href="<?php echo $Url::createAdminUrl('content/page/see',array('menu'=>'reportes')); ?>">
+                                        <img src="image/menu/page-stats.png" alt="<?php echo $Language->get('text_page'); ?>">
+                                        <br /><span><?php echo $Language->get('text_page'); ?></span>
                                     </a>
-                                    <a title="Por Pedidos" href="<?php echo $Url::createAdminUrl('report/cupurchased',array('menu'=>'reportes')); ?>">
-                                        <img src="image/menu/c_mas_pedidos.png" alt="Con M&aacute;s Pedidos">
-                                        <br /><span>Art&iacute;culos</span>
+                                    <a title="<?php echo $Language->get('text_post'); ?>" href="<?php echo $Url::createAdminUrl('content/post/see',array('menu'=>'reportes')); ?>">
+                                        <img src="image/menu/post-stats.png" alt="<?php echo $Language->get('text_post'); ?>">
+                                        <br /><span><?php echo $Language->get('text_post'); ?></span>
                                     </a>
-                                    <a title="Por Pedidos" href="<?php echo $Url::createAdminUrl('report/cupurchased',array('menu'=>'reportes')); ?>">
-                                        <img src="image/menu/c_mas_pedidos.png" alt="Con M&aacute;s Pedidos">
-                                        <br /><span>Cat. Art&iacute;culos</span>
+                                    <a title="<?php echo $Language->get('text_post_category'); ?>" href="<?php echo $Url::createAdminUrl('content/post_category/see',array('menu'=>'reportes')); ?>">
+                                        <img src="image/menu/post-category-stats.png" alt="<?php echo $Language->get('text_post_category'); ?>">
+                                        <br /><span><?php echo $Language->get('text_post_category'); ?></span>
                                     </a>
                                 </li>
                             </ul>
@@ -306,27 +312,27 @@
                         <li id="mercadeo" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/megaphone.png" alt="Mercadeo" /><span><?php echo $Language->get('tab_marketing'); ?></span></a>
                             <ul>
                                 <li>
-                                    <a href="<?php echo $Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo')); ?>">
-                                        <img src="image/menu/contact.png" />
-                                        <br /><span>Contactos</span>
+                                    <a title="<?php echo $Language->get('text_contacts'); ?>" href="<?php echo $Url::createAdminUrl('marketing/contact',array('menu'=>'mercadeo')); ?>">
+                                        <img src="image/menu/contact.png" alt="<?php echo $Language->get('text_contacts'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_contacts'); ?></span>
                                     </a>
-                                    <a href="<?php echo $Url::createAdminUrl('marketing/list',array('menu'=>'mercadeo')); ?>" title="Crear una nueva lista de emails">
-                                        <img src="image/menu/contact_list.png" />
-                                        <br /><span>Listas de Contactos</span>
+                                    <a href="<?php echo $Url::createAdminUrl('marketing/list',array('menu'=>'mercadeo')); ?>" title="<?php echo $Language->get('text_contacts_lists'); ?>">
+                                        <img src="image/menu/contact_list.png" alt="<?php echo $Language->get('text_contacts_lists'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_contacts_lists'); ?></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo $Url::createAdminUrl('marketing/newsletter',array('menu'=>'mercadeo')); ?>" title="Crear una nueva lista de emails">
-                                        <img src="image/menu/mail.png" />
-                                        <br /><span>Plantillas de Email</span>
+                                    <a href="<?php echo $Url::createAdminUrl('marketing/newsletter',array('menu'=>'mercadeo')); ?>" title="<?php echo $Language->get('text_newsletters'); ?>">
+                                        <img src="image/menu/mail.png" alt="<?php echo $Language->get('text_newsletters'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_newsletters'); ?></span>
                                     </a>
-                                    <a href="<?php echo $Url::createAdminUrl('marketing/campaign',array('menu'=>'mercadeo')); ?>" title="Crear una nueva campa&ntilde;a">
-                                        <img src="image/menu/send_mail.png" />
-                                        <br /><span>Campa&ntilde;as</span>
+                                    <a href="<?php echo $Url::createAdminUrl('marketing/campaign',array('menu'=>'mercadeo')); ?>" title="<?php echo $Language->get('text_email_campaigns'); ?>">
+                                        <img src="image/menu/send_mail.png" alt="<?php echo $Language->get('text_email_campaigns'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_email_campaigns'); ?></span>
                                     </a>
-                                    <a href="<?php echo $Url::createAdminUrl("marketing/message",array('menu'=>'mercadeo')); ?>" title="Asociar Plantillas de Email y P&aacute;ginas">
-                                        <img src="image/menu/asociations.png" />
-                                        <br /><span>Asociaciones</span>
+                                    <a href="<?php echo $Url::createAdminUrl("marketing/message",array('menu'=>'mercadeo')); ?>" title="<?php echo $Language->get('text_email_associations'); ?>">
+                                        <img src="image/menu/asociations.png" alt="<?php echo $Language->get('text_email_associations'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_email_associations'); ?></span>
                                     </a>
                                 </li>
                             </ul>
@@ -334,34 +340,38 @@
                         <li id="apariencia" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/bigBrush.png" alt="Apariencia" /><span><?php echo $Language->get('tab_style'); ?></span></a>
                             <ul>
                                 <li>
-                                    <a href="<?php echo Url::createAdminUrl("style/theme"); ?>">
-                                        <img src="image/menu/theme.png" alt="Fondos" />
-                                        <br /><span>Temas</span>
+                                    <a title="<?php echo $Language->get('text_views'); ?>" href="<?php echo Url::createAdminUrl("style/views"); ?>">
+                                        <img src="image/menu/views.png" alt="<?php echo $Language->get('text_views'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_views'); ?></span>
                                     </a>
-                                    <a href="<?php echo $Url::createAdminUrl('style/layouts',array('menu'=>'apariencia')); ?>">
-                                        <img src="image/menu/template.png" alt="Fondos" />
-                                        <br /><span>Plantillas</span>
+                                    <a title="<?php echo $Language->get('text_themes'); ?>" href="<?php echo Url::createAdminUrl("style/theme"); ?>">
+                                        <img src="image/menu/theme.png" alt="<?php echo $Language->get('text_themes'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_themes'); ?></span>
                                     </a>
-                                    <a href="<?php echo $Url::createAdminUrl('style/editor',array('menu'=>'apariencia')); ?>">
-                                        <img src="image/menu/editor.png" alt="Fondos" />
-                                        <br /><span>Editor HTML</span>
+                                    <a title="<?php echo $Language->get('text_templates'); ?>" href="<?php echo $Url::createAdminUrl('style/layouts',array('menu'=>'apariencia')); ?>">
+                                        <img src="image/menu/template.png" alt="<?php echo $Language->get('text_templates'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_templates'); ?></span>
                                     </a>
-                                    <a href="<?php echo Url::createAdminUrl("style/widget"); ?>">
-                                        <img src="image/menu/widgets.png" alt="Widgets" />
-                                        <br /><span>Widgets</span>
+                                    <a title="<?php echo $Language->get('text_html_editor'); ?>" href="<?php echo $Url::createAdminUrl('style/editor',array('menu'=>'apariencia')); ?>">
+                                        <img src="image/menu/editor.png" alt="<?php echo $Language->get('text_html_editor'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_html_editor'); ?></span>
+                                    </a>
+                                    <a title="<?php echo $Language->get('text_widgets'); ?>" href="<?php echo Url::createAdminUrl("style/widget"); ?>">
+                                        <img src="image/menu/widgets.png" alt="<?php echo $Language->get('text_widgets'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_widgets'); ?></span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li id="sistema" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/settings.png" alt="Sistema" /><span><?php echo $Language->get('tab_system'); ?></span></a>
+                        <li id="sistema" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/settings.png" alt="<?php echo $Language->get('text_system'); ?>" /><span><?php echo $Language->get('tab_system'); ?></span></a>
                             <ul>
                                 <li>
                                     <a href="<?php echo $Url::createAdminUrl('setting/setting',array('menu'=>'sistema')); ?>" title="<?php echo $Language->get('text_setting'); ?>">
-                                        <img src="image/menu/setting.png" />
+                                        <img src="image/menu/setting.png" alt="<?php echo $Language->get('text_setting'); ?>" />
                                         <br /><span><?php echo $Language->get('text_setting'); ?></span>
                                     </a>
                                     <a href="<?php echo $Url::createAdminUrl('user/user',array('menu'=>'sistema')); ?>" title="<?php echo $Language->get('text_user'); ?>">
-                                        <img src="image/menu/user.png" />
+                                        <img src="image/menu/user.png" alt="<?php echo $Language->get('text_user'); ?>" />
                                         <br /><span><?php echo $Language->get('text_user'); ?></span>
                                     </a>
                                     <a href="<?php echo $Url::createAdminUrl('user/user_permission',array('menu'=>'sistema')); ?>" title="<?php echo $Language->get('text_user_group'); ?>">
@@ -403,40 +413,40 @@
                                 </li>
                             </ul>
                         </li>
-                        <li id="ayuda" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/help.png" alt="Ayuda" /><span><?php echo $Language->get('tab_help'); ?></span></a>
+                        <li id="ayuda" onclick="menuOn(this);"><a class="itemenu"><img src="image/icons/middlenav/help.png" alt="<?php echo $Language->get('text_help'); ?>" /><span><?php echo $Language->get('tab_help'); ?></span></a>
                             <ul>
                                 <li>
-                                    <a href="http://www.necotienda.com/docs/" title="Documentaci&oacute;n">
-                                        <img src="image/menu/guia_usuario.png" alt="Documentaci&oacute;n" />
-                                        <br /><span>Documentaci&oacute;n</span>
+                                    <a href="http://docs.necotienda.com/" title="<?php echo $Language->get('text_documentation'); ?>">
+                                        <img src="image/menu/guia_usuario.png" alt="<?php echo $Language->get('text_documentation'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_documentation'); ?></span>
                                     </a>
-                                    <a href="http://www.youtube.com/user/necotienda" target='_blank'>
-                                        <img src="image/menu/youtube.png" />
-                                        <br /><span>Videos Tutoriales</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="http://www.necotienda.com/forum/" target='_blank'>
-                                        <img src="image/menu/necotienda.png" alt="Foro" />
-                                        <br /><span>Foros</span>
-                                    </a>
-                                    <a href="http://www.necotienda.com/store/" target='_blank'>
-                                        <img src="image/menu/webtino.png" alt="Tienda" />
-                                        <br /><span>Tienda</span>
-                                    </a>
-                                    <a href="http://www.necotienda.com/blog/" target='_blank'>
-                                        <img src="image/menu/wordpress.png" alt="Blog" />
-                                        <br /><span>Blog</span>
+                                    <a href="http://www.youtube.com/user/necotienda" title="<?php echo $Language->get('text_video_tutorials'); ?>" target='_blank'>
+                                        <img src="image/menu/youtube.png" alt="<?php echo $Language->get('text_video_tutorials'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_video_tutorials'); ?></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="http://www.necotienda.com/support/" target='_blank'>
-                                        <img src="image/menu/atencion.png" />
-                                        <br /><span>Soporte</span>
+                                    <a href="http://forum.necotienda.com/" title="<?php echo $Language->get('text_forum'); ?>" target='_blank'>
+                                        <img src="image/menu/necotienda.png" alt="<?php echo $Language->get('text_forum'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_forum'); ?></span>
+                                    </a>
+                                    <a href="http://apps.necotienda.com/" title="<?php echo $Language->get('text_apps_store'); ?>" target='_blank'>
+                                        <img src="image/menu/webtino.png" alt="<?php echo $Language->get('text_apps_store'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_apps_store'); ?></span>
+                                    </a>
+                                    <a href="http://blog.necotienda.com/" title="<?php echo $Language->get('text_blog'); ?>" target='_blank'>
+                                        <img src="image/menu/wordpress.png" alt="<?php echo $Language->get('text_blog'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_blog'); ?></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://www.necotienda.com/support/" title="<?php echo $Language->get('text_support'); ?>" target='_blank'>
+                                        <img src="image/menu/atencion.png" alt="<?php echo $Language->get('text_support'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_support'); ?></span>
                                     </a>
                                     <a>
-                                        <img src="image/menu/acerca_de.png" />
-                                        <br /><span>Acerca De</span>
+                                        <img src="image/menu/acerca_de.png" alt="<?php echo $Language->get('text_support'); ?>" />
+                                        <br /><span><?php echo $Language->get('text_about'); ?></span>
                                     </a>
                                 </li>
                             </ul>

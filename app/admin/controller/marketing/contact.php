@@ -67,6 +67,22 @@ class ControllerMarketingContact extends Controller {
 		}
      }
     
+    /**
+     * ControllerMarketingContact::addToList()
+     * asocia un contacto a una lista
+     * @return boolean
+     * */
+     public function addToList() {
+        $this->load->model('marketing/list');
+		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            foreach ($this->request->post['selected'] as $id) {
+                $this->modelList->addContact($this->request->getQuery('contact_list_id'),$id);
+            }
+		} else {
+            $this->modelList->addContact($this->request->getQuery('contact_list_id'),$_GET['id']);
+		}
+     }
+    
     public function exportThis() {	
         $dir_vcards = opendir($_SERVER['DOCUMENT_ROOT']);
         while ($file_vcf = readdir($dir_vcards) !== false) {
@@ -169,8 +185,29 @@ class ControllerMarketingContact extends Controller {
                 return false;
             } 
             function addToList() {
+                $('#temp').dialog({
+                    height: 300,
+                    width: 350,
+                    buttons: {
+                        '". $this->language->get('button_accept') ."': function() {
+                            if ( $('#contact_list_id').val() ) {
+                                $.post('". Url::createAdminUrl("marketing/contact/addtolist") ."&contact_list_id='+ $('#contact_list_id').val(),$('#form').serialize());
+                                $('input[type=\'checkbox\']').attr('checked', null);
+                                $( this ).dialog('close');
+                            }
+                        },
+                        Cancel: function() {
+                            $( this ).dialog('close');
+                        }
+                    },
+                    close: function() {
+                        
+                    }
+                });
+                
                 return false;
-            } 
+            }
+            
             function deleteAll() {
                 if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
@@ -259,6 +296,9 @@ class ControllerMarketingContact extends Controller {
 			'limit'                    => $limit
 		);
 		
+        $this->load->model('marketing/list');
+		$this->data['lists'] = $this->modelList->getAll();
+        
 		$contact_total = $this->modelContact->getTotalContacts($data);
         
         if ($contact_total) {
@@ -356,6 +396,7 @@ class ControllerMarketingContact extends Controller {
 		if (isset($this->request->get['filter_date_end'])) { $url .= '&filter_date_end=' . $this->request->get['filter_date_end']; }
 		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
 		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
+		if (isset($this->request->get['limit'])) { $url .= '&limit=' . $this->request->get['limit']; }
 		
 		$pagination = new Pagination();
 		$pagination->ajax = true;

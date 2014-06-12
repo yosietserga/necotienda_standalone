@@ -360,13 +360,22 @@ final class Task {
      * @param integer task_queue_id 
      * @return void
      * */
-    public function setTaskDone() {
+    public function setTaskDone($id=0) {
+        $id ($id) ? $id : $this->task_id;
+        if (!$id) return false;
         $this->status = 0;
-        $this->db->query("UPDATE ". DB_PREFIX ."task SET `status` = 0 WHERE task_id = '". (int)$this->task_id ."'");
+        $this->db->query("UPDATE ". DB_PREFIX ."task SET `status` = 0 WHERE task_id = '". (int)$id ."'");
         $this->db->query("DELETE FROM ". DB_PREFIX ."task_exec WHERE task_id = '". (int)$id ."'");
-        foreach ($this->queue as $key => $queue) {
-            $this->setQueueDone($queue['task_queue_id']);
+        if ($this->task_id) {
+            foreach ($this->queue as $key => $queue) {
+                $this->setQueueDone($queue['task_queue_id']);
+            }
+        } else {
+            $this->db->query("UPDATE ". DB_PREFIX ."task_queue SET `status` = 0 WHERE task_id = '". (int)$id ."'");
         }
+        //TODO: verificar si la tarea se repite y cual es el periodo para reiniciar la tarea
+        //TODO: enviar informe de la tarea ejecutada al administrador
+        //TODO: si la tarea se reinicia notificar al administrador del reinicio de la tarea
     }
     
     /**
@@ -374,8 +383,13 @@ final class Task {
      * Devuelve todas las tareas de la cola de trabajo
      * @return void
      * */
-    public function getTaskQueue() {
-        return $this->queue;
+    public function getTaskQueue($id=0) {
+        if ($id != 0) {
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."task_queue WHERE AND task_id = '". (int)$id ."'");
+            return $query->rows;
+        } else {
+            return $this->queue;
+        }
     }
     
     /**
@@ -384,14 +398,19 @@ final class Task {
      * @param integer $id task_id
      * @return void
      * */
-    public function getTaskDos() {
-        $result = array();
-        foreach ($this->queue as $key => $queue) {
-            if ($queue['status'] == 1) {
-                $result[] = $this->queue[$key]; 
+    public function getTaskDos($id=0) {
+        if ($id != 0) {
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."task_queue WHERE status = 1 AND task_id = '". (int)$id ."'");
+            return $query->rows;
+        } else {
+            $result = array();
+            foreach ($this->queue as $key => $queue) {
+                if ($queue['status'] == 1) {
+                    $result[] = $this->queue[$key]; 
+                }
             }
+            return $result;
         }
-        return $result;
     }
     
     /**

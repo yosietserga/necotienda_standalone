@@ -2,6 +2,7 @@
 <?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
 <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
+    <?php if ($post_id) { ?><a href="<?php echo $Url::createUrl("content/page",array('page_id'=>$post_id),'NONSSL',HTTP_CATALOG); ?>" target="_blank"><?php echo $Language->get('text_see_page_in_frontstore'); ?></a><?php } ?>
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
             <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
@@ -10,9 +11,25 @@
         </div>
         
         <div class="clear"></div>
-                                
+        
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
         
+            <div class="row">
+                <label><?php echo $Language->get('entry_view'); ?></label>
+                <select name="view">
+                    <option value=""<?php if (empty($layout)) { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_default'); ?></option>
+                    <?php foreach ($views as $key => $value) { ?>
+                    <optgroup label="<?php echo $value['folder']; ?>">
+                        <?php foreach ($value['files'] as $k => $v) { ?>
+                        <option value="<?php echo basename($value['folder']) ."/". basename($v); ?>"<?php if ($layout==basename($value['folder']) ."/". basename($v)) { echo ' selected="selected"'; } ?>><?php echo basename($v); ?></option>
+                        <?php } ?>
+                    </optgroup>
+                    <?php } ?>
+                </select>
+            </div>
+            
+            <div class="clear"></div>
+            
             <div class="row">
                 <label><?php echo $Language->get('entry_parent'); ?></label>
                 <select name="parent_id" style="width:40%">
@@ -27,6 +44,26 @@
                </select>
             </div>
             
+            <div class="clear"></div>
+            
+            <div class="row">
+                <label><?php echo $Language->get('entry_customer_group'); ?></label>
+                <input type="text" placeholder="Filtrar listado" value="" name="q" id="q" />
+                <div class="clear"></div>
+                <ul id="customerGroupsWrapper" class="scrollbox">
+                    <li>
+                        <input type="checkbox" name="customer_groups[]" value="0"<?php if (in_array(0, $customer_groups)) { ?> checked="checked"<?php } ?> showquick="off" onchange="$('.customerGroups input').attr('checked', this.checked);" />
+                        <b><?php echo $Language->get('text_all_public'); ?></b>
+                    </li>
+                    <?php foreach ($customerGroups as $group) { ?>
+                    <li class="customerGroups">
+                        <input type="checkbox" name="customer_groups[]" value="<?php echo $group['customer_group_id']; ?>"<?php if (in_array($group['customer_group_id'], $customer_groups) || in_array(0, $customer_groups)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <b><?php echo $group['name']; ?></b>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+    
             <div class="clear"></div><br />
             
             <div id="languages" class="htabs">
@@ -38,7 +75,7 @@
                     
                         <div class="row">
                             <label><?php echo $Language->get('entry_title'); ?></label>
-                            <input class="page" id="page_description_<?php echo $language['language_id']; ?>_title" name="page_description[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($page_description[$language['language_id']]) ? $page_description[$language['language_id']]['title'] : ''; ?>" required="true" style="width:40%" />
+                            <input class="page" id="description_<?php echo $language['language_id']; ?>_title" name="page_description[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($page_description[$language['language_id']]) ? $page_description[$language['language_id']]['title'] : ''; ?>" required="true" style="width:40%" />
                         </div>
                         
                         <div class="clear"></div>
@@ -78,14 +115,14 @@
             
             <div class="row">
                 <label><?php echo $Language->get('entry_date_start'); ?></label>
-                <input type="date" name="date_publish_start" id="date_publish_start" value="<?php echo isset($date_publish_start) ? $date_publish_start : ''; ?>" style="width:40%" />
+                <input type="necoDate" name="date_publish_start" id="date_publish_start" value="<?php echo isset($date_publish_start) ? $date_publish_start : ''; ?>" style="width:40%" />
             </div>
             
             <div class="clear"></div>
             
             <div class="row">
                 <label><?php echo $Language->get('entry_date_end'); ?></label>
-                <input type="date" name="date_publish_end" id="date_publish_end" value="<?php echo isset($date_publish_end) ? $date_publish_end : ''; ?>" style="width:40%" />
+                <input type="necoDate" name="date_publish_end" id="date_publish_end" value="<?php echo isset($date_publish_end) ? $date_publish_end : ''; ?>" style="width:40%" />
             </div>
             
             <?php if ($stores) { ?>

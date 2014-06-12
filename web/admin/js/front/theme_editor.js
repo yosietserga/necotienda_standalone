@@ -99,6 +99,11 @@ $(function() {
             setStyle();
         }
 	});
+    $("#margin").on('change',function(event){ $("#marginSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#marginTop").on('change',function(event){ $("#marginTopSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#marginRight").on('change',function(event){ $("#marginRightSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#marginBottom").on('change',function(event){ $("#marginBottomSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#marginLeft").on('change',function(event){ $("#marginLeftSlider").slider('option', 'value', parseInt(this.value)); });
     
     
     $("#marginTopSlider").slider({
@@ -160,6 +165,11 @@ $(function() {
             setStyle();
         }
 	});
+    $("#padding").on('change',function(event){ $("#paddingSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#paddingTop").on('change',function(event){ $("#paddingTopSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#paddingRight").on('change',function(event){ $("#paddingRightSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#paddingBottom").on('change',function(event){ $("#paddingBottomSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#paddingLeft").on('change',function(event){ $("#paddingLeftSlider").slider('option', 'value', parseInt(this.value)); });
     $("#paddingTopSlider").slider({
         range: "min",
 		min: 0,
@@ -209,6 +219,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#top").on('change',function(event){ $("#topSlider").slider('option', 'value', parseInt(this.value)); });
     $("#leftSlider").slider({
         range: "min",
 		min: -width,
@@ -218,6 +229,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#left").on('change',function(event){ $("#leftSlider").slider('option', 'value', parseInt(this.value)); });
     $("#widthSlider").slider({
         range: "min",
 		min: 0,
@@ -227,6 +239,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#width").on('change',function(event){ $("#widthSlider").slider('option', 'value', parseInt(this.value)); });
     $("#heightSlider").slider({
         range: "min",
 		min: 0,
@@ -236,6 +249,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#height").on('change',function(event){ $("#heightSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#borderRadiusSlider").slider({
         range: "min",
@@ -256,6 +270,11 @@ $(function() {
             setStyle();
         }
 	});
+    $("#borderRadius").on('change',function(event){ $("#borderRadiusSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#borderRadiusTopLeft").on('change',function(event){ $("#borderRadiusTopLeftSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#borderRadiusTopRight").on('change',function(event){ $("#borderRadiusTopRightSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#borderRadiusBottomLeft").on('change',function(event){ $("#borderRadiusBottomLeftSlider").slider('option', 'value', parseInt(this.value)); });
+    $("#borderRadiusBottomRight").on('change',function(event){ $("#borderRadiusBottomRightSlider").slider('option', 'value', parseInt(this.value)); });
     $("#borderRadiusTopLeftSlider").slider({
         range: "min",
 		min: 0,
@@ -305,6 +324,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#borderWidth").on('change',function(event){ $("#borderWidthSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#borderTopWidthSlider").slider({
         range: "min",
@@ -315,6 +335,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#borderTopWidth").on('change',function(event){ $("#borderTopWidthSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#borderRightWidthSlider").slider({
         range: "min",
@@ -325,6 +346,8 @@ $(function() {
             setStyle();
         }
 	});
+    $("#borderRightWidth").on('change',function(event){ $("#borderRightWidthSlider").slider('option', 'value', parseInt(this.value)); });
+    
     $("#borderBottomWidthSlider").slider({
         range: "min",
 		min: 0,
@@ -334,6 +357,8 @@ $(function() {
             setStyle();
         }
 	});
+    $("#borderBottomWidth").on('change',function(event){ $("#borderBottomWidthSlider").slider('option', 'value', parseInt(this.value)); });
+    
     $("#borderLeftWidthSlider").slider({
         range: "min",
 		min: 0,
@@ -343,6 +368,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#borderLeftWidth").on('change',function(event){ $("#borderLeftWidthSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#boxShadowXSlider").slider({
         range: "min",
@@ -353,6 +379,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#boxShadowX").on('change',function(event){ $("#boxShadowXSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#boxShadowYSlider").slider({
         range: "min",
@@ -363,6 +390,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#boxShadowY").on('change',function(event){ $("#boxShadowYSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#boxShadowBlurSlider").slider({
         range: "min",
@@ -373,6 +401,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#boxShadowBlur").on('change',function(event){ $("#boxShadowBlurSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#boxShadowSpreadSlider").slider({
         range: "min",
@@ -383,6 +412,7 @@ $(function() {
             setStyle();
         }
 	});
+    $("#boxShadowSpread").on('change',function(event){ $("#boxShadowSpreadSlider").slider('option', 'value', parseInt(this.value)); });
     
     $("#letterSpacingSlider").slider({
         range: "min",
@@ -393,6 +423,8 @@ $(function() {
             setStyle();
         }
 	});
+    $("#letterSpacing").on('change',function(event){ $("#letterSpacingSlider").slider('option', 'value', parseInt(this.value)); });
+    
     $("#wordSpacingSlider").slider({
         range: "min",
 		min: 0,
@@ -402,6 +434,8 @@ $(function() {
             setStyle();
         }
 	});
+    $("#wordSpacing").on('change',function(event){ $("#wordSpacingSlider").slider('option', 'value', parseInt(this.value)); });
+    
     $("#lineHeightSlider").slider({
         range: "min",
 		min: 0,
@@ -411,6 +445,8 @@ $(function() {
             setStyle();
         }
 	});
+    $("#lineHeight").on('change',function(event){ $("#lineHeightSlider").slider('option', 'value', parseInt(this.value)); });
+    
     $('#selectors').on('change', function(e){
         setElementToStyle( $('#selectors:selected').val());
     });
@@ -546,11 +582,12 @@ function loadStyle() {
         $.each(elements, function(el,style) {
             that = $('#'+ el);
             
-            if (typeof style.background.image != 'undefined' 
-            && style.background.image 
-            && !style.background.image.indexOf('url(')) 
-            { 
-                style.background.image = 'url('+ style.background.image +')'; 
+            if (typeof style.background.image != 'undefined' && style.background.image) {
+                if (!style.background.image.indexOf('url')) {
+                    style.background.image = 'url('+ style.background.image +')'; 
+                } else {
+                    style.background.image = style.background.image +')'; 
+                }
             }
             
             if (IsNumber(style.background.positionX)) { style.background.positionX += 'px'; }
@@ -622,8 +659,8 @@ function loadStyle() {
             $('#alignRight').removeClass('align-rightOn');
             $('#alignJustify').removeClass('align-justifyOn');
                 
-            if (style.font.weight == 'bold' || style.font.weight == '700') { $('#bold').addClass('boldOn'); }
-            if (style.font.style == 'italic') { $('#italic').addClass('italicOn'); }
+            if (style.font.weight == 'bold' || style.font.weight == '700') { $('#bold').addClass('boldOn'); } else { $('#bold').removeClass('boldOn'); }
+            if (style.font.style == 'italic') { $('#italic').addClass('italicOn'); } else { $('#italic').removeClass('italicOn'); }
             if (style.font.decoration == 'underline') { $('#underline').addClass('underlineOn'); }
             if (style.font.decoration == 'line-through') { $('#lineThrough').addClass('line-throughOn'); }
             if (style.font.transform == 'uppercase') { $('#upper').addClass('uppercaseOn'); }
@@ -826,6 +863,12 @@ function translateCssProperties($cssObject) {
     return style;
 }
 
+/*
+renderPanel()
+
+Inicializa los valores de cada propiedad en el panel de control
+que edita las propiedades CSS del elemento seleccionado
+*/
 function renderPanel() {
     var style = {};
     var cookieName = "";
@@ -919,8 +962,8 @@ function renderPanel() {
                 
         if (typeof style.font.color != 'undefined') { $('#fontColor').val(style.font.color); }
         if (typeof style.font.family != 'undefined') { $('#fontFamily').val(style.font.family); }
-        if (typeof style.font.weight == 'undefined') { $('#fontWeight').val(''); }
-        if (typeof style.font.style == 'undefined') { $('#fontStyle').val(''); }
+        if (typeof style.font.weight != 'undefined') { $('#fontWeight').val(style.font.weight); }
+        if (typeof style.font.style != 'undefined') { $('#fontStyle').val(style.font.style); }
         if (typeof style.font.size != 'undefined') { $('#fontSize').val(style.font.size); }
         if (typeof style.font.align != 'undefined') { $('#textAlign').val(style.font.align); }
         if (typeof style.font.decoration != 'undefined') { $('#textDecoration').val(style.font.decoration); }
@@ -929,8 +972,8 @@ function renderPanel() {
         if (typeof style.font.wordspacing != 'undefined') { $('#wordSpacing').val(style.font.wordspacing); }
         if (typeof style.font.lineheight != 'undefined') { $('#lineHeight').val(style.font.lineheight); }
                 
-        if (style.font.weight) { $('#bold').addClass('boldOn'); }
-        if (style.font.style) { $('#italic').addClass('italicOn'); }
+        if (style.font.weight == 'bold' || style.font.weight == '700') { $('#bold').addClass('boldOn'); }
+        if (style.font.style == 'italic') { $('#italic').addClass('italicOn'); }
         if (style.font.decoration == 'underline') { $('#underline').addClass('underlineOn'); }
         if (style.font.decoration == 'line-through') { $('#lineThrough').addClass('line-throughOn'); }
         if (style.font.transform == 'uppercase') { $('#upper').addClass('uppercaseOn'); }
@@ -1062,11 +1105,6 @@ function setStyle() {
     style.dimensions = {};
     style.font = {};
     
-            if ($('#backgroundImage').val().length && !$('#backgroundImage').val().indexOf('url(')) {
-                a = $('#backgroundImage').val();
-                $('#backgroundImage').val('url('+ a +')'); 
-            }
-            
             _IsNumber('backgroundPositionX');
             _IsNumber('backgroundPositionY');
             _IsNumber('top');
@@ -1109,7 +1147,7 @@ function setStyle() {
             }
             if ($('#backgroundImage').val().length) {
                 style.background.image = $('#backgroundImage').val();
-                $(that).css('backgroundImage',$('#backgroundImage').val());
+                $(that).css('backgroundImage','url('+ $('#backgroundImage').val() +')');
             }
             if ($('#backgroundRepeat').val().length) {
                 style.background.repeat = $('#backgroundRepeat').val();
@@ -1131,7 +1169,7 @@ function setStyle() {
                 style.background.attachment = null;
                 $(that).css({'backgroundAttachment':'scroll'});
             }
-        
+            
             // borders
             if ($('#borderAdvanced').val() == 0) {
                 if ($('#borderColor').val().length) {
@@ -1207,17 +1245,37 @@ function setStyle() {
             } else {
                 var cssBorderRadius = "";
                 
-                style.borderradius.topleft = $('#borderRadiusTopLeft').val();
-                cssBorderRadius += parseInt($('#borderRadiusTopLeft').val()); 
+                if ($('#borderRadiusTopLeft').val()) {
+                    style.borderradius.topleft = $('#borderRadiusTopLeft').val();
+                    cssBorderRadius += $('#borderRadiusTopLeft').val(); 
+                } else {
+                    style.borderradius.topleft = 0;
+                    cssBorderRadius += '0px '; 
+                }
                 
-                style.borderradius.topright = $('#borderRadiusTopRight').val();
-                cssBorderRadius += parseInt($('#borderRadiusTopRight').val());
+                if ($('#borderRadiusTopRight').val()) {
+                    style.borderradius.topright = $('#borderRadiusTopRight').val();
+                    cssBorderRadius += $('#borderRadiusTopRight').val(); 
+                } else {
+                    style.borderradius.topright = 0;
+                    cssBorderRadius += '0px '; 
+                }
                 
-                style.borderradius.bottomleft = $('#borderRadiusBottomLeft').val();
-                cssBorderRadius += parseInt($('#borderRadiusBottomLeft').val()); 
+                if ($('#borderRadiusBottomRight').val()) {
+                    style.borderradius.bottomright = $('#borderRadiusBottomRight').val();
+                    cssBorderRadius += $('#borderRadiusBottomRight').val(); 
+                } else {
+                    style.borderradius.bottomright = 0;
+                    cssBorderRadius += '0px '; 
+                }
                 
-                style.borderradius.bottomright = $('#borderRadiusBottomRight').val();
-                cssBorderRadius += parseInt($('#borderRadiusBottomRight').val()); 
+                if ($('#borderRadiusBottomLeft').val()) {
+                    style.borderradius.bottomleft = $('#borderRadiusBottomLeft').val();
+                    cssBorderRadius += $('#borderRadiusBottomLeft').val(); 
+                } else {
+                    style.borderradius.bottomleft = 0;
+                    cssBorderRadius += '0px '; 
+                }
                 
                 $(that).css({'borderRadius':cssBorderRadius});
             }
@@ -1308,23 +1366,29 @@ function setStyle() {
                 style.font.family = $('#fontFamily').val();
                 $(that).css('fontFamily',$('#fontFamily').val());
             }
-            if ($('#fontSize option').is(':selected')) { 
+            if ($('#fontSize').val()) { 
                 style.font.size = $('#fontSize').val();
                 $(that).css('fontSize',$('#fontSize').val());
             }
             if ($('#fontStyle').val()) { 
-                style.font.style = $('#fontStyle').val();
+                style.font.style = 'italic';
                 $(that).css('fontStyle','italic');
+            } else {
+                style.font.style = 'normal';
+                $(that).css('fontStyle','normal');
             }
             if ($('#fontWeight').val()) { 
-                style.font.weight = $('#fontWeight').val();
+                style.font.weight = 'bold';
                 $(that).css('fontWeight','bold');
+            } else {
+                style.font.weight = 'normal';
+                $(that).css('fontWeight','normal');
             }
-            if ($('#textDecoration').val()) { 
+            if ($('#textDecoration').val()) {
                 style.font.decoration = $('#textDecoration').val();
                 $(that).css('textDecoration',$('#textDecoration').val());
             }
-            if ($('#textAlign').val()) { 
+            if ($('#textAlign').val()) {
                 style.font.align = $('#textAlign').val();
                 $(that).css('textAlign',$('#textAlign').val());
             }
@@ -1333,15 +1397,15 @@ function setStyle() {
                 $(that).css('textTransform',$('#textTransform').val());
             }
             if ($('#letterSpacing').val()) { 
-                style.font.transform = $('#letterSpacing').val();
+                style.font.letterspacing = $('#letterSpacing').val();
                 $(that).css('letterSpacing',$('#letterSpacing').val());
             }
             if ($('#wordSpacing').val()) { 
-                style.font.transform = $('#wordSpacing').val();
+                style.font.wordspacing = $('#wordSpacing').val();
                 $(that).css('wordSpacing',$('#wordSpacing').val());
             }
             if ($('#lineHeight').val()) { 
-                style.font.transform = $('#lineHeight').val();
+                style.font.lineheight = $('#lineHeight').val();
                 $(that).css('lineHeight',$('#lineHeight').val());
             }
             
@@ -1360,7 +1424,7 @@ function setAlign(e,v,c) {
     $('#alignRight').removeClass('align-rightOn');
     $('#alignJustify').removeClass('align-justifyOn');
     $(e).toggleClass(c);
-    $('#fontAlign').val(v);
+    $('#textAlign').val(v);
     setStyle();
 }
 
@@ -1488,6 +1552,7 @@ function resetFont() {
     $($('#selector').val()).css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1497,6 +1562,7 @@ function resetFont() {
     $($('#selector').val()).find('h1').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1506,6 +1572,7 @@ function resetFont() {
     $($('#selector').val()).find('h2').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1515,6 +1582,7 @@ function resetFont() {
     $($('#selector').val()).find('h3').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1524,6 +1592,7 @@ function resetFont() {
     $($('#selector').val()).find('h4').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1533,6 +1602,7 @@ function resetFont() {
     $($('#selector').val()).find('h5').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1542,6 +1612,7 @@ function resetFont() {
     $($('#selector').val()).find('h6').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1551,6 +1622,7 @@ function resetFont() {
     $($('#selector').val()).find('p').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',
@@ -1560,6 +1632,7 @@ function resetFont() {
     $($('#selector').val()).find('b').css({
         'color': '#000',
         'font': 'none',
+        'fontStyle': 'normal',
         'textDecoration': 'none',
         'textAlign': 'left',
         'letterSpacing': 'normal',

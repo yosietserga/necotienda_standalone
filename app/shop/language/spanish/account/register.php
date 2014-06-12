@@ -15,6 +15,9 @@ $_['text_agree']           = 'Al continuar con el registro, usted est&aacute; ac
 $_['text_datos_fiscales']    = 'Datos Fiscales';
 
 // Entry
+$_['entry_referencedBy']      = 'Email del Cliente que Referencia:';
+$_['entry_birthday']       = 'Fecha de Nacimiento:';
+$_['entry_street']         = 'Calle o Avenida:';
 $_['entry_firstname']      = 'Nombres:';
 $_['entry_lastname']       = 'Apellidos:';
 $_['entry_sexo']           = 'Sexo:';

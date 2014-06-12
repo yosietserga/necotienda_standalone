@@ -66,13 +66,13 @@ $_['entry_stock_status']      = 'Estado del Stock:';
 $_['entry_download']          = 'Permitir Descargas:';
 $_['entry_download_status']   = 'Estado de los pedidos para las descargas:';
 $_['entry_icon']              = '&Iacute;cono:';
-$_['entry_image_thumb']       = 'Tamaño de la imagen pequeña:';
-$_['entry_image_popup']       = 'Tamaño de la imagen grande:';
-$_['entry_image_category']    = 'Tamaño de la lista de categorias:';
-$_['entry_image_product']     = 'Tamaño de la lista de productos:';
-$_['entry_image_additional']  = 'Tamaño de la imagen adicional del producto:';
-$_['entry_image_related']     = 'Tamaño de la imagen de los productos relacionados:';
-$_['entry_image_cart']        = 'Tamaño de la imagen del carro:';
+$_['entry_image_thumb']       = 'Tama&ntilde;o de la imagen peque&ntilde;a:';
+$_['entry_image_popup']       = 'Tama&ntilde;o de la imagen grande:';
+$_['entry_image_category']    = 'Tama&ntilde;o de la lista de categorias:';
+$_['entry_image_product']     = 'Tama&ntilde;o de la lista de productos:';
+$_['entry_image_additional']  = 'Tama&ntilde;o de la imagen adicional del producto:';
+$_['entry_image_related']     = 'Tama&ntilde;o de la imagen de los productos relacionados:';
+$_['entry_image_cart']        = 'Tama&ntilde;o de la imagen del carro:';
 $_['entry_encryption']        = 'Clave de Encriptaci&oacute;n:';
 $_['entry_seo_url']           = 'Usa SEO URL\'s:';
 $_['entry_compression']       = 'Nivel de Compresi&oacute;n de salida:';
@@ -115,7 +115,7 @@ $_['entry_extramail_others']  = 'Otro:';
 $_['entry_dir_export']        = 'Directorio de Exportaci&oacute;n:';
 $_['entry_js_security']       = 'Activar Seguridad ClientSide:<br /><span class="help">Activa directices de seguridad que el usuario debe cumplir para garantizar la seguridad del sistema y la integridad de los datos</span>';
 $_['entry_server_security']   = 'Activar Seguridad ServerSide:<br /><span class="help">Activa directrices de seguridad para filtrar todos los datos ingresados por el usuario.</span>';
-$_['entry_password_security'] = 'Activar Requerimientos de Contrase&ntilde;a:<br /><span class="help">Activa las exigenias mínimas de la contraseña ingresada por el usuario para una mayor seguridad.</span>';
+$_['entry_password_security'] = 'Activar Requerimientos de Contrase&ntilde;a:<br /><span class="help">Activa las exigenias m&iacute;nimas de la contrase&ntilde;a ingresada por el usuario para una mayor seguridad.</span>';
 $_['entry_page_new_customer'] = 'Mensaje Cliente Nuevo:<br><span class="help">Este mensaje ser&aacute; enviado a todos los nuevos clientes que se registren en el sitio web.</span>';
 $_['entry_page_new_order']    = 'Mensaje Pedido Nuevo:<br><span class="help">Este mensaje ser&aacute; enviado al cliente cuando haga un pedido nuevo.</span>';
 $_['entry_page_old_order']    = 'Mensaje Pedido Olvidado:<br><span class="help">Este mensaje ser&aacute; enviado al cliente cuando no se haya registrado ning&uacute;n pago asociado al pedido realizado.</span>';
@@ -124,9 +124,9 @@ $_['entry_page_new_comment']  = 'Mensaje Nuevo Comentario:<br><span class="help"
 $_['entry_page_new_contact']  = 'Mensaje Nuevo Contacto:<br><span class="help">Este mensaje ser&aacute; enviado al cliente cuando env&iacute;e un mensaje nuevo a trav&eacute;s del formulario de contacto.</span>';
 $_['entry_page_new_payment']  = 'Mensaje Registro de Pago:<br><span class="help">Este mensaje ser&aacute; enviado al cliente cuando registre un pago.</span>';
 $_['entry_page_add_balance']  = 'Mensaje Saldo Acreditado:<br><span class="help">Este mensaje ser&aacute; enviado al cliente cuando se agregue saldo a su cuenta.</span>';
-$_['entry_page_happy_birthday']  = 'Mensaje Feliz Cumplea&ntilde;o:<br><span class="help">Este mensaje ser&aacute; enviado al cliente en su d&iacute;a de cumpleaños.</span>';
+$_['entry_page_happy_birthday']  = 'Mensaje Feliz Cumplea&ntilde;o:<br><span class="help">Este mensaje ser&aacute; enviado al cliente en su d&iacute;a de cumplea&ntilde;os.</span>';
 $_['entry_page_subtract_balance']  = 'Mensaje Saldo Debitado:<br><span class="help">Este mensaje ser&aacute; enviado al cliente cuando se debite saldo de su cuenta.</span>';
-$_['entry_page_contact_id']  = 'P&aacute;gina de Contacto:<br><span class="help">Ampl&iacute;a la información de la p&aacute;gina de contacto asociando.</span>';
+$_['entry_page_contact_id']  = 'P&aacute;gina de Contacto:<br><span class="help">Ampl&iacute;a la informaci&oacute;n de la p&aacute;gina de contacto asociando.</span>';
 $_['entry_page_order_pdf']  = 'Mensaje Pedido Nuevo en PDF :<br><span class="help">Este mensaje ser&aacute; convertido en pdf para descargar los pedidos en PDF o ser adjuntado a los correos.</span>';
 
 // Button
@@ -148,3 +148,32 @@ $_['error_image_cart']        = 'Tama&ntilde;o de la imagen del carrito de compr
 $_['error_store']             = 'Atenci&oacute;n: Esta sucursal no puede ser eliminada porque existen %s pedidos asignados!';
 $_['error_required_data']     = 'Uno o m&aacute;s campos requeridos no han sido llenados. Por favor revise e intente de nuevo!';
 $_['error_limit']       	  = 'L&iacute;mite requerido!';
+$_['error_folder_name_prohibited']  = 'No puede colocar ese nombre de carpeta, por favor seleccione otro.<p>Est&aacute;n prohibidos:<br /><ul>'.
+                                    '<li>necotienda</li>'.
+                                    '<li>shop</li>'.
+                                    '<li>blog</li>'.
+                                    '<li>carrito</li>'.
+                                    '<li>buscar</li>'.
+                                    '<li>search</li>'.
+                                    '<li>cart</li>'.
+                                    '<li>profile</li>'.
+                                    '<li>contact</li>'.
+                                    '<li>contacto</li>'.
+                                    '<li>special</li>'.
+                                    '<li>ofertas</li>'.
+                                    '<li>pages</li>'.
+                                    '<li>paginas</li>'.
+                                    '<li>productos</li>'.
+                                    '<li>products</li>'.
+                                    '<li>categories</li>'.
+                                    '<li>categorias</li>'.
+                                    '<li>buscar</li>'.
+                                    '<li>search</li>'.
+                                    '<li>pedidos</li>'.
+                                    '<li>orders</li>'.
+                                    '<li>mensajes</li>'.
+                                    '<li>pagos</li>'.
+                                    '<li>payments</li>'.
+                                    '<li>comentarios</li>'.
+                                    '<li>reviews</li>'.
+                                    '</ul></p>';

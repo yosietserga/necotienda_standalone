@@ -492,7 +492,8 @@
     margin:5px;
 	line-height:24px;
 	font-size:11px;
-	height:24px;
+	min-height:24px;
+	height:auto;
 	float:left;
 }
 #filter-selected a{
@@ -506,16 +507,17 @@
 	border-radius:4px;	
 }
 
- #filter-selected a:after{
+#filter-selected a:after{
 	content:"X";
 	position:absolute;
 	top:0px;
 	left:0px;
-    padding:4px 4px 5px 4px;
+    padding:2% 4px 1% 4px;
 	background:#900;
 	float:left;
     font:bold 12px Arial;
     color:#fff;
+	height:90%;
 	-moz-border-radius:4px 0px 0px 4px;
 	-webkit-border-radius:4px 0px 0px 4px;
 	border-radius:4px 0px 0px 4px;
@@ -523,7 +525,6 @@
 #filter-selected a:hover{
     background:#555;
 }	
-
 #filter-selected a:hover:before{
     border-color:transparent #555 transparent transparent;
 }

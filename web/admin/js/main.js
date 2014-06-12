@@ -263,6 +263,7 @@ function addPage(token) {
         $('#pagesWrapper :checkbox').removeAttr('checked');
     });
 }
+
 function addCategory(token) {
     if (!$('#categoriesWrapper :checkbox').is(':checked')) {
         alert('Debe seleccionar al menos una categor\u00EDa de productos');
@@ -373,6 +374,119 @@ function addCategory(token) {
             
         });
         $('#categoriesWrapper :checkbox').removeAttr('checked');
+    });
+}
+
+function addPostCategory(token) {
+    if (!$('#post_categoriesWrapper :checkbox').is(':checked')) {
+        alert('Debe seleccionar al menos una categor\u00EDa de productos');
+        return false;
+    }
+    
+    $.post('index.php?r=content/menu/postcategory&token=' + token,$('#post_categoriesWrapper :checkbox:checked').serialize(),function (response) {
+        var data = $.parseJSON(response);
+        $.each(data, function(i,item) {
+            
+            var k = $('.items li:last-child').index() + 1 * 1;
+            
+            var labelLink = $(document.createElement('label'))
+                .attr({
+                    'for':'link_'+ k +'_link'
+                })
+                .addClass('neco-label')
+                .text('Url:');
+                        
+            var inputLink = $(document.createElement('input'))
+                .addClass('menu_link')
+                .css({
+                    width:'60%'
+                })
+                .attr({
+                    value:item.href,
+                    type:'url',
+                    name:'link['+ k +'][link]',
+                    id:'link_'+ k +'_link'
+                });
+             var labelTag = $(document.createElement('label'))
+                .attr({
+                    'for':'link_'+ k +'_tag'
+                })
+                .addClass('neco-label')
+                .text('Etiqueta:');
+                        
+            var inputTag = $(document.createElement('input'))
+                .addClass('menu_tag')
+                .css({
+                    width:'60%'
+                })
+                    .attr({
+                    value:item.title,
+                    type:'text',
+                    name:'link['+ k +'][tag]',
+                    id:'link_'+ k +'_tag'
+                });
+                               
+            var labelKeyword = $(document.createElement('label'))
+                .attr({
+                    'for':'link_'+ k +'_keyword'
+                })
+                .addClass('neco-label')
+                .text('Slug:');
+                 
+            var inputKeyword = $(document.createElement('input'))
+                .addClass('menu_keyword')
+                .css({
+                    width:'60%'
+                })
+                .attr({
+                    value:item.keyword,
+                    type:'text',
+                    name:'link['+ k +'][keyword]',
+                    id:'link_'+ k +'_keyword'
+                });
+            
+            var itemForm1 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelLink)
+                .append(inputLink);
+                  
+            var itemForm2 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelTag)
+                .append(inputTag);
+                  
+            var itemForm3 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelKeyword)
+                .append(inputKeyword);
+            
+            var itemOptions = $(document.createElement('div'))
+                .addClass('itemOptions')
+                .attr({
+                    id:'linkOptions'+ k,
+                })
+                .append(itemForm1)
+                .append('<div class="clear"></div>')
+                .append(itemForm2)
+                .append('<div class="clear"></div>')
+                .append(itemForm3)
+                .append('<div class="clear"></div>')
+                .append('<a style="float:right;font-size:10px;" onclick="$(\'#li_'+ k +'\').remove()">[ Eliminar ]</a>');
+            
+            var div = $(document.createElement('div'))
+                .addClass('item')
+                .append('<b>'+ item.title +'</b><a class="showOptions" onclick="$(\'#linkOptions'+ k +'\').slideToggle(\'fast\')">&darr;</a>');
+                        
+            var li = $(document.createElement('li'))
+            .attr({
+                id:'li_'+ k
+            })
+            .append(div)
+            .append(itemOptions)
+            .appendTo('.items');
+            
+        });
+        $('#post_categoriesWrapper :checkbox').removeAttr('checked');
     });
 }
 

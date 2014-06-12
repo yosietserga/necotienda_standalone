@@ -1,1 +1,0 @@
-<li class="nt-editable storeTitleWidget<?php echo ($settings['class']) ? ' '. $settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>"><h1><?php echo $heading_title; ?></h1><div class="clear"></div><br /></li>

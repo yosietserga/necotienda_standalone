@@ -1,1 +1,0 @@
-<ul class="aside widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul>

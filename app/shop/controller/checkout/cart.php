@@ -314,6 +314,7 @@ class ControllerCheckoutCart extends Controller {
                         session_address_var: 'shipping_address_id'
                     },
                     function(data) {
+                        hasAddress = 1;
                         var confirmShippingAddress = $('#shipping_address_1').val()  +' '+ $('#payment_street').val() +', '+ $('#shipping_city').val() +'.';
                         $('#confirmShippingAddress').text(confirmShippingAddress);
                     });";
@@ -328,6 +329,7 @@ class ControllerCheckoutCart extends Controller {
                         session_address_var: 'shipping_address_id'
                     },
                     function(data) {
+                        hasAddress = 1;
                         $('#payment_country_id').val($('#shipping_country_id').val());
                         $('#payment_zone_id').val($('#shipping_zone_id').val());
                         $('#payment_street').val($('#shipping_street').val());
@@ -351,6 +353,10 @@ class ControllerCheckoutCart extends Controller {
             
             $('select[name=\'payment_zone_id\']').load('" . Url::createUrl("account/register/zone") . "&country_id=" . $address['country_id'] . "&zone_id=" . $address['zone_id'] . "');
             $('select[name=\'shipping_zone_id\']').load('" . Url::createUrl("account/register/zone") . "&country_id=" . $address['country_id'] . "&zone_id=" . $address['zone_id'] . "');
+            
+            var shippingMethods = " . (int) $this->data['shipping_methods'] . ";
+            var isLogged = " . (int) $this->customer->isLogged() . ";
+            var hasAddress = " . (int) $this->data['shipping_country_id'] . ";
             $('#contentWrapper').ntWizard({
                 next:function(data) {
                     var stepId = $('.neco-wizard-step-active').attr('id');
@@ -361,12 +367,10 @@ class ControllerCheckoutCart extends Controller {
                         $(this).find('.neco-wizard-next').text('" . $this->data['button_checkout'] . "');
                         return false;
                     }
+                            
                     
                     if (stepId == 'necoWizardStep_2') {
                         var error = false;
-                        var shippingMethods = " . (int) $this->data['shipping_methods'] . ";
-                        var isLogged = " . (int) $this->customer->isLogged() . ";
-                        var hasAddress = " . (int) $this->data['shipping_country_id'] . ";
                         
                         $(data.element).find('.neco-wizard-prev').show();
                         
@@ -455,9 +459,7 @@ class ControllerCheckoutCart extends Controller {
                             });
                                 
                             if (!error) { " . $script . " }
-                        }
-                        
-                        if (isLogged && !hasAddress) {
+                        } else if (isLogged && !hasAddress) {
                             $('#shipping_country_id,#shipping_zone_id,#shipping_city,#shipping_street,#shipping_postcode,#shipping_address_1').each(function(e){
                                 var value    = !!$(this).val();
                                 var required = $(this).attr('required');
@@ -473,7 +475,7 @@ class ControllerCheckoutCart extends Controller {
                                         .find('.neco-form-error')
                                         .attr({'title':'Debes rellenar este campo con la informaci\u00F3n correspondiente'});
                                 }
-                                    
+                                
                                 var pattern = new RegExp(/.[\"\\\/\{\}\[\]\+']/i);
                                 if (pattern.test($(this).val()) && !error) {
                                     error = true;
@@ -485,18 +487,17 @@ class ControllerCheckoutCart extends Controller {
                                         .attr({'title':'No se permiten ninguno de estos caracteres especiales [\"#$&/?\'+}{\u003C\u003E] en este campo'});
                                     top = $(this).offset().top;
                                 }
-                                    
+                                
                                 if ($(this).hasClass('neco-input-error') && !error) {
                                     error = true;
                                     $(\"#tempError\").remove();
                                     msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Hay errores en el formulario, por favor revise y corr\u00EDjalos todos para poder continuar');
                                 }                        
                             });
-                                
+                            
                             if (!error) { " . $script . " }
-                        }
-                        
-                        if(isLogged && hasAddress && !shippingMethods) {
+                                
+                        } else if(isLogged && hasAddress && !shippingMethods) {
                             $.post('" . Url::createUrl("checkout/confirm") . "',
                                 $('#orderForm').serialize(),
                                 function(){
@@ -506,12 +507,10 @@ class ControllerCheckoutCart extends Controller {
                         }
                         return error;
                     } 
+                            
                     
                     if (stepId == 'necoWizardStep_3') {
                         var error = false;
-                        var shippingMethods = " . (int) $this->data['shipping_methods'] . ";
-                        var hasAddress = " . (int) $this->data['shipping_country_id'] . ";
-                        var isLogged = " . (int) $this->customer->isLogged() . ";
                         
                         /* si hay metodos de envios configurados y debe seleccionar uno */
                         if (shippingMethods) {
@@ -523,7 +522,7 @@ class ControllerCheckoutCart extends Controller {
                             }
                         }
                         
-                        if (!isLogged || !hasAddress) {
+                        if (isLogged === 0 || hasAddress === 0) {
                             $('#shipping_country_id,#shipping_zone_id,#shipping_city,#shipping_street,#shipping_postcode,#shipping_address_1').each(function(e){
                                 var value    = !!$(this).val();
                                 var required = $(this).attr('required');
@@ -558,7 +557,7 @@ class ControllerCheckoutCart extends Controller {
                                     msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Hay errores en el formulario, por favor revise y corr\u00EDjalos todos para poder continuar');
                                 }                        
                             });
-                                
+                            
                             if (!error) { " . $scriptShippingAddress . " }
                         } else {
                             $.post('" . Url::createUrl("checkout/confirm") . "',
@@ -574,7 +573,7 @@ class ControllerCheckoutCart extends Controller {
                     if (stepId == 'necoWizardStep_4') {
                         var error = false;
                         var isLogged = " . (int) $this->customer->isLogged() . ";
-                        if (isLogged==0) {
+                        if (isLogged > 0) {
                             $.post('" . Url::createUrl("checkout/confirm") . "',
                                 $('#orderForm').serialize(),
                                 function(){

@@ -9,6 +9,31 @@ $(function(){
     $('img.nt-lazyload').lazyload();
 });
 
+function addToCart(url) {
+    overlayHelper();
+    $('#overlayTemp span.content').html('<img src="assets/images/loader.gif" alt="Cargando..." />');
+    
+    $.post(
+        url,
+        $('#productForm').serialize(),
+        function (response) {
+            var data = $.parseJSON(response);
+
+            if (typeof data.html == 'undefined') {
+                data.html += '<div class="clear"></div>';
+                data.html += '<div class="message success">Se ha agregado el producto al carrito satisfactoriamente.</div>';
+                data.html += '<div class="clear"></div>';
+                data.html += '<a class="button" href="'+ data.urlToCart +'">Ir Al Carrito de Compra</a>';
+            }
+            $('#overlayTemp span.content').html(data.html);
+        }
+    );
+    
+    resizeLightbox(840);
+    $(window).on('resize',function(e){
+        resizeLightbox(840);
+    });
+}
 
 function resizeLightbox(width,height) {
     if (typeof width == 'undefined') {

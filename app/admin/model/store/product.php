@@ -1224,4 +1224,28 @@ class ModelStoreProduct extends Model {
         }
     }
 
+    public function getSeoTitleRating() {
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_description` WHERE CHAR_LENGTH(`name`) NOT BETWEEN 8 AND 55");
+        $query2 = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_description`");
+        return $query->row['total'] * 100 / $query2->row['total'];
+    }
+
+    public function getSeoMetaDescripionRating() {
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_description` WHERE CHAR_LENGTH(`meta_description`) NOT BETWEEN 8 AND 155");
+        $query2 = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_description`");
+        return $query->row['total'] * 100 / $query2->row['total'];
+    }
+
+    public function getSeoDescriptionRating() {
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_description` WHERE CHAR_LENGTH(`description`) < 150");
+        $query2 = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_description`");
+        return $query->row['total'] * 100 / $query2->row['total'];
+    }
+
+    public function getSeoUrlRating() {
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product` WHERE product_id NOT IN (SELECT `object_id` FROM `" . DB_PREFIX . "url_alias` WHERE `object_type` = 'product')");
+        $query2 = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product`");
+        return $query->row['total'] * 100 / $query2->row['total'];
+    }
+
 }

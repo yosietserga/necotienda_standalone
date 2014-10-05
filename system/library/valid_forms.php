@@ -151,7 +151,7 @@ final class ValidateForms {
            return $this->esValido;
     }
     
-    public function custom($strErrorMsg,$strCampo="",$strPattern="/^\D+$/")  {
+    public function custom($strCampo="",$strPattern="/^\D+$/")  {
         if (preg_match($strPattern,$strCampo)) {
             return $this->esValido;
         }
@@ -296,6 +296,10 @@ final class ValidateForms {
         $this->esValido = false;
         $this->error .= '- El RIF debe tener el formato J000000000\n';
     }
+}
+
+
+   }
 }
 
 

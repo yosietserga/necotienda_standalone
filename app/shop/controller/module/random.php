@@ -140,9 +140,7 @@ class ControllerModuleRandom extends Controller {
             );
         }
 
-        if (!$this->config->get('config_customer_price')) {
-            $this->data['display_price'] = true;
-        } elseif ($this->customer->isLogged()) {
+        if (!$this->config->get('config_customer_price') || $this->customer->isLogged()) {
             $this->data['display_price'] = true;
         } else {
             $this->data['display_price'] = false;
@@ -162,7 +160,9 @@ class ControllerModuleRandom extends Controller {
             if (!file_exists(DIR_IMAGE . $v['image']))
                 $json['results'][$k]['image'] = HTTP_IMAGE . "no_image.jpg";
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
-            $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+            if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode'=='store')) {
+                $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+            }
         }
 
         if (!count($json['results']))

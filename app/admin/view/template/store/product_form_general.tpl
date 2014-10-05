@@ -30,7 +30,7 @@
     <div class="row necoDescription">
         <label><?php echo $Language->get('entry_description'); ?></label>
         <div class="clear"></div>
-        <textarea title="<?php echo $Language->get('help_description'); ?>" name="product_description[<?php echo $language['language_id']; ?>][description]" id="description_<?php echo $language['language_id']; ?>_description"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] : ''; ?></textarea>
+        <textarea class="description" title="<?php echo $Language->get('help_description'); ?>" name="product_description[<?php echo $language['language_id']; ?>][description]" id="description_<?php echo $language['language_id']; ?>_description"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] : ''; ?></textarea>
     </div>
     
     <div class="clear"></div>

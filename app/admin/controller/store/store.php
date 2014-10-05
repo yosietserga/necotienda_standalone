@@ -257,16 +257,22 @@ class ControllerStoreStore extends Controller {
                     $('#gridPreloader').hide();
                     $('#gridWrapper').html(data).show();
                 }
+            });
+            $('#formFilter').on('keyup', function(e){
+                var code = e.keyCode || e.which;
+                if (code == 13){
+                    $('#formFilter').ntForm('submit');
+                }
             });");
 
         $this->scripts = array_merge($this->scripts, $scripts);
 
         $this->template = 'store/store_list.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
-
+        
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+        
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
@@ -653,14 +659,18 @@ class ControllerStoreStore extends Controller {
 
         foreach ($this->data['languages'] as $language) {
             $scripts[] = array('id' => 'Language' . $language["language_id"], 'method' => 'ready', 'script' =>
-                "CKEDITOR.replace('description" . $language["language_id"] . "', {
+                "var editor". $language["language_id"] ." = CKEDITOR.replace('description" . $language["language_id"] . "', {
                 	filebrowserBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserImageBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserFlashBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserImageUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "'
-                });");
+                });
+                editor". $language["language_id"] .".products = '". $json['products'] ."';
+                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css';
+                editor". $language["language_id"] .".config.allowedContent = true;
+                    ");
         }
 
         $scripts[] = array('id' => 'Functions', 'method' => 'function', 'script' =>
@@ -706,10 +716,11 @@ class ControllerStoreStore extends Controller {
         $this->javascripts = array_merge($javascripts, $this->javascripts);
 
         $this->template = 'store/store_form.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+        
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+        
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
@@ -763,108 +774,108 @@ class ControllerStoreStore extends Controller {
             'comentarios',
             'reviews',
         );
-        
+
         if (in_array($prohibited, $this->request->getPost('config_folder'))) {
             $this->error['warning'] = $this->language->get('error_folder_name_prohibited');
         }
-        
+
         if (!$this->user->hasPermission('modify', 'setting/setting')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         /*
-        if (!$this->request->post['config_name']) {
-            $this->error['name'] = $this->language->get('error_name');
-        }
+          if (!$this->request->post['config_name']) {
+          $this->error['name'] = $this->language->get('error_name');
+          }
 
 
-        if (!$this->validate_form->esRif($this->request->post['config_rif'])) {
-            $this->error['rif'] = $this->language->get('error_rif');
-        }
+          if (!$this->validate_form->esRif($this->request->post['config_rif'])) {
+          $this->error['rif'] = $this->language->get('error_rif');
+          }
 
 
-        if (!$this->request->post['config_url']) {
-            $this->error['url'] = $this->language->get('error_url');
-        }
+          if (!$this->request->post['config_url']) {
+          $this->error['url'] = $this->language->get('error_url');
+          }
 
 
-        if (!$this->request->post['config_owner']) {
-            $this->error['owner'] = $this->language->get('error_owner');
-        }
+          if (!$this->request->post['config_owner']) {
+          $this->error['owner'] = $this->language->get('error_owner');
+          }
 
 
-        if (!$this->request->post['config_address']) {
-            $this->error['address'] = $this->language->get('error_address');
-        }
+          if (!$this->request->post['config_address']) {
+          $this->error['address'] = $this->language->get('error_address');
+          }
 
-        $pattern = '/^[A-Z0-9._%-]+@[A-Z0-9][A-Z0-9.-]{0,61}[A-Z0-9]\.[A-Z]{2,6}$/i';
-
-
-        if ((strlen(utf8_decode($this->request->post['config_email'])) > 96) || (!preg_match($pattern, $this->request->post['config_email']))) {
-            $this->error['email'] = $this->language->get('error_email');
-        }
+          $pattern = '/^[A-Z0-9._%-]+@[A-Z0-9][A-Z0-9.-]{0,61}[A-Z0-9]\.[A-Z]{2,6}$/i';
 
 
-        if (!$this->request->post['config_image_thumb_width'] || !$this->request->post['config_image_thumb_height']) {
-            $this->error['image_thumb'] = $this->language->get('error_image_thumb');
-        }
+          if ((strlen(utf8_decode($this->request->post['config_email'])) > 96) || (!preg_match($pattern, $this->request->post['config_email']))) {
+          $this->error['email'] = $this->language->get('error_email');
+          }
 
-        if (!$this->request->post['config_image_popup_width'] || !$this->request->post['config_image_popup_height']) {
-            $this->error['image_popup'] = $this->language->get('error_image_popup');
-        }
 
-        if (!$this->request->post['config_image_category_width'] || !$this->request->post['config_image_category_height']) {
-            $this->error['image_category'] = $this->language->get('error_image_category');
-        }
+          if (!$this->request->post['config_image_thumb_width'] || !$this->request->post['config_image_thumb_height']) {
+          $this->error['image_thumb'] = $this->language->get('error_image_thumb');
+          }
 
-        if (!$this->request->post['config_image_post_width'] || !$this->request->post['config_image_post_height']) {
-            $this->error['image_post'] = $this->language->get('error_image_post');
-        }
+          if (!$this->request->post['config_image_popup_width'] || !$this->request->post['config_image_popup_height']) {
+          $this->error['image_popup'] = $this->language->get('error_image_popup');
+          }
 
-        if (!$this->request->post['config_image_product_width'] || !$this->request->post['config_image_product_height']) {
-            $this->error['image_product'] = $this->language->get('error_image_product');
-        }
+          if (!$this->request->post['config_image_category_width'] || !$this->request->post['config_image_category_height']) {
+          $this->error['image_category'] = $this->language->get('error_image_category');
+          }
 
-        if (!$this->request->post['config_image_additional_width'] || !$this->request->post['config_image_additional_height']) {
-            $this->error['image_additional'] = $this->language->get('error_image_additional');
-        }
+          if (!$this->request->post['config_image_post_width'] || !$this->request->post['config_image_post_height']) {
+          $this->error['image_post'] = $this->language->get('error_image_post');
+          }
 
-        if (!$this->request->post['config_image_related_width'] || !$this->request->post['config_image_related_height']) {
-            $this->error['image_related'] = $this->language->get('error_image_related');
-        }
+          if (!$this->request->post['config_image_product_width'] || !$this->request->post['config_image_product_height']) {
+          $this->error['image_product'] = $this->language->get('error_image_product');
+          }
 
-        if (!$this->request->post['config_image_cart_width'] || !$this->request->post['config_image_cart_height']) {
-            $this->error['image_cart'] = $this->language->get('error_image_cart');
-        }
+          if (!$this->request->post['config_image_additional_width'] || !$this->request->post['config_image_additional_height']) {
+          $this->error['image_additional'] = $this->language->get('error_image_additional');
+          }
 
-        if (!$this->request->post['config_error_filename']) {
-            $this->error['error_filename'] = $this->language->get('error_error_filename');
-        }
+          if (!$this->request->post['config_image_related_width'] || !$this->request->post['config_image_related_height']) {
+          $this->error['image_related'] = $this->language->get('error_image_related');
+          }
 
-        if (isset($this->request->post['config_smtp_port']) && !$this->validate_form->esSoloNumeros($this->request->post['config_smtp_port'], $this->language->get('entry_smtp_port'))) {
-            $this->error['smtp_port'] = $this->language->get('error_smtp_port');
-        }
+          if (!$this->request->post['config_image_cart_width'] || !$this->request->post['config_image_cart_height']) {
+          $this->error['image_cart'] = $this->language->get('error_image_cart');
+          }
 
-        if (isset($this->request->post['config_pop3_port']) && !$this->validate_form->esSoloNumeros($this->request->post['config_pop3_port'], $this->language->get('entry_pop3_port'))) {
-            $this->error['pop3_port'] = $this->language->get('error_pop3_port');
-        }
+          if (!$this->request->post['config_error_filename']) {
+          $this->error['error_filename'] = $this->language->get('error_error_filename');
+          }
 
-        if (isset($this->request->post['config_smtp_timeout']) && !$this->validate_form->esSoloNumeros($this->request->post['config_smtp_timeout'], $this->language->get('entry_smtp_timeout'))) {
-            $this->error['smtp_timeout'] = $this->language->get('error_smtp_timeout');
-        }
+          if (isset($this->request->post['config_smtp_port']) && !$this->validate_form->esSoloNumeros($this->request->post['config_smtp_port'], $this->language->get('entry_smtp_port'))) {
+          $this->error['smtp_port'] = $this->language->get('error_smtp_port');
+          }
 
-        if (isset($this->request->post['config_smtp_from_email']) && !$this->validate_form->validEmail($this->request->post['config_smtp_from_email'], $this->language->get('entry_smtp_from_email'))) {
-            $this->error['smtp_from_email'] = $this->language->get('error_smtp_from_email');
-        }
+          if (isset($this->request->post['config_pop3_port']) && !$this->validate_form->esSoloNumeros($this->request->post['config_pop3_port'], $this->language->get('entry_pop3_port'))) {
+          $this->error['pop3_port'] = $this->language->get('error_pop3_port');
+          }
 
-        if (isset($this->request->post['config_replyto_email']) && !$this->validate_form->validEmail($this->request->post['config_replyto_email'], $this->language->get('entry_replyto_email'))) {
-            $this->error['replyto_email'] = $this->language->get('error_replyto_email');
-        }
+          if (isset($this->request->post['config_smtp_timeout']) && !$this->validate_form->esSoloNumeros($this->request->post['config_smtp_timeout'], $this->language->get('entry_smtp_timeout'))) {
+          $this->error['smtp_timeout'] = $this->language->get('error_smtp_timeout');
+          }
 
-        if (isset($this->request->post['config_bounce_email']) && !$this->validate_form->validEmail($this->request->post['config_bounce_email'], $this->language->get('entry_bounce_email'))) {
-            $this->error['bounce_email'] = $this->language->get('error_bounce_email');
-        }
-        */
+          if (isset($this->request->post['config_smtp_from_email']) && !$this->validate_form->validEmail($this->request->post['config_smtp_from_email'], $this->language->get('entry_smtp_from_email'))) {
+          $this->error['smtp_from_email'] = $this->language->get('error_smtp_from_email');
+          }
+
+          if (isset($this->request->post['config_replyto_email']) && !$this->validate_form->validEmail($this->request->post['config_replyto_email'], $this->language->get('entry_replyto_email'))) {
+          $this->error['replyto_email'] = $this->language->get('error_replyto_email');
+          }
+
+          if (isset($this->request->post['config_bounce_email']) && !$this->validate_form->validEmail($this->request->post['config_bounce_email'], $this->language->get('entry_bounce_email'))) {
+          $this->error['bounce_email'] = $this->language->get('error_bounce_email');
+          }
+         */
         if (!$this->error) {
             return true;
         } else {

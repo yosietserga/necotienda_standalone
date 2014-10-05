@@ -14,8 +14,8 @@
       <table id="list">
         <thead>
           <tr>
-            <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);"></th>
-            <th><?php echo $Language->get('column_image'); ?></th>
+            <th class="hideOnTablet hideOnMobile"><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);"></th>
+            <th class="hideOnTablet"><?php echo $Language->get('column_image'); ?></th>
             <th><?php if ($sort == 'pd.name') { ?>
               <a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_name'); ?></a>
               <?php } else { ?>
@@ -36,7 +36,7 @@
               <?php } else { ?>
               <a onclick="$('#gridWrapper').load('<?php echo $sort_status; ?>')"><?php echo $Language->get('column_status'); ?></a>
               <?php } ?></th>
-            <th><?php if ($sort == 'p.sort_order') { ?>
+            <th class="hideOnTablet hideOnMobile"><?php if ($sort == 'p.sort_order') { ?>
               <a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')" class="<?php echo strtolower($order); ?>"><?php echo $Language->get('column_sort_order'); ?></a>
               <?php } else { ?>
               <a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"><?php echo $Language->get('column_sort_order'); ?></a>
@@ -48,22 +48,22 @@
           <?php  print_r($results); if ($products) { ?>
           <?php foreach ($products as $product) { ?>
           <tr id="tr_<?php echo $product['product_id']; ?>">
-            <td style="text-align: center;">
+            <td class="hideOnMobile hideOnTablet" style="text-align: center;">
               <input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>"<?php if ($product['selected']) { ?> checked="checked"<?php } ?> />
             </td>
-            <td class="center"><img alt="<?php echo $product['name']; ?>" src="<?php echo $product['image']; ?>" style="padding: 1px; border: 1px solid #000;" /></td>
-            <td><?php echo $product['name']; ?></td>
-            <td><?php echo $product['model']; ?></td>
-            <td><?php if ($product['quantity'] <= 0) { ?>
+            <td data-title="<?php echo $Language->get('column_image'); ?>" class="center hideOnMobile"><img alt="<?php echo $product['name']; ?>" src="<?php echo $product['image']; ?>" style="padding: 1px; border: 1px solid #000;" /></td>
+            <td data-title="<?php echo $Language->get('column_name'); ?>"><?php echo $product['name']; ?></td>
+            <td data-title="<?php echo $Language->get('column_model'); ?>"><?php echo $product['model']; ?></td>
+            <td data-title="<?php echo $Language->get('column_quantity'); ?>"><?php if ($product['quantity'] <= 0) { ?>
               <span style="color: #FF0000;"><?php echo $product['quantity']; ?></span>
               <?php } elseif ($product['quantity'] <= 5) { ?>
               <span style="color: #FFA500;"><?php echo $product['quantity']; ?></span>
               <?php } else { ?>
               <span style="color: #008000;"><?php echo $product['quantity']; ?></span>
               <?php } ?></td>
-            <td><?php echo $product['status']; ?></td>
-            <td class="move"><img src="image/move.png" alt="Posicionar" title="Posicionar" style="text-align:center" /></td>
-            <td><?php foreach ($product['action'] as $action) { ?>
+            <td data-title="<?php echo $Language->get('column_status'); ?>"><?php echo $product['status']; ?></td>
+            <td class="move hideOnMobile hideOnTablet"><img src="image/move.png" alt="Posicionar" title="Posicionar" style="text-align:center" /></td>
+            <td data-title="<?php echo $Language->get('column_action'); ?>"><?php foreach ($product['action'] as $action) { ?>
             <?php 
                 if ($action['action'] == "activate") { 
                     $jsfunction = "activate(". $product['product_id'] .")";

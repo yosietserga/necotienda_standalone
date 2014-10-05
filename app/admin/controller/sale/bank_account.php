@@ -1,4 +1,5 @@
-<?php    
+<?php
+
 /**
  * ControllerSaleBank
  * 
@@ -11,169 +12,169 @@
  */
 class ControllerSaleBankAccount extends Controller {
 
-	private $error = array();
-  
-  	/**
-  	 * ControllerSaleBank::index()
-  	 * 
+    private $error = array();
+
+    /**
+     * ControllerSaleBank::index()
+     * 
      * @see Load
      * @see Document
      * @see Language
      * @see getList
-  	 * @return void 
-  	 */
-  	public function index() {
-		$this->document->title = $this->language->get('heading_title');
-		$this->getList();
-  	}
-  
-  	/**
-  	 * ControllerSaleBank::insert()
-  	 * 
+     * @return void 
+     */
+    public function index() {
+        $this->document->title = $this->language->get('heading_title');
+        $this->getList();
+    }
+
+    /**
+     * ControllerSaleBank::insert()
+     * 
      * @see Load
      * @see Document
      * @see Language
      * @see Session
      * @see Redirect
      * @see getForm
-  	 * @return void 
-  	 */
-  	public function insert() {
-		$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-      	  	$bank_account_id = $this->modelBank_account->add($this->request->post);
-			$this->session->set('success',$this->language->get('text_success'));
+     * @return void 
+     */
+    public function insert() {
+        $this->document->title = $this->language->get('heading_title');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $bank_account_id = $this->modelBank_account->add($this->request->post);
+            $this->session->set('success', $this->language->get('text_success'));
             if ($this->request->post['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('sale/bank_account/update',array('bank_account_id'=>$bank_account_id))); 
+                $this->redirect(Url::createAdminUrl('sale/bank_account/update', array('bank_account_id' => $bank_account_id)));
             } elseif ($this->request->post['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('sale/bank_account/insert')); 
+                $this->redirect(Url::createAdminUrl('sale/bank_account/insert'));
             } else {
-                $this->redirect(Url::createAdminUrl('sale/bank_account')); 
+                $this->redirect(Url::createAdminUrl('sale/bank_account'));
             }
-		}
-    	$this->getForm();
-  	} 
-   
-  	/**
-  	 * ControllerSaleBank::update()
-  	 * 
+        }
+        $this->getForm();
+    }
+
+    /**
+     * ControllerSaleBank::update()
+     * 
      * @see Load
      * @see Document
      * @see Language
      * @see Session
      * @see Redirect
      * @see getForm
-  	 * @return void 
-  	 */
-  	public function update() {
-		$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelBank_account->update($this->request->get['bank_account_id'], $this->request->post);
-			$this->session->set('success',$this->language->get('text_success'));
+     * @return void 
+     */
+    public function update() {
+        $this->document->title = $this->language->get('heading_title');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->modelBank_account->update($this->request->get['bank_account_id'], $this->request->post);
+            $this->session->set('success', $this->language->get('text_success'));
             if ($this->request->post['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('sale/bank_account/update',array('bank_account_id'=>$this->request->get['bank_account_id']))); 
+                $this->redirect(Url::createAdminUrl('sale/bank_account/update', array('bank_account_id' => $this->request->get['bank_account_id'])));
             } elseif ($this->request->post['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('store/categorysale/bank_account/insert')); 
+                $this->redirect(Url::createAdminUrl('store/categorysale/bank_account/insert'));
             } else {
-                $this->redirect(Url::createAdminUrl('sale/bank_account')); 
+                $this->redirect(Url::createAdminUrl('sale/bank_account'));
             }
-		}
-    	$this->getForm();
-  	}   
+        }
+        $this->getForm();
+    }
 
     /**
      * ControllerSaleBank::delete()
      * elimina un objeto
      * @return boolean
      * */
-     public function delete() {
+    public function delete() {
         $this->load->auto('sale/bank_account');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelBank_account->delete($id);
             }
-		} else {
+        } else {
             $this->modelBank_account->delete($_GET['id']);
-		}
-     }
-    
-  	/**
-  	 * ControllerMarketingNewsletter::copy()
+        }
+    }
+
+    /**
+     * ControllerMarketingNewsletter::copy()
      * duplicar un objeto
-  	 * @return boolean
-  	 */
-  	public function copy() {
+     * @return boolean
+     */
+    public function copy() {
         $this->load->auto('sale/bank_account');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelBank_account->copy($id);
             }
-		} else {
+        } else {
             $this->modelBank_account->copy($_GET['id']);
-		}
+        }
         echo 1;
-  	}
-      
-  	/**
-  	 * ControllerSaleBank::getById()
-  	 * 
+    }
+
+    /**
+     * ControllerSaleBank::getById()
+     * 
      * @see Load
      * @see Document
      * @see Language
      * @see Session
      * @see Response
      * @see Request     
-  	 * @return void 
-  	 */
-  	private function getList() {
-  		$this->document->breadcrumbs = array();
+     * @return void 
+     */
+    private function getList() {
+        $this->document->breadcrumbs = array();
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('common/home'),
+            'text' => $this->language->get('text_home'),
+            'separator' => false
+        );
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('sale/bank_account') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-		
-		$this->data['insert'] = Url::createAdminUrl('sale/bank_account/insert') . $url;
-		$this->data['delete'] = Url::createAdminUrl('sale/bank_account/delete') . $url;
-	
-		$this->data['heading_title'] = $this->language->get('heading_title');
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('sale/bank_account') . $url,
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
 
-		$this->data['button_insert'] = $this->language->get('button_insert');
-		$this->data['button_delete'] = $this->language->get('button_delete');
+        $this->data['insert'] = Url::createAdminUrl('sale/bank_account/insert') . $url;
+        $this->data['delete'] = Url::createAdminUrl('sale/bank_account/delete') . $url;
 
-		if ($this->session->has('error')) {
-			$this->data['error_warning'] = $this->session->get('error');
-			
-			$this->session->clear('error');
-		} elseif (isset($this->error['warning'])) {
-			$this->data['error_warning'] = $this->error['warning'];
-		} else {
-			$this->data['error_warning'] = '';
-		}
-		
-		if ($this->session->has('success')) {
-			$this->data['success'] = $this->session->get('success');
-		
-			$this->session->clear('success');
-		} else {
-			$this->data['success'] = '';
-		}
-		
-        
+        $this->data['heading_title'] = $this->language->get('heading_title');
+
+        $this->data['button_insert'] = $this->language->get('button_insert');
+        $this->data['button_delete'] = $this->language->get('button_delete');
+
+        if ($this->session->has('error')) {
+            $this->data['error_warning'] = $this->session->get('error');
+
+            $this->session->clear('error');
+        } elseif (isset($this->error['warning'])) {
+            $this->data['error_warning'] = $this->error['warning'];
+        } else {
+            $this->data['error_warning'] = '';
+        }
+
+        if ($this->session->has('success')) {
+            $this->data['success'] = $this->session->get('success');
+
+            $this->session->clear('success');
+        } else {
+            $this->data['success'] = '';
+        }
+
+
         // SCRIPTS
-        $scripts[] = array('id'=>'bank_accountList','method'=>'function','script'=>
+        $scripts[] = array('id' => 'bank_accountList', 'method' => 'function', 'script' =>
             "function activate(e) {    
             	$.ajax({
             	   'type':'get',
                    'dataType':'json',
-                   'url':'".Url::createAdminUrl("sale/bank_account/activate")."&id=' + e,
+                   'url':'" . Url::createAdminUrl("sale/bank_account/activate") . "&id=' + e,
                    'success': function(data) {
                         if (data > 0) {
                             $(\"#img_\" + e).attr('src','image/good.png');
@@ -186,8 +187,8 @@ class ControllerSaleBankAccount extends Controller {
             function copy(e) {
                 $('#gridWrapper').hide();
                 $('#gridPreloader').show();
-                $.getJSON('".Url::createAdminUrl("sale/bank_account/copy")."&id=' + e, function(data) {
-                    $('#gridWrapper').load('". Url::createAdminUrl("sale/bank_account/grid") ."',function(response){
+                $.getJSON('" . Url::createAdminUrl("sale/bank_account/copy") . "&id=' + e, function(data) {
+                    $('#gridWrapper').load('" . Url::createAdminUrl("sale/bank_account/grid") . "',function(response){
                         $('#gridPreloader').hide();
                         $('#gridWrapper').show();
                     });
@@ -196,7 +197,7 @@ class ControllerSaleBankAccount extends Controller {
             function eliminar(e) {
                 if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
-                	$.getJSON('". Url::createAdminUrl("sale/bank_account/delete") ."',{
+                	$.getJSON('" . Url::createAdminUrl("sale/bank_account/delete") . "',{
                         id:e
                     });
                 }
@@ -205,8 +206,8 @@ class ControllerSaleBankAccount extends Controller {
             function copyAll() {
                 $('#gridWrapper').hide();
                 $('#gridPreloader').show();
-                $.post('". Url::createAdminUrl("sale/bank_account/copy") ."',$('#form').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("sale/bank_account/grid") ."',function(){
+                $.post('" . Url::createAdminUrl("sale/bank_account/copy") . "',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('" . Url::createAdminUrl("sale/bank_account/grid") . "',function(){
                         $('#gridWrapper').show();
                         $('#gridPreloader').hide();
                     });
@@ -217,8 +218,8 @@ class ControllerSaleBankAccount extends Controller {
                 if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
-                    $.post('". Url::createAdminUrl("sale/bank_account/delete") ."',$('#form').serialize(),function(){
-                        $('#gridWrapper').load('". Url::createAdminUrl("sale/bank_account/grid") ."',function(){
+                    $.post('" . Url::createAdminUrl("sale/bank_account/delete") . "',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('" . Url::createAdminUrl("sale/bank_account/grid") . "',function(){
                             $('#gridWrapper').show();
                             $('#gridPreloader').hide();
                         });
@@ -226,8 +227,8 @@ class ControllerSaleBankAccount extends Controller {
                 }
                 return false;
             }");
-        $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
-            "$('#gridWrapper').load('". Url::createAdminUrl("sale/bank_account/grid") ."',function(e){
+        $scripts[] = array('id' => 'sortable', 'method' => 'ready', 'script' =>
+            "$('#gridWrapper').load('" . Url::createAdminUrl("sale/bank_account/grid") . "',function(e){
                 $('#gridPreloader').hide();
             });
                 
@@ -236,7 +237,7 @@ class ControllerSaleBankAccount extends Controller {
                 ajax:true,
                 type:'get',
                 dataType:'html',
-                url:'". Url::createAdminUrl("sale/bank_account/grid") ."',
+                url:'" . Url::createAdminUrl("sale/bank_account/grid") . "',
                 beforeSend:function(){
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
@@ -245,233 +246,256 @@ class ControllerSaleBankAccount extends Controller {
                     $('#gridPreloader').hide();
                     $('#gridWrapper').html(data).show();
                 }
+            });
+            $('#formFilter').on('keyup', function(e){
+                var code = e.keyCode || e.which;
+                if (code == 13){
+                    $('#formFilter').ntForm('submit');
+                }
             });");
-             
-        $this->scripts = array_merge($this->scripts,$scripts);
-        
-		$this->template = 'sale/bank_account_list.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-  	}
-    
-  	/**
-  	 * ControllerSaleBank::grid()
-  	 * 
+
+        $this->scripts = array_merge($this->scripts, $scripts);
+
+        $this->template = 'sale/bank_account_list.tpl';
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+
+    /**
+     * ControllerSaleBank::grid()
+     * 
      * @see Load
      * @see Document
      * @see Language
      * @see Session
      * @see Response
      * @see Request     
-  	 * @return void 
-  	 */
-  	public function grid() {
-		$filter_number = isset($this->request->get['filter_number']) ? $this->request->get['filter_number'] : null;
-		$filter_bank = isset($this->request->get['filter_bank']) ? $this->request->get['filter_bank'] : null;
-		$filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
-		$filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
-		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
-		$limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
-		
-		$url = '';
-			
-		if (isset($this->request->get['filter_number'])) { $url .= '&filter_number=' . $this->request->get['filter_number']; } 
-		if (isset($this->request->get['filter_bank'])) { $url .= '&filter_bank=' . $this->request->get['filter_bank']; } 
-		if (isset($this->request->get['filter_date_start'])) { $url .= '&filter_date_start=' . $this->request->get['filter_date_start']; }
-		if (isset($this->request->get['filter_date_end'])) { $url .= '&filter_date_end=' . $this->request->get['filter_date_end']; }
-		if (isset($this->request->get['page'])) { $url .= '&page=' . $this->request->get['page']; }
-		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
-		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
-		if (!empty($this->request->get['limit'])) { $url .= '&limit=' . $this->request->get['limit']; }
+     * @return void 
+     */
+    public function grid() {
+        $filter_number = isset($this->request->get['filter_number']) ? $this->request->get['filter_number'] : null;
+        $filter_bank = isset($this->request->get['filter_bank']) ? $this->request->get['filter_bank'] : null;
+        $filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
+        $filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
+        $page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+        $sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
+        $order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
+        $limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
 
-		$this->data['bank_accounts'] = array();
+        $url = '';
 
-		$data = array(
-			'filter_number'              => $filter_number, 
-			'filter_bank'              => $filter_bank, 
-			'filter_date_start'        => $filter_date_start,
-			'filter_date_end'          => $filter_date_end,
-			'sort'                     => $sort,
-			'order'                    => $order,
-			'start'                    => ($page - 1) * $limit,
-			'limit'                    => $limit
-		);
-		
-		$bank_account_total = $this->modelBank_account->getTotalAll($data);
-		$results = $this->modelBank_account->getAll($data);
-        
-    	foreach ($results as $result) {
-			$action = array(
-                'edit'      => array(
-                        'action'  => 'edit',
-                        'text'  => $this->language->get('text_edit'),
-                        'href'  =>Url::createAdminUrl('sale/bank_account/update') . '&bank_account_id=' . $result['bank_account_id'] . $url,
-                        'img'   => 'edit.png'
+        if (isset($this->request->get['filter_number'])) {
+            $url .= '&filter_number=' . $this->request->get['filter_number'];
+        }
+        if (isset($this->request->get['filter_bank'])) {
+            $url .= '&filter_bank=' . $this->request->get['filter_bank'];
+        }
+        if (isset($this->request->get['filter_date_start'])) {
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        }
+        if (isset($this->request->get['filter_date_end'])) {
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        }
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+        if (!empty($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
+
+        $this->data['bank_accounts'] = array();
+
+        $data = array(
+            'filter_number' => $filter_number,
+            'filter_bank' => $filter_bank,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $limit,
+            'limit' => $limit
+        );
+
+        $bank_account_total = $this->modelBank_account->getTotalAll($data);
+        $results = $this->modelBank_account->getAll($data);
+
+        foreach ($results as $result) {
+            $action = array(
+                'edit' => array(
+                    'action' => 'edit',
+                    'text' => $this->language->get('text_edit'),
+                    'href' => Url::createAdminUrl('sale/bank_account/update') . '&bank_account_id=' . $result['bank_account_id'] . $url,
+                    'img' => 'edit.png'
                 ),
-                'delete'    => array(
-                        'action'  => 'delete',
-                        'text'  => $this->language->get('text_delete'),
-                        'href'  =>'',
-                        'img'   => 'delete.png'
+                'delete' => array(
+                    'action' => 'delete',
+                    'text' => $this->language->get('text_delete'),
+                    'href' => '',
+                    'img' => 'delete.png'
                 )
             );
-            
-			$this->data['bank_accounts'][] = array(
-				'bank_account_id'    => $result['bank_account_id'],
-				'bank_id'    => $result['bank_id'],
-				'bank'    => $result['bank'],
-				'number'           => $result['number'],
-				'date_added'     => date('d-m-Y', strtotime($result['dateAdded'])),
-				'selected'       => isset($this->request->post['selected']) && in_array($result['bank_account_id'], $this->request->post['selected']),
-				'action'         => $action
-			);
-		}
-        
-		$this->data['text_enabled'] = $this->language->get('text_enabled');
-		$this->data['text_disabled'] = $this->language->get('text_disabled');
-		$this->data['text_yes'] = $this->language->get('text_yes');
-		$this->data['text_no'] = $this->language->get('text_no');		
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
 
-		$this->data['column_number'] = $this->language->get('column_number');
-		$this->data['column_bank']    = $this->language->get('column_bank');
-		$this->data['column_date_added'] = $this->language->get('column_date_added');
-		$this->data['column_action'] = $this->language->get('column_action');		
+            $this->data['bank_accounts'][] = array(
+                'bank_account_id' => $result['bank_account_id'],
+                'bank_id' => $result['bank_id'],
+                'bank' => $result['bank'],
+                'number' => $result['number'],
+                'date_added' => date('d-m-Y', strtotime($result['dateAdded'])),
+                'selected' => isset($this->request->post['selected']) && in_array($result['bank_account_id'], $this->request->post['selected']),
+                'action' => $action
+            );
+        }
 
-		$pagination = new Pagination();
-		$pagination->ajax = true;
-		$pagination->ajaxTarget = "gridWrapper";
-		$pagination->total = $bank_account_total;
-		$pagination->page = $page;
-		$pagination->limit = $limit;
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = Url::createAdminUrl('sale/bank_account/grid') . $url . '&page={page}';
-			
-		$this->data['pagination'] = $pagination->render();
+        $this->data['text_enabled'] = $this->language->get('text_enabled');
+        $this->data['text_disabled'] = $this->language->get('text_disabled');
+        $this->data['text_yes'] = $this->language->get('text_yes');
+        $this->data['text_no'] = $this->language->get('text_no');
+        $this->data['text_no_results'] = $this->language->get('text_no_results');
 
-		$this->template = 'sale/bank_account_grid.tpl';
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-  	}
-    
-  	/**
-  	 * ControllerSaleBank::getForm()
-  	 * 
+        $this->data['column_number'] = $this->language->get('column_number');
+        $this->data['column_bank'] = $this->language->get('column_bank');
+        $this->data['column_date_added'] = $this->language->get('column_date_added');
+        $this->data['column_action'] = $this->language->get('column_action');
+
+        $pagination = new Pagination();
+        $pagination->ajax = true;
+        $pagination->ajaxTarget = "gridWrapper";
+        $pagination->total = $bank_account_total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+        $pagination->text = $this->language->get('text_pagination');
+        $pagination->url = Url::createAdminUrl('sale/bank_account/grid') . $url . '&page={page}';
+
+        $this->data['pagination'] = $pagination->render();
+
+        $this->template = 'sale/bank_account_grid.tpl';
+
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+
+    /**
+     * ControllerSaleBank::getForm()
+     * 
      * @see Load
      * @see Document
      * @see Language
      * @see Session
      * @see Response
      * @see Request     
-  	 * @return void 
-  	 */
-  	private function getForm() {
- 		$this->data['error_warning']     = ($this->error['warning']) ? $this->error['warning'] : '';
- 		$this->data['error_accountholder']   = ($this->error['accountholder']) ? $this->error['accountholder'] : '';
- 		$this->data['error_number']   = ($this->error['number']) ? $this->error['number'] : '';
- 		$this->data['error_email']   = ($this->error['email']) ? $this->error['email'] : '';
- 		$this->data['error_rif']   = ($this->error['rif']) ? $this->error['rif'] : '';
- 		$this->data['error_type']   = ($this->error['type']) ? $this->error['type'] : '';
- 		$this->data['error_bank']   = ($this->error['bank']) ? $this->error['bank'] : '';
-        
-  		$this->document->breadcrumbs = array();
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('sale/bank_account') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
+     * @return void 
+     */
+    private function getForm() {
+        $this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
+        $this->data['error_accountholder'] = ($this->error['accountholder']) ? $this->error['accountholder'] : '';
+        $this->data['error_number'] = ($this->error['number']) ? $this->error['number'] : '';
+        $this->data['error_email'] = ($this->error['email']) ? $this->error['email'] : '';
+        $this->data['error_rif'] = ($this->error['rif']) ? $this->error['rif'] : '';
+        $this->data['error_type'] = ($this->error['type']) ? $this->error['type'] : '';
+        $this->data['error_bank'] = ($this->error['bank']) ? $this->error['bank'] : '';
 
-		if (!isset($this->request->get['bank_account_id'])) {
-			$this->data['action'] = Url::createAdminUrl('sale/bank_account/insert') . $url;
-		} else {
-			$this->data['action'] = Url::createAdminUrl('sale/bank_account/update') . '&bank_account_id=' . $this->request->get['bank_account_id'] . $url;
-		}
-		  
-    	$this->data['cancel'] = Url::createAdminUrl('sale/bank_account') . $url;
+        $this->document->breadcrumbs = array();
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('common/home'),
+            'text' => $this->language->get('text_home'),
+            'separator' => false
+        );
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('sale/bank_account') . $url,
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
 
-    	if (isset($this->request->get['bank_account_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$bank_account_info = $this->modelBank_account->getById($this->request->get['bank_account_id']);
-    	}
-        
-		$this->data['stores'] = $this->modelStore->getAll();
-		$this->data['_stores'] = $this->modelBank_account->getStores($this->request->get['bank_account_id']);
-        
-        $this->setvar('accountholder',$bank_account_info,'');
-        $this->setvar('number',$bank_account_info,'');
-        $this->setvar('email',$bank_account_info,'');
-        $this->setvar('rif',$bank_account_info,'');
-        $this->setvar('type',$bank_account_info,'');
-        $this->setvar('bank_id',$bank_account_info,'');
-        
+        if (!isset($this->request->get['bank_account_id'])) {
+            $this->data['action'] = Url::createAdminUrl('sale/bank_account/insert') . $url;
+        } else {
+            $this->data['action'] = Url::createAdminUrl('sale/bank_account/update') . '&bank_account_id=' . $this->request->get['bank_account_id'] . $url;
+        }
+
+        $this->data['cancel'] = Url::createAdminUrl('sale/bank_account') . $url;
+
+        if (isset($this->request->get['bank_account_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+            $bank_account_info = $this->modelBank_account->getById($this->request->get['bank_account_id']);
+        }
+
+        $this->data['stores'] = $this->modelStore->getAll();
+        $this->data['_stores'] = $this->modelBank_account->getStores($this->request->get['bank_account_id']);
+
+        $this->setvar('accountholder', $bank_account_info, '');
+        $this->setvar('number', $bank_account_info, '');
+        $this->setvar('email', $bank_account_info, '');
+        $this->setvar('rif', $bank_account_info, '');
+        $this->setvar('type', $bank_account_info, '');
+        $this->setvar('bank_id', $bank_account_info, '');
+
         $this->data['banks'] = $this->modelBank->getAll();
-        
-		$this->template = 'sale/bank_account_form.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-	}
-	
-  	/**
-  	 * ControllerSaleBank::validateForm()
-  	 * 
-  	 * @return
-  	 */
-  	private function validateForm() {
-    	if (!$this->user->hasPermission('modify', 'sale/bank_account')) {
-      		$this->error['warning'] = $this->language->get('error_permission');
-    	}
 
-    	if (empty($this->request->post['accountholder'])) {
-      		$this->error['accountholder'] = $this->language->get('error_accountholder');
-    	}
+        $this->template = 'sale/bank_account_form.tpl';
         
-    	if (empty($this->request->post['number'])) {
-      		$this->error['number'] = $this->language->get('error_number');
-    	}
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
         
-    	if (empty($this->request->post['email'])) {
-      		$this->error['email'] = $this->language->get('error_email');
-    	}
-        
-    	if (empty($this->request->post['rif'])) {
-      		$this->error['rif'] = $this->language->get('error_rif');
-    	}
-        
-		if (!$this->error) {
-	  		return true;
-		} else {
-	  		return false;
-		}
-  	}    
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
 
-  	/**
-  	 * ControllerSaleBank::validateDelete()
-  	 * 
-  	 * @return
-  	 */
-  	private function validateDelete() {
-    	if (!$this->user->hasPermission('delete', 'sale/bank_account')) {
-      		$this->error['warning'] = $this->language->get('error_permission');
-    	}	
-	  	 
-		if (!$this->error) {
-	  		return true;
-		} else {
-	  		return false;
-		}  
-  	}
+    /**
+     * ControllerSaleBank::validateForm()
+     * 
+     * @return
+     */
+    private function validateForm() {
+        if (!$this->user->hasPermission('modify', 'sale/bank_account')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        if (empty($this->request->post['accountholder'])) {
+            $this->error['accountholder'] = $this->language->get('error_accountholder');
+        }
+
+        if (empty($this->request->post['number'])) {
+            $this->error['number'] = $this->language->get('error_number');
+        }
+
+        if (empty($this->request->post['email'])) {
+            $this->error['email'] = $this->language->get('error_email');
+        }
+
+        if (empty($this->request->post['rif'])) {
+            $this->error['rif'] = $this->language->get('error_rif');
+        }
+
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * ControllerSaleBank::validateDelete()
+     * 
+     * @return
+     */
+    private function validateDelete() {
+        if (!$this->user->hasPermission('delete', 'sale/bank_account')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

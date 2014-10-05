@@ -4,7 +4,7 @@
         <?php foreach ($products as $product) { ?>
             <a title="<?php echo $product['name']; ?>" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" class="thumb"><img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" /></a>
             <a title="<?php echo $product['name']; ?>" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>"><?php echo $product['name']; ?></a>
-            <?php if ($display_price) { ?>
+            <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
                 <?php if (!$product['special']) { ?>
                     <p class="price"><?php echo $product['price']; ?></p>
                 <?php } else { ?>

@@ -26,6 +26,7 @@
             <li>
                 <a href="<?php echo $Url::createUrl('store/product',array('product_id'=>$product['product_id'])); ?>" class="thumb" title="<?php echo $product['name']; ?>">
                     <img src="<?php echo HTTP_IMAGE; ?>data/preloader.gif" data-original="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" class="nt-lazyload" />
+                    <a href="#" class="quick_view_button" onclick="return quickView('product', '<?php echo $product['product_id']; ?>');"><?php echo $Language->get('text_quick_view'); ?></a>
                 </a>
                 <div class="product_info nt-hoverdir">
                     <?php echo $product['sticker']; ?>
@@ -39,8 +40,10 @@
 
                     <div class="description"><?php echo $product['description']; ?></div>
 
+                    <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
                     <p class="price"><?php echo $product['price']; ?></p>
-
+                    <?php } ?>
+            
                     <a title="<?php echo $button_see_product; ?>" class="button_see_small" href="<?php echo $Url::createUrl('store/product',array('product_id'=>$product['product_id'])); ?>"><?php echo $Language->get('button_see_product'); ?></a>
 
                     <?php if ($Config->get('config_store_mode')=='store') { ?>

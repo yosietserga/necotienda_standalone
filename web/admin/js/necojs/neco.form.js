@@ -46,13 +46,19 @@
                     data.container = data.element.find('.' + settings.classname);
                     
                 });
+            },
+            submit: function() {
+                $(this).find('.submit').trigger('click');
+            },
+            cancel: function() {
+                $(this).find('.cancel').trigger('click');
             }
         }
 
         var helpers = {
             _create: function() {                
                 var formCounter = 0;
-                if (data.element.length == 0) { //all forms in the document
+                if (data.element.length == 0) {
                     data.element = $('body');
                     $(data.element).find('form').each(function() {
                         $(this).attr('id','neco-form-' + formCounter).addClass('neco-form');
@@ -71,7 +77,7 @@
                         });
                     });
                 } 
-                if (data.element.length > 0 && $(data.element).get(0).tagName != 'FORM') { //all forms inside the tag dom
+                if (data.element.length > 0 && $(data.element).get(0).tagName != 'FORM') {
                     if ($(data.element).find('form')) {
                         $(data.element).find('form').each(function() {
                             $(this).attr('id','neco-form-' + formCounter).addClass('neco-form');
@@ -91,7 +97,7 @@
                         });
                     }
                 } 
-                if ($(data.element).get(0).tagName == 'FORM') { //is a form, so let´s get it
+                if ($(data.element).get(0).tagName == 'FORM') {
                     $(data.element).addClass('neco-form').attr({
                         action:settings.url,
                         method:settings.type,
@@ -111,14 +117,26 @@
                 $(data.element).find('label').each(function() {
                     $(this).addClass('neco-label');
                 });
+
+                data.submitButton = $(document.createElement('a'))
+                    .addClass('button')
+                    .addClass('submit')
+                    .text('Aceptar')
+                    .attr({
+                        title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
+                    })
+                    .css({'display':'none'})
+                    .appendTo(data.element);
                 
-                submitButton = $(document.createElement('a')).addClass('button').text('Aceptar').attr({
-                    title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
-                }).css({'display':'none'}).appendTo(data.element);
-                
-                cancelButton = $(document.createElement('a')).addClass('button').text('Cancelar').attr({
-                    title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
-                }).css({'display':'none'}).appendTo(data.element);
+                cancelButton = $(document.createElement('a'))
+                    .addClass('button')
+                    .addClass('cancel')
+                    .text('Cancelar')
+                    .attr({
+                        title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
+                    })
+                    .css({'display':'none'})
+                    .appendTo(data.element);
                 
                 $(cancelButton).on('click',function(e){
                    $(data.element).find('input').each(function(){
@@ -142,7 +160,7 @@
                 			if(left > 200) {
                 				 $(unlockButton).fadeOut(function(data){
          				             $(unlockButton).remove();
-                        			 $(submitButton).fadeIn();
+                        			 $(data.submitButton).fadeIn();
                         			 $(cancelButton).fadeIn();
                 				 });
                 			} else {
@@ -152,10 +170,10 @@
                         }
               		});
                 } else {
-                    if (settings.submitButton) $(submitButton).fadeIn();
+                    if (settings.submitButton) $(data.submitButton).fadeIn();
                     if (settings.cancelButton) $(cancelButton).fadeIn();
                 }
-                $(submitButton).on('click',function(e){
+                $(data.submitButton).on('click',function(e){
                     var msg;
                     var error = false;
                     var top, input;
@@ -267,9 +285,12 @@
                     settings.success(data);
                 }
             },
-            _submit: function() {
-                if (typeof settings.mouseleave == "function") {
-                    settings.mouseleave(this,data.li);
+            _submit: function(data) {
+                $(data.element).submit();
+                if (typeof settings.submit == "function") {
+                    settings.submit(data);
+                } else {
+                    $(data.submitButton).trigger('click');$(data.element).submit();
                 }
             }
         }
@@ -334,7 +355,7 @@
             _create: function() {
                 data.type = $(data.element).attr('type');
                 if (data.type=='hidden') return;
-                $(data.element).addClass('neco-input-' + data.type); // add class to the form field
+                $(data.element).addClass('neco-input-' + data.type);
                 $('*', data.element).change(helpers._change);
                 $('*', data.element).keydown(helpers._keydown);
                 
@@ -354,7 +375,7 @@
                 if (data.type == 'rif') {
                     settings.pattern = /\b[JGVE]-[0-9]{8}-[0-9]{1}\b/i;
                     settings.help = "Por favor ingrese su numero de cedula, RIF Natural o RIF de su empresa";
-                    settings.tip = "Si eres una persona y no posees RIF, ingresa tu número de cédula con un cero (0) al final";
+                    settings.tip = "Si eres una persona y no posees RIF, ingresa tu nï¿½mero de cï¿½dula con un cero (0) al final";
                     $(data.element).mask("a-99999999-9",{placeholder:" "});
                     data.element.on('change',function(event){
                         data.error = helpers.checkPattern();
@@ -484,7 +505,6 @@
                         currentValue = $(data.element).val();
                         $(data.element).val(currentValue + '@').focus();
                     });
-                    //TODO: comprobar servidor y direccion de correo contra php en necoyoad
                     data.element.on('change',function(event){
                         data.error = helpers.checkPattern();
                         
@@ -500,7 +520,6 @@
                 
                 if (data.type == 'necoNumber') {
                     settings.pattern = /^\d+$/i;
-                    //TODO: agregar botones para sumar o restar
                     data.element.on('change',function(event){
                         data.error = helpers.checkPattern();
                         if (!data.error) {
@@ -561,7 +580,7 @@
                     });
                     
                     if ($(data.element).data('confirm') == 1) {
-                        confirmPwd = $(document.createElement('div')).addClass('property').html('<label for="confirm">Confirmar Contrase\u00F1a:</label><input type="password" name="confirm" id="confirm" value="" autocomplete="off" required="true" title="Vuelva a escribir la contrase&ntilde;a" /><span class="neco-input-required">*</span><a class="neco-form-help"><span class="neco-tooltip">Por favor repita la contrase\u00F1a</span></a><a class="neco-form-tip"><span class="neco-tooltip">Debe repetir la contrase\u00F1a para confirmar que la haya escrito bien</span></a><a class="neco-form-error" title="No hay errores en el campo"><span class="neco-tooltip"></span></a>');
+                        confirmPwd = $(document.createElement('div')).addClass('property').html('<label for="confirm">Confirmar Contrase\u00F1a:</label><input type="password" name="confirm" id="confirm" value="" autocomplete="off" required="true" title="Vuelva a escribir la contrase&ntilde;a" /><span class="neco-input-required">*</span><a class="neco-form-help"><i class="fa faquestion-circle"></i><span class="neco-tooltip">Por favor repita la contrase\u00F1a</span></a><a class="neco-form-tip"><span class="neco-tooltip">Debe repetir la contrase\u00F1a para confirmar que la haya escrito bien</span></a><a class="neco-form-error" title="No hay errores en el campo"><span class="neco-tooltip"></span></a>');
                     
                         $(data.element).parent('div').after(confirmPwd);
                     

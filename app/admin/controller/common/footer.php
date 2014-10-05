@@ -1,17 +1,19 @@
 <?php
-class ControllerCommonFooter extends Controller {   
-	protected function index() {
-		$this->load->language('common/footer');
-		
-		$this->data['text_footer'] = sprintf($this->language->get('text_footer'), VERSION);
-		
-		$this->id       = 'footer';
-		$this->template = 'common/footer.tpl';
-	
+
+class ControllerCommonFooter extends Controller {
+
+    protected function index() {
+        $this->load->language('common/footer');
+
+        $this->data['text_footer'] = sprintf($this->language->get('text_footer'), VERSION);
+
+        $this->id = 'footer';
+        $this->template = 'common/footer.tpl';
+
         // SCRIPTS
-        $scripts[] = array('id'=>'footer','method'=>'function','script'=>
+        $scripts[] = array('id' => 'footer', 'method' => 'function', 'script' =>
             "function sendFeedback() {
-                $.post('". Url::createAdminUrl("support/feedback") ."',$('#feedbackForm').serialize(),function(response) {
+                $.post('" . Url::createAdminUrl("support/feedback") . "',$('#feedbackForm').serialize(),function(response) {
                     var data = $.parseJSON(response);
                     if (data.success) {
                         alert(data.msg);
@@ -36,7 +38,7 @@ class ControllerCommonFooter extends Controller {
                 window.onbeforeunload = null;
                 $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
             }");
-        $scripts[] = array('id'=>'footerScripts','method'=>'ready','script'=>
+        $scripts[] = array('id' => 'footerScripts', 'method' => 'ready', 'script' =>
             "$('.trends').fancybox({
         		maxWidth	: 640,
         		maxHeight	: 600,
@@ -115,14 +117,15 @@ class ControllerCommonFooter extends Controller {
                     $(this).removeClass('hidded').addClass('show').text('[ Ocultar ]');
                 }
             });");
-        $this->scripts = array_merge($this->scripts,$scripts);
-        
+        $this->scripts = array_merge($this->scripts, $scripts);
+
         $r_output = $w_output = $s_output = $f_output = "";
         $script_keys = array();
-        foreach ($this->scripts as $k => $script) { 
-            if (in_array($script['id'],$script_keys)) continue;
+        foreach ($this->scripts as $k => $script) {
+            if (in_array($script['id'], $script_keys))
+                continue;
             $script_keys[$k] = $script['id'];
-            switch($script['method']) {
+            switch ($script['method']) {
                 case 'ready':
                 default:
                     $r_output .= $script['script'];
@@ -134,21 +137,30 @@ class ControllerCommonFooter extends Controller {
                     $f_output .= $script['script'];
                     break;
             }
-        } 
-        
-        $this->data['scripts'] = ($r_output) ? "<script>$(function() { ".$r_output." });</script>" : "";
-        $this->data['scripts'] .= ($w_output) ? "<script>window.onload = function() { ".$w_output."  };</script>" : "";
-        $this->data['scripts'] .= ($f_output) ? "<script>".$f_output."</script>" : "";
-        
-        // javascript files
-        
+        }
+
         $javascripts[] = "js/vendor/jquery-ui.min.js";
         $javascripts[] = "js/plugins.js";
         $javascripts[] = "js/main.js";
         $javascripts[] = "js/necojs/neco.form.js";
+        $javascripts[] = "js/vendor/jquery.sidr.min.js";
+
+        $this->javascripts = array_merge($javascripts, $this->javascripts);
         
-        $this->data['javascripts'] = $this->javascripts = array_merge($javascripts,$this->javascripts);
-        
-    	$this->render();
-  	}
+        foreach ($this->javascripts as $key => $js) {
+            $f_output .= file_get_contents($js);
+            unset($this->javascripts[$key]);
+        }
+        $f_output = str_replace('{%token%}', $this->request->getQuery('token'), $f_output);
+        $f_output = str_replace('{%http_home%}', HTTP_HOME, $f_output);
+
+        $this->data['scripts'] = ($r_output) ? "<script>$(function() { " . $r_output . " });</script>" : "";
+        $this->data['scripts'] .= ($w_output) ? "<script>window.onload = function() { " . $w_output . "  };</script>" : "";
+        $this->data['scripts'] .= ($f_output) ? "<script>" . $f_output . "</script>" : "";
+
+        $this->data['javascripts'] = $this->javascripts = array_merge($javascripts, $this->javascripts);
+
+        $this->render();
+    }
+
 }

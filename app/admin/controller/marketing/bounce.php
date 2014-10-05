@@ -98,21 +98,21 @@ class ControllerMarketingBounce extends Controller {
 
 
         $this->template = 'marketing/bounce_test.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
     public function test() {
-        
+
         $this->load->language('marketing/bounce');
-        
+
         $this->document->title = $this->language->get('heading_title');
         $this->load->auto('marketing/bounce');
-        
+
         // TODO: pasar variables a por post y procesar formulario con ajax
         $bounce_details = array(
             'config_bounce_server' => $this->request->get['config_bounce_server'],
@@ -122,7 +122,7 @@ class ControllerMarketingBounce extends Controller {
             'config_bounce_agree_delete' => isset($this->request->get['config_bounce_agree_delete']) ? $this->request->get['config_bounce_agree_delete'] : '',
             'config_save_settings' => isset($this->request->get['savebounceserverdetails']) ? $this->request->get['savebounceserverdetails'] : '',
         );
-        
+
         $strCombinations = '';
         if (!empty($this->request->get['extra_mail_nossl'])) {
             $strCombinations .= '/' . $this->request->get['extra_mail_nossl'];
@@ -140,9 +140,9 @@ class ControllerMarketingBounce extends Controller {
         if (empty($bounce_details['bounce_extrasettings'])) {
             $bounce_details['bounce_extrasettings'] = $this->generateConnectionCombinations();
         }
-        
+
         $this->session->set('bounce_details', $bounce_details);
-        
+
         $port = false;
         if (strpos($bounce_details['config_bounce_server'], ':') !== false) {
             list($server, $port) = explode(':', $bounce_details['config_bounce_server']);
@@ -156,9 +156,9 @@ class ControllerMarketingBounce extends Controller {
                 $port = 110;
             }
         }
-        
+
         $fp = @fsockopen($server, $port, $errno, $errstr, 10);
-        
+
         if (!$fp) {
             $this->data['title'] = 'Error Al Conectar...';
             $this->data['msg'] = 'Se ha producido un error en la conexi&oacute;n al servidor. Por favor verifique los datos e intente de nuevo';
@@ -188,18 +188,18 @@ class ControllerMarketingBounce extends Controller {
                         . '80: \'' . HTTP_HOME . 'image/progressbg_green.gif\''
                         . '}'
                         . '});';
-        
+
                 $count = $this->GetEmailCount();
                 $this->Logout();
             }
         }
-        
+
 
         $this->template = 'marketing/bounce_test.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+        
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
         
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
@@ -316,5 +316,8 @@ class ControllerMarketingBounce extends Controller {
 
         return array_unique($combinations);
     }
+
+}
+}
 
 }

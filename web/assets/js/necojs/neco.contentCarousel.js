@@ -142,15 +142,23 @@
                         data.output+="<article>";
                         data.output+="<div>";
                         
-                        if (item.link && item.title) {
+                        if (item.link) {
                             data.output+="<a href='" + item.link + "'>";
+                        }
+                        if (item.title) {
                             data.output+="<h2>" + item.title + "</h2>";
+                        }
+                        if (item.link) {
                             data.output+="</a>";
                         }
                     
-                        if (item.link && item.thumb) {
+                        if (item.link) {
                             data.output+="<a href='" + item.link + "'>";
+                        }
+                        if (item.thumb) {
                             data.output+="<img class='" + settings.image.classname + "' src='" + item.thumb + "' alt='" + item.title + "' title='" + item.title + "' width='" + settings.image.width + "' height='" + settings.image.height + "' />";
+                        }
+                        if (item.link) {
                             data.output+="</a>";
                         }
                     

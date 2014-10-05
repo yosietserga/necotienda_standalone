@@ -1,78 +1,101 @@
-<!DOCTYPE html><!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]--><!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]--><!--[if IE 8]><html class="no-js lt-ie9"> <![endif]--><!--[if gt IE 8]><!--><html class="no-js"> <!--<![endif]-->
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <![endif]-->
+<!-- Consider adding a manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <!--<![endif]-->
 <head>
-    <meta charset="utf-8">
+    <meta charset="<?php echo ($Language->get('charset')) ? $Language->get('charset') : 'utf-8'; ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
     <title><?php echo $title; ?></title>
+    
     <?php if (!empty($keywords)) { ?><meta name="keywords" content="<?php echo $keywords; ?>"><?php } ?>
         
     <?php if (!empty($description)) { ?><meta name="description" content="<?php echo $description; ?>"><?php } ?>
         
-    <base href="<?php echo $base; ?>">
-    <?php if (!empty($icon)) { ?><link href="<?php echo $icon; ?>" rel="icon"><?php } ?>
-    <link href="http://www.necotienda.com/assets/images/data/favicon.png" rel="icon" />
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="apple-touch-icon-144x144-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="image/mobile/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="image/mobile/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon-precomposed" href="image/mobile/apple-touch-icon.png" />
-    <link rel="shortcut icon" href="image/apple-touch-icon.png" />
-    <link rel="apple-touch-startup-image" media="(max-device-width: 480px) and not (-webkit-min-device-pixel-ratio: 2)" href="image/mobile/splash-320x460.png" />
-    <link rel="apple-touch-startup-image" media="(max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)" href="image/mobile/splash-640x920-retina.png" />
-    <link rel="apple-touch-startup-image" media="(min-device-width: 768px) and (orientation: portrait)" href="image/mobile/splash-768x1004.png" />
-    <link rel="apple-touch-startup-image" media="(min-device-width: 768px) and (orientation: landscape)" href="image/mobile/splash-1024x748.png" />
-    <link rel="apple-touch-startup-image" media="(min-device-width: 1536px) and (orientation: portrait)" href="image/mobile/splash-1536x2008-retina.png" />
-    <link rel="apple-touch-startup-image" media="(min-device-width: 2048px) and (orientation: landscape)" href="image/mobile/splash-2048x1496-retina.png" />
+    <base href="<?php echo HTTP_HOME; ?>">
     
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <?php if (!empty($icon)) { ?><link href="<?php echo $icon; ?>" rel="icon"><?php } ?>
+    
+    <link href="http://www.necotienda.org/assets/images/data/favicon.png" rel="icon" />
+    
     <meta name="HandheldFriendly" content="true" />   
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
-    <?php if (count($styles) > 0) foreach ($styles as $style) { ?>
+    <?php if ($css) { ?><style><?php echo $css; ?></style><?php } ?>
+    
+    <?php if (count($styles) > 0) { ?>
+        <?php foreach ($styles as $style) { ?>
+        <?php if (empty($style['href'])) continue; ?>
     <link rel="stylesheet" type="text/css" media="<?php echo $style['media']; ?>" href="<?php echo $style['href']; ?>" />
+        <?php } ?>
     <?php } ?>
-        
-    <script src="js/vendor/modernizr-2.6.1.min.js"></script>
-    <script src="js/vendor/jquery.min-1.8.1.js"></script>
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>
-        
-    <!--[if lt IE 9]>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-        
-    <?php if (!empty($javascripts) && is_array($javascripts)) foreach ($javascripts as $js) { ?>
-    <script type="text/javascript" src="<?php echo $js; ?>"></script>
-    <?php } ?>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>window.Modernizr || document.write('<script src="js/vendor/modernizr.js"><\/script>')</script>
+    <script>window.$ || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
 </head>
 <body>
 
-    <div class="container_24">
-    <?php if ($logged) { ?>
+<?php if ($logged) { ?>
     
     <!-- Top navigation bar -->
     <div id="topNav">
         <div class="fixed">
             <div class="wrapper">
-                <a id="header_logo" onclick="location = '<?php echo $home; ?>'"></a>
+                <a id="simple-menu" href="#sidr" style="margin:5px 10px;float:left;"><i class="fa fa-bars fa-2x" style="color:#fff"></i></a>
+                <a id="right-menu" href="#sidr-right" style="margin:5px 10px;float:right;"><i class="fa fa-bars fa-2x" style="color:#900"></i></a>
+                
                 <div class="userNav">
                     <ul>
-                        <li>
+                        <li class="hideOnMobile">
                             <a href="<?php echo $Url::createAdminUrl("setting/cache"); ?>" title="<?php echo $Language->get('text_delete_cache'); ?>">
-                                <img src="image/icons/topnav/smallBrush.png" alt="<?php echo $Language->get('text_delete_cache'); ?>" />
-                                <span><?php echo $Language->get('text_delete_cache'); ?></span>
+                                <span><i class="fa fa-trash-o fa-2x"></i></span>
+                                <span class="hideOnTablet"><?php echo $Language->get('text_delete_cache'); ?></span>
                             </a>
                         </li>
-                        <li class="dd"><img src="image/icons/topnav/register.png" alt="" /><span><?php echo $Language->get('text_create'); ?>  &darr;</span>
+                        <li>
+                            <a href="<?php echo $Url::createAdminUrl("sale/order"); ?>" title="<?php echo $Language->get('text_orders'); ?>">
+                                <span><i class="fa fa-bell fa-2x"></i></span>
+                                <span class="numberTop">3</span>
+                            </a>
+                        </li>
+                        <li class="dd hideOnMobile">
+                            <span><i class="fa fa-comments fa-2x"></i></span>
+                        </li>
+                        <li class="dd hideOnMobile">
+                            <span><i class="fa fa-shopping-cart fa-2x"></i></span>
                             <ul class="menu_body">
-                                <li><a href="<?php echo $Url::createAdminUrl('store/product/insert'); ?>" title="<?php echo $Language->get('text_product'); ?>"><?php echo $Language->get('text_product'); ?></a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('content/page/insert'); ?>" title="<?php echo $Language->get('text_page'); ?>"><?php echo $Language->get('text_page'); ?></a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('content/post/insert'); ?>" title="<?php echo $Language->get('text_post'); ?>"><?php echo $Language->get('text_post'); ?></a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('store/manufacturer/insert'); ?>" title="<?php echo $Language->get('text_manufacturer'); ?>"><?php echo $Language->get('text_manufacturer'); ?></a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('store/category/insert'); ?>" title="<?php echo $Language->get('text_product_category'); ?>"><?php echo $Language->get('text_product_category'); ?></a></li>
-                                <li><a href="<?php echo $Url::createAdminUrl('content/post_category/insert'); ?>" title="<?php echo $Language->get('text_post_category'); ?>"><?php echo $Language->get('text_post_category'); ?></a></li>
+                                <li><a href="<?php echo HTTP_CATALOG; ?>" title="<?php echo $Language->get('text_main_store'); ?>" target="_blank"><?php echo $Language->get('text_main_store'); ?></a></li>
+                                <?php foreach ($stores as $store) { ?>
+                                <li><a href="<?php echo str_replace("www",$store['folder'],HTTP_CATALOG); ?>" target="_blank" title="Ir a la tienda"><?php echo $store['name']; ?></a></li>
+                                <?php } ?>
                             </ul>
                         </li>
-                        <li>
-                            <a href="<?php echo $Url::createAdminUrl("sale/customer"); ?>" title="<?php echo $Language->get('text_customers'); ?>"><img src="image/icons/topnav/profile.png" alt="<?php echo $Language->get('text_customers'); ?>" />
+                        <li class="hideOnMobile">
+                            <a href="<?php echo $Url::createAdminUrl("setting/setting"); ?>" title="<?php echo $Language->get('tab_help'); ?>">
+                               <span><i class="fa fa-life-ring fa-2x"></i></span>
+                            </a>
+                        </li>
+                        <li class="hideOnMobile">
+                            <a href="<?php echo $Url::createAdminUrl("setting/setting"); ?>" title="<?php echo $Language->get('text_setting'); ?>">
+                               <span><i class="fa fa-cog fa-2x"></i></span>
+                            </a>
+                        </li>
+                        <li><a href="<?php echo $Url::createAdminUrl('common/logout'); ?>" title="<?php echo $Language->get('text_logout'); ?>">
+                                <img src="image/icons/topnav/logout.png" alt="<?php echo $Language->get('text_logout'); ?>" />
+                                <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('text_logout'); ?></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="fix"></div>
+            </div>
+        </div>
+    </div>
+    <?php } ?>tomer"); ?>" title="<?php echo $Language->get('text_customers'); ?>"><img src="image/icons/topnav/profile.png" alt="<?php echo $Language->get('text_customers'); ?>" />
                                 <span><?php echo $Language->get('text_customers'); ?></span>
                                 <?php if ($new_customers) { ?><span class="numberTop"><?php echo (int)$new_customers; ?></span><?php } ?>
                             </a>

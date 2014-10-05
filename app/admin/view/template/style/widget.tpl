@@ -1,340 +1,341 @@
 <?php echo $header; ?>
-<div class="clear"></div>
-<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-<?php if ($success) { ?><div class="grid_24"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
-<div class="grid_24" id="msg"></div>
-<div class="clear"></div>
-<div class="grid_24">
-    <div class="box">
-        <div class="header">
-            <h1>Widgets</h1>
-        </div>    
-          
-        <?php if ($stores) { ?>
-        <div class="clear"></div><br />
-        <div class="row">
-            <label><?php echo $Language->get('entry_store'); ?></label><br />
-            <select onchange="window.location = '<?php echo $Url::createAdminUrl("style/widget"); ?>&store_id='+ this.value">
-                <option value="0"<?php if ($store_id==0) { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_default'); ?></option>
-                <?php foreach ($stores as $store) { ?>
-                <option value="<?php echo $store['store_id']; ?>"<?php if ($store_id==$store['store_id']) { echo ' selected="selected"'; } ?>><?php echo $store['name']; ?></option>
-                <?php } ?>
-            </select>
-        </div> 
-        <?php } else { ?>
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
         <?php } ?>
-            
-        <div class="clear"></div><br />
-        
-        <div class="grid_5" id="widgetsWrapper">
-            <input type="text" id="qWidgets" placeholder="<?php echo $Language->get('text_filter'); ?>" />
-            <ul id="widgetsPanel" class="widget widgetsPanel">
-                <?php foreach ($modules as $module) { ?>
-                <li class="neco-widget" data-title="<?php echo $module['name']; ?>" data-widget="<?php echo $module['widget']; ?>">
-                    <b><?php echo $module['name']; ?></b><br />
-                    <?php echo $module['description']; ?>
-                </li>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+
+    <div class="grid_12">
+        <div class="box">
+            <div class="header">
+                <h1>Widgets</h1>
+                
+                <?php if ($stores) { ?>
+                <div class="pull-right">
+                    <label><?php echo $Language->get('entry_store'); ?></label><br />
+                    <select onchange="window.location = '<?php echo $Url::createAdminUrl("style/widget"); ?>&store_id='+ this.value">
+                        <option value="0"<?php if ($store_id==0) { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_default'); ?></option>
+                        <?php foreach ($stores as $store) { ?>
+                        <option value="<?php echo $store['store_id']; ?>"<?php if ($store_id==$store['store_id']) { echo ' selected="selected"'; } ?>><?php echo $store['name']; ?></option>
+                        <?php } ?>
+                    </select>
+                </div> 
                 <?php } ?>
-            </ul>
-        </div>
-        
-        <div class="grid_19" id="blocksWrapper">
-            <?php if ($hasHeader) { ?>
-            <div class="grid_24">
-                <h2>Cabecera (Header)</h2>
-                <ul id="widgetHeader" class="widgetWrapper" data-position="header">
-                <?php foreach ($widgets['header'] as $widget) { ?>
-                    <li class="widgetSet" id="<?php echo $widget['name']; ?>">
-                        <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
-                        <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
-                        <div class="attributes"></div>
-                        <div style="float:right">
-                            <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
-                            <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
-                        </div>
+            </div>    
+
+            <div class="clear"></div><br />
+
+            <div class="grid_3" id="widgetsWrapper" style="margin:0px !important;">
+                <input type="text" id="qWidgets" placeholder="<?php echo $Language->get('text_filter'); ?>" />
+                <ul id="widgetsPanel" class="widget widgetsPanel">
+                    <?php foreach ($modules as $module) { ?>
+                    <li class="neco-widget" data-title="<?php echo $module['name']; ?>" data-widget="<?php echo $module['widget']; ?>">
+                        <b><?php echo $module['name']; ?></b><br />
+                        <?php echo $module['description']; ?>
                     </li>
-                    <script type="text/javascript">
-                    $(function(){
-                        $.ajaxQueue({
-                            url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
-                            dataType: "json",
-                            data:{
-                                'extension':'<?php echo $widget['extension']; ?>',
-                                'position':'<?php echo $widget['position']; ?>',
-                                'name':'<?php echo $widget['name']; ?>'
-                            }
-                        }).done(function( data ) {
-                            $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
-                            $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
-                            $('.widgetWrapper').find("input, select, textarea, p")
-                            .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
-                                e.stopImmediatePropagation();
-                            });
-                            $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
-                                $('.saving').remove();
-                                $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
-                                $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
-                                $('#<?php echo $widget['name']; ?>_form').serialize(),
-                                function(respons){
+                    <?php } ?>
+                </ul>
+            </div>
+
+            <div class="grid_9" id="blocksWrapper" style="margin:0px !important;padding:0px !important;">
+                <div class="grid_11">
+                    <h2>Cabecera (Header)</h2>
+                    <ul id="widgetHeader" class="widgetWrapper" data-position="header">
+                    <?php foreach ($widgets['header'] as $widget) { ?>
+                        <li class="widgetSet" id="<?php echo $widget['name']; ?>">
+                            <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
+                            <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
+                            <div class="attributes"></div>
+                            <div style="float:right">
+                                <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
+                                <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
+                            </div>
+                        </li>
+                        <script type="text/javascript">
+                        $(function(){
+                            $.ajaxQueue({
+                                url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
+                                dataType: "json",
+                                data:{
+                                    'extension':'<?php echo $widget['extension']; ?>',
+                                    'position':'<?php echo $widget['position']; ?>',
+                                    'name':'<?php echo $widget['name']; ?>'
+                                }
+                            }).done(function( data ) {
+                                $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
+                                $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
+                                $('.widgetWrapper').find("input, select, textarea, p")
+                                .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
+                                    e.stopImmediatePropagation();
+                                });
+                                $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
                                     $('.saving').remove();
-                                    resp = $.parseJSON(respons);
+                                    $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
+                                    $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
+                                    $('#<?php echo $widget['name']; ?>_form').serialize(),
+                                    function(respons){
+                                        $('.saving').remove();
+                                        resp = $.parseJSON(respons);
+                                    });
                                 });
                             });
                         });
-                    });
-                    </script>
-                <?php } ?>
-                </ul>
-            </div>
-            <div class="clear"></div>
-            <?php } ?>
-        
-            <?php if ($hasFeaturedContent) { ?>
-            <div class="grid_23">
-                <h2>Contenido Destacado (Featured Content)</h2>
-                <ul id="widgetFeaturedContent" class="widgetWrapper" data-position="featuredContent">
-                <?php foreach ($widgets['featuredContent'] as $widget) { ?>
-                    <li class="widgetSet" id="<?php echo $widget['name']; ?>">
-                        <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
-                        <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
-                        <div class="attributes"></div>
-                        <div style="float:right">
-                            <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
-                            <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
-                        </div>
-                    </li>
-                    <script type="text/javascript">
-                    $(function(){
-                        $.ajaxQueue({
-                            url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
-                            dataType: "json",
-                            data:{
-                                'extension':'<?php echo $widget['extension']; ?>',
-                                'position':'<?php echo $widget['position']; ?>',
-                                'name':'<?php echo $widget['name']; ?>'
-                            }
-                        }).done(function( data ) {
-                            $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
-                            $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
-                            $('.widgetWrapper').find("input, select, textarea, p")
-                            .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
-                                e.stopImmediatePropagation();
-                            });
-                            $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
-                                $('.saving').remove();
-                                $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
-                                $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
-                                $('#<?php echo $widget['name']; ?>_form').serialize(),
-                                function(respons){
+                        </script>
+                    <?php } ?>
+                    </ul>
+                </div>
+                
+                <div class="clear"></div>
+                
+                <div class="grid_11">
+                    <h2>Contenido Destacado (Featured Content)</h2>
+                    <ul id="widgetFeaturedContent" class="widgetWrapper" data-position="featuredContent">
+                    <?php foreach ($widgets['featuredContent'] as $widget) { ?>
+                        <li class="widgetSet" id="<?php echo $widget['name']; ?>">
+                            <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
+                            <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
+                            <div class="attributes"></div>
+                            <div style="float:right">
+                                <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
+                                <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
+                            </div>
+                        </li>
+                        <script type="text/javascript">
+                        $(function(){
+                            $.ajaxQueue({
+                                url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
+                                dataType: "json",
+                                data:{
+                                    'extension':'<?php echo $widget['extension']; ?>',
+                                    'position':'<?php echo $widget['position']; ?>',
+                                    'name':'<?php echo $widget['name']; ?>'
+                                }
+                            }).done(function( data ) {
+                                $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
+                                $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
+                                $('.widgetWrapper').find("input, select, textarea, p")
+                                .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
+                                    e.stopImmediatePropagation();
+                                });
+                                $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
                                     $('.saving').remove();
-                                    resp = $.parseJSON(respons);
+                                    $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
+                                    $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
+                                    $('#<?php echo $widget['name']; ?>_form').serialize(),
+                                    function(respons){
+                                        $('.saving').remove();
+                                        resp = $.parseJSON(respons);
+                                    });
                                 });
                             });
                         });
-                    });
-                    </script>
-                <?php } ?>
-                </ul>
-            </div>
-            <div class="clear"></div>
-            <?php } ?>
-        
-            <?php if ($hasColumnLeft) { ?>
-            <div class="grid_6">
-                <h2>Columna Izquierda</h2>
-                <ul id="widgetColumnLeft" class="widgetWrapper" data-position="column_left">
-                <?php foreach ($widgets['column_left'] as $widget) { ?>
-                    <li class="widgetSet" id="<?php echo $widget['name']; ?>">
-                        <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
-                        <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
-                        <div class="attributes"></div>
-                        <div style="float:right">
-                            <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
-                            <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
-                        </div>
-                    </li>
-                    <script type="text/javascript">
-                    $(function(){
-                        $.ajaxQueue({
-                            url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
-                            dataType: "json",
-                            data:{
-                                'extension':'<?php echo $widget['extension']; ?>',
-                                'position':'<?php echo $widget['position']; ?>',
-                                'name':'<?php echo $widget['name']; ?>'
-                            }
-                        }).done(function( data ) {
-                            $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
-                            $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
-                            $('.widgetWrapper').find("input, select, textarea, p")
-                            .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
-                                e.stopImmediatePropagation();
-                            });
-                            $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
-                                $('.saving').remove();
-                                $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
-                                $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
-                                $('#<?php echo $widget['name']; ?>_form').serialize(),
-                                function(respons){
+                        </script>
+                    <?php } ?>
+                    </ul>
+                </div>
+                
+                <div class="clear"></div>
+                
+                <div class="grid_3">
+                    <h2>Columna Izquierda</h2>
+                    <ul id="widgetColumnLeft" class="widgetWrapper" data-position="column_left">
+                    <?php foreach ($widgets['column_left'] as $widget) { ?>
+                        <li class="widgetSet" id="<?php echo $widget['name']; ?>">
+                            <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
+                            <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
+                            <div class="attributes"></div>
+                            <div style="float:right">
+                                <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
+                                <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
+                            </div>
+                        </li>
+                        <script type="text/javascript">
+                        $(function(){
+                            $.ajaxQueue({
+                                url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
+                                dataType: "json",
+                                data:{
+                                    'extension':'<?php echo $widget['extension']; ?>',
+                                    'position':'<?php echo $widget['position']; ?>',
+                                    'name':'<?php echo $widget['name']; ?>'
+                                }
+                            }).done(function( data ) {
+                                $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
+                                $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
+                                $('.widgetWrapper').find("input, select, textarea, p")
+                                .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
+                                    e.stopImmediatePropagation();
+                                });
+                                $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
                                     $('.saving').remove();
-                                    resp = $.parseJSON(respons);
+                                    $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
+                                    $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
+                                    $('#<?php echo $widget['name']; ?>_form').serialize(),
+                                    function(respons){
+                                        $('.saving').remove();
+                                        resp = $.parseJSON(respons);
+                                    });
                                 });
                             });
                         });
-                    });
-                    </script>
-                <?php } ?>
-                </ul>
-            </div>
-            <?php } ?>
-            
-            <?php if ($hasMain) { ?>
-            <div class="grid_11" style="margin-left: 2%;">
-                <h2>Principal</h2>
-                <ul id="widgetMain" class="widgetWrapper" data-position="main">
-                <?php foreach ($widgets['main'] as $widget) { ?>
-                    <li class="widgetSet" id="<?php echo $widget['name']; ?>">
-                        <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
-                        <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
-                        <div class="attributes"></div>
-                        <div style="float:right">
-                            <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
-                            <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
-                        </div>
-                    </li>
-                    <script type="text/javascript">
-                    $(function(){
-                        $.ajaxQueue({
-                            url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
-                            dataType: "json",
-                            data:{
-                                'extension':'<?php echo $widget['extension']; ?>',
-                                'position':'<?php echo $widget['position']; ?>',
-                                'name':'<?php echo $widget['name']; ?>'
-                            }
-                        }).done(function( data ) {
-                            $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
-                            $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
-                            $('.widgetWrapper').find("input, select, textarea, p")
-                            .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
-                                e.stopImmediatePropagation();
-                            });
-                            $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
-                                $('.saving').remove();
-                                $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
-                                $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
-                                $('#<?php echo $widget['name']; ?>_form').serialize(),
-                                function(respons){
+                        </script>
+                    <?php } ?>
+                    </ul>
+                </div>
+                
+                <div class="grid_5" style="margin-left: 2%;">
+                    <h2>Principal</h2>
+                    <ul id="widgetMain" class="widgetWrapper" data-position="main">
+                    <?php foreach ($widgets['main'] as $widget) { ?>
+                        <li class="widgetSet" id="<?php echo $widget['name']; ?>">
+                            <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
+                            <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
+                            <div class="attributes"></div>
+                            <div style="float:right">
+                                <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
+                                <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
+                            </div>
+                        </li>
+                        <script type="text/javascript">
+                        $(function(){
+                            $.ajaxQueue({
+                                url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
+                                dataType: "json",
+                                data:{
+                                    'extension':'<?php echo $widget['extension']; ?>',
+                                    'position':'<?php echo $widget['position']; ?>',
+                                    'name':'<?php echo $widget['name']; ?>'
+                                }
+                            }).done(function( data ) {
+                                $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
+                                $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
+                                $('.widgetWrapper').find("input, select, textarea, p")
+                                .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
+                                    e.stopImmediatePropagation();
+                                });
+                                $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
                                     $('.saving').remove();
-                                    resp = $.parseJSON(respons);
+                                    $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
+                                    $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
+                                    $('#<?php echo $widget['name']; ?>_form').serialize(),
+                                    function(respons){
+                                        $('.saving').remove();
+                                        resp = $.parseJSON(respons);
+                                    });
                                 });
                             });
                         });
-                    });
-                    </script>
-                <?php } ?>
-                </ul>
-            </div>
-            <?php } ?>
-            
-            <?php if ($hasColumnRight) { ?>
-            <div class="grid_6" style="float: right;">
-                <h2>Columna Derecha</h2>
-                <ul id="widgetColumnRight" class="widgetWrapper" data-position="column_right">
-                <?php foreach ($widgets['column_right'] as $widget) { ?>
-                    <li class="widgetSet" id="<?php echo $widget['name']; ?>">
-                        <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
-                        <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
-                        <div class="attributes"></div>
-                        <div style="float:right">
-                            <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
-                            <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
-                        </div>
-                    </li>
-                    <script type="text/javascript">
-                    $(function(){
-                        $.ajaxQueue({
-                            url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
-                            dataType: "json",
-                            data:{
-                                'extension':'<?php echo $widget['extension']; ?>',
-                                'position':'<?php echo $widget['position']; ?>',
-                                'name':'<?php echo $widget['name']; ?>'
-                            }
-                        }).done(function( data ) {
-                            $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
-                            $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
-                            $('.widgetWrapper').find("input, select, textarea, p")
-                            .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
-                                e.stopImmediatePropagation();
-                            });
-                            $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
-                                $('.saving').remove();
-                                $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
-                                $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
-                                $('#<?php echo $widget['name']; ?>_form').serialize(),
-                                function(respons){
+                        </script>
+                    <?php } ?>
+                    </ul>
+                </div>
+                
+                <div class="grid_3">
+                    <h2>Columna Derecha</h2>
+                    <ul id="widgetColumnRight" class="widgetWrapper" data-position="column_right">
+                    <?php foreach ($widgets['column_right'] as $widget) { ?>
+                        <li class="widgetSet" id="<?php echo $widget['name']; ?>">
+                            <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
+                            <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
+                            <div class="attributes"></div>
+                            <div style="float:right">
+                                <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
+                                <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
+                            </div>
+                        </li>
+                        <script type="text/javascript">
+                        $(function(){
+                            $.ajaxQueue({
+                                url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
+                                dataType: "json",
+                                data:{
+                                    'extension':'<?php echo $widget['extension']; ?>',
+                                    'position':'<?php echo $widget['position']; ?>',
+                                    'name':'<?php echo $widget['name']; ?>'
+                                }
+                            }).done(function( data ) {
+                                $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
+                                $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
+                                $('.widgetWrapper').find("input, select, textarea, p")
+                                .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
+                                    e.stopImmediatePropagation();
+                                });
+                                $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
                                     $('.saving').remove();
-                                    resp = $.parseJSON(respons);
+                                    $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
+                                    $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
+                                    $('#<?php echo $widget['name']; ?>_form').serialize(),
+                                    function(respons){
+                                        $('.saving').remove();
+                                        resp = $.parseJSON(respons);
+                                    });
                                 });
                             });
                         });
-                    });
-                    </script>
-                <?php } ?>
-                </ul>
-            </div>
-            <?php } ?>
-            
-            <?php if ($hasFooter) { ?>
-            <div class="clear"></div>
-            <div class="grid_24">
-                <h2>Pie de P&aacute;gina</h2>
-                <ul id="widgetFooter" class="widgetWrapper" data-position="footer">
-                <?php foreach ($widgets['footer'] as $widget) { ?>
-                    <li class="widgetSet" id="<?php echo $widget['name']; ?>">
-                        <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
-                        <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
-                        <div class="attributes"></div>
-                        <div style="float:right">
-                            <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
-                            <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
-                        </div>
-                    </li>
-                    <script type="text/javascript">
-                    $(function(){
-                        $.ajaxQueue({
-                            url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
-                            dataType: "json",
-                            data:{
-                                'extension':'<?php echo $widget['extension']; ?>',
-                                'position':'<?php echo $widget['position']; ?>',
-                                'name':'<?php echo $widget['name']; ?>'
-                            }
-                        }).done(function( data ) {
-                            $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
-                            $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
-                            $('.widgetWrapper').find("input, select, textarea, p")
-                            .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
-                                e.stopImmediatePropagation();
-                            });
-                            $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
-                                $('.saving').remove();
-                                $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
-                                $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
-                                $('#<?php echo $widget['name']; ?>_form').serialize(),
-                                function(respons){
+                        </script>
+                    <?php } ?>
+                    </ul>
+                </div>
+                
+                <div class="clear"></div>
+                
+                <div class="grid_11">
+                    <h2>Pie de P&aacute;gina</h2>
+                    <ul id="widgetFooter" class="widgetWrapper" data-position="footer">
+                    <?php foreach ($widgets['footer'] as $widget) { ?>
+                        <li class="widgetSet" id="<?php echo $widget['name']; ?>">
+                            <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
+                            <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
+                            <div class="attributes"></div>
+                            <div style="float:right">
+                                <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
+                                <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
+                            </div>
+                        </li>
+                        <script type="text/javascript">
+                        $(function(){
+                            $.ajaxQueue({
+                                url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
+                                dataType: "json",
+                                data:{
+                                    'extension':'<?php echo $widget['extension']; ?>',
+                                    'position':'<?php echo $widget['position']; ?>',
+                                    'name':'<?php echo $widget['name']; ?>'
+                                }
+                            }).done(function( data ) {
+                                $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
+                                $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
+                                $('.widgetWrapper').find("input, select, textarea, p")
+                                .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
+                                    e.stopImmediatePropagation();
+                                });
+                                $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
                                     $('.saving').remove();
-                                    resp = $.parseJSON(respons);
+                                    $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
+                                    $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
+                                    $('#<?php echo $widget['name']; ?>_form').serialize(),
+                                    function(respons){
+                                        $('.saving').remove();
+                                        resp = $.parseJSON(respons);
+                                    });
                                 });
                             });
                         });
-                    });
-                    </script>
-                <?php } ?>
-                </ul>
+                        </script>
+                    <?php } ?>
+                    </ul>
+                </div>
             </div>
-            <?php } ?>
         </div>
     </div>
 </div>
@@ -435,9 +436,18 @@ $(function(){
         cursor: 'move',
         handle: '.moveWidget',
         start: function(event,ui){
+            if ($(this).data().uiSortable) {
+                data.item = $($(this).data().uiSortable.currentItem);
+            } else if ($(this).data()['ui-sortable']) {
+                data.item = $($(this).data()['ui-sortable'].currentItem);
+            } else if ($(this).data().sortable) {
+                data.item = $($(this).data().sortable.currentItem);
+            } else {
+                console.log('No se definió jquery ui sortable');
+            }
+                
             if (data.name) {
-            $($(this).data().uiSortable.currentItem).attr('id',data.id).removeClass('neco-widget').addClass('widgetSet').html(output);
-            data.item = $($(this).data().uiSortable.currentItem);
+                data.item.attr('id',data.id).removeClass('neco-widget').addClass('widgetSet').html(output);
             }
         },
         receive:function(event,ui) {

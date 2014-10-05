@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ControllerStoreManufacturer
  * 
@@ -9,146 +10,147 @@
  * @access public
  * @see Controller
  */
-class ControllerStoreManufacturer extends Controller { 
-	private $error = array();
-  
-  	/**
-  	 * ControllerStoreManufacturer::index()
+class ControllerStoreManufacturer extends Controller {
+
+    private $error = array();
+
+    /**
+     * ControllerStoreManufacturer::index()
      * 
-  	 * @see Load
-  	 * @see Document
-  	 * @see Language
-  	 * @see getList
-  	 * @return void
-  	 */
-  	public function index() {
-		$this->document->title = $this->language->get('heading_title');
-    	$this->getList();
-  	}
-  
-  	/**
-  	 * ControllerStoreManufacturer::insert()
-  	 * 
-  	 * @see Load
-  	 * @see Document
-  	 * @see Request
-  	 * @see Session
-  	 * @see Redirect
-  	 * @see Language
-  	 * @see getForm
-  	 * @return void
-  	 */
-  	public function insert() {
-    	$this->document->title = $this->language->get('heading_title');	
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$manufacturer_id = $this->modelManufacturer->add($this->request->post);
-            $this->modelManufacturer->setProperty($manufacturer_id,'style','view', $this->request->getPost('view'));
+     * @see Load
+     * @see Document
+     * @see Language
+     * @see getList
+     * @return void
+     */
+    public function index() {
+        $this->document->title = $this->language->get('heading_title');
+        $this->getList();
+    }
 
-			$this->session->set('success',$this->language->get('text_success'));
-			
-            if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('store/manufacturer/update',array('manufacturer_id'=>$manufacturer_id))); 
-            } elseif ($_POST['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('store/manufacturer/insert')); 
-            } else {
-                $this->redirect(Url::createAdminUrl('store/manufacturer')); 
-            }
-		}
-    
-    	$this->getForm();
-  	} 
-   
-  	/**
-  	 * ControllerStoreManufacturer::update()
-  	 * 
-  	 * @see Load
-  	 * @see Document
-  	 * @see Request
-  	 * @see Session
-  	 * @see Redirect
-  	 * @see Language
-  	 * @see getForm
-  	 * @return void
-  	 */
-  	public function update() {
-    	$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->modelManufacturer->update($this->request->getQuery('manufacturer_id'), $this->request->post);
-            $this->modelManufacturer->setProperty($this->request->getQuery('manufacturer_id'),'style','view', $this->request->getPost('view'));
+    /**
+     * ControllerStoreManufacturer::insert()
+     * 
+     * @see Load
+     * @see Document
+     * @see Request
+     * @see Session
+     * @see Redirect
+     * @see Language
+     * @see getForm
+     * @return void
+     */
+    public function insert() {
+        $this->document->title = $this->language->get('heading_title');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $manufacturer_id = $this->modelManufacturer->add($this->request->post);
+            $this->modelManufacturer->setProperty($manufacturer_id, 'style', 'view', $this->request->getPost('view'));
 
-			$this->session->set('success',$this->language->get('text_success'));
-			
+            $this->session->set('success', $this->language->get('text_success'));
+
             if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('store/manufacturer/update',array('manufacturer_id'=>$this->request->getQuery('manufacturer_id')))); 
+                $this->redirect(Url::createAdminUrl('store/manufacturer/update', array('manufacturer_id' => $manufacturer_id)));
             } elseif ($_POST['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('store/manufacturer/insert')); 
+                $this->redirect(Url::createAdminUrl('store/manufacturer/insert'));
             } else {
-                $this->redirect(Url::createAdminUrl('store/manufacturer')); 
+                $this->redirect(Url::createAdminUrl('store/manufacturer'));
             }
-		}
-    
-    	$this->getForm();
-  	}   
+        }
+
+        $this->getForm();
+    }
+
+    /**
+     * ControllerStoreManufacturer::update()
+     * 
+     * @see Load
+     * @see Document
+     * @see Request
+     * @see Session
+     * @see Redirect
+     * @see Language
+     * @see getForm
+     * @return void
+     */
+    public function update() {
+        $this->document->title = $this->language->get('heading_title');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->modelManufacturer->update($this->request->getQuery('manufacturer_id'), $this->request->post);
+            $this->modelManufacturer->setProperty($this->request->getQuery('manufacturer_id'), 'style', 'view', $this->request->getPost('view'));
+
+            $this->session->set('success', $this->language->get('text_success'));
+
+            if ($_POST['to'] == "saveAndKeep") {
+                $this->redirect(Url::createAdminUrl('store/manufacturer/update', array('manufacturer_id' => $this->request->getQuery('manufacturer_id'))));
+            } elseif ($_POST['to'] == "saveAndNew") {
+                $this->redirect(Url::createAdminUrl('store/manufacturer/insert'));
+            } else {
+                $this->redirect(Url::createAdminUrl('store/manufacturer'));
+            }
+        }
+
+        $this->getForm();
+    }
 
     /**
      * ControllerStoreCategory::delete()
      * elimina un objeto
      * @return boolean
      * */
-     public function delete() {
+    public function delete() {
         $this->load->auto('store/manufacturer');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelManufacturer->delete($id);
             }
-		} else {
+        } else {
             $this->modelManufacturer->delete($_GET['id']);
-		}
-     }
-    
-  	/**
-  	 * ControllerStoreManufacturer::getById()
-  	 * 
-  	 * @see Load
-  	 * @see Document
-  	 * @see Request
-  	 * @see Session
-  	 * @see Response
-  	 * @see Pagination
-  	 * @see Language
-  	 * @return void
-  	 */
-  	private function getList() {
-  		$this->document->breadcrumbs = array();
+        }
+    }
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
+    /**
+     * ControllerStoreManufacturer::getById()
+     * 
+     * @see Load
+     * @see Document
+     * @see Request
+     * @see Session
+     * @see Response
+     * @see Pagination
+     * @see Language
+     * @return void
+     */
+    private function getList() {
+        $this->document->breadcrumbs = array();
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('store/manufacturer') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-							
-		$this->data['insert'] = Url::createAdminUrl('store/manufacturer/insert') . $url;
-		$this->data['delete'] = Url::createAdminUrl('store/manufacturer/delete') . $url;	
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('common/home'),
+            'text' => $this->language->get('text_home'),
+            'separator' => false
+        );
 
- 		$this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('store/manufacturer') . $url,
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
 
-		if ($this->session->has('success')) {
-			$this->data['success'] = $this->session->get('success');
-			$this->session->clear('success');
-		} else {
-			$this->data['success'] = '';
-		}
+        $this->data['insert'] = Url::createAdminUrl('store/manufacturer/insert') . $url;
+        $this->data['delete'] = Url::createAdminUrl('store/manufacturer/delete') . $url;
+
+        $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
+
+        if ($this->session->has('success')) {
+            $this->data['success'] = $this->session->get('success');
+            $this->session->clear('success');
+        } else {
+            $this->data['success'] = '';
+        }
 
         // SCRIPTS
-        $scripts[] = array('id'=>'manufacturerList','method'=>'function','script'=>
+        $scripts[] = array('id' => 'manufacturerList', 'method' => 'function', 'script' =>
             "function activate(e) {
-                $.getJSON('". Url::createAdminUrl("store/manufacturer/activate") ."',{
+                $.getJSON('" . Url::createAdminUrl("store/manufacturer/activate") . "',{
                     id:e
                 },function(data){
                     if (data > 0) {
@@ -168,8 +170,8 @@ class ControllerStoreManufacturer extends Controller {
                 if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
-                    $.post('". Url::createAdminUrl("store/manufacturer/delete") ."',$('#form').serialize(),function(){
-                        $('#gridWrapper').load('". Url::createAdminUrl("store/manufacturer/grid") ."',function(){
+                    $.post('" . Url::createAdminUrl("store/manufacturer/delete") . "',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('" . Url::createAdminUrl("store/manufacturer/grid") . "',function(){
                             $('#gridWrapper').show();
                             $('#gridPreloader').hide();
                         });
@@ -180,14 +182,14 @@ class ControllerStoreManufacturer extends Controller {
             function eliminar(e) {
                 if (confirm('\\xbfDesea eliminar este objeto?')) {
                     $('#tr_' + e).remove();
-                	$.getJSON('". Url::createAdminUrl("store/manufacturer/delete") ."',{
+                	$.getJSON('" . Url::createAdminUrl("store/manufacturer/delete") . "',{
                         id:e
                     });
                 }
                 return false;
              }");
-        $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
-            "$('#gridWrapper').load('". Url::createAdminUrl("store/manufacturer/grid") ."',function(e){
+        $scripts[] = array('id' => 'sortable', 'method' => 'ready', 'script' =>
+            "$('#gridWrapper').load('" . Url::createAdminUrl("store/manufacturer/grid") . "',function(e){
                 $('#gridPreloader').hide();
                 $('#list tbody').sortable({
                     opacity: 0.6, 
@@ -197,7 +199,7 @@ class ControllerStoreManufacturer extends Controller {
                         $.ajax({
                             'type':'post',
                             'dateType':'json',
-                            'url':'". Url::createAdminUrl("store/manufacturer/sortable") ."',
+                            'url':'" . Url::createAdminUrl("store/manufacturer/sortable") . "',
                             'data': $(this).sortable('serialize'),
                             'success': function(data) {
                                 if (data > 0) {
@@ -218,7 +220,7 @@ class ControllerStoreManufacturer extends Controller {
                 ajax:true,
                 type:'get',
                 dataType:'html',
-                url:'". Url::createAdminUrl("store/manufacturer/grid") ."',
+                url:'" . Url::createAdminUrl("store/manufacturer/grid") . "',
                 beforeSend:function(){
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
@@ -227,226 +229,254 @@ class ControllerStoreManufacturer extends Controller {
                     $('#gridPreloader').hide();
                     $('#gridWrapper').html(data).show();
                 }
+            });
+            $('#formFilter').on('keyup', function(e){
+                var code = e.keyCode || e.which;
+                if (code == 13){
+                    $('#formFilter').ntForm('submit');
+                }
             });");
-             
-        $this->scripts = array_merge($this->scripts,$scripts);
+
+        $this->scripts = array_merge($this->scripts, $scripts);
+
+        $this->template = 'store/manufacturer_list.tpl';
         
-		$this->template = 'store/manufacturer_list.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-	}
-    
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+        
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+
     public function grid() {
         $this->load->auto('image');
-        
-		$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
-		$filter_product = isset($this->request->get['filter_product']) ? $this->request->get['filter_product'] : null;
-		$filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
-		$filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
-		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
-		$limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
-		
-		$url = '';
-			
-		if (isset($this->request->get['filter_name'])) { $url .= '&filter_name=' . $this->request->get['filter_name']; } 
-		if (isset($this->request->get['filter_product'])) { $url .= '&filter_product=' . $this->request->get['filter_product']; } 
-		if (isset($this->request->get['filter_date_start'])) { $url .= '&filter_date_start=' . $this->request->get['filter_date_start']; }
-		if (isset($this->request->get['filter_date_end'])) { $url .= '&filter_date_end=' . $this->request->get['filter_date_end']; }
-		if (isset($this->request->get['page'])) { $url .= '&page=' . $this->request->get['page']; }
-		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
-		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
-		if (!empty($this->request->get['limit'])) { $url .= '&limit=' . $this->request->get['limit']; }
-		
-		$this->data['manufacturers'] = array();
 
-		$data = array(
-			'filter_name' => $filter_name, 
-			'filter_product' => $filter_product, 
-			'filter_date_start' => $filter_date_start, 
-			'filter_date_end' => $filter_date_end, 
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * $limit,
-			'limit' => $limit
-		);
-		
-		$manufacturer_total = $this->modelManufacturer->getAllTotal();
-	
-		$results = $this->modelManufacturer->getAll($data);
- 
-    	foreach ($results as $result) {
-				$action = array(
-                'edit'      => array(
-                        'action'  => 'edit',
-                        'text'  => $this->language->get('text_edit'),
-                        'href'  =>Url::createAdminUrl('store/manufacturer/update') . '&manufacturer_id=' . $result['manufacturer_id'] . $url,
-                        'img'   => 'edit.png'
+        $filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
+        $filter_product = isset($this->request->get['filter_product']) ? $this->request->get['filter_product'] : null;
+        $filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
+        $filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
+        $page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+        $sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
+        $order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
+        $limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
+
+        $url = '';
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . $this->request->get['filter_name'];
+        }
+        if (isset($this->request->get['filter_product'])) {
+            $url .= '&filter_product=' . $this->request->get['filter_product'];
+        }
+        if (isset($this->request->get['filter_date_start'])) {
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        }
+        if (isset($this->request->get['filter_date_end'])) {
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        }
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+        if (!empty($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
+
+        $this->data['manufacturers'] = array();
+
+        $data = array(
+            'filter_name' => $filter_name,
+            'filter_product' => $filter_product,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $limit,
+            'limit' => $limit
+        );
+
+        $manufacturer_total = $this->modelManufacturer->getAllTotal();
+
+        $results = $this->modelManufacturer->getAll($data);
+
+        foreach ($results as $result) {
+            $action = array(
+                'edit' => array(
+                    'action' => 'edit',
+                    'text' => $this->language->get('text_edit'),
+                    'href' => Url::createAdminUrl('store/manufacturer/update') . '&manufacturer_id=' . $result['manufacturer_id'] . $url,
+                    'img' => 'edit.png'
                 ),
-                'delete'    => array(
-                        'action'  => 'delete',
-                        'text'  => $this->language->get('text_delete'),
-                        'href'  =>'',
-                        'img'   => 'delete.png'
+                'delete' => array(
+                    'action' => 'delete',
+                    'text' => $this->language->get('text_delete'),
+                    'href' => '',
+                    'img' => 'delete.png'
                 )
             );
-						
-			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-				$image = NTImage::resizeAndSave($result['image'], 40, 40);
-			} else {
-				$image = NTImage::resizeAndSave('no_image.jpg', 40, 40);
-			}
-			
-			$this->data['manufacturers'][] = array(
-				'manufacturer_id' => $result['manufacturer_id'],
-				'name'            => $result['name'],
-				'sort_order'      => $result['sort_order'],
-				'image'      => $image,
-				'selected'        => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']),
-				'action'          => $action
-			);
-		}	       
-        
-		$url = '';
 
-		if ($order == 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
-		}
+            if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
+                $image = NTImage::resizeAndSave($result['image'], 40, 40);
+            } else {
+                $image = NTImage::resizeAndSave('no_image.jpg', 40, 40);
+            }
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-		
-		$this->data['sort_name'] = Url::createAdminUrl('store/manufacturer/grid') . '&sort=name' . $url;
-		$this->data['sort_sort_order'] = Url::createAdminUrl('store/manufacturer/grid') . '&sort=sort_order' . $url;
-		
-		$url = '';
+            $this->data['manufacturers'][] = array(
+                'manufacturer_id' => $result['manufacturer_id'],
+                'name' => $result['name'],
+                'sort_order' => $result['sort_order'],
+                'image' => $image,
+                'selected' => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']),
+                'action' => $action
+            );
+        }
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-												
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+        $url = '';
 
-		$pagination = new Pagination();
-		$pagination->ajax = true;
-		$pagination->ajaxTarget = "gridWrapper";
-		$pagination->total = $manufacturer_total;
-		$pagination->page = $page;
-		$pagination->limit = $limit;
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = Url::createAdminUrl('store/manufacturer/grid') . $url . '&page={page}';
-			
-		$this->data['pagination'] = $pagination->render();
+        if ($order == 'ASC') {
+            $url .= '&order=DESC';
+        } else {
+            $url .= '&order=ASC';
+        }
 
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
-		
-		$this->data['text_no_results']= $this->language->get('text_no_results');
-		$this->data['column_image']    = $this->language->get('column_image');
-		$this->data['column_name']    = $this->language->get('column_name');
-		$this->data['column_sort_order'] = $this->language->get('column_sort_order');
-		$this->data['column_action']  = $this->language->get('column_action');	
-        
-		$this->template = 'store/manufacturer_grid.tpl';
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        $this->data['sort_name'] = Url::createAdminUrl('store/manufacturer/grid') . '&sort=name' . $url;
+        $this->data['sort_sort_order'] = Url::createAdminUrl('store/manufacturer/grid') . '&sort=sort_order' . $url;
+
+        $url = '';
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        $pagination = new Pagination();
+        $pagination->ajax = true;
+        $pagination->ajaxTarget = "gridWrapper";
+        $pagination->total = $manufacturer_total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+        $pagination->text = $this->language->get('text_pagination');
+        $pagination->url = Url::createAdminUrl('store/manufacturer/grid') . $url . '&page={page}';
+
+        $this->data['pagination'] = $pagination->render();
+
+        $this->data['sort'] = $sort;
+        $this->data['order'] = $order;
+
+        $this->data['text_no_results'] = $this->language->get('text_no_results');
+        $this->data['column_image'] = $this->language->get('column_image');
+        $this->data['column_name'] = $this->language->get('column_name');
+        $this->data['column_sort_order'] = $this->language->get('column_sort_order');
+        $this->data['column_action'] = $this->language->get('column_action');
+
+        $this->template = 'store/manufacturer_grid.tpl';
+
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
-    
-  	/**
-  	 * ControllerStoreManufacturer::getForm()
-  	 * 
-  	 * @see Load
-  	 * @see Document
-  	 * @see Request
-  	 * @see Session
-  	 * @see Response
-  	 * @see Pagination
-  	 * @see Language
-  	 * @return void
-  	 */
-  	private function getForm() {
- 		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
- 		$this->data['error_name'] = ($this->error['name']) ? $this->error['name'] : '';
-		    
-		$url = '';
-		if (isset($this->request->get['page'])) { $url .= '&page=' . $this->request->get['page']; }
-		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
-		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
-		
-  		$this->document->breadcrumbs = array();
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('store/manufacturer') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-							
-		if (!isset($this->request->get['manufacturer_id'])) {
-			$this->data['action'] = Url::createAdminUrl('store/manufacturer/insert') . $url;
-		} else {
-			$this->data['action'] = Url::createAdminUrl('store/manufacturer/update') . '&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url;
-		}
-		
-		$this->data['cancel'] = Url::createAdminUrl('store/manufacturer') . $url;
+    /**
+     * ControllerStoreManufacturer::getForm()
+     * 
+     * @see Load
+     * @see Document
+     * @see Request
+     * @see Session
+     * @see Response
+     * @see Pagination
+     * @see Language
+     * @return void
+     */
+    private function getForm() {
+        $this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
+        $this->data['error_name'] = ($this->error['name']) ? $this->error['name'] : '';
 
-    	if ($this->request->hasQuery('manufacturer_id') && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-      		$manufacturer_info = $this->modelManufacturer->getById($this->request->getQuery('manufacturer_id'));
-    	}
+        $url = '';
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
 
-        $this->setvar('manufacturer_id',$manufacturer_info,'');
-        $this->setvar('name',$manufacturer_info,'');
-        $this->setvar('keyword',$manufacturer_info,'');
-        $this->setvar('image',$manufacturer_info,'');
-        $this->setvar('sort_order',$manufacturer_info,'');
-        
-		$this->data['stores'] = $this->modelStore->getAll();
-		$this->data['_stores'] = $this->modelManufacturer->getStores($this->request->getQuery('manufacturer_id'));
-        $this->data['layout'] = $this->modelManufacturer->getProperty($this->request->getQuery('manufacturer_id'),'style','view');
-        
-  		if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
+        $this->document->breadcrumbs = array();
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('common/home'),
+            'text' => $this->language->get('text_home'),
+            'separator' => false
+        );
+
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('store/manufacturer') . $url,
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
+
+        if (!isset($this->request->get['manufacturer_id'])) {
+            $this->data['action'] = Url::createAdminUrl('store/manufacturer/insert') . $url;
+        } else {
+            $this->data['action'] = Url::createAdminUrl('store/manufacturer/update') . '&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url;
+        }
+
+        $this->data['cancel'] = Url::createAdminUrl('store/manufacturer') . $url;
+
+        if ($this->request->hasQuery('manufacturer_id') && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+            $manufacturer_info = $this->modelManufacturer->getById($this->request->getQuery('manufacturer_id'));
+        }
+
+        $this->setvar('manufacturer_id', $manufacturer_info, '');
+        $this->setvar('name', $manufacturer_info, '');
+        $this->setvar('keyword', $manufacturer_info, '');
+        $this->setvar('image', $manufacturer_info, '');
+        $this->setvar('sort_order', $manufacturer_info, '');
+
+        $this->data['stores'] = $this->modelStore->getAll();
+        $this->data['_stores'] = $this->modelManufacturer->getStores($this->request->getQuery('manufacturer_id'));
+        $this->data['layout'] = $this->modelManufacturer->getProperty($this->request->getQuery('manufacturer_id'), 'style', 'view');
+
+        if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
             $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';
-    	} else {
-    		$folderTPL = DIR_CATALOG . 'view/theme/default/';
-    	}
-        
+        } else {
+            $folderTPL = DIR_CATALOG . 'view/theme/default/';
+        }
+
         $directories = glob($folderTPL . "*", GLOB_ONLYDIR);
-		$this->data['templates'] = array();
-		foreach ($directories as $key => $directory) {
-			$this->data['views'][$key]['folder'] = basename($directory);
+        $this->data['templates'] = array();
+        foreach ($directories as $key => $directory) {
+            $this->data['views'][$key]['folder'] = basename($directory);
             $files = glob($directory . "/*.tpl", GLOB_NOSORT);
             foreach ($files as $k => $file) {
-    			$this->data['views'][$key]['files'][$k] = str_replace("\\","/",$file) ;
-    		}
-		}
-        
-		if (isset($manufacturer_info) && $manufacturer_info['image'] && file_exists(DIR_IMAGE . $manufacturer_info['image'])) {
-			$this->data['preview'] = NTImage::resizeAndSave($manufacturer_info['image'], 100, 100);
-		} else {
-			$this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
-		}
-		
+                $this->data['views'][$key]['files'][$k] = str_replace("\\", "/", $file);
+            }
+        }
+
+        if (isset($manufacturer_info) && $manufacturer_info['image'] && file_exists(DIR_IMAGE . $manufacturer_info['image'])) {
+            $this->data['preview'] = NTImage::resizeAndSave($manufacturer_info['image'], 100, 100);
+        } else {
+            $this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
+
         //TODO: mostrar los productos al scrolldown para no colapsar el navegador cuando se listan todos los productos
-        $scripts[] = array('id'=>'form','method'=>'ready','script'=>
+        $scripts[] = array('id' => 'form', 'method' => 'ready', 'script' =>
             "$('#name').blur(function(e){
-                $.getJSON('". Url::createAdminUrl('common/home/slug') ."',
+                $.getJSON('" . Url::createAdminUrl('common/home/slug') . "',
                 { 
                     slug : $(this).val(),
-                    query : 'manufacturer_id=". $this->request->getQuery('manufacturer_id') ."',
+                    query : 'manufacturer_id=" . $this->request->getQuery('manufacturer_id') . "',
                 },
                 function(data){
                         $('#slug').val(data.slug);
@@ -459,9 +489,9 @@ class ControllerStoreManufacturer extends Controller {
                 var products = $('#addsWrapper').find('.row');
                 
                 if (products.length == 0) {
-                    $.getJSON('".Url::createAdminUrl("store/manufacturer/products")."',
+                    $.getJSON('" . Url::createAdminUrl("store/manufacturer/products") . "',
                         {
-                            'manufacturer_id':'".$this->request->getQuery('manufacturer_id')."'
+                            'manufacturer_id':'" . $this->request->getQuery('manufacturer_id') . "'
                         }, function(data) {
                             
                             var htmlOutput = '<div class=\"row\">';
@@ -521,11 +551,11 @@ class ControllerStoreManufacturer extends Controller {
             });
                 
             $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });");
-            
-        $scripts[] = array('id'=>'categoryFunctions','method'=>'function','script'=>
+
+        $scripts[] = array('id' => 'categoryFunctions', 'method' => 'function', 'script' =>
             "function image_delete(field, preview) {
                 $('#' + field).val('');
-                $('#' + preview).attr('src','". HTTP_IMAGE ."cache/no_image-100x100.jpg');
+                $('#' + preview).attr('src','" . HTTP_IMAGE . "cache/no_image-100x100.jpg');
             }
             
             function image_upload(field, preview) {
@@ -533,14 +563,14 @@ class ControllerStoreManufacturer extends Controller {
                 var width = $(window).width() * 0.8;
                 
             	$('#dialog').remove();
-            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"". Url::createAdminUrl("common/filemanager") ."&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"" . Url::createAdminUrl("common/filemanager") . "&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
-            		title: '".$this->data['text_image_manager']."',
+            		title: '" . $this->data['text_image_manager'] . "',
             		close: function (event, ui) {
             			if ($('#' + field).attr('value')) {
             				$.ajax({
-            					url: '". Url::createAdminUrl("common/filemanager/image") ."',
+            					url: '" . Url::createAdminUrl("common/filemanager/image") . "',
             					type: 'POST',
             					data: 'image=' + encodeURIComponent($('#' + field).val()),
             					dataType: 'text',
@@ -556,79 +586,80 @@ class ControllerStoreManufacturer extends Controller {
             		resizable: false,
             		modal: false
             	});}");
-            
-        $this->scripts = array_merge($this->scripts,$scripts);
+
+        $this->scripts = array_merge($this->scripts, $scripts);
+
+        $this->template = 'store/manufacturer_form.tpl';
         
-		$this->template = 'store/manufacturer_form.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
-	}  
-	 
-  	/**
-  	 * ControllerStoreManufacturer::validateForm()
-  	 * 
-  	 * @see Request
-  	 * @see Language
-  	 * @return bool
-  	 */
-  	private function validateForm() {
-    	if (!$this->user->hasPermission('modify', 'store/manufacturer')) {
-      		$this->error['warning'] = $this->language->get('error_permission');
-    	}
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+        
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+
+    /**
+     * ControllerStoreManufacturer::validateForm()
+     * 
+     * @see Request
+     * @see Language
+     * @return bool
+     */
+    private function validateForm() {
+        if (!$this->user->hasPermission('modify', 'store/manufacturer')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
         //TODO: colocar validaciones propias
 
-    	if (empty($this->request->post['name'])) {
-      		$this->error['name'] = $this->language->get('error_name');
-    	}
-		
-		if (!$this->error) {
-	  		return true;
-		} else {
-	  		return false;
-		}
-  	}    
+        if (empty($this->request->post['name'])) {
+            $this->error['name'] = $this->language->get('error_name');
+        }
 
-  	/**
-  	 * ControllerStoreManufacturer::validateDelete()
-  	 * 
-  	 * @see Request
-  	 * @see Language
-  	 * @return bool
-  	 */
-  	private function validateDelete() {
-    	if (!$this->user->hasPermission('modify', 'store/manufacturer')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-    	}	
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * ControllerStoreManufacturer::validateDelete()
+     * 
+     * @see Request
+     * @see Language
+     * @return bool
+     */
+    private function validateDelete() {
+        if (!$this->user->hasPermission('modify', 'store/manufacturer')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
         //TODO: colocar validaciones propias
-		
-		$this->load->auto('store/product');
 
-		foreach ($this->request->post['selected'] as $manufacturer_id) {
-  			$product_total = $this->modelProduct->getAllTotalByManufacturerId($manufacturer_id);
-    
-			if ($product_total) {
-	  			$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);	
-			}	
-	  	} 
-		
-		if (!$this->error) {
-	  		return true;
-		} else {
-	  		return false;
-		}  
-  	}
-    
+        $this->load->auto('store/product');
+
+        foreach ($this->request->post['selected'] as $manufacturer_id) {
+            $product_total = $this->modelProduct->getAllTotalByManufacturerId($manufacturer_id);
+
+            if ($product_total) {
+                $this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
+            }
+        }
+
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * ControllerStoreCategory::activate()
      * activar o desactivar un objeto accedido por ajax
      * @return boolean
      * */
-     public function activate() {
-        if (!isset($_GET['id'])) return false;
+    public function activate() {
+        if (!isset($_GET['id']))
+            return false;
         $this->load->auto('store/manufacturer');
         $status = $this->modelManufacturer->getById($_GET['id']);
         if ($status) {
@@ -639,19 +670,19 @@ class ControllerStoreManufacturer extends Controller {
                 $this->modelManufacturer->desactivate($_GET['id']);
                 echo -1;
             }
-            
         } else {
             echo 0;
         }
-     }
-    
+    }
+
     /**
      * ControllerStoreCategory::sortable()
-     * ordenar el listado actualizando la posición de cada objeto
+     * ordenar el listado actualizando la posiciï¿½n de cada objeto
      * @return boolean
      * */
-     public function sortable() {
-        if (!isset($_POST['tr'])) return false;
+    public function sortable() {
+        if (!isset($_POST['tr']))
+            return false;
         $this->load->auto('store/manufacturer');
         $result = $this->modelManufacturer->sortProduct($_POST['tr']);
         if ($result) {
@@ -659,13 +690,12 @@ class ControllerStoreManufacturer extends Controller {
         } else {
             echo 0;
         }
-     }
-     
-     
-     public function products() {
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-        header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT"); 
-        header("Cache-Control: no-cache, must-revalidate"); 
+    }
+
+    public function products() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
+        header("Cache-Control: no-cache, must-revalidate");
         header("Pragma: no-cache");
         header("Content-type: application/json");
         $this->load->auto("store/product");
@@ -683,33 +713,34 @@ class ControllerStoreManufacturer extends Controller {
             $products = unserialize($cache);
         } else {
             $products = $this->modelProduct->getAll();
-            $this->cache->set("products.for.manufacturer.form",serialize($products));
+            $this->cache->set("products.for.manufacturer.form", serialize($products));
         }
-        
+
         $this->data['Image'] = new NTImage();
-        
+
         $output = array();
-        
+
         foreach ($products as $product) {
-            if (!empty($products_by_manufacturer) && in_array($product['product_id'],$products_by_manufacturer)) {
+            if (!empty($products_by_manufacturer) && in_array($product['product_id'], $products_by_manufacturer)) {
                 $output[] = array(
-                    'product_id'=>$product['product_id'],
-                    'pimage'    =>NTImage::resizeAndSave($product['image'],50,50),
-                    'pname'     =>$product['name'],
-                    'class'     =>'added',
-                    'value'     =>$product['product_id']
+                    'product_id' => $product['product_id'],
+                    'pimage' => NTImage::resizeAndSave($product['image'], 50, 50),
+                    'pname' => $product['name'],
+                    'class' => 'added',
+                    'value' => $product['product_id']
                 );
             } else {
                 $output[] = array(
-                    'product_id'=>$product['product_id'],
-                    'pimage'    =>NTImage::resizeAndSave($product['image'],50,50),
-                    'pname'     =>$product['name'],
-                    'class'     =>'add',
-                    'value'     =>$product['product_id']
+                    'product_id' => $product['product_id'],
+                    'pimage' => NTImage::resizeAndSave($product['image'], 50, 50),
+                    'pname' => $product['name'],
+                    'class' => 'add',
+                    'value' => $product['product_id']
                 );
             }
         }
         $this->load->auto('json');
         $this->response->setOutput(Json::encode($output), $this->config->get('config_compression'));
-     }
+    }
+
 }

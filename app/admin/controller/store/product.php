@@ -15,6 +15,20 @@ class ControllerStoreProduct extends Controller {
     private $error = array();
     private $aKey = "";
 
+    public function lista() {
+
+        $javascripts[] = 'js/app/app.js';
+        $this->javascripts = array_merge($javascripts, $this->javascripts);
+
+        $this->template = 'store/product_lista.tpl';
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+
     /**
      * ControllerStoreProduct::index()
      * 
@@ -78,30 +92,30 @@ class ControllerStoreProduct extends Controller {
                 $description['description'] = htmlentities($dom->saveHTML());
                 $this->request->post['product_description'][$language_id] = $description;
             }
-            
-            $dps = explode("/",$this->request->post['date_available']);
-            $this->request->post['date_available'] = $dps[2] ."-". $dps[1] ."-". $dps[0];
-            
+
+            $dps = explode("/", $this->request->post['date_available']);
+            $this->request->post['date_available'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+
             foreach ($this->request->post['discount'] as $key => $discount) {
-                $dps = explode("/",$discount['date_start']);
-                $discount['date_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0];
-                
-                $dpe = explode("/",$discount['date_available']);
-                $discount['date_available'] = $dpe[2] ."-". $dpe[1] ."-". $dpe[0];
-            
+                $dps = explode("/", $discount['date_start']);
+                $discount['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+
+                $dpe = explode("/", $discount['date_available']);
+                $discount['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+
                 $this->request->post['discount'][$key] = $discount;
             }
 
             foreach ($this->request->post['product_special'] as $key => $special) {
-                $dps = explode("/",$special['date_start']);
-                $special['date_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0];
-                
-                $dpe = explode("/",$special['date_available']);
-                $special['date_available'] = $dpe[2] ."-". $dpe[1] ."-". $dpe[0];
-            
+                $dps = explode("/", $special['date_start']);
+                $special['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+
+                $dpe = explode("/", $special['date_available']);
+                $special['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+
                 $this->request->post['product_special'][$key] = $special;
             }
-            
+
             $product_id = $this->modelProduct->add($this->request->post);
             $this->modelProduct->setProperty($product_id, 'customer_groups', 'customer_groups', $this->request->getPost('customer_groups'));
             $this->modelProduct->setProperty($product_id, 'style', 'view', $this->request->getPost('view'));
@@ -172,26 +186,26 @@ class ControllerStoreProduct extends Controller {
                 $this->request->post['product_description'][$language_id] = $description;
             }
 
-            $dps = explode("/",$this->request->post['date_available']);
-            $this->request->post['date_available'] = $dps[2] ."-". $dps[1] ."-". $dps[0];
-            
+            $dps = explode("/", $this->request->post['date_available']);
+            $this->request->post['date_available'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+
             foreach ($this->request->post['discount'] as $key => $discount) {
-                $dps = explode("/",$discount['date_start']);
-                $discount['date_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0];
-                
-                $dpe = explode("/",$discount['date_available']);
-                $discount['date_available'] = $dpe[2] ."-". $dpe[1] ."-". $dpe[0];
-            
+                $dps = explode("/", $discount['date_start']);
+                $discount['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+
+                $dpe = explode("/", $discount['date_available']);
+                $discount['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+
                 $this->request->post['discount'][$key] = $discount;
             }
 
             foreach ($this->request->post['product_special'] as $key => $special) {
-                $dps = explode("/",$special['date_start']);
-                $special['date_start'] = $dps[2] ."-". $dps[1] ."-". $dps[0];
-                
-                $dpe = explode("/",$special['date_available']);
-                $special['date_available'] = $dpe[2] ."-". $dpe[1] ."-". $dpe[0];
-            
+                $dps = explode("/", $special['date_start']);
+                $special['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+
+                $dpe = explode("/", $special['date_available']);
+                $special['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+
                 $this->request->post['product_special'][$key] = $special;
             }
 
@@ -526,10 +540,10 @@ class ControllerStoreProduct extends Controller {
         $this->scripts = array_merge($this->scripts, $scripts);
 
         $this->template = 'store/product_see.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
@@ -885,15 +899,21 @@ class ControllerStoreProduct extends Controller {
                     $('#gridPreloader').hide();
                     $('#gridWrapper').html(data).show();
                 }
+            });
+            $('#formFilter').on('keyup', function(e){
+                var code = e.keyCode || e.which;
+                if (code == 13){
+                    $('#formFilter').ntForm('submit');
+                }
             });");
 
         $this->scripts = array_merge($this->scripts, $scripts);
 
         $this->template = 'store/product_list.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
@@ -1099,10 +1119,10 @@ class ControllerStoreProduct extends Controller {
         $this->data['order'] = $order;
 
         $this->template = 'store/product_grid.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
@@ -1256,7 +1276,7 @@ class ControllerStoreProduct extends Controller {
         } else {
             $this->data['date_available'] = date('d/m/Y', time() - 86400);
         }
-        
+
         $weight_info = $this->modelWeightclass->getDescriptionByUnit($this->config->get('config_weight_class'));
         if (isset($this->request->post['weight_class_id'])) {
             $this->data['weight_class_id'] = $this->request->post['weight_class_id'];
@@ -1467,7 +1487,7 @@ class ControllerStoreProduct extends Controller {
 
         foreach ($this->data['languages'] as $language) {
             $scripts[] = array('id' => 'Language' . $language["language_id"], 'method' => 'ready', 'script' =>
-                "CKEDITOR.replace('description_" . $language["language_id"] . "_description', {
+                "var editor". $language["language_id"] ." = CKEDITOR.replace('description_" . $language["language_id"] . "_description', {
                 	filebrowserBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserImageBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserFlashBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
@@ -1475,6 +1495,10 @@ class ControllerStoreProduct extends Controller {
                 	filebrowserImageUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
                 	filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "'
                 });
+                editor". $language["language_id"] .".products = '". $json['products'] ."';
+                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css';
+                editor". $language["language_id"] .".config.allowedContent = true;
+                    
                 $('#description_" . $language["language_id"] . "_name').change(function(e){
                     $.getJSON('" . Url::createAdminUrl('common/home/slug') . "',
                     { 
@@ -1511,7 +1535,7 @@ class ControllerStoreProduct extends Controller {
             	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"" . Url::createAdminUrl("common/filemanager") . "&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
                 
                 $('#dialog').dialog({
-            		title: '" . $this->data['text_image_manager'] . "',
+                    title: '" . $this->data['text_image_manager'] . "',
             		close: function (event, ui) {
             			if ($('#' + field).attr('value')) {
             				$.ajax({
@@ -1535,15 +1559,16 @@ class ControllerStoreProduct extends Controller {
         $this->scripts = array_merge($this->scripts, $scripts);
 
         // javascript files
-        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+        $javascripts[] = "js/vendor/fileUploader/jquery.iframe-transport.js";
+        $javascripts[] = "js/vendor/fileUploader/jquery.fileupload.js";
         $javascripts[] = "js/vendor/ckeditor/ckeditor.js";
         $this->javascripts = array_merge($javascripts, $this->javascripts);
-
+        
         $this->template = 'store/product_form.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
@@ -1918,10 +1943,10 @@ class ControllerStoreProduct extends Controller {
         $this->scripts = array_merge($this->scripts, $scripts);
 
         $this->template = 'store/product_import.tpl';
-        $this->children = array(
-            'common/header',
-            'common/footer'
-        );
+
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }

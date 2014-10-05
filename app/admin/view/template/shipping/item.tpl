@@ -1,6 +1,21 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-<div class="box">
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+    
+    <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
@@ -11,55 +26,56 @@
         <div class="clear"></div>
                                 
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-      <table class="form">
-        <tr>
-          <td><?php echo $Language->get('entry_cost'); ?></td>
-          <td><input type="text" name="item_cost" value="<?php echo $item_cost; ?>"></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_tax'); ?></td>
-          <td><select name="item_tax_class_id">
-              <option value="0"><?php echo $Language->get('text_none'); ?></option>
-              <?php foreach ($tax_classes as $tax_class) { ?>
-              <?php if ($tax_class['tax_class_id'] == $item_tax_class_id) { ?>
-              <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
-              <?php } else { ?>
-              <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
-              <?php } ?>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_geo_zone'); ?></td>
-          <td><select name="item_geo_zone_id">
-              <option value="0"><?php echo $Language->get('text_all_zones'); ?></option>
-              <?php foreach ($geo_zones as $geo_zone) { ?>
-              <?php if ($geo_zone['geo_zone_id'] == $item_geo_zone_id) { ?>
-              <option value="<?php echo $geo_zone['geo_zone_id']; ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
-              <?php } else { ?>
-              <option value="<?php echo $geo_zone['geo_zone_id']; ?>"><?php echo $geo_zone['name']; ?></option>
-              <?php } ?>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_status'); ?></td>
-          <td><select name="item_status">
-              <?php if ($item_status) { ?>
-              <option value="1" selected="selected"><?php echo $Language->get('text_enabled'); ?></option>
-              <option value="0"><?php echo $Language->get('text_disabled'); ?></option>
-              <?php } else { ?>
-              <option value="1"><?php echo $Language->get('text_enabled'); ?></option>
-              <option value="0" selected="selected"><?php echo $Language->get('text_disabled'); ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_sort_order'); ?></td>
-          <td><input type="text" name="item_sort_order" value="<?php echo $item_sort_order; ?>" size="1"></td>
-        </tr>
-      </table>
-    </form>
+            <table class="form">
+                <tr>
+                  <td><?php echo $Language->get('entry_cost'); ?></td>
+                  <td><input type="text" name="item_cost" value="<?php echo $item_cost; ?>"></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_tax'); ?></td>
+                  <td><select name="item_tax_class_id">
+                      <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                      <?php foreach ($tax_classes as $tax_class) { ?>
+                      <?php if ($tax_class['tax_class_id'] == $item_tax_class_id) { ?>
+                      <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+                      <?php } else { ?>
+                      <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+                      <?php } ?>
+                      <?php } ?>
+                    </select></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_geo_zone'); ?></td>
+                  <td><select name="item_geo_zone_id">
+                      <option value="0"><?php echo $Language->get('text_all_zones'); ?></option>
+                      <?php foreach ($geo_zones as $geo_zone) { ?>
+                      <?php if ($geo_zone['geo_zone_id'] == $item_geo_zone_id) { ?>
+                      <option value="<?php echo $geo_zone['geo_zone_id']; ?>" selected="selected"><?php echo $geo_zone['name']; ?></option>
+                      <?php } else { ?>
+                      <option value="<?php echo $geo_zone['geo_zone_id']; ?>"><?php echo $geo_zone['name']; ?></option>
+                      <?php } ?>
+                      <?php } ?>
+                    </select></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_status'); ?></td>
+                  <td><select name="item_status">
+                      <?php if ($item_status) { ?>
+                      <option value="1" selected="selected"><?php echo $Language->get('text_enabled'); ?></option>
+                      <option value="0"><?php echo $Language->get('text_disabled'); ?></option>
+                      <?php } else { ?>
+                      <option value="1"><?php echo $Language->get('text_enabled'); ?></option>
+                      <option value="0" selected="selected"><?php echo $Language->get('text_disabled'); ?></option>
+                      <?php } ?>
+                    </select></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_sort_order'); ?></td>
+                  <td><input type="text" name="item_sort_order" value="<?php echo $item_sort_order; ?>" size="1"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </div>
 <div class="sidebar" id="feedbackPanel">
     <div class="tab"></div>

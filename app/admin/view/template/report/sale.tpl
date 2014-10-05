@@ -1,14 +1,14 @@
 <?php echo $header; ?>
 <?php if ($error_warning) { ?>
-<div class="grid_24 warning"><?php echo $error_warning; ?></div>
+<div class="grid_12 warning"><?php echo $error_warning; ?></div>
 <?php } ?>
 <?php if ($success) { ?>
-<div class="grid_24 success"><?php echo $success; ?></div>
+<div class="grid_12 success"><?php echo $success; ?></div>
 <?php } ?>
 
-<div class="grid_24" id="msg"></div>
+<div class="grid_12" id="msg"></div>
 
-<div class="grid_24">
+<div class="grid_12">
     <div class="box">
         <div class="header">
             <h1><?php echo $Language->get('heading_title'); ?></h1>
@@ -69,7 +69,7 @@
     </div>
 </div>
 <div class="clear"></div>
-<div class="grid_24">
+<div class="grid_12">
     <div class="box">
         <div id="gridPreloader"></div>
         <div id="gridWrapper"></div>

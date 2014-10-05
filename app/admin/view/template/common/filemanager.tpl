@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <base href="<?php echo $base; ?>" />
     <link rel="stylesheet" type="text/css" href="css/filemanager.css" />
-    <link rel="stylesheet" type="text/css" href="css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="css/vendor.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="css/filemanager.css" />
     
-    <script src="js/vendor/modernizr-2.6.1.min.js"></script>
+    <script src="js/vendor/modernizr.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-    <script>window.$ || document.write('<script src="js/vendor/jquery.min-1.8.1.js"><\/script>')</script>
+    <script>window.$ || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
     <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>
     <div class="container_24" style="z-index: 10000;">
     
-        <div id="tabs" class="grid_24">
+        <div id="tabs" class="grid_12">
             <ul>
                 <li id="browser">Browser</li>
                 <li id="frompc">Desde el PC</li>
@@ -25,7 +25,7 @@
             </ul>
         </div>
         
-        <div class="tabs grid_24" id="tabbrowser">
+        <div class="tabs grid_12" id="tabbrowser">
             <div id="menu">
                 <a id="create" class="button" style="background-image: url('image/filemanager/folder.png');"><?php echo $Language->get('button_folder'); ?></a>
                 <a id="delete" class="button" style="background-image: url('image/filemanager/edit-delete.png');"><?php echo $Language->get('button_delete'); ?></a>
@@ -693,4 +693,5 @@ jQuery(function(){
 });
 </script>
 </body>
+</html>dy>
 </html>

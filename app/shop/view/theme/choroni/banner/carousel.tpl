@@ -25,10 +25,12 @@ $(function(){
             },
             loading: {
               image: '<?php echo HTTP_IMAGE; ?>loader.gif'
-            },
+            }
+            <?php if ($settings['scroll']) { ?>,
             options: {
                 scroll: <?php echo (int)$settings['scroll']; ?>
             }
+            <?php } ?>
         });
     }
 });

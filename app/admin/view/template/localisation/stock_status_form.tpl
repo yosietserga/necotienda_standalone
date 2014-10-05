@@ -1,6 +1,21 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-<div class="box">
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+    
+    <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
@@ -12,19 +27,20 @@
         <div class="clear"></div>
                                 
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-        <table class="form">
-        <?php foreach ($languages as $language) { ?>
-        <tr>
-          <td><label><?php echo $Language->get('entry_name'); ?></label></td>
-          <td><input title="Ingrese le nombre del estado del stock" name="stock_status[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($stock_status[$language['language_id']]) ? $stock_status[$language['language_id']]['name'] : ''; ?>" required="required" />
-            <img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
-            <?php if (isset($error_name[$language['language_id']])) { ?>
-            <span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
-            <?php } ?></td>
-        </tr>
-        <?php } ?>
-      </table>
+            <table class="form">
+                <?php foreach ($languages as $language) { ?>
+                <tr>
+                  <td><label><?php echo $Language->get('entry_name'); ?></label></td>
+                  <td><input title="Ingrese le nombre del estado del stock" name="stock_status[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($stock_status[$language['language_id']]) ? $stock_status[$language['language_id']]['name'] : ''; ?>" required="required" />
+                    <img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+                    <?php if (isset($error_name[$language['language_id']])) { ?>
+                    <span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
+                    <?php } ?></td>
+                </tr>
+                <?php } ?>
+            </table>
         </form>
+    </div>
 </div>
 <div class="sidebar" id="feedbackPanel">
     <div class="tab"></div>

@@ -1,6 +1,21 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-<div class="box">
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+    
+    <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
@@ -11,46 +26,46 @@
         <div class="clear"></div>
                                 
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-      <table class="form">
-        <tr>
-          <td><?php echo $Language->get('entry_total'); ?></td>
-          <td><input type="text" name="handling_total" value="<?php echo $handling_total; ?>"></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_fee'); ?></td>
-          <td><input type="text" name="handling_fee" value="<?php echo $handling_fee; ?>"></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_tax'); ?></td>
-          <td><select name="handling_tax_class_id">
-              <option value="0"><?php echo $Language->get('text_none'); ?></option>
-              <?php foreach ($tax_classes as $tax_class) { ?>
-              <?php if ($tax_class['tax_class_id'] == $handling_tax_class_id) { ?>
-              <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
-              <?php } else { ?>
-              <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
-              <?php } ?>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_status'); ?></td>
-          <td><select name="handling_status">
-              <?php if ($handling_status) { ?>
-              <option value="1" selected="selected"><?php echo $Language->get('text_enabled'); ?></option>
-              <option value="0"><?php echo $Language->get('text_disabled'); ?></option>
-              <?php } else { ?>
-              <option value="1"><?php echo $Language->get('text_enabled'); ?></option>
-              <option value="0" selected="selected"><?php echo $Language->get('text_disabled'); ?></option>
-              <?php } ?>
-            </select></td>
-        </tr>
-        <tr>
-          <td><?php echo $Language->get('entry_sort_order'); ?></td>
-          <td><input type="text" name="handling_sort_order" value="<?php echo $handling_sort_order; ?>" size="1"></td>
-        </tr>
-      </table>
-    </form>
+            <table class="form">
+                <tr>
+                  <td><?php echo $Language->get('entry_total'); ?></td>
+                  <td><input type="text" name="handling_total" value="<?php echo $handling_total; ?>"></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_fee'); ?></td>
+                  <td><input type="text" name="handling_fee" value="<?php echo $handling_fee; ?>"></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_tax'); ?></td>
+                  <td><select name="handling_tax_class_id">
+                      <option value="0"><?php echo $Language->get('text_none'); ?></option>
+                      <?php foreach ($tax_classes as $tax_class) { ?>
+                      <?php if ($tax_class['tax_class_id'] == $handling_tax_class_id) { ?>
+                      <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+                      <?php } else { ?>
+                      <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+                      <?php } ?>
+                      <?php } ?>
+                    </select></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_status'); ?></td>
+                  <td><select name="handling_status">
+                      <?php if ($handling_status) { ?>
+                      <option value="1" selected="selected"><?php echo $Language->get('text_enabled'); ?></option>
+                      <option value="0"><?php echo $Language->get('text_disabled'); ?></option>
+                      <?php } else { ?>
+                      <option value="1"><?php echo $Language->get('text_enabled'); ?></option>
+                      <option value="0" selected="selected"><?php echo $Language->get('text_disabled'); ?></option>
+                      <?php } ?>
+                    </select></td>
+                </tr>
+                <tr>
+                  <td><?php echo $Language->get('entry_sort_order'); ?></td>
+                  <td><input type="text" name="handling_sort_order" value="<?php echo $handling_sort_order; ?>" size="1"></td>
+                </tr>
+            </table>
+        </form>
     </div>
 </div>
 <div class="sidebar" id="toolPanel">

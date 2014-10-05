@@ -1,24 +1,26 @@
 <?php
-class ControllerStyleViews extends Controller { 
-	private $error = array();
-  
-  	public function index() {
+
+class ControllerStyleViews extends Controller {
+
+    private $error = array();
+
+    public function index() {
         $this->language->load('style/views');
-		$this->document->title = $this->language->get('heading_title');
-        
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        $this->document->title = $this->language->get('heading_title');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->load->auto('setting/setting');
-			$this->modelSetting->update('views', $this->request->post);
-			$this->session->set('success',$this->language->get('text_success'));
-		}
-        
-		if ($this->session->has('success')) {
-			$this->data['success'] = $this->session->get('success');
-			$this->session->clear('success');
-		} else {
-			$this->data['success'] = '';
-		}
-		
+            $this->modelSetting->update('views', $this->request->post);
+            $this->session->set('success', $this->language->get('text_success'));
+        }
+
+        if ($this->session->has('success')) {
+            $this->data['success'] = $this->session->get('success');
+            $this->session->clear('success');
+        } else {
+            $this->data['success'] = '';
+        }
+
         // general views
         $this->setvar('default_view_search_home');
         $this->setvar('default_view_not_found');
@@ -26,7 +28,7 @@ class ControllerStyleViews extends Controller {
         $this->setvar('default_view_maintenance');
         $this->setvar('default_view_contact');
         $this->setvar('default_view_sitemap');
-        
+
         // content views
         $this->setvar('default_view_page');
         $this->setvar('default_view_page');
@@ -40,7 +42,7 @@ class ControllerStyleViews extends Controller {
         $this->setvar('default_view_post_review');
         $this->setvar('default_view_post_comment');
         $this->setvar('default_view_post_category');
-        
+
         // store views
         $this->setvar('default_view_search');
         $this->setvar('default_view_special');
@@ -60,7 +62,7 @@ class ControllerStyleViews extends Controller {
         $this->setvar('default_view_manufacturer_all');
         $this->setvar('default_view_manufacturer_home');
         $this->setvar('default_view_manufacturer_error');
-        
+
         // account views
         $this->setvar('default_view_account_login');
         $this->setvar('default_view_account_logout');
@@ -89,54 +91,55 @@ class ControllerStyleViews extends Controller {
         $this->setvar('default_view_account_review_read_error');
         $this->setvar('default_view_account_success');
         $this->setvar('default_view_account_account');
-  
-  		$this->document->breadcrumbs = array();
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('marketing/message'),
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-		$this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
 
-  		if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
+        $this->document->breadcrumbs = array();
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('common/home'),
+            'text' => $this->language->get('text_home'),
+            'separator' => false
+        );
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('marketing/message'),
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
+        $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
+
+        if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
             $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';
-    	} else {
-    		$folderTPL = DIR_CATALOG . 'view/theme/default/';
-    	}
-        
+        } else {
+            $folderTPL = DIR_CATALOG . 'view/theme/default/';
+        }
+
         $directories = glob($folderTPL . "*", GLOB_ONLYDIR);
-		$this->data['templates'] = array();
-		foreach ($directories as $key => $directory) {
-			$this->data['views'][$key]['folder'] = basename($directory);
+        $this->data['templates'] = array();
+        foreach ($directories as $key => $directory) {
+            $this->data['views'][$key]['folder'] = basename($directory);
             $files = glob($directory . "/*.tpl", GLOB_NOSORT);
             foreach ($files as $k => $file) {
-    			$this->data['views'][$key]['files'][$k] = str_replace("\\","/",$file) ;
-    		}
-		}
+                $this->data['views'][$key]['files'][$k] = str_replace("\\", "/", $file);
+            }
+        }
+
+        $this->template = 'style/views.tpl';
         
-		$this->template = 'style/views.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('marketing_compression'));
-  	}
-    
-	private function validate() {
-		if (!$this->user->hasPermission('modify', 'style/views')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
         
-		if (!$this->error) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+        $this->response->setOutput($this->render(true), $this->config->get('marketing_compression'));
+    }
+
+    private function validate() {
+        if (!$this->user->hasPermission('modify', 'style/views')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

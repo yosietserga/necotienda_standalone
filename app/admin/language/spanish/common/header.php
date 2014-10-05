@@ -110,3 +110,4 @@ $_['text_showslider']        = 'Showsliders';
 $_['text_links']             = 'Enlaces';
 $_['text_bank']             = 'Bancos';
 $_['text_bank_account']             = 'Cuentas Bancarias';
+$_['text_filemanager']             = 'Gestor de Archivos';

@@ -138,9 +138,7 @@ class ControllerModuleSpecial extends Controller {
             );
         }
 
-        if (!$this->config->get('config_customer_price')) {
-            $this->data['display_price'] = true;
-        } elseif ($this->customer->isLogged()) {
+        if (!$this->config->get('config_customer_price') || $this->customer->isLogged()) {
             $this->data['display_price'] = true;
         } else {
             $this->data['display_price'] = false;
@@ -152,7 +150,7 @@ class ControllerModuleSpecial extends Controller {
         $this->load->auto("store/product");
         $this->load->auto('image');
         $this->load->auto('json');
-
+        
         $json['results'] = $this->modelProduct->getProductSpecials(isset($_GET['limit']) ? $_GET['limit'] : 40);
         $width = isset($_GET['width']) ? $_GET['width'] : 80;
         $height = isset($_GET['height']) ? $_GET['height'] : 80;
@@ -160,7 +158,9 @@ class ControllerModuleSpecial extends Controller {
             if (!file_exists(DIR_IMAGE . $v['image']))
                 $json['results'][$k]['image'] = HTTP_IMAGE . "no_image.jpg";
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
-            $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+            if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode'=='store')) {
+                $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+            }
         }
 
         if (!count($json['results']))

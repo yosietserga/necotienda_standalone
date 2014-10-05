@@ -1,8 +1,22 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-<?php if ($success) { ?><div class="grid_24"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
-<div class="box">
-    <h1><?php echo $Language->get('heading_title'); ?></h1>
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+    
+    <div class="box">
+        <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
             <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
@@ -10,46 +24,46 @@
             <a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $Language->get('button_cancel'); ?></a>
         </div>
         
-    <div class="clear"></div>
-               
-    <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-        <?php if ($_GET['r']=='store/store/insert') { ?>
-        <div class="row">
-            <label><?php echo $Language->get('entry_own_file'); ?></label>
-            <input type="checkbox" name="create_app" value="1" />
-        </div>               
-            
         <div class="clear"></div>
-                
-        <div class="row">
-            <label><?php echo $Language->get('entry_folder'); ?></label>
-            <input type="text" name="config_folder" value="" placeholder="newshop" />
-        </div>
-        
-        <div class="clear"></div><br />
-        <?php } ?>
-        <div class="htabs product_tabs">
-            <a data-target="#general" class="htab"><?php echo $Language->get('tab_general'); ?></a>
-            <a data-target="#store" class="htab"><?php echo $Language->get('tab_store'); ?></a>
-            <a data-target="#local" class="htab"><?php echo $Language->get('tab_local'); ?></a>
-            <a data-target="#option" class="htab"><?php echo $Language->get('tab_option'); ?></a>
-            <a data-target="#image" class="htab"><?php echo $Language->get('tab_image'); ?></a>
-            <a data-target="#mail" class="htab"><?php echo $Language->get('tab_mail'); ?></a>
-            <a data-target="#server" class="htab"><?php echo $Language->get('tab_server'); ?></a>
-            <?php if ($showContent) { ?><a data-target="#store_content" class="htab"><?php echo $Language->get('tab_content'); ?></a><?php } ?>
-        </div>
-        
-        <div class="product_tab" id="general"><?php require_once(dirname(__FILE__)."/store_form_general.tpl"); ?></div>
-        <div class="product_tab" id="store"><?php require_once(dirname(__FILE__)."/store_form_store.tpl"); ?></div>
-        <div class="product_tab" id="local"><?php require_once(dirname(__FILE__)."/store_form_local.tpl"); ?></div>
-        <div class="product_tab" id="option"><?php require_once(dirname(__FILE__)."/store_form_option.tpl"); ?></div>
-        <div class="product_tab" id="image"><?php require_once(dirname(__FILE__)."/store_form_images.tpl"); ?></div>
-        <div class="product_tab" id="mail"><?php require_once(dirname(__FILE__)."/store_form_mail.tpl"); ?></div>
-        <div class="product_tab" id="server"><?php require_once(dirname(__FILE__)."/store_form_server.tpl"); ?></div>
-        <?php if ($showContent) { ?><div class="product_tab" id="store_content"><?php require_once(dirname(__FILE__)."/store_form_content.tpl"); ?></div><?php } ?>
-    </form>
-</div>
 
+        <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
+            <?php if ($_GET['r']=='store/store/insert') { ?>
+            <div class="row">
+                <label><?php echo $Language->get('entry_own_file'); ?></label>
+                <input type="checkbox" name="create_app" value="1" />
+            </div>               
+
+            <div class="clear"></div>
+
+            <div class="row">
+                <label><?php echo $Language->get('entry_folder'); ?></label>
+                <input type="text" name="config_folder" value="" placeholder="newshop" />
+            </div>
+
+            <div class="clear"></div><br />
+            <?php } ?>
+            <div class="htabs product_tabs">
+                <a data-target="#general" class="htab"><?php echo $Language->get('tab_general'); ?></a>
+                <a data-target="#store" class="htab"><?php echo $Language->get('tab_store'); ?></a>
+                <a data-target="#local" class="htab"><?php echo $Language->get('tab_local'); ?></a>
+                <a data-target="#option" class="htab"><?php echo $Language->get('tab_option'); ?></a>
+                <a data-target="#image" class="htab"><?php echo $Language->get('tab_image'); ?></a>
+                <a data-target="#mail" class="htab"><?php echo $Language->get('tab_mail'); ?></a>
+                <a data-target="#server" class="htab"><?php echo $Language->get('tab_server'); ?></a>
+                <?php if ($showContent) { ?><a data-target="#store_content" class="htab"><?php echo $Language->get('tab_content'); ?></a><?php } ?>
+            </div>
+
+            <div class="product_tab" id="general"><?php require_once(dirname(__FILE__)."/store_form_general.tpl"); ?></div>
+            <div class="product_tab" id="store"><?php require_once(dirname(__FILE__)."/store_form_store.tpl"); ?></div>
+            <div class="product_tab" id="local"><?php require_once(dirname(__FILE__)."/store_form_local.tpl"); ?></div>
+            <div class="product_tab" id="option"><?php require_once(dirname(__FILE__)."/store_form_option.tpl"); ?></div>
+            <div class="product_tab" id="image"><?php require_once(dirname(__FILE__)."/store_form_images.tpl"); ?></div>
+            <div class="product_tab" id="mail"><?php require_once(dirname(__FILE__)."/store_form_mail.tpl"); ?></div>
+            <div class="product_tab" id="server"><?php require_once(dirname(__FILE__)."/store_form_server.tpl"); ?></div>
+            <?php if ($showContent) { ?><div class="product_tab" id="store_content"><?php require_once(dirname(__FILE__)."/store_form_content.tpl"); ?></div><?php } ?>
+        </form>
+    </div>
+</div>
 <script type="text/javascript">
 $(document).ready(function() {
 	jQuery('input[type=text],input[type=url],textarea,select,td:first-child').css({'width':'40%'});

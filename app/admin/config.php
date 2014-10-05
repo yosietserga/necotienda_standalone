@@ -1,6 +1,10 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "cconfig.php");
 define('ADMIN_PATH','admin');
+define('DB_VERSION', '1.0.2');
+define('ADMIN_VERSION', '1.0.2');
+define('SHOP_VERSION', '1.0.2');
+define('SYSTEM_VERSION', '1.0.2');
 
 $defaultPath    = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
 $adminPath      = dirname(__FILE__) . DIRECTORY_SEPARATOR;
@@ -24,6 +28,7 @@ define('HTTP_TPL_IMAGE', HTTP_HOME . "view/image/");
 define('HTTP_JS', $protocol.$httppath."/assets/js/");
 define('HTTP_TPL', HTTP_HOME . "view/template/");
 
+define('HTTP_ADMIN_FONT', $protocol.$httppath."/". ADMIN_PATH ."/fonts/");
 define('HTTP_ADMIN_CSS', $protocol.$httppath."/". ADMIN_PATH ."/css/");
 define('HTTP_ADMIN_JS', $protocol.$httppath."/". ADMIN_PATH ."/js/");
 define('HTTP_ADMIN_IMAGE', $protocol.$httppath."/". ADMIN_PATH ."/image/");
@@ -38,6 +43,9 @@ define('DIR_ROOT',          $defaultPath);
 define('DIR_APPLICATION',   $adminPath);
 define('DIR_LANGUAGE',      DIR_APPLICATION . "language" . DIRECTORY_SEPARATOR);
 define('DIR_TEMPLATE',      DIR_APPLICATION . "view/template" . DIRECTORY_SEPARATOR);
+define('DIR_ADMIN_CSS',     $defaultPath . "web/". ADMIN_PATH ."/css" . DIRECTORY_SEPARATOR);
+define('DIR_ADMIN_JS',      $defaultPath . "web/". ADMIN_PATH ."/js" . DIRECTORY_SEPARATOR);
+define('DIR_ADMIN_IMAGE',   $defaultPath . "web/". ADMIN_PATH ."/images" . DIRECTORY_SEPARATOR);
 define('DIR_EMAIL_TEMPLATE',$defaultPath . "web/". ADMIN_PATH ."/email_templates" . DIRECTORY_SEPARATOR);
 
 // Core System

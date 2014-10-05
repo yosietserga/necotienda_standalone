@@ -1,6 +1,21 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-<div class="box">
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+    
+    <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
         <?php if ($manufacturer_id) { ?><a href="<?php echo $Url::createUrl("store/manufacturer",array('manufacturer_id'=>$manufacturer_id),'NONSSL',HTTP_CATALOG); ?>" target="_blank"><?php echo $Language->get('text_see_manufacturer_in_storefront'); ?></a><?php } ?>
         <div class="buttons">
@@ -89,6 +104,7 @@
             <div class="clear"></div><br />
             
         </form>
+    </div>
 </div>
 <div class="sidebar" id="feedbackPanel">
     <div class="tab"></div>

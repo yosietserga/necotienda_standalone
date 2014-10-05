@@ -1,6 +1,21 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?><div class="grid_24"><div class="message warning"><?php echo $error_warning; ?></div></div><?php } ?>
-<div class="box">
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+    
+    <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
@@ -46,29 +61,28 @@
                     <input title="<?php echo $Language->get('help_sort_order'); ?>" type="text" name="weight_sort_order" value="<?php echo $weight_sort_order; ?>" style="width: 40%;" />
                 </div>
                    
-        </div>
+            </div>
         
-        <?php foreach ($geo_zones as $geo_zone) { ?>
-        <div id="tab_geo_zone<?php echo $geo_zone['geo_zone_id']; ?>" class="vtabs_page" style="float:left">
-            <h2><?php echo $geo_zone['name']; ?></h2>
-                <div class="row">
-                    <label><?php echo $Language->get('entry_rate'); ?></label>
-                    <textarea name="weight_<?php echo $geo_zone['geo_zone_id']; ?>_rate" cols="40" rows="5"><?php echo ${'weight_' . $geo_zone['geo_zone_id'] . '_rate'}; ?></textarea>
-                </div>
-                            
-                <div class="row">
-                    <label><?php echo $Language->get('entry_status'); ?></label>
-                    <select name="weight_<?php echo $geo_zone['geo_zone_id']; ?>_status">
-                        <option value="1"<?php if (${'weight_' . $geo_zone['geo_zone_id'] . '_status'}) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_enabled'); ?></option>
-                        <option value="0"<?php if (!${'weight_' . $geo_zone['geo_zone_id'] . '_status'}) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_disabled'); ?></option>
-                    </select>
-                </div>
-                
-        </div>  
-        <?php } ?>
-            
-            
+            <?php foreach ($geo_zones as $geo_zone) { ?>
+            <div id="tab_geo_zone<?php echo $geo_zone['geo_zone_id']; ?>" class="vtabs_page" style="float:left">
+                <h2><?php echo $geo_zone['name']; ?></h2>
+                    <div class="row">
+                        <label><?php echo $Language->get('entry_rate'); ?></label>
+                        <textarea name="weight_<?php echo $geo_zone['geo_zone_id']; ?>_rate" cols="40" rows="5"><?php echo ${'weight_' . $geo_zone['geo_zone_id'] . '_rate'}; ?></textarea>
+                    </div>
+
+                    <div class="row">
+                        <label><?php echo $Language->get('entry_status'); ?></label>
+                        <select name="weight_<?php echo $geo_zone['geo_zone_id']; ?>_status">
+                            <option value="1"<?php if (${'weight_' . $geo_zone['geo_zone_id'] . '_status'}) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_enabled'); ?></option>
+                            <option value="0"<?php if (!${'weight_' . $geo_zone['geo_zone_id'] . '_status'}) { ?> selected="selected"<?php } ?>><?php echo $Language->get('text_disabled'); ?></option>
+                        </select>
+                    </div>
+
+            </div>  
+            <?php } ?>
         </form>
+    </div>
 </div>
 <div class="sidebar" id="feedbackPanel">
     <div class="tab"></div>

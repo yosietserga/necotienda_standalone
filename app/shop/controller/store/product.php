@@ -895,7 +895,7 @@ class ControllerStoreProduct extends Controller {
             $message = str_replace("{%qr_code_store%}", '<img src="' . HTTP_IMAGE . $qrStore . '" alt="QR Code" />', $message);
             $message = str_replace("{%barcode_39_order_id%}", '<img src="' . HTTP_IMAGE . $eanStore . '" alt="QR Code" />', $message);
 
-            $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; " . date('Y') . "</p>";
+            $message .= "<p style=\"text-align:center\">Powered By <a href=\"http://www.necotienda.org\">Necotienda</a>&reg; " . date('Y') . "</p>";
 
             $subject = $this->config->get('config_owner') . " " . $this->language->get('text_new_comment');
             if ($this->config->get('config_smtp_method') == 'smtp') {
@@ -985,7 +985,7 @@ class ControllerStoreProduct extends Controller {
             $message = str_replace("{%qr_code_store%}", '<img src="' . HTTP_IMAGE . $qrStore . '" alt="QR Code" />', $message);
             $message = str_replace("{%barcode_39_order_id%}", '<img src="' . HTTP_IMAGE . $eanStore . '" alt="QR Code" />', $message);
 
-            $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; " . date('Y') . "</p>";
+            $message .= "<p style=\"text-align:center\">Powered By <a href=\"http://www.necotienda.org\">Necotienda</a>&reg; " . date('Y') . "</p>";
 
             $subject = $this->config->get('config_owner') . " " . $this->language->get('text_new_reply');
             if ($this->config->get('config_smtp_method') == 'smtp') {
@@ -1018,6 +1018,7 @@ class ControllerStoreProduct extends Controller {
         $this->load->auto("store/product");
         $this->load->auto('image');
         $this->load->auto('json');
+        $Url = new Url($this->registry);
 
         $json['results'] = $this->modelProduct->getProductRelated($this->request->get['product_id']);
         $width = isset($_GET['width']) ? $_GET['width'] : 80;
@@ -1027,12 +1028,178 @@ class ControllerStoreProduct extends Controller {
                 $json['results'][$k]['image'] = HTTP_IMAGE . "no_image.jpg";
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
             $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+            $json['results'][$k]['href'] = $Url::createUrl('store/product',array('product_id'=>$v['product_id']));
         }
 
         if (!count($json['results']))
             $json['error'] = 1;
 
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
+    }
+
+    public function quickViewJson() {
+        $this->load->auto('store/product');
+        
+        $this->product_id = $product_id = isset($this->request->get['product_id']) ? (int) $this->request->get['product_id'] : $product_id = 0;
+        $product_info = $this->modelProduct->getProduct($product_id);
+
+        if ($product_info) {
+            $cached = $this->cache->get('product.json.callback' .
+                    $product_id .
+                    $this->config->get('config_language_id') . "." .
+                    $this->config->get('config_currency') . "." .
+                    (int) $this->config->get('config_store_id')
+            );
+            $this->load->library('user');
+            if ($cached && !$this->user->isLogged()) {
+                $this->response->setOutput($cached, $this->config->get('config_compression'));
+            } else {
+                $this->load->auto('store/category');
+                $this->load->auto('store/manufacturer');
+                $this->load->auto('tool/image');
+                $this->load->auto('store/review');
+                $this->load->auto('currency');
+                $this->load->auto('tax');
+                $this->load->auto('json');
+                $this->load->auto('url');
+                $this->language->load('store/product');
+                
+                $Url = new Url($this->registry);
+                $average = ($this->config->get('config_review')) ? $this->modelReview->getAverageRating($product_id) : false;
+
+                $image = isset($product_info['image']) ? $product_info['image'] : $image = 'no_image.jpg';
+                $this->data['popup'] = NTImage::resizeAndSave($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
+                $this->data['thumb'] = NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
+
+                $imgProduct = array(
+                    'popup' => NTImage::resizeAndSave($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                    'preview' => NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                    'thumb' => NTImage::resizeAndSave($image, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+                );
+
+                $this->data['productInfo'] = $product_info;
+
+                $discount = $this->modelProduct->getProductDiscount($product_id);
+
+                if ($discount) {
+                    $this->data['price'] = $this->currency->format($this->tax->calculate($discount, $product_info['tax_class_id'], $this->config->get('config_tax')));
+                    $this->data['special'] = false;
+                } else {
+                    $this->data['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                    $special = $this->modelProduct->getProductSpecial($product_id);
+
+                    if ($special) {
+                        $this->data['special'] = $this->currency->format($this->tax->calculate($special, $product_info['tax_class_id'], $this->config->get('config_tax')));
+                    } else {
+                        $this->data['special'] = false;
+                    }
+                }
+
+                $discounts = $this->modelProduct->getProductDiscounts($product_id);
+                
+                if ($discounts) {
+                    $this->data['discounts'] = array();
+                    foreach ($discounts as $discount) {
+                        $this->data['discounts'][] = array(
+                            'quantity' => $discount['quantity'],
+                            'price' => $this->currency->format($this->tax->calculate($discount['price'], $product_info['tax_class_id'], $this->config->get('config_tax')))
+                        );
+                    }
+                }
+
+                if ($product_info['quantity'] <= 0) {
+                    $this->data['stock'] = $product_info['stock'];
+                } else {
+                    if ($this->config->get('config_stock_display')) {
+                        $this->data['stock'] = $product_info['quantity'];
+                    } else {
+                        $this->data['stock'] = $this->language->get('text_instock');
+                    }
+                }
+
+                if ($product_info['minimum']) {
+                    $this->data['minimum'] = $product_info['minimum'];
+                } else {
+                    $this->data['minimum'] = 1;
+                }
+
+                $this->data['model'] = $product_info['model'];
+                $this->data['href'] = $Url::createUrl('store/product',array('product_id'=>$product_info['product_id']));
+                $this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+                $this->data['product_id'] = $product_id;
+                $this->data['average'] = $average;
+                $this->data['button_add_to_cart'] = $this->language->get('button_add_to_cart');
+                $this->data['button_see_product'] = $this->language->get('button_see_product');
+
+                $this->data['images'] = array();
+                $results = $this->modelProduct->getProductImages($product_id);
+
+                foreach ($results as $k => $result) {
+                    $this->data['images'][$k] = array(
+                        'popup' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                        'preview' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                        'thumb' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+                    );
+                }
+                $k = count($this->data['images']) + 1;
+                $this->data['images'][$k] = $imgProduct;
+
+                if (!$this->config->get('config_customer_price')) {
+                    $this->data['display_price'] = true;
+                } elseif ($this->customer->isLogged()) {
+                    $this->data['display_price'] = true;
+                } else {
+                    $this->data['display_price'] = false;
+                }
+
+                list($dia, $mes, $ano) = explode('-', date('d-m-Y'));
+                list($pdia, $pmes, $pano) = explode('-', date('d-m-Y', strtotime($product_info['created'])));
+                $l = ((int) $this->config->get('config_new_days') > 30) ? 30 : $this->config->get('config_new_days');
+                if (($dia = $dia - $l) <= 0) {
+                    $dia = $dia + 30;
+                    if ($dia <= 0)
+                        $dia = 1;
+                    $mes = $mes - 1;
+                    if ($mes <= 0) {
+                        $mes = $mes + 12;
+                        $ano = $ano - 1;
+                    }
+                }
+
+                if ($special && $this->data['display_price']) {
+                    $this->data['sticker'] = "<div class='oferta'></div>";
+                } elseif ($discount && $this->data['display_price']) {
+                    $this->data['sticker'] = "<div class='descuento'></div>";
+                } elseif (strtotime($dia . "-" . $mes . "-" . $ano) <= strtotime($pdia . "-" . $pmes . "-" . $pano)) {
+                    $this->data['sticker'] = "<div class='nuevo'></div>";
+                } else {
+                    $this->data['sticker'] = "";
+                }
+
+                $this->data['config_image_popup_width'] = $this->config->get('config_image_popup_width');
+                $this->data['config_image_popup_height'] = $this->config->get('config_image_popup_height');
+                $this->data['config_image_thumb_width'] = $this->config->get('config_image_thumb_width');
+                $this->data['config_image_thumb_height'] = $this->config->get('config_image_thumb_height');
+                $this->data['config_image_additional_width'] = $this->config->get('config_image_additional_width');
+                $this->data['config_image_additional_height'] = $this->config->get('config_image_additional_height');
+
+                $this->modelProduct->updateStats($this->request->getQuery('product_id'), (int) $this->customer->getId());
+
+                if (!$this->user->isLogged()) {
+                    $this->cacheId = 'product.json.callback' .
+                            $product_id .
+                            $this->config->get('config_language_id') . "." .
+                            $this->config->get('config_currency') . "." .
+                            (int) $this->config->get('config_store_id');
+                }
+                $this->response->setOutput(Json::encode($this->data), $this->config->get('config_compression'));
+            }
+        } else {
+            $this->data = array();
+            $this->data['error'] = 1;
+            $this->load->auto('json');
+            $this->response->setOutput(Json::encode($this->data), $this->config->get('config_compression'));
+        }
     }
 
     public function related() {

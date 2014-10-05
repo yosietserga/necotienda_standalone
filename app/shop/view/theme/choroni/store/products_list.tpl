@@ -52,7 +52,7 @@
                 <p class="overview"><?php echo substr($product['overview'],0,150)." ... "; ?><a href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>">Leer M&aacute;s</a></p>
             </div>
             <div class="right">
-                <?php if ($display_price) { ?>
+                                    <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
                     <?php if (!$product['special']) { ?>
                         <p class="price"><?php echo $product['price']; ?></p>
                     <?php } else { ?>

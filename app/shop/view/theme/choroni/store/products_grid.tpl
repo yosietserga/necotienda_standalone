@@ -23,7 +23,7 @@
             <a class="thumb" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /><?php echo $product['sticker']; ?></a>
             <a class="name" href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>"><?php echo $product['name']; ?></a>
             <p class="model"><?php echo $product['model']; ?></p>
-            <?php if ($display_price) { ?>
+            <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
                 <?php if (!$product['special']) { ?>
                     <p class="price"><?php echo $product['price']; ?></p>
                 <?php } else { ?>

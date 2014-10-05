@@ -1,20 +1,16 @@
 <div class="box">
-    <div class="header">
-        <hgroup><h1>Gr&aacute;fico de Pedidos</h1></hgroup>
-    </div>
-    <div class="clear"></div><br />
-    <div id="chart_order_line" style="width:100%; height: 300px; margin: 0 auto"></div>
+    <div id="chart_order_line" style="width:100%; height: 120px; margin: 0 auto"></div>
 </div>
 <script type="text/javascript">
 $(function () {
     var chart;
-    $(document).ready(function() {
+    $(function() {
         chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'chart_order_line',
-                type: 'line',
-                marginRight: 130,
-                marginBottom: 25
+                type: 'bar',
+                marginBottom: 25,
+                plotShadow: false
             },
             title: {
                 text: 'Pedidos',
@@ -44,12 +40,20 @@ $(function () {
                 }
             },
             legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -10,
-                y: 100,
-                borderWidth: 0
+                enabled: false
+            },
+            series: [
+                {
+                    name: 'Pedidos',
+                    data: [
+                        <?php echo implode(',', $orders); ?>
+                    ]
+                }
+            ]
+        });
+    });
+});
+</script>               borderWidth: 0
             },
             series: [{
                 name: 'Pedidos',

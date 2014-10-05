@@ -648,6 +648,7 @@ tr:hover {
     list-style: none;
 }
 .grid_view li {
+    position: relative;
     margin:10px 2%;
     padding:10px 1%;
     width:23%;
@@ -717,6 +718,12 @@ tr:hover {
 	display:block;
 	z-index:99;
 }
+.grid_view li .quick_view_button {
+    position:absolute;
+    top:90px;
+    left:30%;
+    z-index:99;
+}
 .list_view, .list_view ul {
     width:100%;
 }
@@ -725,6 +732,7 @@ tr:hover {
 }
 .list_view li {
     clear:both;
+    position:relative;
     margin:10px 0px;
     padding:10px 2%;
     width:96%;
@@ -807,6 +815,29 @@ tr:hover {
 }
 .list_view li:nth-child(odd) {
     background:#fff;
+}
+.list_view li .quick_view_button {
+    position:absolute;
+    top:90px;
+    left:10%;
+    z-index:99;
+}
+li .quick_view_button {
+    padding:10px;
+    background:rgba(255,255,255,0.8);
+    border-radius:2px;
+    color:#666;
+    font:bold 11px Arial, sans-serif;
+    text-decoration:none;
+    text-transform:uppercase;
+    height:15px;
+    opacity:0;
+    box-shadow:0px 0px 4px #999;
+    transition:all 0.5s ease-out;
+    z-index:99;
+}
+.list_view li:hover .quick_view_button, .grid_view li:hover .quick_view_button {
+    opacity:1;
 }
 .view_style {
     margin:5px;

@@ -151,7 +151,7 @@ class ControllerCheckoutSuccess extends Controller {
                 $message = str_replace("{%qr_code_order%}", '<img src="' . HTTP_IMAGE . $qrOrder . '" alt="QR Code" />', $message);
                 $message = str_replace("{%barcode_39_order_id%}", '<img src="' . HTTP_IMAGE . $eanStore . '" alt="QR Code" />', $message);
 
-                $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; " . date('Y') . "</p>";
+                $message .= "<p style=\"text-align:center\">Powered By <a href=\"http://www.necotienda.org\">Necotienda</a>&reg; " . date('Y') . "</p>";
 
                 if ($this->config->get('marketing_email_order_pdf')) {
                     $pdfFile = DIR_CACHE . str_replace(" ", "_", $this->config->get('config_owner') . "_pedido_" . $order_id) . '.pdf';

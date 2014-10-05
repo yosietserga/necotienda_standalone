@@ -106,6 +106,7 @@ $_['button_next']             = 'Siguiente';
 $_['button_prev']             = 'Atr&aacute;s';
 
 // Tab
+$_['tab_menu']                = 'Menu';
 $_['tab_admin']               = 'Admin';
 $_['tab_address']             = 'Direci&oacute;n';
 $_['tab_cache']               = 'Cache';
@@ -134,7 +135,6 @@ $_['tab_send']                = 'Enviar';
 $_['tab_check']               = 'Datos de Env&iacute;o';
 $_['tab_pages']               = 'P&aacute;ginas';
 $_['tab_newsletters']         = 'Newsletters';
-
 $_['entry_store']         = 'Tienda:';
 
 

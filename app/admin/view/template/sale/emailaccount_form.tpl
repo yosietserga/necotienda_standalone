@@ -1,10 +1,21 @@
 <?php echo $header; ?>
-<?php if ($error_warning) { ?>
-<div class="warning"><?php echo $error_warning; ?></div>
-<?php } ?>
-<div class="box">
-  <div class="left"></div>
-  <div class="right"></div>
+<?php echo $navigation; ?>
+<div class="container">
+    
+    <?php if ($breadcrumbs) { ?>
+    <ul class="breadcrumb">
+        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+        <?php } ?>
+    </ul>
+    <?php } ?>
+    
+    <?php if ($success) { ?><div class="grid_12"><div class="message success"><?php echo $success; ?></div></div><?php } ?>
+    <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
+    <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
+    <div class="grid_12" id="msg"></div>
+    
+    <div class="box">
   <div class="heading">
     <h1 style="background-image: url('view/image/customer.png');"><?php echo $Language->get('heading_title'); ?></h1>
     <div class="buttons"><a title="" onClick="$('#form').submit();" class="button"><span><?php echo $Language->get('button_save'); ?></span></a><a title="" onClick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $Language->get('button_cancel'); ?></span></a></div>

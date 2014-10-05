@@ -64,8 +64,10 @@
                             <th><?php echo $Language->get('column_name'); ?></th>
                             <th><?php echo $Language->get('column_model'); ?></th>
                             <th><?php echo $Language->get('column_quantity'); ?></th>
+                                    <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
                             <th><?php echo $Language->get('column_price'); ?></th>
                             <th><?php echo $Language->get('column_total'); ?></th>
+                    <?php } ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,13 +85,16 @@
                                 <input type="text" name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" showquick="off" size="3" style="float:left;width:30px;" onchange="refreshCart(this,'<?php echo $product['key']; ?>')" />
                                 <a class="update-product" onclick="refreshCart(this,'<?php echo $product['key']; ?>')" title="<?php echo $Language->get('text_update'); ?>"></a>
                             </td>
+                                    <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
                             <td><?php echo $product['price']; ?></td>
                             <td><?php echo $product['total']; ?></td>
+                    <?php } ?>
                         </tr>
                         <?php } ?>
                     </tbody>
                     </table>
                     
+                                    <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
                     <table id="totals">
                     <?php foreach ($totals as $total) { ?>
                         <tr>
@@ -98,6 +103,7 @@
                         </tr>
                     <?php } ?>
                     </table>
+                    <?php } ?>
                     
             </div>
 

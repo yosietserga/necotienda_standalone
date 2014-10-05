@@ -127,6 +127,12 @@ class ControllerCheckoutCart extends Controller {
                 );
             }
 
+            if (!$this->config->get('config_customer_price') || $this->customer->isLogged()) {
+                $this->data['display_price'] = true;
+            } else {
+                $this->data['display_price'] = false;
+            }
+
             if ($this->config->get('config_cart_weight')) {
                 $this->data['weight'] = $this->weight->format($this->cart->getWeight(), $this->config->get('config_weight_class'));
             } else {
@@ -1024,9 +1030,6 @@ class ControllerCheckoutCart extends Controller {
     }
 
     public function callback() {
-        if ($this->config->get('config_store_mode') != 'store') {
-            $this->redirect(Url::createUrl('common/home'));
-        }
         $this->language->load('module/cart');
 
         $output = '<li>';
@@ -1035,7 +1038,11 @@ class ControllerCheckoutCart extends Controller {
             foreach ($this->cart->getProducts() as $product) {
                 $output .= '<div>';
                 //$output .= '<td class="cartRemove" id="remove_ ' . $product['key'] . '">&nbsp;</td>';
-                $output .= '<p>' . $product['quantity'] . '&nbsp;x&nbsp;' . $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))) . '</p>';
+                if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode')=='store') {
+                    $output .= '<p>' . $product['quantity'] . '&nbsp;x&nbsp;' . $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))) . '</p>';
+                } else {
+                    $output .= '<p>' . $product['quantity'] . '</p>';
+                }
                 $output .= '<p>';
                 $output .= '<a href="' . Url::createUrl("store/product", array("product_id" => $product['product_id'])) . '">' . $product['name'] . '</a>';
 
@@ -1053,32 +1060,34 @@ class ControllerCheckoutCart extends Controller {
             $total = 0;
             $taxes = $this->cart->getTaxes();
 
-            $this->load->model('checkout/extension');
-            $sort_order = array();
-            $results = $this->modelExtension->getExtensions('total');
-            foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['key'] . '_sort_order');
-            }
-            array_multisort($sort_order, SORT_ASC, $results);
-            foreach ($results as $result) {
-                $this->load->model('total/' . $result['key']);
+            if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode')=='store') {
+                $this->load->model('checkout/extension');
+                $sort_order = array();
+                $results = $this->modelExtension->getExtensions('total');
+                foreach ($results as $key => $value) {
+                    $sort_order[$key] = $this->config->get($value['key'] . '_sort_order');
+                }
+                array_multisort($sort_order, SORT_ASC, $results);
+                foreach ($results as $result) {
+                    $this->load->model('total/' . $result['key']);
 
-                $this->{'model_total_' . $result['key']}->getTotal($total_data, $total, $taxes);
-            }
-            $sort_order = array();
-            foreach ($total_data as $key => $value) {
-                $sort_order[$key] = $value['sort_order'];
-            }
-            array_multisort($sort_order, SORT_ASC, $total_data);
+                    $this->{'model_total_' . $result['key']}->getTotal($total_data, $total, $taxes);
+                }
+                $sort_order = array();
+                foreach ($total_data as $key => $value) {
+                    $sort_order[$key] = $value['sort_order'];
+                }
+                array_multisort($sort_order, SORT_ASC, $total_data);
 
-            $output .= '<table>';
-            foreach ($total_data as $total) {
-                $output .= '<tr>';
-                $output .= '<td><strong>' . $total['title'] . '</strong></td>';
-                $output .= '<td>' . $total['text'] . '</td>';
-                $output .= '</tr>';
+                $output .= '<table>';
+                foreach ($total_data as $total) {
+                    $output .= '<tr>';
+                    $output .= '<td><strong>' . $total['title'] . '</strong></td>';
+                    $output .= '<td>' . $total['text'] . '</td>';
+                    $output .= '</tr>';
+                }
+                $output .= '</table>';
             }
-            $output .= '</table>';
             $output .= '<div><a style="width:95%" class="button" href="' . Url::createUrl("checkout/cart") . '">' . $this->language->get('text_cart') . '</a></div>';
             
             $output .= '</li>';

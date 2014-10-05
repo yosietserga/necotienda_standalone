@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ControllerSaleCustomerGroup
  * 
@@ -10,128 +11,129 @@
  * @see Controller
  */
 class ControllerSaleCustomerGroup extends Controller {
-	private $error = array();
- 
-	/**
-	 * ControllerSaleCustomerGroup::index()
-	 * 
-	 * @see Load
-	 * @see Language
-	 * @see getList
-	 * @return void
-	 */
-	public function index() {
-		$this->document->title = $this->language->get('heading_title');
- 		$this->getList();
-	}
 
-	/**
-	 * ControllerSaleCustomerGroup::insert()
-	 * 
-	 * @see Load
-	 * @see Language
-	 * @see Redirect
-	 * @see Session
-	 * @see getForm
-	 * @return void
-	 */
-	public function insert() {
-		$this->document->title = $this->language->get('heading_title');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-		    $this->request->post['params'] = serialize($this->request->post['Params']);
-			$customer_group_id = $this->modelCustomergroup->add($this->request->post);
-            
-			$this->session->set('success',$this->language->get('text_success'));
+    private $error = array();
+
+    /**
+     * ControllerSaleCustomerGroup::index()
+     * 
+     * @see Load
+     * @see Language
+     * @see getList
+     * @return void
+     */
+    public function index() {
+        $this->document->title = $this->language->get('heading_title');
+        $this->getList();
+    }
+
+    /**
+     * ControllerSaleCustomerGroup::insert()
+     * 
+     * @see Load
+     * @see Language
+     * @see Redirect
+     * @see Session
+     * @see getForm
+     * @return void
+     */
+    public function insert() {
+        $this->document->title = $this->language->get('heading_title');
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->request->post['params'] = serialize($this->request->post['Params']);
+            $customer_group_id = $this->modelCustomergroup->add($this->request->post);
+
+            $this->session->set('success', $this->language->get('text_success'));
 
             if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('sale/customergroup/update',array('customer_group_id'=>$customer_group_id))); 
+                $this->redirect(Url::createAdminUrl('sale/customergroup/update', array('customer_group_id' => $customer_group_id)));
             } elseif ($_POST['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('sale/customergroup/insert')); 
+                $this->redirect(Url::createAdminUrl('sale/customergroup/insert'));
             } else {
-                $this->redirect(Url::createAdminUrl('sale/customergroup')); 
+                $this->redirect(Url::createAdminUrl('sale/customergroup'));
             }
-		}
+        }
 
-		$this->getForm();
-	}
+        $this->getForm();
+    }
 
-	/**
-	 * ControllerSaleCustomerGroup::update()
-	 * 
-	 * @see Load
-	 * @see Language
-	 * @see Redirect
-	 * @see Session
-	 * @see getForm
-	 * @return void
-	 */
-	public function update() {
-		$this->document->title = $this->language->get('heading_title');
-        
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-		    $this->request->post['params'] = serialize($this->request->post['Params']);
-			$this->modelCustomergroup->update($this->request->get['customer_group_id'], $this->request->post);
-			
-			$this->session->set('success',$this->language->get('text_success'));
-			
+    /**
+     * ControllerSaleCustomerGroup::update()
+     * 
+     * @see Load
+     * @see Language
+     * @see Redirect
+     * @see Session
+     * @see getForm
+     * @return void
+     */
+    public function update() {
+        $this->document->title = $this->language->get('heading_title');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->request->post['params'] = serialize($this->request->post['Params']);
+            $this->modelCustomergroup->update($this->request->get['customer_group_id'], $this->request->post);
+
+            $this->session->set('success', $this->language->get('text_success'));
+
             if ($_POST['to'] == "saveAndKeep") {
-                $this->redirect(Url::createAdminUrl('sale/customergroup/update',array('customer_group_id'=>$this->request->get['customer_group_id']))); 
+                $this->redirect(Url::createAdminUrl('sale/customergroup/update', array('customer_group_id' => $this->request->get['customer_group_id'])));
             } elseif ($_POST['to'] == "saveAndNew") {
-                $this->redirect(Url::createAdminUrl('sale/customergroup/insert')); 
+                $this->redirect(Url::createAdminUrl('sale/customergroup/insert'));
             } else {
-                $this->redirect(Url::createAdminUrl('sale/customergroup')); 
+                $this->redirect(Url::createAdminUrl('sale/customergroup'));
             }
-		}
+        }
 
-		$this->getForm();
-	}
+        $this->getForm();
+    }
 
-	/**
-	 * ControllerSaleCustomerGroup::getById()
-	 * 
-	 * @see Load
-	 * @see Language
-	 * @see Response
-	 * @see Session
-	 * @see Request
-	 * @return void
-	 */
-	private function getList() {
-  		$this->document->breadcrumbs = array();
+    /**
+     * ControllerSaleCustomerGroup::getById()
+     * 
+     * @see Load
+     * @see Language
+     * @see Response
+     * @see Session
+     * @see Request
+     * @return void
+     */
+    private function getList() {
+        $this->document->breadcrumbs = array();
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('common/home'),
+            'text' => $this->language->get('text_home'),
+            'separator' => false
+        );
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('sale/customergroup') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-							
-		$this->data['insert'] = Url::createAdminUrl('sale/customergroup/insert') . $url;
-		$this->data['delete'] = Url::createAdminUrl('sale/customergroup/delete') . $url;	
-	
-		$this->data['heading_title'] = $this->language->get('heading_title');
-		
-		$this->data['button_insert'] = $this->language->get('button_insert');
-		$this->data['button_delete'] = $this->language->get('button_delete');
- 
- 		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] :  '';
-		
-		if ($this->session->has('success')) {
-			$this->data['success'] = $this->session->get('success');
-			$this->session->clear('success');
-		} else {
-			$this->data['success'] = '';
-		}
-		
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('sale/customergroup') . $url,
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
+
+        $this->data['insert'] = Url::createAdminUrl('sale/customergroup/insert') . $url;
+        $this->data['delete'] = Url::createAdminUrl('sale/customergroup/delete') . $url;
+
+        $this->data['heading_title'] = $this->language->get('heading_title');
+
+        $this->data['button_insert'] = $this->language->get('button_insert');
+        $this->data['button_delete'] = $this->language->get('button_delete');
+
+        $this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
+
+        if ($this->session->has('success')) {
+            $this->data['success'] = $this->session->get('success');
+            $this->session->clear('success');
+        } else {
+            $this->data['success'] = '';
+        }
+
         // SCRIPTS
-        $scripts[] = array('id'=>'customergroupList','method'=>'function','script'=>
+        $scripts[] = array('id' => 'customergroupList', 'method' => 'function', 'script' =>
             "function activate(e) {
-                $.getJSON('". Url::createAdminUrl("sale/customergroup/activate") ."',{
+                $.getJSON('" . Url::createAdminUrl("sale/customergroup/activate") . "',{
                     id:e
                 },function(data){
                     if (data > 0) {
@@ -144,9 +146,9 @@ class ControllerSaleCustomerGroup extends Controller {
             
             function eliminar(e) {
                 if (confirm('\\xbfDesea eliminar este objeto?')) {
-                    if (e != '". $this->config->get('config_customer_group_id') ."') {
+                    if (e != '" . $this->config->get('config_customer_group_id') . "') {
                         $('#tr_' + e).remove();
-                    	$.getJSON('". Url::createAdminUrl("sale/customergroup/delete") ."',{
+                    	$.getJSON('" . Url::createAdminUrl("sale/customergroup/delete") . "',{
                             id:e
                         });
                     } else {
@@ -167,8 +169,8 @@ class ControllerSaleCustomerGroup extends Controller {
             function copyAll() {
                 $('#gridWrapper').hide();
                 $('#gridPreloader').show();
-                $.post('". Url::createAdminUrl("sale/customergroup/copy") ."',$('#form').serialize(),function(){
-                    $('#gridWrapper').load('". Url::createAdminUrl("sale/customergroup/grid") ."',function(){
+                $.post('" . Url::createAdminUrl("sale/customergroup/copy") . "',$('#form').serialize(),function(){
+                    $('#gridWrapper').load('" . Url::createAdminUrl("sale/customergroup/grid") . "',function(){
                         $('#gridWrapper').show();
                         $('#gridPreloader').hide();
                     });
@@ -180,8 +182,8 @@ class ControllerSaleCustomerGroup extends Controller {
                 if (confirm('\\xbfDesea eliminar todos los objetos seleccionados?')) {
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
-                    $.post('". Url::createAdminUrl("sale/customergroup/delete") ."',$('#form').serialize(),function(){
-                        $('#gridWrapper').load('". Url::createAdminUrl("sale/customergroup/grid") ."',function(){
+                    $.post('" . Url::createAdminUrl("sale/customergroup/delete") . "',$('#form').serialize(),function(){
+                        $('#gridWrapper').load('" . Url::createAdminUrl("sale/customergroup/grid") . "',function(){
                             $('#gridWrapper').show();
                             $('#gridPreloader').hide();
                         });
@@ -189,9 +191,9 @@ class ControllerSaleCustomerGroup extends Controller {
                 }
                 return false;
             }");
-            
-        $scripts[] = array('id'=>'sortable','method'=>'ready','script'=>
-            "$('#gridWrapper').load('". Url::createAdminUrl("sale/customergroup/grid") ."',function(e){
+
+        $scripts[] = array('id' => 'sortable', 'method' => 'ready', 'script' =>
+            "$('#gridWrapper').load('" . Url::createAdminUrl("sale/customergroup/grid") . "',function(e){
                 $('#gridPreloader').hide();
                 $('#list tbody').sortable({
                     opacity: 0.6, 
@@ -201,7 +203,7 @@ class ControllerSaleCustomerGroup extends Controller {
                         $.ajax({
                             'type':'post',
                             'dateType':'json',
-                            'url':'". Url::createAdminUrl("sale/customergroup/sortable") ."',
+                            'url':'" . Url::createAdminUrl("sale/customergroup/sortable") . "',
                             'data': $(this).sortable('serialize'),
                             'success': function(data) {
                                 if (data > 0) {
@@ -222,7 +224,7 @@ class ControllerSaleCustomerGroup extends Controller {
                 ajax:true,
                 type:'get',
                 dataType:'html',
-                url:'". Url::createAdminUrl("sale/customergroup/grid") ."',
+                url:'" . Url::createAdminUrl("sale/customergroup/grid") . "',
                 beforeSend:function(){
                     $('#gridWrapper').hide();
                     $('#gridPreloader').show();
@@ -231,215 +233,243 @@ class ControllerSaleCustomerGroup extends Controller {
                     $('#gridPreloader').hide();
                     $('#gridWrapper').html(data).show();
                 }
+            });
+            $('#formFilter').on('keyup', function(e){
+                var code = e.keyCode || e.which;
+                if (code == 13){
+                    $('#formFilter').ntForm('submit');
+                }
             });");
-             
-        $this->scripts = array_merge($this->scripts,$scripts);
+
+        $this->scripts = array_merge($this->scripts, $scripts);
+
+        $this->template = 'sale/customer_group_list.tpl';
         
-		$this->template = 'sale/customer_group_list.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
- 	}
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+        
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
 
-	/**
-	 * ControllerSaleCustomerGroup::grid()
-	 * 
-	 * @see Load
-	 * @see Language
-	 * @see Response
-	 * @see Session
-	 * @see Request
-	 * @return void
-	 */
-	public function grid() {
-		$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
-		$filter_customer = isset($this->request->get['filter_customer']) ? $this->request->get['filter_customer'] : null;
-		$filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
-		$filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
-		$page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-		$sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
-		$order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
-		$limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
-		
-		$url = '';
-			
-		if (isset($this->request->get['filter_name'])) { $url .= '&filter_name=' . $this->request->get['filter_name']; } 
-		if (isset($this->request->get['filter_customer'])) { $url .= '&filter_customer=' . $this->request->get['filter_customer']; } 
-		if (isset($this->request->get['filter_date_start'])) { $url .= '&filter_date_start=' . $this->request->get['filter_date_start']; }
-		if (isset($this->request->get['filter_date_end'])) { $url .= '&filter_date_end=' . $this->request->get['filter_date_end']; }
-		if (isset($this->request->get['page'])) { $url .= '&page=' . $this->request->get['page']; }
-		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
-		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
-		if (!empty($this->request->get['limit'])) { $url .= '&limit=' . $this->request->get['limit']; }
+    /**
+     * ControllerSaleCustomerGroup::grid()
+     * 
+     * @see Load
+     * @see Language
+     * @see Response
+     * @see Session
+     * @see Request
+     * @return void
+     */
+    public function grid() {
+        $filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
+        $filter_customer = isset($this->request->get['filter_customer']) ? $this->request->get['filter_customer'] : null;
+        $filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
+        $filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
+        $page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+        $sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
+        $order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
+        $limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
 
-		$this->data['customer_groups'] = array();
+        $url = '';
 
-		$data = array(
-			'filter_name'     => $filter_name, 
-			'filter_customer' => $filter_customer, 
-			'filter_date_start'=> $filter_date_start, 
-			'filter_date_end' => $filter_date_end, 
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * $limit,
-			'limit' => $limit
-		);
-		
-		$customer_group_total = $this->modelCustomergroup->getAllTotal();
-		
-		$results = $this->modelCustomergroup->getAll($data);
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . $this->request->get['filter_name'];
+        }
+        if (isset($this->request->get['filter_customer'])) {
+            $url .= '&filter_customer=' . $this->request->get['filter_customer'];
+        }
+        if (isset($this->request->get['filter_date_start'])) {
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        }
+        if (isset($this->request->get['filter_date_end'])) {
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        }
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+        if (!empty($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
 
-		foreach ($results as $result) {
-			
-			$action = array(
-                'activate'  => array(
-                        'action'  => 'activate',
-                        'text'  => $this->language->get('text_activate'),
-                        'href'  =>'',
-                        'img'   => ($result['status']==1) ? 'good.png' :  'minus.png'
+        $this->data['customer_groups'] = array();
+
+        $data = array(
+            'filter_name' => $filter_name,
+            'filter_customer' => $filter_customer,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $limit,
+            'limit' => $limit
+        );
+
+        $customer_group_total = $this->modelCustomergroup->getAllTotal();
+
+        $results = $this->modelCustomergroup->getAll($data);
+
+        foreach ($results as $result) {
+
+            $action = array(
+                'activate' => array(
+                    'action' => 'activate',
+                    'text' => $this->language->get('text_activate'),
+                    'href' => '',
+                    'img' => ($result['status'] == 1) ? 'good.png' : 'minus.png'
                 ),
-                'edit'      => array(
-                        'action'  => 'edit',
-                        'text'  => $this->language->get('text_edit'),
-                        'href'  =>Url::createAdminUrl('sale/customergroup/update') . '&customer_group_id=' . $result['customer_group_id'] . $url,
-                        'img'   => 'edit.png'
+                'edit' => array(
+                    'action' => 'edit',
+                    'text' => $this->language->get('text_edit'),
+                    'href' => Url::createAdminUrl('sale/customergroup/update') . '&customer_group_id=' . $result['customer_group_id'] . $url,
+                    'img' => 'edit.png'
                 ),
-                'delete'    => array(
-                        'action'  => 'delete',
-                        'text'  => $this->language->get('text_delete'),
-                        'href'  =>'',
-                        'img'   => 'delete.png'
+                'delete' => array(
+                    'action' => 'delete',
+                    'text' => $this->language->get('text_delete'),
+                    'href' => '',
+                    'img' => 'delete.png'
                 )
-            );	
-		      
+            );
+
             $customers = $this->modelCustomergroup->getAllTotalByGroup($result['customer_group_id']);
-			$this->data['customer_groups'][] = array(
-				'customer_group_id' => $result['customer_group_id'],
-				'params'            => unserialize($result['params']),
-				'qty_customers'    => (int)$customers,
-				'name'              => $result['name'] . (($result['customer_group_id'] == $this->config->get('config_customer_group_id')) ? $this->language->get('text_default') : null),
-				'selected'          => isset($this->request->post['selected']) && in_array($result['customer_group_id'], $this->request->post['selected']),
-				'action'            => $action
-			);
-		}	
-	
-		$this->data['text_no_results']    = $this->language->get('text_no_results');
-		$this->data['column_name']        = $this->language->get('column_name');
-		$this->data['column_qty_customers']  = $this->language->get('column_qty_customers');
-		$this->data['column_qty_orders']  = $this->language->get('column_qty_orders');
-		$this->data['column_qty_invoices']= $this->language->get('column_qty_invoices');
-		$this->data['column_qty_references'] = $this->language->get('column_qty_references');
-		$this->data['column_qty_reviews'] = $this->language->get('column_qty_reviews');
-		$this->data['column_action']      = $this->language->get('column_action');
+            $this->data['customer_groups'][] = array(
+                'customer_group_id' => $result['customer_group_id'],
+                'params' => unserialize($result['params']),
+                'qty_customers' => (int) $customers,
+                'name' => $result['name'] . (($result['customer_group_id'] == $this->config->get('config_customer_group_id')) ? $this->language->get('text_default') : null),
+                'selected' => isset($this->request->post['selected']) && in_array($result['customer_group_id'], $this->request->post['selected']),
+                'action' => $action
+            );
+        }
 
-		$url = '';
+        $this->data['text_no_results'] = $this->language->get('text_no_results');
+        $this->data['column_name'] = $this->language->get('column_name');
+        $this->data['column_qty_customers'] = $this->language->get('column_qty_customers');
+        $this->data['column_qty_orders'] = $this->language->get('column_qty_orders');
+        $this->data['column_qty_invoices'] = $this->language->get('column_qty_invoices');
+        $this->data['column_qty_references'] = $this->language->get('column_qty_references');
+        $this->data['column_qty_reviews'] = $this->language->get('column_qty_reviews');
+        $this->data['column_action'] = $this->language->get('column_action');
 
-		if ($order == 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
-		}
+        $url = '';
 
-		if (isset($this->request->get['page'])) { $url .= '&page=' . $this->request->get['page']; }
-		$this->data['sort_name'] = Url::createAdminUrl('sale/customergroup/grid') . '&sort=name' . $url;
-		
-		$url = '';
+        if ($order == 'ASC') {
+            $url .= '&order=DESC';
+        } else {
+            $url .= '&order=ASC';
+        }
 
-		if (isset($this->request->get['sort'])) { $url .= '&sort=' . $this->request->get['sort']; }
-		if (isset($this->request->get['order'])) { $url .= '&order=' . $this->request->get['order']; }
-				
-		$pagination = new Pagination();
-		$pagination->ajax         = true;
-		$pagination->ajaxTarget   = "gridWrapper";
-		$pagination->total        = $customer_group_total;
-		$pagination->page         = $page;
-		$pagination->limit        = $limit;
-		$pagination->text         = $this->language->get('text_pagination');
-		$pagination->url          = Url::createAdminUrl('sale/customergroup/grid') . $url . '&page={page}';
-		
-		$this->data['pagination'] = $pagination->render();				
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+        $this->data['sort_name'] = Url::createAdminUrl('sale/customergroup/grid') . '&sort=name' . $url;
 
-		$this->data['sort'] = $sort; 
-		$this->data['order'] = $order;
-		
-		$this->template = 'sale/customer_group_grid.tpl';
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression'));
- 	}
+        $url = '';
 
-	/**
-	 * ControllerSaleCustomerGroup::getForm()
-	 * 
-	 * @see Load
-	 * @see Language
-	 * @see Response
-	 * @see Session
-	 * @see Request
-	 * @return void
-	 */
-	private function getForm() {
-		$this->data['heading_title']      = $this->language->get('heading_title');
-        
-		$this->data['entry_name']         = $this->language->get('entry_name');
-		$this->data['entry_qty_orders']   = $this->language->get('entry_qty_orders');
-		$this->data['entry_qty_invoices'] = $this->language->get('entry_qty_invoices');
-		$this->data['entry_qty_references'] = $this->language->get('entry_qty_references');
-		$this->data['entry_qty_reviews']  = $this->language->get('entry_qty_reviews');
-        
-		$this->data['help_name']          = $this->language->get('help_name');
-		$this->data['help_qty_orders']    = $this->language->get('help_qty_orders');
-		$this->data['help_qty_invoices']  = $this->language->get('help_qty_invoices');
-		$this->data['help_qty_reviews']   = $this->language->get('help_qty_reviews');
-		$this->data['help_qty_references']= $this->language->get('help_qty_references');
-        
-		$this->data['button_save']        = $this->language->get('button_save');
-		$this->data['button_cancel']      = $this->language->get('button_cancel');
-		$this->data['button_save_and_new'] = $this->language->get('button_save_and_new');
-		$this->data['button_save_and_exit']= $this->language->get('button_save_and_exit');
-		$this->data['button_save_and_keep']= $this->language->get('button_save_and_keep');
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        $pagination = new Pagination();
+        $pagination->ajax = true;
+        $pagination->ajaxTarget = "gridWrapper";
+        $pagination->total = $customer_group_total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+        $pagination->text = $this->language->get('text_pagination');
+        $pagination->url = Url::createAdminUrl('sale/customergroup/grid') . $url . '&page={page}';
+
+        $this->data['pagination'] = $pagination->render();
+
+        $this->data['sort'] = $sort;
+        $this->data['order'] = $order;
+
+        $this->template = 'sale/customer_group_grid.tpl';
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+
+    /**
+     * ControllerSaleCustomerGroup::getForm()
+     * 
+     * @see Load
+     * @see Language
+     * @see Response
+     * @see Session
+     * @see Request
+     * @return void
+     */
+    private function getForm() {
+        $this->data['heading_title'] = $this->language->get('heading_title');
+
+        $this->data['entry_name'] = $this->language->get('entry_name');
+        $this->data['entry_qty_orders'] = $this->language->get('entry_qty_orders');
+        $this->data['entry_qty_invoices'] = $this->language->get('entry_qty_invoices');
+        $this->data['entry_qty_references'] = $this->language->get('entry_qty_references');
+        $this->data['entry_qty_reviews'] = $this->language->get('entry_qty_reviews');
+
+        $this->data['help_name'] = $this->language->get('help_name');
+        $this->data['help_qty_orders'] = $this->language->get('help_qty_orders');
+        $this->data['help_qty_invoices'] = $this->language->get('help_qty_invoices');
+        $this->data['help_qty_reviews'] = $this->language->get('help_qty_reviews');
+        $this->data['help_qty_references'] = $this->language->get('help_qty_references');
+
+        $this->data['button_save'] = $this->language->get('button_save');
+        $this->data['button_cancel'] = $this->language->get('button_cancel');
+        $this->data['button_save_and_new'] = $this->language->get('button_save_and_new');
+        $this->data['button_save_and_exit'] = $this->language->get('button_save_and_exit');
+        $this->data['button_save_and_keep'] = $this->language->get('button_save_and_keep');
 
 
- 		$this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
- 		$this->data['error_name']    = ($this->error['name']) ? $this->error['name'] : '';
-		
-  		$this->document->breadcrumbs = array();
+        $this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
+        $this->data['error_name'] = ($this->error['name']) ? $this->error['name'] : '';
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('common/home'),
-       		'text'      => $this->language->get('text_home'),
-      		'separator' => false
-   		);
+        $this->document->breadcrumbs = array();
 
-   		$this->document->breadcrumbs[] = array(
-       		'href'      => Url::createAdminUrl('sale/customergroup') . $url,
-       		'text'      => $this->language->get('heading_title'),
-      		'separator' => ' :: '
-   		);
-			
-		if (!isset($this->request->get['customer_group_id'])) {
-			$this->data['action'] = Url::createAdminUrl('sale/customergroup/insert') . $url;
-		} else {
-			$this->data['action'] = Url::createAdminUrl('sale/customergroup/update') . '&customer_group_id=' . $this->request->get['customer_group_id'] . $url;
-		}
-		  
-    	$this->data['cancel'] = Url::createAdminUrl('sale/customergroup') . $url;
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('common/home'),
+            'text' => $this->language->get('text_home'),
+            'separator' => false
+        );
 
-		if (isset($this->request->get['customer_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$customer_group_info = $this->modelCustomergroup->getById($this->request->get['customer_group_id']);
-		}
-        
-        $this->setvar('name',$customer_group_info,'');
-        $this->setvar('params',$customer_group_info,array());
-        
+        $this->document->breadcrumbs[] = array(
+            'href' => Url::createAdminUrl('sale/customergroup') . $url,
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
+
+        if (!isset($this->request->get['customer_group_id'])) {
+            $this->data['action'] = Url::createAdminUrl('sale/customergroup/insert') . $url;
+        } else {
+            $this->data['action'] = Url::createAdminUrl('sale/customergroup/update') . '&customer_group_id=' . $this->request->get['customer_group_id'] . $url;
+        }
+
+        $this->data['cancel'] = Url::createAdminUrl('sale/customergroup') . $url;
+
+        if (isset($this->request->get['customer_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+            $customer_group_info = $this->modelCustomergroup->getById($this->request->get['customer_group_id']);
+        }
+
+        $this->setvar('name', $customer_group_info, '');
+        $this->setvar('params', $customer_group_info, array());
+
         if (!is_array($this->data['params'])) {
             $this->data['params'] = unserialize($this->data['params']);
         }
-			
+
         $this->data['Url'] = new Url;
-        
-        $scripts[] = array('id'=>'form','method'=>'ready','script'=>
+
+        $scripts[] = array('id' => 'form', 'method' => 'ready', 'script' =>
             "$('#q').on('change',function(e){
                 var that = this;
                 var valor = $(that).val().toLowerCase();
@@ -471,8 +501,8 @@ class ControllerSaleCustomerGroup extends Controller {
                     return 'There is unsaved form data.';
                 }
             };");
-            
-        $scripts[] = array('id'=>'Functions','method'=>'function','script'=>
+
+        $scripts[] = array('id' => 'Functions', 'method' => 'function', 'script' =>
             "function saveAndExit() { 
                 window.onbeforeunload = null;
                 $('#form').append(\"<input type='hidden' name='to' value='saveAndExit'>\").submit(); 
@@ -487,82 +517,84 @@ class ControllerSaleCustomerGroup extends Controller {
                 window.onbeforeunload = null;
                 $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
             }");
-            
-        $this->scripts = array_merge($this->scripts,$scripts);
+
+        $this->scripts = array_merge($this->scripts, $scripts);
+
+        $this->template = 'sale/customer_group_form.tpl';
         
-		$this->template = 'sale/customer_group_form.tpl';
-		$this->children = array(
-			'common/header',	
-			'common/footer'	
-		);
-		
-		$this->response->setOutput($this->render(true), $this->config->get('config_compression')); 
-	}
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/footer';
+        
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
 
-	/**
-	 * ControllerSaleCustomerGroup::validateForm()
-	 * 
-	 * @see User
-	 * @see Language
-	 * @see Request
-	 * @return bool
-	 */
-	private function validateForm() {
-		if (!$this->user->hasPermission('modify', 'sale/customergroup')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+    /**
+     * ControllerSaleCustomerGroup::validateForm()
+     * 
+     * @see User
+     * @see Language
+     * @see Request
+     * @return bool
+     */
+    private function validateForm() {
+        if (!$this->user->hasPermission('modify', 'sale/customergroup')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
 
-		if ((strlen(utf8_decode($this->request->post['name'])) < 3) || (strlen(utf8_decode($this->request->post['name']))> 64)) {
-			$this->error['name'] = $this->language->get('error_name');
-		}
+        if ((strlen(utf8_decode($this->request->post['name'])) < 3) || (strlen(utf8_decode($this->request->post['name'])) > 64)) {
+            $this->error['name'] = $this->language->get('error_name');
+        }
 
-		if (!$this->error) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * ControllerSaleCustomerGroup::validateDelete()
-	 * 
-	 * @see User
-	 * @see Language
-	 * @see Request
-	 * @return bool
-	 */
-	private function validateDelete() {
-		if (!$this->user->hasPermission('modify', 'sale/customer_group')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
-		
-		$this->load->auto('sale/customer');
-      	
-		foreach ($this->request->post['selected'] as $customer_group_id) {
-    		if ($this->config->get('config_customer_group_id') == $customer_group_id) {
-	  			$this->error['warning'] = $this->language->get('error_default');	
-			}  
-			
-			$customer_total = $this->modelCustomer->getAllTotalByCustomerGroupId($customer_group_id);
+    /**
+     * ControllerSaleCustomerGroup::validateDelete()
+     * 
+     * @see User
+     * @see Language
+     * @see Request
+     * @return bool
+     */
+    private function validateDelete() {
+        if (!$this->user->hasPermission('modify', 'sale/customer_group')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
 
-			if ($customer_total) {
-				$this->error['warning'] = sprintf($this->language->get('error_customer'), $customer_total);
-			}
-		}
-		
-		if (!$this->error) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+        $this->load->auto('sale/customer');
+
+        foreach ($this->request->post['selected'] as $customer_group_id) {
+            if ($this->config->get('config_customer_group_id') == $customer_group_id) {
+                $this->error['warning'] = $this->language->get('error_default');
+            }
+
+            $customer_total = $this->modelCustomer->getAllTotalByCustomerGroupId($customer_group_id);
+
+            if ($customer_total) {
+                $this->error['warning'] = sprintf($this->language->get('error_customer'), $customer_total);
+            }
+        }
+
+        if (!$this->error) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * ControllerSaleCategory::activate()
      * activar o desactivar un objeto accedido por ajax
      * @return boolean
      * */
-     public function activate() {
-        if (!isset($_GET['id'])) return false;
+    public function activate() {
+        if (!isset($_GET['id']))
+            return false;
         $this->load->auto('sale/customergroup');
         $status = $this->modelCustomergroup->getById($_GET['id']);
         if ($status) {
@@ -573,44 +605,46 @@ class ControllerSaleCustomerGroup extends Controller {
                 $this->modelCustomergroup->desactivate($_GET['id']);
                 echo -1;
             }
-            
         } else {
             echo 0;
         }
-     }
-     
-  	/**
-  	 * ControllerMarketingNewsletter::copy()
+    }
+
+    /**
+     * ControllerMarketingNewsletter::copy()
      * duplicar un objeto
-  	 * @return boolean
-  	 */
-  	public function copy() {
+     * @return boolean
+     */
+    public function copy() {
         $this->load->auto('sale/customergroup');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelCustomergroup->copy($id);
             }
-		} else {
+        } else {
             $this->modelCustomergroup->copy($_GET['id']);
-		}
+        }
         echo 1;
-  	}
-      
+    }
+
     /**
      * ControllerMarketingNewsletter::delete()
      * elimina un objeto
      * @return boolean
      * */
-     public function delete() {
+    public function delete() {
         $this->load->auto('sale/customergroup');
-		if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
-	            if ($id == $this->config->get('config_customer_group_id')) return false;
+                if ($id == $this->config->get('config_customer_group_id'))
+                    return false;
                 $this->modelCustomergroup->delete($id);
             }
-		} else {
-            if ($_GET['id'] == $this->config->get('config_customer_group_id')) return false;
+        } else {
+            if ($_GET['id'] == $this->config->get('config_customer_group_id'))
+                return false;
             $this->modelCustomergroup->delete($_GET['id']);
-		}
-     }
+        }
+    }
+
 }

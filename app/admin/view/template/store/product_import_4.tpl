@@ -14,7 +14,3 @@
         <p>Total de Productos: <b id="total"><?php echo (int)$_GET['total']; ?></b></p>
         
     </div>
-<script>
-$(function(){
-});
-</script>

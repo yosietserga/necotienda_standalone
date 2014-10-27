@@ -7,6 +7,4 @@
         <?php if ($twitter_oauth_token_secret) { ?><a class="socialSmallButton twitterButton" href="<?php echo $Url::createUrl("api/twitter",array('redirect'=>'invitefriends')); ?>"><?php echo $Language->get('text_twitter_invite'); ?></a><?php } ?>           
     </div>
     <div class="clear"></div><br />
-</li>>
-    <div class="clear"></div><br />
 </li>

@@ -117,10 +117,13 @@ class ControllerCommonLogin extends Controller {
 
         if (!$this->user->login($this->request->post['username'], $this->request->post['password'], false)) {
             $json['error'] = 1;
+            $userInfo = $this->db->query("SELECT user_id FROM ". DB_PREFIX ."user WHERE username = '". $this->request->post['username'] ."'");
+            $this->user->registerActivity($userInfo->row['user_id'], 'user', 'Intento de inicio de sesión fallido', 'login');
         } elseif (!$json['error']) {
             $json['redirect'] = isset($this->request->post['redirect']) ?
                     Url::createUrl($this->request->post['redirect'], array('token' => $this->session->get('ukey'))) :
                     Url::createUrl('common/home', array('token' => $this->session->get('ukey')));
+            $this->user->registerActivity($this->user->getId(), 'user', 'Inicio de sesión', 'login');
             $json['success'] = 1;
         }
 
@@ -147,6 +150,8 @@ class ControllerCommonLogin extends Controller {
                 WHERE username = '" . $this->request->getPost('username') . "' 
                 AND email = '" . $this->request->getPost('email') . "'");
 
+                $this->user->registerActivity($result->row['user_id'], 'user', 'Solicitud de generación de contraseña nueva', 'update');
+            
                 $this->load->auto('email/mailer');
                 $mailer = new Mailer;
 
@@ -177,6 +182,7 @@ class ControllerCommonLogin extends Controller {
 
                 $this->redirect(Url::createUrl('common/login'));
             } else {
+                $this->user->registerActivity($result->row['user_id'], 'user', 'Intento fallido de solicitud de generación de contraseña nueva', 'update');
                 $this->data['error_warning'] = $this->language->get('error_user_unknown');
             }
         }

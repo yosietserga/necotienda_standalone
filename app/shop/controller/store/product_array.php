@@ -90,10 +90,4 @@ if (!$this->config->get('config_customer_price') || $this->customer->isLogged())
     $this->data['display_price'] = true;
 } else {
     $this->data['display_price'] = false;
-}('config_customer_price')) {
-			$this->data['display_price'] = true;
-		} elseif ($this->customer->isLogged()) {
-			$this->data['display_price'] = true;
-		} else {
-			$this->data['display_price'] = false;
-		}
+}

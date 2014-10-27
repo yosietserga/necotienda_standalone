@@ -98,6 +98,30 @@ final class User {
         $this->username = '';
     }
 
+    public function registerActivity($id, $type, $desc, $action='update', $event='click') {
+        if (file_exists(__DIR__ . '/browser.php')) {
+            include_once('browser.php');
+            $browser = new Browser;
+        }
+        
+        $actions = array('login', 'logout', 'create','read','update','delete', 'import', 'export');
+        $events = array('load','click','keydown');
+        
+        if ($browser && in_array($action, $actions) && in_array($event, $events)) {
+            $this->db->query("INSERT " . DB_PREFIX . "user_activity SET 
+            `user_id`       = '" . (int) $this->getId() . "',
+            `object_id`     = '" . (int) $id . "',
+            `object_type`   = '" . $this->db->escape($type) . "',
+            `description`   = '" . $this->db->escape($desc) . "',
+            `session`        = '" . $this->db->escape(serialize($_SESSION)) . "',
+            `browser`       = '" . $this->db->escape($browser->getBrowser()) . "',
+            `browser_version`= '" . $this->db->escape($browser->getVersion()) . "',
+            `os`            = '" . $this->db->escape($browser->getPlatform()) . "',
+            `ip`            = '" . $this->db->escape($_SERVER['REMOTE_ADDR']) . "',
+            `date_added`    = NOW()");
+        }
+    }
+
     public function hasPermission($key, $value) {
         if (isset($this->permission[$key])) {
             return in_array($value, $this->permission[$key]);

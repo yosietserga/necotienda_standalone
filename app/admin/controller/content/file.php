@@ -5,7 +5,7 @@ class ControllerContentFile extends Controller {
     private $error = array();
 
     public function index() {
-        $this->load->language('common/filemanager');
+        $this->load->language('content/file');
         $this->load->library('url');
         $this->data['Url'] = new Url;
 
@@ -20,6 +20,8 @@ class ControllerContentFile extends Controller {
             'text' => $this->language->get('heading_title'),
             'separator' => ' :: '
         );
+        
+        $this->document->title = $this->language->get('heading_title');
 
         if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];
@@ -40,7 +42,7 @@ class ControllerContentFile extends Controller {
             $this->data['base'] = HTTP_HOME;
         }
 
-        $this->data['action'] = Url::createAdminUrl("common/filemanager/uploader");
+        $this->data['action'] = Url::createAdminUrl("content/file/uploader");
 
         $this->data['directory'] = HTTP_IMAGE . 'data/';
 
@@ -76,21 +78,20 @@ class ControllerContentFile extends Controller {
     }
 
     public function directory() {
-
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
         header("Cache-Control: no-cache, must-revalidate");
         header("Pragma: no-cache");
         header("Content-type: application/json");
-
+        
         $json = array();
-        if (isset($this->request->post['directory'])) {
-            $directories = glob(rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $this->request->post['directory']), '/') . '/*', GLOB_ONLYDIR);
-
+        $dir = $this->request->hasQuery('directory') ? $this->request->getQuery('directory') : null;
+        if ($dir) {
+            $directories = glob(rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $dir), '/') . '/*', GLOB_ONLYDIR);
             if ($directories) {
                 $i = 0;
                 foreach ($directories as $directory) {
-                    $json[$i]['data'] = basename($directory);
+                    $json[$i]['text'] = basename($directory);
                     $json[$i]['attributes']['directory'] = substr($directory, strlen(DIR_IMAGE . 'data/'));
                     $children = glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR);
                     if ($children) {
@@ -99,11 +100,83 @@ class ControllerContentFile extends Controller {
                     $i++;
                 }
             }
+        } else {
+            $directories = glob(DIR_IMAGE . 'data/*', GLOB_ONLYDIR);
+            $json['text'] = 'Inicio';
+            $json['li_attr']['directory'] = '';
+            $json['state'] = array(
+                'opened'=>true,
+                'selected'=>true
+            );
+            if ($directories) {
+                $json['children'] = $this->__directory('');
+                /*
+                foreach ($directories as $i => $directory) {
+                    $json['children'][$i]['text'] = basename($directory);
+                    $json['children'][$i]['li_attr']['directory'] = substr($directory, strlen(DIR_IMAGE . 'data/'));
+                    $children = glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR);
+                    if ($children) {
+                        $json['children'][$i]['children'] = ' ';
+                    }
+                }
+                */
+            }
         }
+        
         $this->load->library('json');
         $this->response->setOutput(Json::encode($json));
     }
+    
 
+    protected function __directory($dir) {
+        $children = array();
+        $directories = glob(rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $dir), '/') . '/*', GLOB_ONLYDIR);
+        if ($directories) {
+            foreach ($directories as $i => $directory) {
+                $children[$i]['text'] = basename($directory);
+                $subdir = substr($directory, strlen(DIR_IMAGE . 'data/'));
+                $children[$i]['li_attr']['directory'] = $subdir;
+                if (glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR)) {
+                    $children[$i]['children'] = $this->__directory($subdir);
+                }
+            }
+        }
+        return $children;
+    }
+    
+    public function directory_old() {
+
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+
+        $json = array();
+        $dir = $this->request->hasQuery('directory') ? $this->request->getQuery('directory') : null;
+        if ($dir) {
+            $directories = glob(rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $dir), '/') . '/*', GLOB_ONLYDIR);
+        } else {
+            $directories = glob(DIR_IMAGE . 'data/*', GLOB_ONLYDIR);
+        }
+        
+        $json[0] = 'Inicio';
+        if ($directories) {
+            $i = 1;
+            foreach ($directories as $directory) {
+                $json[$i]['data'] = basename($directory);
+                $json[$i]['attributes']['directory'] = substr($directory, strlen(DIR_IMAGE . 'data/'));
+                $children = glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR);
+                if ($children) {
+                    $json[$i]['children'] = ' ';
+                }
+                $i++;
+            }
+        }var_dump($json);
+        $this->load->library('json');
+        $this->response->setOutput(Json::encode($json));
+    }
+    
     public function files() {
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
@@ -112,12 +185,13 @@ class ControllerContentFile extends Controller {
         header("Content-type: application/json");
 
         $json = array();
-        if (isset($this->request->post['directory']) && $this->request->post['directory']) {
-            $directory = DIR_IMAGE . 'data/' . str_replace('../', '', $this->request->post['directory']);
+        $dir = $this->request->hasQuery('directory') ? $this->request->getQuery('directory') : null;
+        if ($dir && $dir!='undefined') {
+            $directory = DIR_IMAGE . 'data/' . str_replace('../', '', $dir);
         } else {
             $directory = DIR_IMAGE . 'data/';
         }
-
+        
         $allowed = array(
             '.jpg',
             '.jpeg',
@@ -199,22 +273,23 @@ class ControllerContentFile extends Controller {
 
         $this->load->language('common/filemanager');
         $json = array();
-        if (isset($this->request->post['directory'])) {
-            if (isset($this->request->post['name']) || $this->request->post['name']) {
-                $directory = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
+        
+        if ($this->request->hasQuery('directory') && $this->request->getQuery('directory') != 'undefined') {
+            $directory = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $this->request->getQuery('directory')), '/');
+        } else {
+            $directory = DIR_IMAGE . 'data';
+        }
+        
+        if ($this->request->hasQuery('name')) {
+            if (!is_dir($directory)) {
+                $json['error'] = $this->language->get('error_directory');
+            }
 
-                if (!is_dir($directory)) {
-                    $json['error'] = $this->language->get('error_directory');
-                }
-
-                if (file_exists($directory . '/' . str_replace('../', '', $this->request->post['name']))) {
-                    $json['error'] = $this->language->get('error_exists');
-                }
-            } else {
-                $json['error'] = $this->language->get('error_name');
+            if (file_exists($directory . '/' . str_replace('../', '', $this->request->getQuery('name')))) {
+                $json['error'] = $this->language->get('error_exists');
             }
         } else {
-            $json['error'] = $this->language->get('error_directory');
+            $json['error'] = $this->language->get('error_name');
         }
 
         if (!$this->user->hasPermission('modify', 'common/filemanager')) {
@@ -222,9 +297,34 @@ class ControllerContentFile extends Controller {
         }
 
         if (!isset($json['error'])) {
-            mkdir($directory . '/' . str_replace('../', '', $this->request->post['name']), 0777);
+            $path = strtolower($this->request->getQuery('name'));
+            $path = str_replace(' ', '-', $path);
+            $path = str_replace('á', 'a', $path);
+            $path = str_replace('é', 'e', $path);
+            $path = str_replace('í', 'i', $path);
+            $path = str_replace('ó', 'o', $path);
+            $path = str_replace('ú', 'u', $path);
+            $path = str_replace('ñ', 'n', $path);
+
+            if ($path !== mb_convert_encoding(mb_convert_encoding($path, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32'))
+                $path = mb_convert_encoding($path, 'UTF-8', mb_detect_encoding($path));
+            $path = htmlentities($path, ENT_NOQUOTES, 'UTF-8');
+            $path = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $path);
+            $path = html_entity_decode($path, ENT_NOQUOTES, 'UTF-8');
+            $path = preg_replace(array('`[^a-z0-9]`i', '`[-]+`'), '-', $path);
+            $path = strtolower(trim($path, '-'));
+
+            mkdir($directory . '/' . str_replace('../', '', $path), 0777);
 
             $json['success'] = $this->language->get('text_create');
+            $json['id'] = $this->request->getQuery('id');
+            $json['name'] = $path;
+            $json['path'] = $path;
+            if ($this->request->getQuery('directory') == 'undefined' || empty($this->request->getQuery('directory'))) {
+                $json['directory'] = $path;
+            } else {
+                $json['directory'] = $this->request->getQuery('directory') .'/'. $path;
+            }
         }
 
         $this->load->library('json');
@@ -465,12 +565,29 @@ class ControllerContentFile extends Controller {
 
         $json = array();
 
-        if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
-            if ((strlen(utf8_decode($this->request->post['name'])) < 3) || (strlen(utf8_decode($this->request->post['name'])) > 255)) {
+        if ($this->request->hasQuery('path') && $this->request->hasQuery('name')) {
+            
+            $name = strtolower($this->request->getQuery('name'));
+            $name = str_replace(' ', '-', $name);
+            $name = str_replace('á', 'a', $name);
+            $name = str_replace('é', 'e', $name);
+            $name = str_replace('í', 'i', $name);
+            $name = str_replace('ó', 'o', $name);
+            $name = str_replace('ú', 'u', $name);
+            $name = str_replace('ñ', 'n', $name);
+
+            if ($name !== mb_convert_encoding(mb_convert_encoding($name, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32'))
+                $name = mb_convert_encoding($name, 'UTF-8', mb_detect_encoding($name));
+            $name = htmlentities($name, ENT_NOQUOTES, 'UTF-8');
+            $name = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $name);
+            $name = html_entity_decode($name, ENT_NOQUOTES, 'UTF-8');
+            $name = preg_replace(array('`[^a-z0-9]`i', '`[-]+`'), '-', $name);
+            $name = strtolower(trim($name, '-'));
+
+            if (strlen($name) < 1 || strlen($name) > 255) {
                 $json['error'] = $this->language->get('error_filename');
             }
-
-            $old_name = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $this->request->post['path']), '/');
+            $old_name = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $this->request->getQuery('path')), '/');
 
             if (!file_exists($old_name) || $old_name == DIR_IMAGE . 'data') {
                 $json['error'] = $this->language->get('error_rename');
@@ -482,7 +599,7 @@ class ControllerContentFile extends Controller {
                 $ext = '';
             }
 
-            $new_name = dirname($old_name) . '/' . str_replace('../', '', $this->request->post['name'] . $ext);
+            $new_name = dirname($old_name) . '/' . str_replace('../', '', $name . $ext);
 
             if (file_exists($new_name)) {
                 $json['error'] = $this->language->get('error_exists');
@@ -496,6 +613,9 @@ class ControllerContentFile extends Controller {
         if (!isset($json['error'])) {
             rename($old_name, $new_name);
 
+            $json['id'] = $this->request->getQuery('id');
+            $json['old'] = $this->request->getQuery('path');
+            $json['name'] = $name;
             $json['success'] = $this->language->get('text_rename');
         }
 

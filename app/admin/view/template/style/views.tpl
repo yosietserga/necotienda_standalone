@@ -802,7 +802,7 @@
                         </select>
                     </td>
                 </tr>
-
+                <!--
                 <tr>
                     <td><?php echo $Language->get('entry_default_view_account_history'); ?></td>
                     <td>
@@ -834,7 +834,7 @@
                         </select>
                     </td>
                 </tr>
-
+                
                 <tr>
                     <td><?php echo $Language->get('entry_default_view_account_newsletter'); ?></td>
                     <td>
@@ -849,8 +849,8 @@
                             <?php } ?>
                         </select>
                     </td>
-                </tr>
-
+                </tr>default_view_account_review_read_error
+                -->
                 <tr>
                     <td><?php echo $Language->get('entry_default_view_account_order'); ?></td>
                     <td>
@@ -978,7 +978,7 @@
                         </select>
                     </td>
                 </tr>
-
+                <!--
                 <tr>
                     <td><?php echo $Language->get('entry_default_view_account_review_read_error'); ?></td>
                     <td>
@@ -994,7 +994,7 @@
                         </select>
                     </td>
                 </tr>
-
+                -->
                 <tr>
                     <td><?php echo $Language->get('entry_default_view_account_success'); ?></td>
                     <td>

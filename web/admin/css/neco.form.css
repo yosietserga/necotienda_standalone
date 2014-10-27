@@ -168,17 +168,3 @@ a.neco-form-error .neco-tooltip {
 
 /* Used by the jQuery slider */
 .ui-slider { position: relative; background-repeat: no-repeat; background-position: center center; }
-r:solid 1px #ddd;
-    border-radius:4px;
-    color:#fff;
-}
-.neco-unlock-sample {background: url(../images/slide_sample.gif) transparent no-repeat;width:192px;height:72px;display:block}
-#neco-unlock-form { position: relative; width:320px;height:94px; background-image:url(../images/lock-bottom.png); }
-#slide-to-unlock {  position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height:94px; background:url(../images/slide-to-unlock.gif) transparent no-repeat; }
-#neco-unlock-slider-wrapper { padding-left:22px; padding-top:23px; }
-#neco-unlock-slider { width:207px; height:50px; }
-.ui-slider .ui-slider-handle{ position: absolute; z-index: 10 !important; height: 50px; width: 72px; top: 0px; left: 0px; margin-left:0px;background: url(../images/lock-slider.png) transparent no-repeat; border:none; cursor:pointer }
-.ui-slider {background:transparent;border:none}
-
-/* Used by the jQuery slider */
-.ui-slider { position: relative; background-repeat: no-repeat; background-position: center center; }

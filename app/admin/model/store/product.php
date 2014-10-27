@@ -55,7 +55,7 @@ class ModelStoreProduct extends Model {
             $this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET 
             product_id = '" . (int) $product_id . "', 
             language_id = '" . (int) $language_id . "', 
-            name = '" . $this->db->escape($value['name']) . "', 
+            name = '" . $this->db->escape(str_replace(':', '', $value['name'])) . "', 
             meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "', 
             meta_description = '" . $this->db->escape($value['meta_description']) . "', 
             description = '" . $this->db->escape($value['description']) . "'");
@@ -97,7 +97,7 @@ class ModelStoreProduct extends Model {
                     product_option_id = '" . (int) $product_option_id . "', 
                     language_id = '" . (int) $language_id . "', 
                     product_id = '" . (int) $product_id . "', 
-                    name = '" . $this->db->escape($language['name']) . "'");
+                    name = '" . $this->db->escape(str_replace('.', '', $language['name'])) . "'");
                 }
 
                 if (isset($product_option['product_option_value'])) {

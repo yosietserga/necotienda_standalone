@@ -41,6 +41,7 @@ class ControllerStoreProduct extends Controller {
      */
     public function index() {
         $this->document->title = $this->language->get('heading_title');
+        $this->user->registerActivity(0, 'product', 'Gestión de listado de productos', 'read');
         $this->getList();
     }
 
@@ -58,7 +59,6 @@ class ControllerStoreProduct extends Controller {
     public function insert() {
         $this->document->title = $this->language->get('heading_title');
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
             foreach ($this->request->post['product_description'] as $language_id => $description) {
                 $dom = new DOMDocument;
                 $dom->preserveWhiteSpace = false;
@@ -90,6 +90,7 @@ class ControllerStoreProduct extends Controller {
                     }
                 }
                 $description['description'] = htmlentities($dom->saveHTML());
+                
                 $this->request->post['product_description'][$language_id] = $description;
             }
 
@@ -120,6 +121,8 @@ class ControllerStoreProduct extends Controller {
             $this->modelProduct->setProperty($product_id, 'customer_groups', 'customer_groups', $this->request->getPost('customer_groups'));
             $this->modelProduct->setProperty($product_id, 'style', 'view', $this->request->getPost('view'));
 
+            $this->user->registerActivity($product_id, 'product', 'Creación de un producto', 'create');
+            
             if ($product_id === false) {
                 $this->error['warning'] = "No puede crear m&aacute;s productos, ha llegado al l&iacute;mite permitido para su cuenta.\nSi desea agregar m&aacute;s productos a su tienda debe comprar una nueva licencia.";
             } else {
@@ -133,6 +136,8 @@ class ControllerStoreProduct extends Controller {
                     $this->redirect(Url::createAdminUrl('store/product'));
                 }
             }
+        } elseif (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->validateForm()) {
+            $this->user->registerActivity(0, 'product', 'Intento fallido de creación de un producto', 'create');
         }
 
         $this->getForm();
@@ -214,7 +219,7 @@ class ControllerStoreProduct extends Controller {
             $this->modelProduct->setProperty($this->request->getQuery('product_id'), 'style', 'view', $this->request->getPost('view'));
 
             $this->session->set('success', $this->language->get('text_success'));
-
+            $this->user->registerActivity($this->request->getQuery('product_id'), 'product', 'Actualización de un producto', 'update');
             if ($_POST['to'] == "saveAndKeep") {
                 $this->redirect(Url::createAdminUrl('store/product/update', array('product_id' => $this->request->getQuery('product_id'))));
             } elseif ($_POST['to'] == "saveAndNew") {
@@ -222,8 +227,10 @@ class ControllerStoreProduct extends Controller {
             } else {
                 $this->redirect(Url::createAdminUrl('store/product'));
             }
+        } elseif (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->validateForm()) {
+            $this->user->registerActivity($this->request->getQuery('product_id'), 'product', 'Intento fallido de actualización de un producto', 'update');
         }
-
+        $this->user->registerActivity((int)$this->request->getQuery('product_id'), 'product', 'Formulario del producto', 'read');
         $this->getForm();
     }
 
@@ -544,7 +551,8 @@ class ControllerStoreProduct extends Controller {
         $this->children[] = 'common/header';
         $this->children[] = 'common/nav';
         $this->children[] = 'common/footer';
-
+        
+        $this->user->registerActivity((int)$this->request->getQuery('product_id'), 'product', 'Estadísticas de los productos', 'read');
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
@@ -1811,12 +1819,15 @@ class ControllerStoreProduct extends Controller {
         if ($status) {
             if ($status['status'] == 0) {
                 $this->modelProduct->activate($_GET['id']);
+                $this->user->registerActivity((int)$_GET['id'], 'product', 'Activó el producto', 'update');
                 echo 1;
             } else {
                 $this->modelProduct->desactivate($_GET['id']);
+                $this->user->registerActivity((int)$_GET['id'], 'product', 'Desactivó el producto', 'update');
                 echo -1;
             }
         } else {
+            $this->user->registerActivity((int)$_GET['id'], 'product', 'Intento fallido de activar/desactivar el producto', 'update');
             echo 0;
         }
     }
@@ -1831,9 +1842,11 @@ class ControllerStoreProduct extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelProduct->delete($id);
+                $this->user->registerActivity((int)$id, 'product', 'Eliminó el producto', 'delete');
             }
         } else {
             $this->modelProduct->delete($_GET['id']);
+            $this->user->registerActivity((int)$_GET['id'], 'product', 'Eliminó el producto', 'delete');
         }
     }
 
@@ -1847,9 +1860,11 @@ class ControllerStoreProduct extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             foreach ($this->request->post['selected'] as $id) {
                 $this->modelProduct->copy($id);
+                $this->user->registerActivity((int)$id, 'product', 'Duplicó el producto', 'create');
             }
         } else {
             $this->modelProduct->copy($_GET['id']);
+            $this->user->registerActivity((int)$_GET['id'], 'product', 'Duplicó el producto', 'create');
         }
         echo 1;
     }

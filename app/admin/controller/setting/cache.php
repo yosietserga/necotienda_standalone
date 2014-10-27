@@ -72,6 +72,3 @@ class ControllerSettingCache extends Controller {
     }
 
 }
- return false;
-    }
-}

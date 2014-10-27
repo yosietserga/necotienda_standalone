@@ -34,6 +34,8 @@
                 <a tab="#mail" class="htab"><?php echo $Language->get('tab_mail'); ?></a>
                 <a tab="#server" class="htab"><?php echo $Language->get('tab_server'); ?></a>
             </div>
+            
+            <p class="message warning">No olvides configurar los cronjobs de tu servidor: 0 * * * * php -f <?php echo str_replace('app/admin/../../', '', DIR_SYSTEM); ?>cron/cron.php > /dev/null 2>&1</p>
 
             <div id="general"><?php require_once(dirname(__FILE__)."/setting_form_general.tpl"); ?></div>
             <div id="store"><?php require_once(dirname(__FILE__)."/setting_form_store.tpl"); ?></div>

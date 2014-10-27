@@ -95,7 +95,7 @@ class ControllerCommonFooter extends Controller {
             };
             setTimeout(function(){
                 $('.message').fadeOut('slow');
-            },5000);
+            },10000);
             
             var preloader = $('#gridPreloader');
             

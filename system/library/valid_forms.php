@@ -299,7 +299,3 @@ final class ValidateForms {
 }
 
 
-   }
-}
-
-

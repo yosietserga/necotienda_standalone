@@ -5,6 +5,3 @@
     <input type="hidden" name="<?php echo $producto['product_id']; ?>" value="<?php echo $producto['product_id']; ?>">
 </div>
 <?php } ?>
-oduct_id']; ?>">
-			</div>
-         <?php } ?>

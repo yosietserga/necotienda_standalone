@@ -12,9 +12,13 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/myapps/necotienda_standalone/app/admin/controller/content/file.php</file>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/myapps/necotienda_standalone/web/admin/js/contentfile.js</file>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/myapps/necotienda_standalone/web/admin/css/contentfile.css</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/common/header.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/content/page.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/web/admin/js/contentfile.js</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/language/spanish/content/file.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/web/admin/css/contentfile.css</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/view/template/content/file_list.tpl</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/content/file.php</file>
         </group>
     </open-files>
 </project-private>

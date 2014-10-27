@@ -103,7 +103,7 @@ class ControllerCommonHeader extends Controller {
         }
         
         $this->load->language('common/header');
-        $this->data['title'] = $this->document->title . " | " . $this->config->get("config_title");
+        $this->data['title'] = $this->document->title . " | NecoTienda";
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
         $this->data['heading_title'] = $this->language->get('heading_title');
 

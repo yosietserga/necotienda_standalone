@@ -42,8 +42,8 @@ class ControllerContentPage extends Controller {
      */
     public function insert() {
         $this->document->title = $this->language->get('heading_title');
-        $this->modelPage->init();
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->modelPage->formValidate()) {
+        
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             //TODO: colocar validaciones
             foreach ($this->request->post['page_description'] as $language_id => $description) {
                 $dom = new DOMDocument;
@@ -103,8 +103,6 @@ class ControllerContentPage extends Controller {
             }
         }
 
-        var_dump($this->modelPage->getErrors());
-
         $this->getForm();
     }
 
@@ -122,8 +120,8 @@ class ControllerContentPage extends Controller {
      */
     public function update() {
         $this->document->title = $this->language->get('heading_title');
-        $this->modelPage->init();
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->modelPage->formValidate()) {
+        
+        if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
 
             foreach ($this->request->post['page_description'] as $language_id => $description) {
                 $dom = new DOMDocument;

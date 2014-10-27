@@ -13,4 +13,4 @@
         <p>Contactos Malos: <b id="bad"><?php echo (int)$_GET['bad']; ?></b></p>
         <p>Total de Contactos: <b id="total"><?php echo (int)$_GET['total']; ?></b></p>
         
-    </div>div>
+    </div>

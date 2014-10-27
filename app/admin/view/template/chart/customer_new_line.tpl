@@ -58,18 +58,4 @@ $(function () {
     });
     
 });
-</script>; ?>,
-                    <?php echo (int)$customers[6]; ?>,
-                    <?php echo (int)$customers[7]; ?>,
-                    <?php echo (int)$customers[8]; ?>,
-                    <?php echo (int)$customers[9]; ?>,
-                    <?php echo (int)$customers[10]; ?>,
-                    <?php echo (int)$customers[11]; ?>,
-                    <?php echo (int)$customers[12]; ?>
-                ]
-            }]
-        });
-    });
-    
-});
 </script>

@@ -318,6 +318,3 @@ class ControllerMarketingBounce extends Controller {
     }
 
 }
-}
-
-}

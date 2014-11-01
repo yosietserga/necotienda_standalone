@@ -16,7 +16,7 @@
     
     <div class="grid_12" id="msg"></div>
     
-    
+    <?php /*
     <div class="grid_4">
         <!-- gauge con la salud del servidor y el sitio web -->
         <div class="box" style="text-align: center;">
@@ -39,7 +39,7 @@
     </div>
     
     <div class="clear"></div>
-    
+    */ ?>
     <div class="grid_6">
         <!-- gráfico de area comparando cantidad de visitas, bs. en ventas, cantidad de pedidos en los últimos 10 días -->
         <div class="box" style="text-align: center;">

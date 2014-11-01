@@ -343,42 +343,44 @@ class ControllerContentFile extends Controller {
 
         $json = array();
 
-        if (isset($this->request->post['path'])) {
-            $path = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $this->request->post['path']), '/');
-
-            if (!file_exists($path)) {
-                $json['error'] = $this->language->get('error_select');
-            }
-
-            if ($path == rtrim(DIR_IMAGE . 'data/', '/')) {
-                $json['error'] = $this->language->get('error_delete');
-            }
-        } elseif (isset($this->request->post['filess'])) {
-            foreach ($this->request->post['filess'] as $file) {
-
-                $file = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $file), '/');
-                if (is_file($file)) {
-                    unlink($file);
-                } elseif (!file_exists($file)) {
-                    $json['error'] = $this->language->get('error_select');
-                }
-            }
-        } else {
-            $json['error'] = $this->language->get('error_select');
-        }
-
         if (!$this->user->hasPermission('modify', 'common/filemanager')) {
             $json['error'] = $this->language->get('error_permission');
         }
 
-        if (!isset($json['error'])) {
-            if (is_file($file)) {
-                unlink($file);
-            } elseif (is_dir($path)) {
-                $this->recursiveDelete($path);
-            }
+        if ($this->request->hasQuery('path')) {
+            $paths = explode(':', $this->request->getQuery('path'));
+            foreach ($paths as $dir) {
+                if (empty($dir) || $dir === ':' || strpos($dir, 'undefined')) continue;
+                $path = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $dir), '/');
 
-            $json['success'] = $this->language->get('text_delete');
+                if (!file_exists($path)) {
+                    $json['error'] = $this->language->get('error_select');
+                }
+
+                if ($path == rtrim(DIR_IMAGE . 'data/', '/')) {
+                    $json['error'] = $this->language->get('error_delete');
+                }
+                
+                if (!isset($json['error'])) {
+                    if (is_dir($path)) {
+                        $this->recursiveDelete($path);
+                    }
+                    $json['success'] = $this->language->get('text_delete');
+                }
+            }
+        } elseif ($this->request->hasPost('filess')) {
+            foreach ($this->request->getPost('filess') as $file) {
+                if (!isset($json['error'])) {
+                    $file = rtrim(DIR_IMAGE . 'data/' . str_replace('../', '', $file), '/');
+                    if (is_file($file)) {
+                        unlink($file);
+                    } elseif (!file_exists($file)) {
+                        $json['error'] = $this->language->get('error_select');
+                    }
+                }
+            }
+        } else {
+            $json['error'] = $this->language->get('error_select');
         }
 
         $this->load->library('json');

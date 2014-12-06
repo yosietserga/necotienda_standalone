@@ -25,7 +25,7 @@
             <?php foreach ($manufacturers as $manufacturer) { ?>
             <tr id="tr_<?php echo $manufacturer['manufacturer_id']; ?>">
                 <td><input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" <?php if ($manufacturer['selected']) { ?>checked="checked"<?php } ?>/></td>
-                <td><img alt="<?php echo $manufacturer['name']; ?>" src="<?php echo $manufacturer['image']; ?>" style="padding: 1px; border: 1px solid #000;" /></td>
+                <td><img alt="<?php echo $manufacturer['name']; ?>" src="<?php echo $manufacturer['image']; ?>" style="padding: 1px; border: 1px solid #ccc;" /></td>
                 <td><?php echo $manufacturer['name']; ?></td>
                 <td class="move"><img src="image/move.png" alt="Posicionar" title="Posicionar" style="text-align:center" /></td>
                 <td>

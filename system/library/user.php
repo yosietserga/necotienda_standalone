@@ -52,12 +52,27 @@ final class User {
     }
 
     public function login($username, $password, $hash = true) {
+        if (empty($username) || empty($password))
+            return false;
+        
         if ($hash) {
             $password = md5($password);
         }
+        
+        $query = $this->db->query("SELECT `password` FROM `" . DB_PREFIX . "user` WHERE `username` = '" . $this->db->escape($username) . "'");
 
-        $user_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "user WHERE username = '" . $this->db->escape($username) . "' AND password = '" . $this->db->escape($password) . "'");
+        list($pass, $suffix) = explode(':', $query->row['password']);
 
+        if (!$suffix) {
+            $suffix = md5(base_convert(rand(10e16, 10e20), 10, 36) . time());
+            $this->db->query("UPDATE `" . DB_PREFIX . "user` SET 
+              `password`    = '" . $this->db->escape(md5($password . $suffix) . ':' . $suffix) . "' 
+              WHERE `username` = '" . $this->db->escape($username) . "'");
+        }
+
+        $user_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` "
+                . "WHERE username = '" . $this->db->escape($username) . "' "
+                . "AND password = '" . $this->db->escape(md5($password . $suffix) . ':' . $suffix) . "'");
 
         if ($user_query->num_rows) {
             $this->session->set('user_id', $user_query->row['user_id']);

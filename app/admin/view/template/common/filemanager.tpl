@@ -25,6 +25,8 @@
             </ul>
         </div>
         
+        <div classW="clear"></div>
+        
         <div class="tabs grid_12" id="tabbrowser">
             <div id="menu">
                 <a id="create" class="button" style="background-image: url('image/filemanager/folder.png');"><?php echo $Language->get('button_folder'); ?></a>
@@ -38,8 +40,8 @@
             
             <div class="clear"></div>
             
-            <div class="grid_4" id="column_left"></div>
-            <form id="form"><div class="grid_18" id="column_right"></div></form>
+            <div class="grid_3" id="column_left"></div>
+            <form id="form"><div class="grid_8" id="column_right"></div></form>
         </div>
         
         <div class="clear"></div>
@@ -83,87 +85,85 @@ jQuery(function(){
         height:(windowHeight * 60 / 100) + 'px'
     });
     
-	jQuery('#column_left').tree({
-		data: { 
-			type: 'json',
-			async: true, 
-			opts: { 
-				method: 'POST', 
-				url: '<?php echo $Url::createAdminUrl("common/filemanager/directory"); ?>'
-			} 
-		},
-		selected: 'top',
-		ui: {		
-			theme_name: 'classic'
-		},	
-		types: { 
-			'default': {
-				clickable: true,
-				creatable: false,
-				renameable: true,
-				deletable: false,
-				draggable: false,
-				max_children: -1,
-				max_depth: -1,
-				valid_children: 'all'
-			}
-		},
-		callback: {
-			beforedata: function(NODE, TREE_OBJ) { 
-				if (NODE == false) {
-					TREE_OBJ.settings.data.opts.static = [ 
-						{
-							data: 'image',
-							attributes: { 
-								'id': 'top',
-								'directory': ''
-							}, 
-							state: 'closed'
-						}
-					];
-					return { 'directory': '' } 
-				} else {
-					TREE_OBJ.settings.data.opts.static = false;
+    jQuery('#column_left').tree({
+        data: { 
+            type: 'json',
+            async: true, 
+            opts: { 
+                method: 'POST', 
+		url: '<?php echo $Url::createAdminUrl("common/filemanager/directory"); ?>'
+            } 
+	},
+	selected: 'top',
+	ui: {		
+            theme_name: 'classic'
+	},	
+	types: { 
+            'default': {
+                clickable: true,
+		creatable: false,
+		renameable: true,
+		deletable: false,
+		draggable: false,
+		max_children: -1,
+                max_depth: -1,
+		valid_children: 'all'
+            }
+	},
+	callback: {
+            beforedata: function(NODE, TREE_OBJ) { 
+                if (NODE == false) {
+                    TREE_OBJ.settings.data.opts.static = [{
+			data: 'image',
+			attributes: { 
+                            'id': 'top',
+                            'directory': ''
+			}, 
+			state: 'closed'
+                    }];
+                    return { 'directory': '' } 
+		} else {
+                    TREE_OBJ.settings.data.opts.static = false;
                     jQuery("#directoryForUpload").val( jQuery(NODE).attr('directory') );
-					return { 'directory': jQuery(NODE).attr('directory') } 
+                    return { 'directory': jQuery(NODE).attr('directory') } 
+		}
+            },		
+            onselect: function (NODE, TREE_OBJ) {
+                jQuery("#directoryForUpload").val( jQuery(NODE).attr('directory') );
+		jQuery.ajax({
+                    url: '<?php echo $Url::createAdminUrl("common/filemanager/files"); ?>',
+                    type: 'POST',
+                    data: 'directory=' + encodeURIComponent(jQuery(NODE).attr('directory')),
+                    dataType: 'json',
+                    success: function(json) {
+                        html = '<ul>';
+			if (json) {
+                            for (i = 0; i < json.length; i++) {
+                                html += '<li id="file_'+ i +'">';
+				name = '';
+				filename = json[i]['filename'];
+				for (j = 0; j < filename.length; j = j + 15) {
+                                    name += filename.substr(j, 15) + '<br>';
 				}
-			},		
-			onselect: function (NODE, TREE_OBJ) {
-			    jQuery("#directoryForUpload").val( jQuery(NODE).attr('directory') );
-				jQuery.ajax({
-					url: '<?php echo $Url::createAdminUrl("common/filemanager/files"); ?>',
-					type: 'POST',
-					data: 'directory=' + encodeURIComponent(jQuery(NODE).attr('directory')),
-					dataType: 'json',
-					success: function(json) {
-						html = '<ul>';
-						if (json) {
-							for (i = 0; i < json.length; i++) {
-								html += '<li id="file_'+ i +'">';
-								name = '';
-								filename = json[i]['filename'];
-								for (j = 0; j < filename.length; j = j + 15) {
-									name += filename.substr(j, 15) + '<br>';
-								}
-								name += json[i]['size'];
-								html += '<a file="' + json[i]['file'] + '">';
-								html += '<img src="' + json[i]['thumb'] + '" title="' + json[i]['filename'] + '" />';
-								html += '<p>' + name + '</p>';
-								html += '</a>';
-								html += '<input type="checkbox" name="filess[]" value="' + json[i]['file'] + '" style="display:none" />';
-								html += '<a class="selected"></a>';
-								html += '<a class="copy" onclick="copy(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
-								html += '<a class="rename" onclick="rename(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
-								html += '<a class="move"></a>';
-								html += '<a class="delete" onclick="eliminar(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
-						        html += '</li>';
-							}
-						}
-						html += '</ul>';
-						jQuery('#column_right').html(html);
+				name += json[i]['size'];
+				html += '<a file="' + json[i]['file'] + '">';
+				html += '<img src="' + json[i]['thumb'] + '" title="' + json[i]['filename'] + '" />';
+				html += '<p>' + name + '</p>';
+				html += '</a>';
+				html += '<input type="checkbox" name="filess[]" value="' + json[i]['file'] + '" style="display:none" />';
+				html += '<a class="selected"></a>';
+				html += '<a class="copy" onclick="copy(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
+				html += '<a class="rename" onclick="rename(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
+				html += '<a class="move"></a>';
+				html += '<a class="delete" onclick="eliminar(\'file_'+ i +'\',\'' + json[i]['file'] + '\')"></a>';
+				html += '</li>';
+                            }
+			}
+			html += '</ul>';
+			jQuery('#column_right').html(html);
                         
-                    	jQuery('#column_right li').on('click', function (e) {
-                    	   if(e.shiftKey) {
+                        jQuery('#column_right li').on('click', function (e) {
+                            if(e.shiftKey) {
                                 var firstLi = (jQuery('#column_right .liSelected:first-child').index()) ? jQuery('#column_right .liSelected:first-child').index() : jQuery('#column_right li:first-child').index();
                                 var lastLi = jQuery(this).index();
                                 jQuery('#column_right li').each(function(){
@@ -176,8 +176,8 @@ jQuery(function(){
                                     }
                                 });
                            } else {
-                        		$(this).toggleClass('liSelected');
-                        		$(this).find('.selected').toggle();
+                        	$(this).toggleClass('liSelected');
+                        	$(this).find('.selected').toggle();
                                 var inputCheck = $(this).find('input');
                                 if (inputCheck.attr('checked')) {
                                     inputCheck.removeAttr('checked');
@@ -188,15 +188,19 @@ jQuery(function(){
                     	});
 
                     	$('#column_right li').on('dblclick', function () {
-                    	   var filename = $(this).find('a:eq(0)').attr('file');
-                    		<?php if ($fckeditor) { ?>
-                    		window.opener.CKEDITOR.tools.callFunction(1, '<?php echo $directory; ?>' + filename);
-                    		self.close();	
-                    		<?php } else { ?>
-                    		parent.$('#<?php echo $field; ?>').attr('value', 'data/' + filename);
-                    		parent.$('#dialog').dialog('close');
-                    		parent.$('#dialog').remove();	
-                    		<?php } ?>
+                            var filename = $(this).find('a:eq(0)').attr('file');
+                            <?php if ($fckeditor) { ?>
+                            window.opener.CKEDITOR.tools.callFunction(1, '<?php echo $directory; ?>' + filename);
+                            self.close();	
+                            <?php } elseif ($_GET['theme_editor']) { ?>
+                            parent.setImage('data/' + filename);
+                            parent.$('#dialog').dialog('close');
+                            parent.$('#dialog').remove();
+                            <?php } else { ?>
+                            parent.$('#<?php echo $field; ?>').attr('value', 'data/' + filename);
+                            parent.$('#dialog').dialog('close');
+                            parent.$('#dialog').remove();
+                            <?php } ?>
                     	});
                         
                         function eliminar(path) {

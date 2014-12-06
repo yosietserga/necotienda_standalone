@@ -1,5 +1,5 @@
 @charset "utf-8";
-html, body {margin-top:18px}
+html, body {margin-top:18px; margin-left: 200px !important;}
 #adminTopNav {
     position:absolute !important;
     top:0px !important;
@@ -125,9 +125,7 @@ html, body {margin-top:18px}
     margin:0px !important;
     list-style:none !important;
 }
-.actions li {
-    
-}
+
 .administrable:hover > .actions {
     display:block !important;
 }
@@ -143,29 +141,50 @@ html, body {margin-top:18px}
 .style { background: url(../../image/icons/color/palette.png) left top no-repeat !important;}
 .config { background: url(../../image/icons/color/wrench-screwdriver.png) left top no-repeat !important;}
 .delete { background: url(../../image/icons/color/cross.png) left top no-repeat !important;}
+.panel-lateral-tabs {
+    margin:10px auto;
+    width:100%;
+    display:block;
+}
+.panel-lateral-tabs span {
+    margin:0px;
+    padding:7px 10px;
+    background:#f0f0f0;
+    border:solid 1px #e0e0e0;
+    width:30%;
+    cursor:pointer;
+}
+.panel-lateral-tabs span:hover, .panel-lateral-tabs span.selected {
+    background:#ccc;
+}
+.transparent-background {
+    margin:2px;
+    padding:0px;
+    background:url(../../image/transparent-icon.gif) no-repeat top center;
+    width:13px !important;
+    height:13px !important;
+    display:block;
+    float:right;
+    border:solid 1px #ccc;
+}
 .panel-lateral {
     position:fixed !important;
     top: 0px !important;
-    left:-400px !important;
-    padding:20px !important;
+    left:0px !important;
+    padding:10px !important;
     padding-top:40px !important;
-    background: #ffffff !important; /* Old browsers */
-    background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%) !important; /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)) !important; /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%) !important; /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%) !important; /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%) !important; /* IE10+ */
-    background: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%) !important; /* W3C */
+    background: #f3f3f3 !important;
     border-right:solid 1px #ccc !important;
-    width:360px !important;
+    width:280px !important;
     height:90% !important;
     overflow:auto  !important;
     box-shadow: 0px 3px 15px #666 !important;
     z-index:990 !important;
+    font:normal 8px Verdana, sans-serif;
 }
 .panel-lateral > div:first-child {
     margin:0px auto !important;
-    width:380px !important;
+    width:260px !important;
 }
 .panel-lateral a, .panel-lateral a:visited {
     background:transparent !important;
@@ -200,7 +219,8 @@ html, body {margin-top:18px}
     float:left;
 }
 .panel-lateral td {
-    font:normal 9px arial !important;
+    padding:0px !important;
+    font:normal 8px arial !important;
 }
 .panel-lateral .label {
     position:absolute !important;
@@ -241,7 +261,7 @@ html, body {margin-top:18px}
     margin-top:-150px !important;
     background:#1A6DE7 !important;
     width:10px !important;
-    z-index:1001 !important;
+    z-index:10001 !important;
 }
 .ui-slider-handle {
     background:#FEC200 !important;
@@ -249,9 +269,7 @@ html, body {margin-top:18px}
 .neco-color-picker-submit,.neco-color-picker-cancel {
     padding: 2px 4px !important;
     padding-bottom:0px !important;
-    background:#1A6DE7 !important;
     width:auto !important;
-    border:solid 1px #0E4799 !important;
     text-decoration:none !important;
     color:#FEC200 !important;
 }
@@ -306,4 +324,12 @@ html, body {margin-top:18px}
     border-radius:8px !important;
     box-shadow: 0px 0px 1px 0px #999 !important;
     border:solid 1px #aaa !important;
+}
+.transparent-background {
+    margin:0px;
+    padding:0px;
+    background:;
+    width:20px;
+    height:20px;
+    display:block;
 }

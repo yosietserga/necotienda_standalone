@@ -15,7 +15,7 @@
             <tr id="special_row<?php echo $special_row; ?>" class="special_row">
                 <td>
                     <select name="product_special[<?php echo $special_row; ?>][customer_group_id]">
-                    <?php foreach ($customer_groups as $customer_group) { ?>
+                    <?php foreach ($customerGroups as $customer_group) { ?>
                         <?php if ($customer_group['customer_group_id'] == $product_special['customer_group_id']) { ?>
                         <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
                         <?php } else { ?>
@@ -24,10 +24,10 @@
                     <?php } ?>
                     </select>
                 </td>
-                <td><input type="text" name="product_special[<?php echo $special_row; ?>][priority]" value="<?php echo $product_special['priority']; ?>" size="2"></td>
-                <td><input type="text" name="product_special[<?php echo $special_row; ?>][price]" value="<?php echo $product_special['price']; ?>"></td>
-                <td><input type="text" name="product_special[<?php echo $special_row; ?>][date_start]" value="<?php echo date('d-m-Y',strtotime($product_special['date_start'])); ?>" class="date"></td>
-                <td><input type="text" name="product_special[<?php echo $special_row; ?>][date_end]" value="<?php echo date('d-m-Y',strtotime($product_special['date_end'])); ?>" class="date"></td>
+                <td><input type="text" name="product_special[<?php echo $special_row; ?>][priority]" value="<?php echo $product_special['priority']; ?>" size="2" showquick="off" /></td>
+                <td><input type="text" name="product_special[<?php echo $special_row; ?>][price]" value="<?php echo $product_special['price']; ?>" showquick="off" /></td>
+                <td><input type="text" name="product_special[<?php echo $special_row; ?>][date_start]" value="<?php list($y, $m, $d) = explode('-', $product_special['date_start']); echo $d.'/'.$m.'/'.$y; ?>" class="date" showquick="off" /></td>
+                <td><input type="text" name="product_special[<?php echo $special_row; ?>][date_end]" value="<?php list($y, $m, $d) = explode('-', $product_special['date_end']); echo ((int)$product_special['date_end']) ? $d.'/'.$m.'/'.$y : ''; ?>" class="date" showquick="off" /></td>
                 <td><a onclick="$('#special_row<?php echo $special_row; ?>').remove();" class="button"><?php echo $Language->get('button_remove'); ?></a></td>
             </tr>
         <?php } ?>
@@ -48,14 +48,14 @@ function addSpecial() {
     _row = $('.special_row:last-child').index() + 1 * 1;
 	html = '<tr id="special_row' + _row + '" class="special_row">'; 
     html += '<td class="left"><select name="product_special[' + _row + '][customer_group_id]">';
-    <?php foreach ($customer_groups as $customer_group) { ?>
+    <?php foreach ($customerGroups as $customer_group) { ?>
     html += '<option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>';
     <?php } ?>
     html += '</select></td>';		
-    html += '<td class="left"><input type="necoNumber" name="product_special[' + _row + '][priority]" value="" size="2" style="width:40px"></td>';
-	html += '<td class="left"><input type="text" name="product_special[' + _row + '][price]" value=""></td>';
-    html += '<td class="left"><input type="text" name="product_special[' + _row + '][date_start]" value="" class="date"></td>';
-	html += '<td class="left"><input type="text" name="product_special[' + _row + '][date_end]" value="" class="date"></td>';
+    html += '<td class="left"><input type="necoNumber" name="product_special[' + _row + '][priority]" value="" size="2" showquick="off" /></td>';
+	html += '<td class="left"><input type="text" name="product_special[' + _row + '][price]" value="" showquick="off" /></td>';
+    html += '<td class="left"><input type="text" name="product_special[' + _row + '][date_start]" value="" class="date" showquick="off" /></td>';
+	html += '<td class="left"><input type="text" name="product_special[' + _row + '][date_end]" value="" class="date" showquick="off" /></td>';
 	html += '<td class="left"><a onclick="$(\'#special_row' + _row + '\').remove();" class="button"><span><?php echo $Language->get('button_remove'); ?></span></a></td>';
 	html += '</tr>';
 	$('#special tbody').append(html);

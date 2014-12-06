@@ -1,6 +1,7 @@
 @charset "utf-8";
 /* neco-color-picker */
 .neco-color-picker-launch {
+    position:relative;
     background:url(../images/necocss/pickerbox.png) no-repeat;
     width:22px;
     height:22px;
@@ -27,7 +28,7 @@
     width:230px;
     height:230px;
     border-radius:5px;
-    z-index:1000;
+    z-index:9999;
 }
 .neco-color-picker {
     position:relative;
@@ -78,14 +79,15 @@
 .neco-color-picker-buttons a {
     margin-left:5px;
     padding:5px !important;
-    height:20px !important;
-    width:20px !important;
+    height:10px !important;
+    width:auto !important;
     float:left !important;
+    color:#fff;
     display:block;
 }
 .neco-color-picker-submit {
-    background:#233BBD;
+    background:#233BBD !important;
 }
 .neco-color-picker-cancel {
-    background:#900;
+    background:#900 !important;
 }

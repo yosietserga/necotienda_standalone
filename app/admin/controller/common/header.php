@@ -143,6 +143,7 @@ class ControllerCommonHeader extends Controller {
         // style files
         $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_ADMIN_CSS;
         
+        $styles[] = array('media' => 'all', 'href' => $csspath . 'jquery-ui.min.css');
         $styles[] = array('media' => 'all', 'href' => $csspath . 'chosen.min.css');
         $styles[] = array('media' => 'all', 'href' => $csspath . 'vendor/jquery.sidr.dark.css');
         $styles[] = array('media' => 'all', 'href' => $csspath . 'vendor/font-awesome.min.css');

@@ -1,61 +1,61 @@
 @charset 'UTF-8';
 body {
-	padding: 0px;
-	margin: 0px;
-	background: #F7F7F7;
-	font:normal 11px Verdana, Arial, Helvetica, sans-serif;
+    padding: 0px;
+    margin: 0px;
+    background: #F7F7F7;
+    font:normal 11px Verdana, Arial, Helvetica, sans-serif;
 }
 img { border: none; }
 #menu {
-	clear: both;
-	height: 29px;
+    clear: both;
+    height: 29px;
     float:none;
 }
 #column_left {
-	background: #FFF;
-	border: 1px solid #CCC;
-	float: left;
-	width: 20%;
-	height: auto;
-	min-height: 420px;
-	overflow: auto;
+    background: #FFF;
+    border: 1px solid #CCC;
+    float: left;
+    width: 20%;
+    height: auto;
+    min-height: 420px;
+    overflow: auto;
 }
 #column_right {
     margin:0px;
-	background: #FFF;
-	border: 1px solid #CCC;
-	float: right;
-	width: 78%;
-	height: auto;
-	min-height: 420px;
-	overflow: auto;
-	text-align: center;
+    background: #FFF;
+    border: 1px solid #CCC;
+    float: right;
+    width: 77%;
+    height: auto;
+    min-height: 420px;
+    overflow: auto;
+    text-align: center;
 }
 #column_right ul {
     margin:0px;
-	padding: 2px;
+    padding: 2px;
     list-style:none;
 }
 #column_right li {
     margin:5px;
-	padding:5px;
+    padding:5px;
     width:15%;
     height:180px;
-	border: 1px solid #EEE;
+    border: 1px solid #EEE;
     float:left;
-	display: inline-block;
-	text-align: center;
+    display: inline-block;
+    text-align: center;
 }
 #column_right li:hover {
-	border: 1px dashed #999;
-	background: #ddd;
+    border: 1px dashed #999;
+    background: #ddd;
 }
 #column_right li.liSelected {
-	border: 1px dashed #BFFF66;
-	background: #DAFFA8;
+    border: 1px dashed #BFFF66;
+    background: #DAFFA8;
 }
 #column_right p {
-	font:normal 10px arial;
+    font:normal 10px arial;
 }
 .delete, .selected, .move, .copy, .rename  {
     margin:0px 5px;
@@ -88,31 +88,31 @@ img { border: none; }
 }
 #column_right li:hover .delete,#column_right li:hover .move,#column_right li:hover .copy,#column_right li:hover .rename { display:block; }
 #dialog {
-	display: none;
+    display: none;
 }
 .button {
-	margin: 5px;
-	padding: 8px 5px 8px 25px;
-	background-position: 5px 6px;
-	background-repeat: no-repeat;
+    margin: 5px;
+    padding: 8px 5px 8px 25px;
+    background-position: 5px 6px;
+    background-repeat: no-repeat;
     background-color:#e0e0e0;
     border:solid 1px #ccc;
-	display: block;
-	float: left;
-	cursor: pointer;
+    display: block;
+    float: left;
+    cursor: pointer;
 }
 .button:hover {
-	background-color: #EEE;
+    background-color: #EEE;
 }
 .thumb {
-	padding: 5px;
-	width: 105px;
-	height: 105px;
-	background: #F7F7F7;
-	border: 1px solid #CCCCCC;
-	cursor: pointer;
-	cursor: move;
-	position: relative;
+    padding: 5px;
+    width: 105px;
+    height: 105px;
+    background: #F7F7F7;
+    border: 1px solid #CCCCCC;
+    cursor: pointer;
+    cursor: move;
+    position: relative;
 }
 #tabs ul{
     position:relative;
@@ -140,26 +140,26 @@ img { border: none; }
     cursor:pointer;
 }
 .progress-bar {
-	margin: 0px;
-	padding: 5px;
+    margin: 0px;
+    padding: 5px;
     background:#fff;
-	height: 15px;
-	width: 180px;
+    height: 15px;
+    width: 180px;
     filter: none;	
     box-shadow:inset 0px 0px 5px #999;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;         
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;         
 }
 .progress-bar span {
-	display: none;
-	height: 100%;	
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
-	-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
-	box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+    display: none;
+    height: 100%;	
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
     -webkit-transition: width .4s ease-in-out;
     -moz-transition: width .4s ease-in-out;
     -ms-transition: width .4s ease-in-out;
@@ -168,17 +168,17 @@ img { border: none; }
 }
 .blue span { background-color: #34c2e3; } 
 .stripes span {
-	-webkit-background-size: 30px 30px;
-	-moz-background-size: 30px 30px;
-	background-size: 30px 30px;			
-	background-image: -webkit-gradient(linear, left top, right bottom,color-stop(.25, rgba(255, 255, 255, .15)), color-stop(.25, transparent),color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .15)),color-stop(.75, rgba(255, 255, 255, .15)), color-stop(.75, transparent),to(transparent));
-	background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-	background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-	background-image: -ms-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-	background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-	background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
-	-webkit-animation: animate-stripes 3s linear infinite;
-	-moz-animation: animate-stripes 3s linear infinite;       		
+    -webkit-background-size: 30px 30px;
+    -moz-background-size: 30px 30px;
+    background-size: 30px 30px;			
+    background-image: -webkit-gradient(linear, left top, right bottom,color-stop(.25, rgba(255, 255, 255, .15)), color-stop(.25, transparent),color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .15)),color-stop(.75, rgba(255, 255, 255, .15)), color-stop(.75, transparent),to(transparent));
+    background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+    background-image: -moz-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+    background-image: -ms-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+    background-image: -o-linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%,transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,transparent 75%, transparent);
+    -webkit-animation: animate-stripes 3s linear infinite;
+    -moz-animation: animate-stripes 3s linear infinite;       		
 }
 @-webkit-keyframes animate-stripes { 0% {background-position: 0 0;} 100% {background-position: 60px 0;}}
 @-moz-keyframes animate-stripes {0% {background-position: 0 0;} 100% {background-position: 60px 0;}}

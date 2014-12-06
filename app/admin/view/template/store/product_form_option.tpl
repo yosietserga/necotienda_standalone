@@ -105,7 +105,7 @@ function addRow() {
     
     var html  = '<div id="tab_option_'+ _row +'" class="vtabs_page">';
     
-    html += '<h2>Opci\u00F3n '+ _row +'</h2>tab_option_'+ _row;
+    html += '<h2>Opci\u00F3n '+ _row +'</h2>';
     html += '<br />';
     
     <?php foreach ($languages as $language) { ?>
@@ -170,7 +170,7 @@ function addValue(_row) {
     
 	var html = '<tr id="option_'+ _row +'_value_'+ _value_row +'">'; 
     
-    html += '<td>option_'+ _row +'_value_'+ _value_row;
+    html += '<td>';
     <?php foreach ($languages as $language) { ?>
     html += '<input title="<?php echo $Language->get('help_option_value'); ?>" type="text" name="product_option['+ _row +'][product_option_value]['+ _value_row +'][language][<?php echo $language['language_id']; ?>][name]" value="" placeholder="<?php echo $Language->get('entry_option_value'); ?>" />';
     html += '<img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';

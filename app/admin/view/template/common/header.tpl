@@ -1,9 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <![endif]-->
-<!-- Consider adding a manifest.appcache: h5bp.com/d/Offline -->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>"> <!--<![endif]-->
+<html class="no-js" lang="<?php echo ($Language->get('code')) ? $Language->get('code') : 'es'; ?>">
 <head>
     <meta charset="<?php echo ($Language->get('charset')) ? $Language->get('charset') : 'utf-8'; ?>" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -40,7 +36,6 @@
 <body>
 
 <?php if ($logged) { ?>
-    
     <!-- Top navigation bar -->
     <div id="topNav">
         <div class="fixed">

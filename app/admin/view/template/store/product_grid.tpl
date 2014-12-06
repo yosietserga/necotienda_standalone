@@ -51,7 +51,7 @@
             <td class="hideOnMobile hideOnTablet" style="text-align: center;">
               <input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>"<?php if ($product['selected']) { ?> checked="checked"<?php } ?> />
             </td>
-            <td data-title="<?php echo $Language->get('column_image'); ?>" class="center hideOnMobile"><img alt="<?php echo $product['name']; ?>" src="<?php echo $product['image']; ?>" style="padding: 1px; border: 1px solid #000;" /></td>
+            <td data-title="<?php echo $Language->get('column_image'); ?>" class="center hideOnMobile"><img alt="<?php echo $product['name']; ?>" src="<?php echo $product['image']; ?>" style="padding: 1px; border: 1px solid #ccc;" /></td>
             <td data-title="<?php echo $Language->get('column_name'); ?>"><?php echo $product['name']; ?></td>
             <td data-title="<?php echo $Language->get('column_model'); ?>"><?php echo $product['model']; ?></td>
             <td data-title="<?php echo $Language->get('column_quantity'); ?>"><?php if ($product['quantity'] <= 0) { ?>

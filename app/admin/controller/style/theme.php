@@ -781,32 +781,6 @@ class ControllerStyleTheme extends Controller {
         //TODO: condicionar el gestor de archivos para que solo permita seleccionar un (1) archivo de imagen
         //TODO: crear funciones para seleccionar varias imagenes a la vez y asociarlas con objeto, asi no se tiene que seleccionar de una en una
         //TODO: detectar los slugs que coincidan y agregarle un contador al final en caso de que hayan palabras claves ya creadas
-        $this->data['heading_title'] = $this->language->get('heading_title');
-
-        $this->data['text_enabled'] = $this->language->get('text_enabled');
-        $this->data['text_disabled'] = $this->language->get('text_disabled');
-        $this->data['text_default'] = $this->language->get('text_default');
-        $this->data['text_image_manager'] = $this->language->get('text_image_manager');
-
-        $this->data['entry_name'] = $this->language->get('entry_name');
-        $this->data['entry_date_start'] = $this->language->get('entry_date_start');
-        $this->data['entry_date_end'] = $this->language->get('entry_date_end');
-        $this->data['entry_default'] = $this->language->get('entry_default');
-        $this->data['entry_template'] = $this->language->get('entry_template');
-        $this->data['entry_theme_editor'] = $this->language->get('entry_theme_editor');
-        $this->data['text_open_theme_editor'] = $this->language->get('text_open_theme_editor');
-
-        $this->data['help_name'] = $this->language->get('help_name');
-        $this->data['help_date_start'] = $this->language->get('help_date_start');
-        $this->data['help_date_end'] = $this->language->get('help_date_end');
-        $this->data['help_default'] = $this->language->get('help_default');
-        $this->data['help_template'] = $this->language->get('help_template');
-
-        $this->data['button_save_and_new'] = $this->language->get('button_save_and_new');
-        $this->data['button_save_and_exit'] = $this->language->get('button_save_and_exit');
-        $this->data['button_save_and_keep'] = $this->language->get('button_save_and_keep');
-        $this->data['button_cancel'] = $this->language->get('button_cancel');
-
         $this->data['error_warning'] = ($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['error_name'] = ($this->error['name']) ? $this->error['name'] : '';
 
@@ -843,7 +817,7 @@ class ControllerStyleTheme extends Controller {
         if (!isset($this->request->get['theme_id'])) {
             $this->data['action'] = Url::createAdminUrl('style/theme/insert') . $url;
         } else {
-            $this->data['action'] = Url::createAdminUrl('style/theme/update') . '&theme_id=' . $this->request->get['theme_id'] . $url;
+            $this->data['action'] = Url::createAdminUrl('style/theme/update') . '&theme_id=' . $this->request->getQuery('theme_id') . $url;
         }
 
         $this->data['cancel'] = Url::createAdminUrl('style/theme') . $url;

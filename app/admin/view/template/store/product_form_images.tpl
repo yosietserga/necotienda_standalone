@@ -1,11 +1,5 @@
 <div>
     <table id="images" class="list">
-        <thead>
-            <tr>
-                <th><?php echo $Language->get('entry_image'); ?></th>
-                <th></th>
-            </tr>
-        </thead>
         <tbody>
         <?php foreach ($product_images as $image_row => $product_image) { ?>
             <tr id="image_row<?php echo $image_row; ?>">

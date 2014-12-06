@@ -21,7 +21,7 @@ $(function(){
  * @param panel el identificador del panel.
  * @return false si panel es undefined.
  */
-function slidePanel(panel,forceSlide) {
+function slidePanel__(panel,forceSlide) {
     if (typeof panel == 'undefined') {
         return false;
     }

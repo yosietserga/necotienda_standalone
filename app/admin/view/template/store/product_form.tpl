@@ -28,7 +28,7 @@
 
         <div class="clear"></div>
 
-        <ol id="stepsNewProduct" class="joyRideTipContent">
+        <ol id="stepsNewProduct" class="joyRideTipContent" style="display:none">
             <li data-button="<?php echo $Language->get('button_next'); ?>">
                 <h2><?php echo $Language->get('heading_tour_welcome'); ?></h2>
                 <p><?php echo $Language->get('help_tour_welcome'); ?></p>

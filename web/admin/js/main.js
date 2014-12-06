@@ -1,4 +1,5 @@
 $(function () {
+    
     // Confirm Delete
     $('#form').submit(function () {
         if ($(this).attr('action').indexOf('delete', 1) != -1) {
@@ -29,11 +30,10 @@ $(function () {
     });
 });
 
-function menuOn(e) {
-    $("ul.menu li").removeClass("on");
-    $(e).addClass('on');
+function showTab(a) {
+    $('.vtabs_page').hide();
+    $($(a).attr('data-target')).show();
 }
-
 /*################ Menu Funciotns ####################*/
 
 function addLink(token) {

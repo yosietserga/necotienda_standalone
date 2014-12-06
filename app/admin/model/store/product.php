@@ -320,7 +320,6 @@ class ModelStoreProduct extends Model {
         }
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int) $product_id . "'");
-        if (isset($data['product_discount'])) {
             foreach ($data['product_discount'] as $value) {
                 $this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET 
                 product_id = '" . (int) $product_id . "', 
@@ -331,7 +330,6 @@ class ModelStoreProduct extends Model {
                 date_start = '" . $this->db->escape($value['date_start']) . "', 
                 date_end = '" . $this->db->escape($value['date_end']) . "'");
             }
-        }
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int) $product_id . "'");
         if (isset($data['product_special'])) {
@@ -428,6 +426,7 @@ class ModelStoreProduct extends Model {
             $data = array_merge($data, array('product_category' => $this->getCategories($product_id)));
             $data = array_merge($data, array('product_related' => $this->getRelated($product_id)));
             $data = array_merge($data, array('product_tags' => $this->getTags($product_id)));
+            $data = array_merge($data, array('stores' => $this->getStores($product_id)));
 
             $this->add($data);
         }
@@ -463,6 +462,7 @@ class ModelStoreProduct extends Model {
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int) $product_id . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int) $product_id . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int) $product_id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "product_property WHERE product_id = '" . (int) $product_id . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE object_id = '" . (int) $product_id . "' AND object_type = 'product'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_tags WHERE product_id='" . (int) $product_id . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "stat WHERE object_id='" . (int) $product_id . "' AND object_type = 'product'");

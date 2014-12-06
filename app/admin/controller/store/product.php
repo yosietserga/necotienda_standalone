@@ -97,26 +97,25 @@ class ControllerStoreProduct extends Controller {
             $dps = explode("/", $this->request->post['date_available']);
             $this->request->post['date_available'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
 
-            foreach ($this->request->post['discount'] as $key => $discount) {
+            foreach ($this->request->post['product_discount'] as $key => $discount) {
                 $dps = explode("/", $discount['date_start']);
-                $discount['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+                $this->request->post['product_discount'][$key]['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
 
-                $dpe = explode("/", $discount['date_available']);
-                $discount['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
-
-                $this->request->post['discount'][$key] = $discount;
+                $dpe = explode("/", $discount['date_end']);
+                $this->request->post['product_discount'][$key]['date_end'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
             }
 
             foreach ($this->request->post['product_special'] as $key => $special) {
                 $dps = explode("/", $special['date_start']);
-                $special['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+                $this->request->post['product_special'][$key]['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
 
-                $dpe = explode("/", $special['date_available']);
-                $special['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
-
-                $this->request->post['product_special'][$key] = $special;
+                $dpe = explode("/", $special['date_end']);
+                $this->request->post['product_special'][$key]['date_end'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
             }
-
+            
+            $this->request->post['price'] = str_replace('.','',$this->request->post['price']);
+            $this->request->post['price'] = str_replace(',','.',$this->request->post['price']);
+            
             $product_id = $this->modelProduct->add($this->request->post);
             $this->modelProduct->setProperty($product_id, 'customer_groups', 'customer_groups', $this->request->getPost('customer_groups'));
             $this->modelProduct->setProperty($product_id, 'style', 'view', $this->request->getPost('view'));
@@ -193,26 +192,46 @@ class ControllerStoreProduct extends Controller {
 
             $dps = explode("/", $this->request->post['date_available']);
             $this->request->post['date_available'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
-
-            foreach ($this->request->post['discount'] as $key => $discount) {
+            
+            foreach ($this->request->post['product_discount'] as $key => $discount) {
                 $dps = explode("/", $discount['date_start']);
-                $discount['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
-
-                $dpe = explode("/", $discount['date_available']);
-                $discount['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
-
-                $this->request->post['discount'][$key] = $discount;
+                if (isset($dps[2])) {
+                    $this->request->post['product_discount'][$key]['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+                } else {
+                    $dps = explode("-", $discount['date_start']);
+                    $this->request->post['product_discount'][$key]['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+                }
+                
+                $dpe = explode("/", $discount['date_end']);
+                if (isset($dpe[2])) {
+                    $this->request->post['product_discount'][$key]['date_end'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+                } else {
+                    $dpe = explode("-", $discount['date_end']);
+                    $this->request->post['product_discount'][$key]['date_end'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+                }
             }
 
             foreach ($this->request->post['product_special'] as $key => $special) {
                 $dps = explode("/", $special['date_start']);
-                $special['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
-
-                $dpe = explode("/", $special['date_available']);
-                $special['date_available'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
-
-                $this->request->post['product_special'][$key] = $special;
+                if (isset($dps[2])) {
+                    $this->request->post['product_special'][$key]['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+                } else {
+                    $dps = explode("-", $special['date_start']);
+                    $this->request->post['product_special'][$key]['date_start'] = $dps[2] . "-" . $dps[1] . "-" . $dps[0];
+                }
+                
+                $dpe = explode("/", $special['date_end']);
+                if (isset($dpe[2])) {
+                    $this->request->post['product_special'][$key]['date_end'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+                } else {
+                    $dpe = explode("-", $special['date_end']);
+                    $this->request->post['product_special'][$key]['date_end'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
+                }
             }
+            
+            $this->request->post['price'] = str_replace('.','',$this->request->post['price']);
+            $this->request->post['price'] = str_replace(',','.',$this->request->post['price']);
+            
 
             $this->modelProduct->update($this->request->getQuery('product_id'), $this->request->post);
             $this->modelProduct->setProperty($this->request->getQuery('product_id'), 'customer_groups', 'customer_groups', $this->request->getPost('customer_groups'));
@@ -357,12 +376,7 @@ class ControllerStoreProduct extends Controller {
 
         // SCRIPTS
         $scripts[] = array('id' => 'seeFunctions', 'method' => 'function', 'script' =>
-            "function showTab(a) {
-                $('.vtabs_page').hide();
-                $($(a).attr('data-target')).show();
-            }
-            
-            function updateCharts(ds,de) {
+            "function updateCharts(ds,de) {
                 if (typeof de == 'undefined' || typeof ds == 'undefined') {
                     alert('No se pudieron cargar todas las estad\xedsticas');
                     return false;

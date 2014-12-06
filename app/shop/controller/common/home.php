@@ -43,7 +43,7 @@ class ControllerCommonHome extends Controller {
             $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }
     }
-
+    
     protected function loadWidgets() {
         $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
         $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;

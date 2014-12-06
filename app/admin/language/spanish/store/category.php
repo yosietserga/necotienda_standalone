@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']     = 'Categor&iacute;a';
+$_['heading_title']      = 'Categor&iacute;a';
 
 // Text
 $_['text_success']      = 'Se ha actualizado satisfactoriamente!';
@@ -45,3 +45,31 @@ $_['error_upload']               = 'Atenci&oacute;n: Por aluna raz&oacute;n desc
 $_['error_filetype']             = 'Atenci&oacute;n: Tipo de archivo inv&aacute;lido!';
 $_['error_writable_image']       = 'Atenci&oacute;n: El directorio de las imagenes no tiene permisos de escritura!';
 $_['error_writable_image_cache'] = 'Atenci&oacute;n: El Directorio image/cache no tiene permisos de escritura!';
+
+
+// JoyRide
+$_['heading_joyride_begin'] = 'Hola, soy NecoBoy';
+$_['heading_joyride_01'] = 'Vista de la Categoría';
+$_['heading_joyride_02'] = 'Categoría Superior';
+$_['heading_joyride_03'] = 'Imagen de la Categoría';
+$_['heading_joyride_04'] = 'Sucursales Virtuales';
+$_['heading_joyride_05'] = 'Contenido de la Categoría';
+$_['heading_joyride_06'] = 'Nombre de la Categoría';
+$_['heading_joyride_07'] = 'Meta Descripción de la Categoría (SEO)';
+$_['heading_joyride_08'] = 'SEO Url de la Categoría';
+$_['heading_joyride_09'] = 'Descripción de la Categoría';
+$_['heading_joyride_10'] = 'Productos de la Categoría';
+$_['heading_joyride_final'] = 'Final del Recorrido';
+
+$_['help_joyride_begin'] = '<p>Te voy a guiar en la creaci&oacute;n y edici&oacute;n de la categor&iacute;a.</p><p>Haz click en Siguiente para continuar.</p>';
+$_['help_joyride_01'] = '<p>Selecciona la vista predeterminada para esta categoría.</p><p>Puedes utilizar una vista (.tpl) personalizada por cada categoría. Solo debes crear un archivo .tpl con la estructura de las categorías del front-end e incluir el archivo dentro de la carpeta app/shop/view/theme/<i>tuplantilla</i>/store, donde <i>tuplantilla</i> es el nombre de la plantilla web que tienes actualmente configurada.</p><p>Para mayor información puedes consultar la documentación en <a href="http://docs.necotienda.org/" target="_blank">docs.necotienda.org</a></p>';
+$_['help_joyride_02'] = '<p>Selecciona la categoría superior en el caso que aplique, de lo contrario selecciona <b>Ninguno</b></p>';
+$_['help_joyride_03'] = '<p>Haz click sobre la imagen o sobre el enlace <i>Cambiar</i> para seleccionar la imagen de la categor&iacute;a. Se abrir&aacute; el gestor de archivos con el que podr&aacute;s seleccionar, renombrar, eliminar y subir archivos al servidor.</p>';
+$_['help_joyride_04'] = '<p>Selecciona en cu&aacute;les tiendas virtuales o sucursales virtuales va a aparecer esta categoría.</p>';
+$_['help_joyride_05'] = '<p>Las pesta&ntilde;as de idiomas van a aparecer a medida que configures otros idiomas. Por cada una, debes rellenar toda la informaci&oacute;n.</p><p>Para configurar los idiomas de la tienda virtual ingresa a el <a href="'. HTTP_HOME .'index.php?r=localisation/language&token='. $_GET['token'] .'">M&oacute;dulo de Idiomas</a>, para descargar m&aacute;s ingresa a <a href="http://ilove.necotienda.org/">ilove.necotienda.org</a></p>';
+$_['help_joyride_06'] = '<p>Ingresa el nombre de la categoría, trata de no extenderte tanto con el nombre.<br />Para alcanzar un mejor Posicionamiento Web sigue las <a href="https://www.google.co.ve/search?q=buenas+practicas+seo&oq=buenas+practicas+seo" target="_blank">Buenas Pr&aacute;cticas SEO</a></p>';
+$_['help_joyride_07'] = '<p>Este campo es utilizado para posicionar la categoría en los buscadores, ingresa una breve descripci&oacute;n de 140 caracteres. Lo que escribas en este campo se mostrar&aacute; debajo del enlace en los resultados de Google.</p><p>Por ejemplo, haz click en este <a href="https://www.google.co.ve/search?q=necotienda+tienda+virtual&oq=necotienda+tienda+virtual" target="_blank">Resultado de Google</a> y observa los textos debajo de los enlaces azules</p>';
+$_['help_joyride_08'] = '<p>Este valor se auto genera a partir del nombre del fabricante, si deseas cambiarlo ingresa el alias de la url o SEO Url, esta será utilizada para el posicionamiento web.<br />Para alcanzar un mejor Posicionamiento Web sigue las <a href="https://www.google.co.ve/search?q=buenas+practicas+seo&oq=buenas+practicas+seo" target="_blank">Buenas Pr&aacute;cticas SEO</a></p>';
+$_['help_joyride_09'] = '<p>Ingresa la descripci&oacute;n detallada de la categoría, puedes agregar im&aacute;genes, videos, widgets y m&aacute;s.</p><p>Ten en cuenta que mientras m&aacute;s contenido agregues, mejor resultados obtendr&aacute;s en el posicionamiento web.</p><p>Para hacerlo de la mejor manera aprende sobre <a href="https://www.google.co.ve/search?q=t&eacute;cnicas+seo&oq=t&eacute;cnicas+seo" target="_blank">T&eacute;cnicas SEO</a> o contrata nuestros <a href="http://professional.necotienda.org/" target="_blank">Servicios Profesionales</a>.</p>';
+$_['help_joyride_10'] = '<p>Haz click en Agregar Productos para asociar los productos que desees a esta categoría.</p>';
+$_['help_joyride_final'] = '<p>Hemos llegado al final del recorrido, esperamos que haya sido f&aacute;cil de entender y te deseamos los mejores deseos y &eacute;xitos en tu tienda virtual.</p><p>Para saber m&aacute;s sobre el funcionamiento de NecoTienda y sus herramientas, ingresa a <a href="www.necotienda.org" target="_blank">www.necotienda.org</a></p>';

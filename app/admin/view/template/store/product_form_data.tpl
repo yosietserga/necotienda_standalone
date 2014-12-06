@@ -8,7 +8,7 @@
                     
     <div class="row">
         <label><?php echo $Language->get('entry_price'); ?></label>
-        <input class="necoPrice" type="text" title="<?php echo $Language->get('help_price'); ?>" name="price" value="<?php echo $price; ?>" />
+        <input class="necoPrice" type="text" title="<?php echo $Language->get('help_price'); ?>" name="price" value="<?php echo str_replace('.',',',$price); ?>" />
     </div>
     
     <div class="clear"></div>

@@ -69,7 +69,7 @@ ol {list-style:none}
 
 #header_logo {margin-top:5px;background:url(../image/logo.png) no-repeat;width:153px;height:32px;display:inline-block;}
 #topNav { height: 36px; display: block; }
-.fixed { position: fixed; background: url(../image/topNav.jpg) repeat; width: 100%; color: #eeeeee; border-bottom: 1px solid #4a4f51; z-index: 999; }
+.fixed { position: fixed; background: #232323; width: 100%; color: #eeeeee; border-bottom: 1px solid #4a4f51; z-index: 999; }
 
 .welcome { float: left; }
 .welcome img { float: left; margin: 8px 8px 8px 0 }
@@ -438,13 +438,13 @@ ul.right {
 .htabs a.htab, .htabs2 a.htab2 {
     margin-right: 2px;
     padding: 6px 15px;
-    background: rgba(0,0,0,0.8);
+    background:#F1F2F7;
     float: left;
     font: bold 13px Arial, Helvetica, sans-serif;
     text-align: center;
     text-decoration: none;
-    color: #e3e3e3;
-    border: 1px solid #000;
+    color: #333;
+    border: 1px solid #ccc;
 }
 .htabs a.selected, .htabs2 a.selected {
     background: #F3AD06;
@@ -458,22 +458,21 @@ ul.right {
     height: auto;
     float: left;
     display: block;
-    border-right: 2px solid #000;
 }
 .vtabs a {
     margin-bottom: 5px;
     margin-right: 14px;
     padding: 7px 14px 7px 15px;
-    background: rgba(0,0,0,0.8);
-    border: 1px solid #000;
-    border-right: none;
+    background:#F1F2F7;
+    border: 1px solid #ccc;
+    border-left:none;
     display: block;
     float: right; 
     width: 90%;
     font: bold 13px Arial, Helvetica, sans-serif;
     text-align: right;
     text-decoration: none;
-    color: #ddd;
+    color: #333;
 }
 .vtabs a.selected {
     padding-right: 15px;
@@ -528,6 +527,9 @@ ul.right {
     display:inline-block;
     padding-right:20px;
     cursor: pointer;
+}
+.image {
+    border:solid 1px #ccc;
 }
 /* COMMENTS */
 #replies ul {

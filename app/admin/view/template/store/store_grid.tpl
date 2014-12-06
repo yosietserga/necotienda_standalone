@@ -25,7 +25,7 @@
             <?php foreach ($stores as $store) { ?>
             <tr id="tr_<?php echo $store['store_id']; ?>">
                 <td><input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $store['store_id']; ?>" <?php if ($store['selected']) { ?>checked="checked"<?php } ?>/></td>
-                <td><img alt="<?php echo $store['name']; ?>" src="<?php echo $store['image']; ?>" style="padding: 1px; border: 1px solid #000;" /></td>
+                <td><img alt="<?php echo $store['name']; ?>" src="<?php echo $store['image']; ?>" style="padding: 1px; border: 1px solid #ccc;" /></td>
                 <td><?php echo $store['name']; ?></td>
                 <td><?php echo $store['folder']; ?></td>
                 <td>

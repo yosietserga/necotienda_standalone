@@ -19,6 +19,7 @@
         <h1><?php echo $Language->get('heading_title'); ?></h1>
         <?php if ($manufacturer_id) { ?><a href="<?php echo $Url::createUrl("store/manufacturer",array('manufacturer_id'=>$manufacturer_id),'NONSSL',HTTP_CATALOG); ?>" target="_blank"><?php echo $Language->get('text_see_manufacturer_in_storefront'); ?></a><?php } ?>
         <div class="buttons">
+            <a id="necoBoy" style="margin: 0px 10px;" title="NecoBoy ay&uacute;dame!"><img src="<?php echo HTTP_IMAGE; ?>necoBoy.png" alt="NecoBoy" /></a>
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
             <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
             <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_new'); ?></a>
@@ -26,12 +27,68 @@
         </div>
         
         <div class="clear"></div>
-                                
+                       
+        <ol id="stepsForm" class="joyRideTipContent" style="display:none">
+            <li data-button="<?php echo $Language->get('button_next'); ?>">
+                <h2><?php echo $Language->get('heading_joyride_begin'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_begin'); ?></p>
+            </li>
+            <li data-class="necoTemplate" data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">
+                <h2><?php echo $Language->get('heading_joyride_01'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_01'); ?></p>
+            </li>
+            <li data-class="necoName" data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">
+                <h2><?php echo $Language->get('heading_joyride_02'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_02'); ?></p>
+            </li>
+            <li data-class="necoSeoUrl" data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">
+                <h2><?php echo $Language->get('heading_joyride_03'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_03'); ?></p>
+            </li>
+            <li data-class="necoImage" data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">
+                <h2><?php echo $Language->get('heading_joyride_04'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_04'); ?></p>
+            </li>
+            <li data-class="necoStore" data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">
+                <h2><?php echo $Language->get('heading_joyride_05'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_05'); ?></p>
+            </li>
+            <li data-class="necoPanel" data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">
+                <h2><?php echo $Language->get('heading_joyride_06'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_06'); ?></p>
+            </li>
+            <li data-button="<?php echo $Language->get('button_close'); ?>">
+                <h2><?php echo $Language->get('heading_joyride_final'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_final'); ?></p>
+            </li>
+        </ol>
+        <script type="text/javascript" src="<?php echo HTTP_ADMIN_JS; ?>vendor/joyride/jquery.joyride-2.1.js"></script>
+        <script>
+            $(window).load(function() {
+                $(document.createElement('link')).attr({
+                    'href':'<?php echo HTTP_ADMIN_CSS; ?>joyride.css',
+                    'rel':'stylesheet',
+                    'media':'screen'
+                }).appendTo('head');
+            });
+            $(function(){
+                $('#necoBoy').on('click', function(e){
+                    $('#stepsForm').joyride({
+                        autoStart : true,
+                        modal:false,
+                        expose:true
+                    });
+                });
+            });
+        </script>
+                 
+        <div class="clear"></div>
+                     
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 
             <div class="row">
                 <label><?php echo $Language->get('entry_view'); ?></label>
-                <select name="view">
+                <select name="view" class="necoTemplate">
                     <option value=""<?php if (empty($layout)) { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_default'); ?></option>
                     <?php foreach ($views as $key => $value) { ?>
                     <optgroup label="<?php echo $value['folder']; ?>">
@@ -47,14 +104,14 @@
             
             <div class="row">
                 <label><?php echo $Language->get('entry_name'); ?></label>
-                <input class="category" id="name" name="name" value="<?php echo $name; ?>" required="true" style="width:40%" />
+                <input class="necoName" id="name" name="name" value="<?php echo $name; ?>" required="true" style="width:40%" />
             </div>
                 
             <div class="clear"></div>
                             
             <div class="row">
                 <label>SEO Url (<b style="font:normal 10px verdana;color:#999;"><?php echo HTTP_CATALOG; ?>/</b>)</label>
-                <input type="text" id="slug" name="keyword" value="<?php echo $keyword; ?>" style="width:40%" />
+                <input type="text" id="slug" name="keyword" value="<?php echo $keyword; ?>" style="width:40%" class="necoSeoUrl" />
             </div>
             
             <div class="clear"></div>
@@ -62,7 +119,7 @@
             <div class="row">
                 <label><?php echo $Language->get('entry_image'); ?></label>
                 <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
-                <img alt="Imagen de la categor&iacute;a" src="<?php echo $preview; ?>" id="preview" class="image" onclick="image_upload('image', 'preview');" width="100" height="100" />
+                <img alt="Imagen de la categor&iacute;a" src="<?php echo $preview; ?>" id="preview" class="image necoImage" onclick="image_upload('image', 'preview');" width="100" height="100" />
                 <br />
                 <a onclick="image_upload('image', 'preview');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
                 <a onclick="image_delete('image', 'preview');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
@@ -77,7 +134,7 @@
                 <a onclick="$('#storesWrapper input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a onclick="$('#storesWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
                 <div class="clear"></div>
-                <ul id="storesWrapper" class="scrollbox">
+                <ul id="storesWrapper" class="scrollbox necoStore">
                     <li class="stores">
                         <input type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
                         <b><?php echo $Language->get('text_default'); ?></b>
@@ -98,7 +155,7 @@
             
             <div class="clear"></div><br />
             
-            <div id="addsPanel"><b>Agregar / Eliminar Productos</b></div>
+            <div id="addsPanel" class="necoPanel"><b>Agregar / Eliminar Productos</b></div>
             <div id="addsWrapper"><div id="gridPreloader"></div></div>
             
             <div class="clear"></div><br />

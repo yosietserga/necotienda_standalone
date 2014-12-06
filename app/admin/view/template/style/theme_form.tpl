@@ -73,7 +73,7 @@
             <div class="row">
              <?php if ($isSaved) { ?>
                 <label><?php echo $Language->get('entry_theme_editor'); ?></label>
-                <a href="<?php echo  HTTP_CATALOG; ?>/index.php?theme_editor=1&theme_id=<?php echo $theme_id; ?>&template=<?php echo $template; ?>" class="button" target="_blank"><?php echo $Language->get('text_open_theme_editor'); ?></a>
+                <a href="<?php echo  HTTP_CATALOG; ?>/index.php?theme_editor=1&theme_id=<?php echo $this->request->getQuery('theme_id'); ?>&template=<?php echo $template; ?>" class="button" target="_blank"><?php echo $Language->get('text_open_theme_editor'); ?></a>
              <?php }else { ?>
             <div class="warning">Debes guardar el tema primero para poder ir al editor.</div>
              <?php } ?>

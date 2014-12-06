@@ -124,6 +124,7 @@
                 });
                 launcher = $(data.element).find(".neco-color-picker-launch").get(0);
                 $(launcher).on('click',function(){
+                    console.log('ColorPicker Launched');
                     if ($(this).hasClass('neco-color-picker-selected')) {
                         $(this).removeClass('neco-color-picker-selected');
                     }

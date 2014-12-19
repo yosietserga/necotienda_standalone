@@ -657,6 +657,9 @@ ul.tabs {box-shadow:  0px 0px 3px #ccc;}
 #helpPanel {background:red}
 
 /* Filter Forms */
+#formFilter {
+    display:none;
+}
 #filters {
     margin-left:10px;
     font: normal 10px verdana;

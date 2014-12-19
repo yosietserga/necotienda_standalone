@@ -46,7 +46,6 @@ $_['error_filetype']             = 'Atenci&oacute;n: Tipo de archivo inv&aacute;
 $_['error_writable_image']       = 'Atenci&oacute;n: El directorio de las imagenes no tiene permisos de escritura!';
 $_['error_writable_image_cache'] = 'Atenci&oacute;n: El Directorio image/cache no tiene permisos de escritura!';
 
-
 // JoyRide
 $_['heading_joyride_begin'] = 'Hola, soy NecoBoy';
 $_['heading_joyride_01'] = 'Vista de la Categoría';

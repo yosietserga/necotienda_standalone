@@ -10,7 +10,7 @@
  */
 
 $config = [
-	'version'=>1.0.0,
+	'version'=>'1.0.0',
 	'name'=>'Plugin Template',
 	'developer'=>'NecoYoad',
 	'url_plugin'=>'http://www.necoyoad.com', //html raw response

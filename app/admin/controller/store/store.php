@@ -604,7 +604,8 @@ class ControllerStoreStore extends Controller {
 
         $this->data['countries'] = $this->modelCountry->getAll();
         $this->data['currencies'] = $this->modelCurrency->getAll();
-        //$this->data['customer_groups']= $this->modelCustomergroup->getAll();
+        $this->data['pages']= $this->modelPage->getAll();
+        $this->data['customer_groups']= $this->modelCustomergroup->getAll();
         $this->data['order_statuses'] = $this->modelOrderstatus->getAll();
         $this->data['stock_statuses'] = $this->modelStockstatus->getAll();
 

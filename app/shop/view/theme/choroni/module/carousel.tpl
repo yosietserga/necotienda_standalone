@@ -22,7 +22,10 @@ $(function(){
               image: '<?php echo HTTP_IMAGE; ?>loader.gif'
             },
             options: {
-                scroll: <?php echo (int)$settings['scroll']; ?>
+                scroll: {
+                <?php if ((int)$settings['scroll']['items']) { echo 'items:'. (int)$settings['scroll']['items'] .','; } ?>
+                <?php if ($settings['scroll']['pauseOnHover']==true) { echo 'pauseOnHover:'. $settings['scroll']['pauseOnHover'] .','; } ?>
+                }
             }
         });
     }

@@ -299,7 +299,7 @@ final class Customer {
         $sql = "SELECT * 
         FROM " . DB_PREFIX . "customer 
         WHERE email = '" . $this->db->escape($data['email']) . "' "
-                //. "AND live_oauth_id = '" . $this->db->escape($data['live_oauth_id']) . "' "
+                //. "AND facebook_oauth_id = '" . $this->db->escape($data['facebook_oauth_id']) . "' "
                 . "AND status = '1' "
                 . "AND banned = '0'";
 
@@ -309,9 +309,9 @@ final class Customer {
             if (!$customer_query->row['facebook_oauth_id']) {
                 $customer_query = $this->db->query("UPDATE " . DB_PREFIX . "customer SET "
                         . "`facebook_oauth_id`    = '" . $this->db->escape($data['facebook_oauth_id']) . "', "
-                        . "`live_oauth_token` = '" . $this->db->escape($data['live_oauth_token']) . "', "
-                        . "`live_oauth_refresh` = '" . $this->db->escape($data['live_oauth_refresh']) . "', "
-                        . "`live_code` = '" . $this->db->escape($data['live_code']) . "' "
+                        . "`facebook_oauth_token` = '" . $this->db->escape($data['facebook_oauth_token']) . "', "
+                        . "`facebook_oauth_refresh` = '" . $this->db->escape($data['facebook_oauth_refresh']) . "', "
+                        . "`facebook_code` = '" . $this->db->escape($data['facebook_code']) . "' "
                         . "WHERE email = '" . $this->db->escape($data['email']) . "' ");
             }
             if (!$customer_query->row['photo']) {

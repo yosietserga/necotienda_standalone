@@ -27,10 +27,10 @@ class ControllerCommonHome extends Controller {
             if ($scripts)
                 $this->scripts = array_merge($this->scripts, $scripts);
 
-            $this->children[] = 'common/column_left';
-            $this->children[] = 'common/column_right';
             $this->children[] = 'common/nav';
             $this->children[] = 'common/header';
+            $this->children[] = 'common/column_left';
+            $this->children[] = 'common/column_right';
             $this->children[] = 'common/footer';
 
             $template = ($this->config->get('default_view_home')) ? $this->config->get('default_view_home') : 'common/home.tpl';
@@ -130,6 +130,7 @@ class ControllerCommonHome extends Controller {
                 }
             }
         }
+        
     }
 
 }

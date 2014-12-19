@@ -91,7 +91,8 @@ switch ($route) {
         $loader->auto('localisation/language');
         $loader->auto('localisation/country');
         $loader->auto('localisation/currency');
-        $loader->auto('user/customergroup');
+        $loader->auto('content/page');
+        $loader->auto('sale/customergroup');
         $loader->auto('localisation/orderstatus');
         $loader->auto('localisation/stockstatus');
         $loader->auto('image');

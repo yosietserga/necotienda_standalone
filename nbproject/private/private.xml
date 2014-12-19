@@ -13,15 +13,18 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/store/manufacturer.php</file>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/store/review.php</file>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/view/theme/choroni/common/admin.tpl</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/store/product.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/module/plugin_template/config.php</file>
             <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/web/admin/css/front/admin.css</file>
             <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/web/admin/js/main.js</file>
             <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/view/template/common/header.tpl</file>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/web/admin/js/front/theme_editor.js</file>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/view/theme/choroni/common/admin-theme-paddings.tpl</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/web/admin/js/plugins.js</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/view/template/store/product_grid.tpl</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/system/library/facebook/src/Facebook/FacebookRedirectLoginHelper.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/system/library/facebook/src/Facebook/FacebookSession.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/google.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/module/crm/model/step.php</file>
             <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/web/admin/css/main.css</file>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/view/theme/choroni/common/admin-theme-shadows.tpl</file>
         </group>
     </open-files>
 </project-private>

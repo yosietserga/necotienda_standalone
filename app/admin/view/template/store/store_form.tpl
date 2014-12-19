@@ -18,6 +18,7 @@
     <div class="box">
         <h1><?php echo $Language->get('heading_title'); ?></h1>
         <div class="buttons">
+            <a id="necoBoy" style="margin: 0px 10px;" title="NecoBoy ay&uacute;dame!"><img src="<?php echo HTTP_IMAGE; ?>necoBoy.png" alt="NecoBoy" /></a>
             <a onclick="saveAndExit();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_exit'); ?></a>
             <a onclick="saveAndKeep();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_keep'); ?></a>
             <a onclick="saveAndNew();$('#form').submit();" class="button"><?php echo $Language->get('button_save_and_new'); ?></a>
@@ -26,18 +27,172 @@
         
         <div class="clear"></div>
 
+        <ol id="stepsNewProduct" class="joyRideTipContent" style="display:none">
+            <li data-button="<?php echo $Language->get('button_next'); ?>">
+                <h2><?php echo $Language->get('heading_joyride_begin'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_begin'); ?></p>
+            </li>
+            <?php
+            $a = [
+                1=>'necoApp',
+                'necoFolder',
+                'htabs',
+                'necoName',
+                'necoRif',
+                'necoUrl',
+                'necoCompany',
+                'necoAddress',
+                'necoEmail',
+                'necoSender',
+                'necoBounce',
+                'necoTelePhone',
+                'noClass',
+                'necoTemplate',
+                'necoContent',
+                'necoTitle',
+                'necoMetaDescription',
+                'necoDescription',
+                'noClass',
+                'necoCountry',
+                'necoState',
+                'necoShopLanguage',
+                'necoAdminLanguage',
+                'necoCurrency',
+                'necoDecimals',
+                'necoThousands',
+                'necoAutoCurrency',
+                'noClass',
+                'necoAdminItems',
+                'necoShopItems',
+                'necoNewProduct',
+                'necoTax',
+                'necoCustomerGroup',
+                'necoShowPrice',
+                'necoNewCustomer',
+                'necoAccountTerms',
+                'necoShoppingTerms',
+                'necoShowStock',
+                'necoCheckStock',
+                'necoOrderStatus',
+                'necoStockStatus',
+                'necoAllowComments',
+                'necoAproveComments',
+                'necoAllowDownloads',
+                'necoDownloadStatus',
+                'necoCartWeight',
+                'necoCartWeightCost',
+                'noClass',
+                'necoLogo',
+                'necoIcon',
+                'necoImage01',
+                'necoImage02',
+                'necoImage03',
+                'necoImage04',
+                'necoImage05',
+                'necoImage06',
+                'necoImage07',
+                'necoImage08',
+                'noClass',
+                'noClass',
+                'necoEmail01',
+                'necoEmail02',
+                'necoEmail03',
+                'necoEmail04',
+                'necoEmail05',
+                'necoEmail06',
+                'necoEmail07',
+                'necoEmail08',
+                'necoEmail09',
+                'necoEmail10',
+                'necoEmail11',
+                'necoEmail12',
+                'necoEmail13',
+                'necoEmail14',
+                'necoEmail15',
+                'necoEmail16',
+                'noClass',
+                'necoServer01',
+                'necoServer02',
+                'necoServer03',
+                'necoServer04',
+                'necoServer05',
+                'necoServer06',
+                'necoServer07',
+                'necoServer08',
+                'necoServer09',
+                'necoServer10',
+                'necoServer11'
+            ];
+            foreach($a as $k=>$v) {
+            ?>
+            <li<?php if ($v!=='noClass') { ?> data-class="<?php echo $v; ?>"<?php } ?> data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">
+                <h2><?php echo $Language->get('heading_joyride_'. $k); ?></h2>
+                <p><?php echo $Language->get('help_joyride_'. $k); ?></p>
+            </li>
+            <?php
+            }
+            ?>
+            <li data-button="<?php echo $Language->get('button_close'); ?>">
+                <h2><?php echo $Language->get('heading_joyride_final'); ?></h2>
+                <p><?php echo $Language->get('help_joyride_final'); ?></p>
+            </li>
+        </ol>
+        <script type="text/javascript" src="<?php echo HTTP_ADMIN_JS; ?>vendor/joyride/jquery.joyride-2.1.js"></script>
+        <script>
+            $(window).load(function() {
+                $(document.createElement('link')).attr({
+                    'href':'<?php echo HTTP_ADMIN_CSS; ?>joyride.css',
+                    'rel':'stylesheet',
+                    'media':'screen'
+                }).appendTo('head');
+            });
+            $(function(){
+                $('#necoBoy').on('click', function(e){
+                    $('#stepsNewProduct').joyride({
+                        autoStart : true,
+                        postStepCallback : function (index, tip) {
+                            console.log(index);
+                            console.log(tip);
+                            if (index == 12) {
+                                $('.htabs .htab:eq(1)').trigger('click');
+                            }
+                            if (index == 18) {
+                                $('.htabs .htab:eq(2)').trigger('click');
+                            }
+                            if (index == 27) {
+                                $('.htabs .htab:eq(3)').trigger('click');
+                            }
+                            if (index == 47) {
+                                $('.htabs .htab:eq(4)').trigger('click');
+                            }
+                            if (index == 58) {
+                                $('.htabs .htab:eq(5)').trigger('click');
+                            }
+                            if (index == 75) {
+                                $('.htabs .htab:eq(6)').trigger('click');
+                            }
+                        },
+                        modal:false,
+                        expose:true
+                    });
+                });
+            });
+        </script>
+
+        <div class="clear"></div>
+
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
             <?php if ($_GET['r']=='store/store/insert') { ?>
             <div class="row">
                 <label><?php echo $Language->get('entry_own_file'); ?></label>
-                <input type="checkbox" name="create_app" value="1" />
+                <input type="checkbox" name="create_app" value="1" class="necoApp" />
             </div>               
 
             <div class="clear"></div>
 
             <div class="row">
                 <label><?php echo $Language->get('entry_folder'); ?></label>
-                <input type="text" name="config_folder" value="" placeholder="newshop" />
+                <input type="text" name="config_folder" value="" placeholder="newshop" class="necoFolder" />
             </div>
 
             <div class="clear"></div><br />

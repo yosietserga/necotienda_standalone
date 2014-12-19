@@ -2,7 +2,7 @@
     <h2>Local</h2>
     <div class="row">
         <label><?php echo $Language->get('entry_country'); ?></label>
-        <select name="config_country_id" id="country" onchange="$('#zone').load('<?php echo $Url::createAdminUrl("store/store/zone"); ?>&country_id=' + this.value + '&zone_id=<?php echo $config_zone_id; ?>');">
+        <select class="necoCountry" name="config_country_id" id="country" onchange="$('#zone').load('<?php echo $Url::createAdminUrl("store/store/zone"); ?>&country_id=' + this.value + '&zone_id=<?php echo $config_zone_id; ?>');">
         <?php foreach ($countries as $country) { ?>
             <option value="<?php echo $country['country_id']; ?>"<?php if ($country['country_id'] == $config_country_id) { ?> selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
         <?php } ?>
@@ -13,14 +13,14 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_zone'); ?></label>
-        <select name="config_zone_id" id="zone"></select>
+        <select class="necoState" name="config_zone_id" id="zone"></select>
     </div>
                                           
     <div class="clear"></div>
     
     <div class="row">
         <label><?php echo $Language->get('entry_language'); ?></label>
-        <select name="config_language">
+        <select class="necoShopLanguage" name="config_language">
         <?php foreach ($languages as $language) { ?>
             <option value="<?php echo $language['code']; ?>"<?php if ($language['code'] == $config_language) { ?> selected="selected"<?php } ?>><?php echo $language['name']; ?></option>
         <?php } ?>
@@ -31,7 +31,7 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_admin_language'); ?></label>
-        <select name="config_admin_language">
+        <select class="necoAdminLanguage" name="config_admin_language">
         <?php foreach ($languages as $language) { ?>
             <option value="<?php echo $language['code']; ?>"<?php if ($language['code'] == $config_language) { ?> selected="selected"<?php } ?>><?php echo $language['name']; ?></option>
         <?php } ?>
@@ -42,7 +42,7 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_currency'); ?></label>
-        <select name="config_currency">
+        <select class="necoCurrency" name="config_currency">
         <?php foreach ($currencies as $currency) { ?>
             <option value="<?php echo $currency['code']; ?>"<?php if ($currency['code'] == $config_currency) { ?> selected="selected"<?php } ?>><?php echo $currency['title']; ?></option>
         <?php } ?>
@@ -53,21 +53,21 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_decimal_separator'); ?></label>
-        <input type="text" title="<?php echo $Language->get('help_decimal_separator'); ?>" name="config_decimal_separator" value="<?php echo $config_decimal_separator; ?>" required="true"<?php if (isset($error_decimal_separator)) echo ' class="neco-input-error'; ?> />
+        <input class="necoDecimals<?php if (isset($error_decimal_separator)) echo ' neco-input-error'; ?>" type="text" title="<?php echo $Language->get('help_decimal_separator'); ?>" name="config_decimal_separator" value="<?php echo $config_decimal_separator; ?>" required="true" />
     </div>
                                      
     <div class="clear"></div>
     
     <div class="row">
         <label><?php echo $Language->get('entry_thousands_separator'); ?></label>
-        <input type="text" title="<?php echo $Language->get('help_thousands_separator'); ?>" name="config_thousands_separator" value="<?php echo $config_thousands_separator; ?>" required="true"<?php if (isset($error_thousands_separator)) echo ' class="neco-input-error'; ?> />
+        <input class="necoThousands<?php if (isset($error_decimal_separator)) echo ' neco-input-error'; ?>" type="text" title="<?php echo $Language->get('help_thousands_separator'); ?>" name="config_thousands_separator" value="<?php echo $config_thousands_separator; ?>" required="true" />
     </div>
                                      
     <div class="clear"></div>
     
     <div class="row">
         <label><?php echo $Language->get('entry_currency_auto'); ?></label>
-        <input type="checkbox" showquick="off" name="config_currency_auto" value="1"<?php if ($config_currency_auto) { ?> checked="checked"<?php } ?> />
+        <input class="necoAutoCurrency" type="checkbox" showquick="off" name="config_currency_auto" value="1"<?php if ($config_currency_auto) { ?> checked="checked"<?php } ?> />
     </div>
                                       
     <div class="clear"></div>

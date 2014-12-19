@@ -39,7 +39,12 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_scroll'); ?></label>
-        <input name="Widgets[<?php echo $name; ?>][settings][scroll]" value="<?php echo isset($settings['scroll']) ? (int)$settings['scroll'] : 1; ?>" />
+        <input name="Widgets[<?php echo $name; ?>][settings][scroll][items]" value="<?php echo isset($settings['scroll'][items]) ? (int)$settings['scroll'][items] : 1; ?>" />
+    </div>
+    
+    <div class="row">
+        <label>Pausa Al Poner el Cursor Arriba: </label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][scroll][pauseOnHover]" value="<?php echo isset($settings['scroll'][pauseOnHover]) ? (int)$settings['scroll'][pauseOnHover] : true; ?>" />
     </div>
     
     <div class="row">

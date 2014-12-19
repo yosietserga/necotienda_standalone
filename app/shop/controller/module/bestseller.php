@@ -149,6 +149,7 @@ class ControllerModuleBestSeller extends Controller {
 
     public function carousel() {
         $json = array();
+        $Url = new Url($this->registry);
         $this->load->auto("store/product");
         $this->load->auto('image');
         $this->load->auto('json');
@@ -160,9 +161,12 @@ class ControllerModuleBestSeller extends Controller {
             if (!file_exists(DIR_IMAGE . $v['image']))
                 $json['results'][$k]['image'] = HTTP_IMAGE . "no_image.jpg";
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
-            if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode'=='store')) {
+            if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode')==='store') {
                 $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
             }
+            $json['results'][$k]['config_store_mode'] = $this->config->get('config_store_mode');
+            $json['results'][$k]['seeProduct_url'] = $Url::createUrl('store/product',array('product_id'=>$v['product_id']));
+            $json['results'][$k]['addToCart_url'] = $Url::createUrl('checkout/cart') . '?product_id='. $v['product_id'];
         }
 
         if (!count($json['results']))

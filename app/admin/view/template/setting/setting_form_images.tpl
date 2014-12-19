@@ -80,18 +80,7 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_image_cart'); ?></label>
-        <input type="necoNumber" name="config_image_additional_width" value="<?php echo $config_image_additional_width; ?>" size="3" required="true"<?php if (isset($error_image_cart)) echo ' class="neco-input-error'; ?> />
-        <input type="necoNumber" name="config_image_additional_height" value="<?php echo $config_image_additional_height; ?>" size="3" required="true"<?php if (isset($error_image_cart)) echo ' class="neco-input-error'; ?> />
+        <input type="necoNumber" name="config_image_cart_width" value="<?php echo $config_image_cart_width; ?>" size="3" required="true"<?php if (isset($error_image_cart)) echo ' class="neco-input-error'; ?> />
+        <input type="necoNumber" name="config_image_cart_height" value="<?php echo $config_image_cart_height; ?>" size="3" required="true"<?php if (isset($error_image_cart)) echo ' class="neco-input-error'; ?> />
     </div>
-                                     
-    <div class="clear"></div>
-    
-    <div class="row">
-        <label><?php echo $Language->get('entry_image_additional'); ?></label>
-        <input type="necoNumber" name="config_image_cart_width" value="<?php echo $config_image_cart_width; ?>" size="3" required="true"<?php if (isset($error_image_additional)) echo ' class="neco-input-error'; ?> />
-        <input type="necoNumber" name="config_image_cart_height" value="<?php echo $config_image_cart_height; ?>" size="3" required="true"<?php if (isset($error_image_additional)) echo ' class="neco-input-error'; ?> />
-    </div>
-                                     
-    <div class="clear"></div>
-    
 </div>

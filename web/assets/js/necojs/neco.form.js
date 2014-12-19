@@ -15,7 +15,7 @@
             type:       'post',
             dataType:   'json',
             classname:  'neco-form',
-            lockButton: true,
+            lockButton: false,
             submitButton: true,
             cancelButton: true,
             loading:    {

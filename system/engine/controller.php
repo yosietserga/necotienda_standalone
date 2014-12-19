@@ -5,6 +5,7 @@ abstract class Controller {
     protected $registry;
     protected $id;
     protected $template;
+    protected $templatePath = null;
     protected $children = array();
     protected $data = array();
     protected $widget = array();
@@ -160,7 +161,12 @@ abstract class Controller {
     }
 
     protected function fetch($filename) {
-        $file = DIR_TEMPLATE . $filename;
+        if ($this->templatePath && is_dir($this->templatePath)) {
+            $file = $this->templatePath . $filename;
+        } else {
+            $file = DIR_TEMPLATE . $filename;
+        }
+        
         if (file_exists($file)) {
             $this->data['Config'] = $this->registry->get('config');
             $this->data['Language'] = $this->registry->get('language');
@@ -171,17 +177,24 @@ abstract class Controller {
             require($file);
             $content = ob_get_contents();
             ob_end_clean();
-
+            
             foreach ($this->children as $key => $child) {
-                if (!is_numeric($key))
+                if (!is_numeric($key)) {
                     $content = str_replace('{%' . $this->data[$key . "_hook"] . '%}', $this->data[$key . "_code"], $content);
+                }
             }
 
+            foreach ($this->children as $key => $child) {
+                if (!is_numeric($key)) {
+                    $content = str_replace('{%' . $this->data[$key . "_hook"] . '%}', $this->data[$key . "_code"], $content);
+                }
+            }
+/*
             $content = str_replace("\n", "", $content);
             $content = str_replace("\r", "", $content);
             $content = preg_replace('/\s{2,}/', "", $content);
             $content = preg_replace('/\n\s*\n/', "\n", $content);
-
+*/
             return $content;
         } else {
             exit('Error: Could not load template ' . $file . '!');

@@ -97,16 +97,7 @@ class ControllerCommonFooter extends Controller {
                 $('.message').fadeOut('slow');
             },10000);
             
-            var preloader = $('#gridPreloader');
-            
-            if (preloader.length > 0) {
-                var cl = new CanvasLoader('gridPreloader');
-          		cl.setColor('#858585');
-          		cl.setDiameter(72);
-          		cl.setDensity(78);
-          		cl.setRange(1);
-          		cl.show();
-            }
+            $('#gridPreloader').html('<img src=\"image/loader.gif\" alt=\"Cargando...\" />');
             
             $('#filters').on('click',function(){
                 if ($(this).hasClass('show')) {

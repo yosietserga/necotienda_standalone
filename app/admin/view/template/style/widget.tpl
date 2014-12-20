@@ -339,9 +339,9 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="js/vendor/jquery.ajaxqueue.min.js"></script>
 <script type="text/javascript">
-$(function(){
-    
+$(function(){    
     $('#qWidgets').on('change',function(e){
         var that = this;
         var valor = $(that).val().toLowerCase();

@@ -14,19 +14,12 @@ class ControllerCommonLogin extends Controller {
         }
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            //$this->session->set('token',$this->session->get('ukey')); // esta linea esta en la lib user.php
             if (isset($this->request->post['redirect'])) {
                 $this->redirect(Url::createUrl($this->request->post['redirect'], array('token' => $this->session->get('ukey'))));
             } else {
                 $this->redirect(Url::createUrl('common/home', array('token' => $this->session->get('ukey'))));
             }
         }
-
-        $this->data['heading_title'] = $this->language->get('heading_title');
-        $this->data['text_login'] = $this->language->get('text_login');
-        $this->data['entry_username'] = $this->language->get('entry_username');
-        $this->data['entry_password'] = $this->language->get('entry_password');
-        $this->data['button_login'] = $this->language->get('button_login');
 
         if (!$this->session->has('ukey') || !isset($this->request->get['token']) || ($this->request->get['token'] != $this->session->get('ukey'))) {
             $this->error['warning'] = $this->language->get('error_token');
@@ -55,43 +48,6 @@ class ControllerCommonLogin extends Controller {
         }
 
         $this->session->set('fid', md5(rand()));
-        $scripts[] = array('id' => 'login', 'method' => 'ready', 'script' =>
-            "$('#formLogin input').keydown(function(e) {
-        		if (e.keyCode == 13) {
-  		            submit();
-        		}
-        	});");
-        $scripts[] = array('id' => 'loginFunction', 'method' => 'function', 'script' =>
-            "function submit() {
-                $('#formLogin .button').before('<div id=\"loading\" style=\"margin:5px auto;width:210px;\"><img src=\"" . HTTP_IMAGE . "loader.gif\" alt=\"cargando...\" /><div>');
-                if(window.jQuery) {
-  		            if (typeof jQuery.ui != 'undefined') {
-                        $.post('" . Url::createAdminUrl("common/login/login") . "',
-                        {
-                            username:$('input[name=username]').val(),
-                            password:$('input[name=password]').crypt({method:'md5'}),
-                            fid:'" . $this->session->get('fid') . "'
-                        },
-                        function(response){
-                            data = $.parseJSON(response);
-                            if (typeof data.success != 'undefined') {
-                                window.location.href = data.redirect;
-                            } else {
-                                $('#formLogin').effect('shake');
-                            }
-                            $('#loading').remove();
-                        });
-                    } else {
-                        $('#formLogin').submit();
-                        $('#loading').remove();
-                    }
-                } else {
-                    document.forms['formLogin'].submit();
-                    $('#loading').remove();
-                }
-      		}");
-
-        $this->scripts = array_merge($scripts, $this->scripts);
 
         $this->template = 'common/login.tpl';
         $this->children = array(
@@ -213,7 +169,7 @@ class ControllerCommonLogin extends Controller {
     }
 
     private function validate() {
-        if (!$this->user->login($this->request->post['username'], $this->request->post['password'])) {
+        if (!$this->user->login($this->request->post['username'], $this->request->post['password']) && ($this->session->get('fid') != $this->request->post['fid'])) {
             $this->error['warning'] = $this->language->get('error_login');
         }
 

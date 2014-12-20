@@ -4,18 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <base href="<?php echo $base; ?>" />
-    <link rel="stylesheet" type="text/css" href="css/filemanager.css" />
     <link rel="stylesheet" type="text/css" href="css/vendor.css" />
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="css/filemanager.css" />
     
     <script src="js/vendor/modernizr.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
     <script>window.$ || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
-    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 </head>
 <body>
-    <div class="container_24" style="z-index: 10000;">
+    <div class="container">
     
         <div id="tabs" class="grid_12">
             <ul>
@@ -29,33 +26,65 @@
         
         <div class="tabs grid_12" id="tabbrowser">
             <div id="menu">
-                <a id="create" class="button" style="background-image: url('image/filemanager/folder.png');"><?php echo $Language->get('button_folder'); ?></a>
-                <a id="delete" class="button" style="background-image: url('image/filemanager/edit-delete.png');"><?php echo $Language->get('button_delete'); ?></a>
-                <a id="move" class="button" style="background-image: url('image/filemanager/edit-cut.png');"><?php echo $Language->get('button_move'); ?></a>
-                <a id="copy" class="button" style="background-image: url('image/filemanager/edit-copy.png');"><?php echo $Language->get('button_copy'); ?></a>
-                <a id="rename" class="button" style="background-image: url('image/filemanager/edit-rename.png');"><?php echo $Language->get('button_rename'); ?></a>
-                <a onclick="$('.tabs').hide();$('#tabfrompc').show();" class="button" style="background-image: url('image/filemanager/upload.png');"><?php echo $Language->get('button_upload'); ?></a>
-                <a id="refresh" class="button" style="background-image: url('image/filemanager/refresh.png');"><?php echo $Language->get('button_refresh'); ?></a>
+                <a id="create" class="button" style="background-image: url('image/filemanager/folder.png');">
+                    <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_folder'); ?></span>
+                </a>
+                <a id="delete" class="button" style="background-image: url('image/filemanager/edit-delete.png');">
+                    <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_delete'); ?></span>
+                </a>
+                <a id="move" class="button" style="background-image: url('image/filemanager/edit-cut.png');">
+                    <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_move'); ?></span>
+                </a>
+                <a id="copy" class="button" style="background-image: url('image/filemanager/edit-copy.png');">
+                    <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_copy'); ?></span>
+                </a>
+                <a id="rename" class="button" style="background-image: url('image/filemanager/edit-rename.png');">
+                    <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_rename'); ?></span>
+                </a>
+                <a onclick="$('.tabs').hide();$('#tabfrompc').show();" class="button" style="background-image: url('image/filemanager/upload.png');">
+                    <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_upload'); ?></span>
+                </a>
+                <a id="refresh" class="button" style="background-image: url('image/filemanager/refresh.png');">
+                    <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_refresh'); ?></span>
+                </a>
             </div>
             
             <div class="clear"></div>
             
             <div class="grid_3" id="column_left"></div>
-            <form id="form"><div class="grid_8" id="column_right"></div></form>
+            <form id="form">
+                <div class="grid_8" id="column_right"></div>
+            </form>
         </div>
         
         <div class="clear"></div>
         
         <div class="tabs" id="tabfrompc">
-            <div class="clear"></div>
-            <p><b>Instruccioes:</b> Antes de subir los archivos, debes seleccionar la carpeta donde quieres guardarlos. Haz click <a href="#" title="Seleccionar carpeta" onclick="$('.tabs').hide();$('#tabfrompc').show();return false;">aqu&iacute;</a> para seleccionar la carpeta.</p>
+            <p>
+                <b>Instruccioes:</b>
+                Antes de subir los archivos, debes seleccionar la carpeta donde quieres guardarlos. Haz click 
+                <a href="#" title="Seleccionar carpeta" onclick="$('.tabs').hide();$('#tabfrompc').show();return false;">aqu&iacute;</a> para seleccionar la carpeta.
+            </p>
+            
             <a class="uploadStart">Comenzar a Subir</a>
+            
             <div class="clear"></div>
+            
             <input id="fileupload" type="file" name="files[]" multiple="multiple" />
+            
             <input type="hidden" id="directoryForUpload" value="" />
-            <div id="dropHere"><p>Arrastra los archivos hasta aqu&iacute;<br /><span>Selecciona los archivos que quieres subir y arr&aacute;stralos hasta aqu&iacute;</span></p></div>
+            
+            <div id="dropHere">
+                <p>
+                    Arrastra los archivos hasta aqu&iacute;<br />
+                    <span>Selecciona los archivos que quieres subir y arr&aacute;stralos hasta aqu&iacute;</span>
+                </p>
+            </div>
+            
             <ul id="filesUploaded"></ul>
+            
             <div id="scrollDown"></div>
+            
         </div>
         
         <div class="clear"></div>
@@ -65,27 +94,39 @@
         </div>
         -->
     </div>
-<script type="text/javascript" src="js/vendor/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/plugins.js"></script>
-<script type="text/javascript" src="js/vendor/jstree/jquery.tree.min.js"></script>
+    <?php echo $field; ?> - 
+    <?php echo $fckeditor; ?>
+<script type="text/javascript" src="js/vendor/jstree/jstree.min.js"></script>
 <script type="text/javascript" src="js/vendor/fileUploader/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="js/vendor/fileUploader/jquery.fileupload.js"></script>
-<!--[if gte IE 8]><script src="js/cors/jquery.xdr-transport.js"></script><![endif]-->
+<script type="text/javascript" src="js/commonfilemanager.js"></script>
 <script type="text/javascript">
-jQuery(function(){
-    jQuery(".tabs").hide();
-    jQuery("#tabbrowser").show();
-    jQuery("#tabs li").click(function(){
-        jQuery(".tabs").hide();
-        jQuery("#tab" + this.id).show();  
+$(function(){
+    $(".tabs").hide();
+    $("#tabbrowser").show();
+    $("#tabs li").click(function(){
+        $(".tabs").hide();
+        $("#tab" + this.id).show();  
     });
     
-    var windowHeight = jQuery(window).height();
-    jQuery("#dropHere").css({
+    var windowHeight = $(window).height();
+    $("#dropHere").css({
         height:(windowHeight * 60 / 100) + 'px'
     });
     
-    jQuery('#column_left').tree({
+    window.baseImageUrl = '<?php echo HTTP_IMAGE; ?>';
+    window.field = '<?php echo $field; ?>';
+    window.preview = '<?php echo $preview; ?>';
+    window.isFckeditor = '<?php echo $fckeditor; ?>';
+    
+    loadDirectories('<?php echo $GET['token']; ?>');
+    
+    
+    
+    
+    
+    /*
+    $('#column_left').tree({
         data: { 
             type: 'json',
             async: true, 
@@ -124,16 +165,16 @@ jQuery(function(){
                     return { 'directory': '' } 
 		} else {
                     TREE_OBJ.settings.data.opts.static = false;
-                    jQuery("#directoryForUpload").val( jQuery(NODE).attr('directory') );
-                    return { 'directory': jQuery(NODE).attr('directory') } 
+                    $("#directoryForUpload").val( $(NODE).attr('directory') );
+                    return { 'directory': $(NODE).attr('directory') } 
 		}
             },		
             onselect: function (NODE, TREE_OBJ) {
-                jQuery("#directoryForUpload").val( jQuery(NODE).attr('directory') );
-		jQuery.ajax({
+                $("#directoryForUpload").val( $(NODE).attr('directory') );
+		$.ajax({
                     url: '<?php echo $Url::createAdminUrl("common/filemanager/files"); ?>',
                     type: 'POST',
-                    data: 'directory=' + encodeURIComponent(jQuery(NODE).attr('directory')),
+                    data: 'directory=' + encodeURIComponent($(NODE).attr('directory')),
                     dataType: 'json',
                     success: function(json) {
                         html = '<ul>';
@@ -160,19 +201,19 @@ jQuery(function(){
                             }
 			}
 			html += '</ul>';
-			jQuery('#column_right').html(html);
+			$('#column_right').html(html);
                         
-                        jQuery('#column_right li').on('click', function (e) {
+                        $('#column_right li').on('click', function (e) {
                             if(e.shiftKey) {
-                                var firstLi = (jQuery('#column_right .liSelected:first-child').index()) ? jQuery('#column_right .liSelected:first-child').index() : jQuery('#column_right li:first-child').index();
-                                var lastLi = jQuery(this).index();
-                                jQuery('#column_right li').each(function(){
-                                    if (jQuery(this).index() >= firstLi && jQuery(this).index() <= lastLi) {
-                                        jQuery(this).addClass('liSelected').find('.selected').show();
-                                        jQuery(this).find('input').attr('checked','checked');
+                                var firstLi = ($('#column_right .liSelected:first-child').index()) ? $('#column_right .liSelected:first-child').index() : $('#column_right li:first-child').index();
+                                var lastLi = $(this).index();
+                                $('#column_right li').each(function(){
+                                    if ($(this).index() >= firstLi && $(this).index() <= lastLi) {
+                                        $(this).addClass('liSelected').find('.selected').show();
+                                        $(this).find('input').attr('checked','checked');
                                     } else {
-                                        jQuery(this).removeClass('liSelected').find('.selected').hide();
-                                        jQuery(this).find('input').removeAttr('checked');
+                                        $(this).removeClass('liSelected').find('.selected').hide();
+                                        $(this).find('input').removeAttr('checked');
                                     }
                                 });
                            } else {
@@ -310,11 +351,6 @@ jQuery(function(){
                     }
                     
                     
-                    /* 
-                    html += '<div class="grid_2">';
-                    html += '<img src="'+ file.mozFullPath +'" alt="'+ file.name +'" />'; 
-                    html += '</div>';
-                    */
                     html += '<div class="grid_8">';
                     html += file.name;
                     html += '</div>';
@@ -694,6 +730,7 @@ jQuery(function(){
 		var tree = $.tree.focused();
 		tree.refresh(tree.selected);
 	});	
+        */
 });
 </script>
 </body>

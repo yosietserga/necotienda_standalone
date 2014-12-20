@@ -41,10 +41,12 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_image'); ?></label>
-        <img src="<?php echo $preview; ?>" id="preview" class="image necoImage" onclick="image_upload('image', 'preview');" />
-        <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image&amp;preview=preview">
+        <img src="<?php echo $preview; ?>" id="preview" class="image necoImage" width="100" />
+        </a>
+        <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" onchange="$('#preview').attr('src', this.value);" />
         <br />
-        <a onclick="image_upload('image', 'preview');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image&amp;preview=preview" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
         <a onclick="image_delete('image', 'preview');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
     </div>
                             
@@ -126,8 +128,8 @@ $(function(){
         $('.message').remove();
         $.getJSON('<?php echo $Url::createAdminUrl('store/product/checkmodel'); ?>',
         {
-            'product_id':<?php echo $product_id; ?>,
-            'model':$(this).val(),
+            product_id:<?php echo (int)$product_id; ?>,
+            model:$(this).val(),
         },
         function(data){
             if (typeof data.error != 'undefined') {

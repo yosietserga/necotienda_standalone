@@ -18,36 +18,12 @@ class ControllerCommonFileManager extends Controller {
 
         $this->data['action'] = Url::createAdminUrl("common/filemanager/uploader");
 
-        $this->data['entry_folder'] = $this->language->get('entry_folder');
-        $this->data['entry_move'] = $this->language->get('entry_move');
-        $this->data['entry_copy'] = $this->language->get('entry_copy');
-        $this->data['entry_rename'] = $this->language->get('entry_rename');
-
-        $this->data['button_folder'] = $this->language->get('button_folder');
-        $this->data['button_delete'] = $this->language->get('button_delete');
-        $this->data['button_move'] = $this->language->get('button_move');
-        $this->data['button_copy'] = $this->language->get('button_copy');
-        $this->data['button_rename'] = $this->language->get('button_rename');
-        $this->data['button_upload'] = $this->language->get('button_upload');
-        $this->data['button_refresh'] = $this->language->get('button_refresh');
-
-        $this->data['error_select'] = $this->language->get('error_select');
-        $this->data['error_directory'] = $this->language->get('error_directory');
-
         $this->data['directory'] = HTTP_IMAGE . 'data/';
 
-        if (isset($this->request->get['field'])) {
-            $this->data['field'] = $this->request->get['field'];
-        } else {
-            $this->data['field'] = '';
-        }
-
-        if (isset($this->request->get['CKEditorFuncNum'])) {
-            $this->data['fckeditor'] = true;
-        } else {
-            $this->data['fckeditor'] = false;
-        }
-
+        $this->data['field'] = ($this->request->hasQuery('field')) ? $this->request->get['field'] : '';
+        $this->data['preview'] = ($this->request->hasQuery('preview')) ? $this->request->get['preview'] : '';
+        $this->data['fckeditor'] = ($this->request->hasQuery('CKEditorFuncNum')) ? true : false;
+        
         $this->template = 'common/filemanager.tpl';
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

@@ -226,4 +226,36 @@
         </form>
     </div>
 </div>
+<div id="jsProductWrapper"></div>
+<script>
+$(function() {
+    if (!$.fn.fancybox) {
+        $(document.createElement('script')).attr({
+            src:'js/vendor/jquery.fancybox.pack.js',
+            type:'text/javascript'
+        }).appendTo('#jsProductWrapper');
+    }
+    if ($('link[href="<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css"]')) {
+        $(document.createElement('link')).attr({
+            href:'<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css',
+            rel:'stylesheet'
+        }).appendTo('head');
+    }
+    
+    var height = $(window).height() * 0.8;
+    var width = $(window).width() * 0.8;
+    
+    $(".filemanager").fancybox({
+            maxWidth	: width,
+            maxHeight	: height,
+            fitToView	: false,
+            width	: '90%',
+            height	: '90%',
+            autoSize	: false,
+            closeClick	: false,
+            openEffect	: 'none',
+            closeEffect	: 'none'
+    });
+});
+</script>
 <?php echo $footer; ?>

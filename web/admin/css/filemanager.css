@@ -11,24 +11,19 @@ img { border: none; }
     height: 29px;
     float:none;
 }
-#column_left {
-    background: #FFF;
-    border: 1px solid #CCC;
-    float: left;
-    width: 20%;
-    height: auto;
-    min-height: 420px;
-    overflow: auto;
+#menu a {
+    height: 19px;
+    display:block;
 }
-#column_right {
+#column_left, #column_right {
     margin:0px;
     background: #FFF;
     border: 1px solid #CCC;
-    float: right;
-    width: 77%;
-    height: auto;
     min-height: 420px;
+    height: auto;
     overflow: auto;
+}
+#column_right {
     text-align: center;
 }
 #column_right ul {
@@ -245,3 +240,34 @@ img { border: none; }
     background:#F3AD06;
     color:#222;
 }
+
+/* =====  Media queries  ===== */
+/** tablets **/
+@media only screen and (max-width: 700px) {
+
+    .hideOnTablet {
+        display:none !important;
+        visibility:hidden !important;
+        opacity:0 !important;
+        position: absolute !important;
+        top:-9999px !important;
+        left:-9999px !important;
+    }
+}
+/** /tablets **/
+
+/** mobiles **/
+@media only screen and (max-width: 480px) {
+    input[type=input] { width: 100px;}
+    .button { padding:1px; font-size: 8px;}
+
+    .hideOnMobile {
+        display:none !important;
+        visibility:hidden !important;
+        opacity:0 !important;
+        position: absolute !important;
+        top:-9999px !important;
+        left:-9999px !important;
+    }
+}
+/** /mobiles **/

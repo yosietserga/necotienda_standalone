@@ -189,12 +189,12 @@ abstract class Controller {
                     $content = str_replace('{%' . $this->data[$key . "_hook"] . '%}', $this->data[$key . "_code"], $content);
                 }
             }
-/*
+            
             $content = str_replace("\n", "", $content);
             $content = str_replace("\r", "", $content);
             $content = preg_replace('/\s{2,}/', "", $content);
             $content = preg_replace('/\n\s*\n/', "\n", $content);
-*/
+            
             return $content;
         } else {
             exit('Error: Could not load template ' . $file . '!');

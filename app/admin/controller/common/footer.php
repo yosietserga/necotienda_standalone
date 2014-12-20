@@ -39,18 +39,7 @@ class ControllerCommonFooter extends Controller {
                 $('#form').append(\"<input type='hidden' name='to' value='saveAndNew'>\").submit(); 
             }");
         $scripts[] = array('id' => 'footerScripts', 'method' => 'ready', 'script' =>
-            "$('.trends').fancybox({
-        		maxWidth	: 640,
-        		maxHeight	: 600,
-        		fitToView	: false,
-        		width		: '70%',
-        		height		: '70%',
-        		autoSize	: false,
-        		closeClick	: false,
-        		openEffect	: 'none',
-        		closeEffect	: 'none'
-        	});
-            
+            "
             $('.htabs .htab').on('click',function() {
                 $(this).closest('.htabs').find('.htab').each(function(){
                    $($(this).attr('tab')).hide();

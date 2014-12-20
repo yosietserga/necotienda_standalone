@@ -1,6 +1,4 @@
 $(function () {
-    
-    // Confirm Delete
     $('#form').submit(function () {
         if ($(this).attr('action').indexOf('delete', 1) != -1) {
             if (!confirm('<?php echo $text_confirm; ?>')) {
@@ -9,7 +7,6 @@ $(function () {
         }
     });
 
-    // Confirm Uninstall
     $('a').click(function () {
         if ($(this).attr('href') != null && $(this).attr('href').indexOf('uninstall', 1) != -1) {
             if (!confirm('<?php echo $text_confirm; ?>')) {

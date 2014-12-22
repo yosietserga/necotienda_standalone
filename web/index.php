@@ -80,6 +80,28 @@ if (!$session->has('ntConfig_' . (int) STORE_ID)) {
 }
 $config->set('config_store_id', STORE_ID);
 
+$loader->library('browser');
+$browser = new Browser;
+if ($browser->isMobile()) {
+    if ($config->get('config_redirect_when_mobile')) {
+        location($config->get('config_mobile_url'));
+    } else {
+        $config->set('config_template', $config->get('config_mobile_template'));
+    }
+} elseif ($browser->isTablet()) {
+    if ($config->get('config_redirect_when_tablet')) {
+        location($config->get('config_tablet_url'));
+    } else {
+        $config->set('config_template', $config->get('config_tablet_template'));
+    }
+} elseif ($browser->isFacebook()) {
+    if ($config->get('config_redirect_when_facebbok')) {
+        location($config->get('config_facebook_url'));
+    } else {
+        $config->set('config_template', $config->get('config_facebook_theme'));
+    }
+}
+
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 
 // Language Detection

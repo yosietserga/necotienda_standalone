@@ -2,6 +2,24 @@
     <h2>Opciones</h2>
     <table class="form">
         <tr>
+            <td><?php echo $Language->get('entry_redirect_when_mobile'); ?></td>
+            <td>
+                <input title="Marque esta casilla si desea redireccionar la tienda hacia otra url cuando detecte acceso desde un móvil" type="checkbox" name="config_redirect_when_mobile" value="1"<?php if ($config_redirect_when_mobile) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $Language->get('entry_redirect_when_tablet'); ?></td>
+            <td>
+                <input title="Marque esta casilla si desea redireccionar la tienda hacia otra url cuando detecte acceso desde una Tablet" type="checkbox" name="config_redirect_when_tablet" value="1"<?php if ($config_redirect_when_tablet) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $Language->get('entry_redirect_when_facebook'); ?></td>
+            <td>
+                <input title="Marque esta casilla si desea redireccionar la tienda hacia otra url cuando detecte acceso desde un móvil" type="checkbox" name="config_redirect_when_facebook" value="1"<?php if ($config_redirect_when_facebook) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
             <td><?php echo $Language->get('entry_store_mode'); ?></td>
             <td>
                 <select name="config_store_mode">

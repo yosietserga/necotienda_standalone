@@ -18,7 +18,28 @@
         <label><?php echo $Language->get('entry_url'); ?></label>
         <input class="necoUrl<?php if (isset($error_name)) echo ' neco-input-error'; ?>" type="url" title="<?php echo $Language->get('help_url'); ?>" name="config_url" value="<?php echo $config_url; ?>" required="true" />
     </div>
-                                  
+                                     
+    <div class="clear"></div>
+           
+    <div class="row">
+        <label><?php echo $Language->get('entry_mobile_url'); ?></label>
+        <input type="url" title="<?php echo $Language->get('help_mobile_url'); ?>" name="config_mobile_url" value="<?php echo $config_mobile_url; ?>" />
+    </div>
+                                    
+    <div class="clear"></div>
+           
+    <div class="row">
+        <label><?php echo $Language->get('entry_tablet_url'); ?></label>
+        <input type="url" title="<?php echo $Language->get('help_tablet_url'); ?>" name="config_tablet_url" value="<?php echo $config_tablet_url; ?>" />
+    </div>
+                                    
+    <div class="clear"></div>
+           
+    <div class="row">
+        <label><?php echo $Language->get('entry_facebook_url'); ?></label>
+        <input type="url" title="<?php echo $Language->get('help_facebook_url'); ?>" name="config_facebook_url" value="<?php echo $config_facebook_url; ?>" />
+    </div>
+                              
     <div class="clear"></div>
     
     <div class="row">

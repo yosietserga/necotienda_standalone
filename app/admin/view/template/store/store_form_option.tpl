@@ -2,13 +2,42 @@
     <h2>Opciones</h2>
     <table class="form">
         <tr>
+            <td><?php echo $Language->get('entry_redirect_when_mobile'); ?></td>
+            <td>
+                <input title="Marque esta casilla si desea redireccionar la tienda hacia otra url cuando detecte acceso desde un móvil" type="checkbox" name="config_redirect_when_mobile" value="1"<?php if ($config_redirect_when_mobile) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $Language->get('entry_redirect_when_tablet'); ?></td>
+            <td>
+                <input title="Marque esta casilla si desea redireccionar la tienda hacia otra url cuando detecte acceso desde una Tablet" type="checkbox" name="config_redirect_when_tablet" value="1"<?php if ($config_redirect_when_tablet) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $Language->get('entry_redirect_when_facebook'); ?></td>
+            <td>
+                <input title="Marque esta casilla si desea redireccionar la tienda hacia otra url cuando detecte acceso desde un móvil" type="checkbox" name="config_redirect_when_facebook" value="1"<?php if ($config_redirect_when_facebook) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $Language->get('entry_store_mode'); ?></td>
+            <td>
+                <select name="config_store_mode">
+                    <option value="store"<?php if ($config_store_mode=='store') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_store'); ?></option>
+                    <option value="catalog"<?php if ($config_store_mode=='catalog') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_catalog'); ?></option>
+                    <option value="blog"<?php if ($config_store_mode=='blog') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_blog'); ?></option>
+                    <option value="company_website"<?php if ($config_store_mode=='company_website') { echo ' selected="selected"'; } ?>><?php echo $Language->get('text_company_website'); ?></option>
+                </select>
+            </td>
+          </tr>
+        <tr>
             <td><?php echo $Language->get('entry_admin_limit'); ?></td>
             <td><input class="necoAdminItems<?php if (isset($error_admin_limit)) echo ' neco-input-error'; ?>" title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la administraci&oacute;n" type="necoNumber" name="config_admin_limit" value="<?php echo $config_admin_limit; ?>" size="3" required="true">
               <?php if ($error_admin_limit) { ?>
               <span class="error"><?php echo $error_admin_limit; ?></span>
               <?php } ?></td>
-          </tr>
-		  <tr>
+        </tr>
+	<tr>
             <td><?php echo $Language->get('entry_catalog_limit'); ?></td>
             <td><input class="necoShopItems<?php if (isset($error_catalog_limit)) echo ' neco-input-error'; ?>" title="Ingrese la cantidad de items por p&aacute;gina que se mostrar&aacute;n en los diversos listados de la tienda" type="necoNumber" name="config_catalog_limit" value="<?php echo $config_catalog_limit; ?>" size="3" required="true">
               <?php if ($error_catalog_limit) { ?>

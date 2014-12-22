@@ -485,6 +485,15 @@ class ControllerStoreStore extends Controller {
         $this->setVarData('config_title', $store_info, '');
         $this->setVarData('config_meta_description', $store_info, '');
         $this->setVarData('config_template', $store_info, '');
+        $this->setVarData('config_mobile_template', $store_info, '');
+        $this->setVarData('config_tablet_template', $store_info, '');
+        $this->setVarData('config_facebook_template', $store_info, '');
+        $this->setVarData('config_mobile_url', $store_info, '');
+        $this->setVarData('config_tablet_url', $store_info, '');
+        $this->setVarData('config_facebbok_url', $store_info, '');
+        $this->setVarData('config_redirect_when_mobile', $store_info, '');
+        $this->setVarData('config_redirect_when_tablet', $store_info, '');
+        $this->setVarData('config_redirect_when_facebook', $store_info, '');
         $this->setVarData('config_country_id', $store_info, '');
         $this->setVarData('config_zone_id', $store_info, '');
         $this->setVarData('config_language', $store_info, '');
@@ -495,6 +504,7 @@ class ControllerStoreStore extends Controller {
         $this->setVarData('config_customer_group_id', $store_info, '');
         $this->setVarData('config_customer_price', $store_info, '');
         $this->setVarData('config_customer_approval', $store_info, '');
+        $this->setVarData('config_store_mode', $store_info, '');
         $this->setVarData('config_account_id', $store_info, '');
         $this->setVarData('config_checkout_id', $store_info, '');
         $this->setVarData('config_stock_display', $store_info, '');

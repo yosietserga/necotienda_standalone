@@ -12,7 +12,6 @@ $mainPath    = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARA
 $protocol       = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http://' : 'https://';
 $httpPath= isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] : substr($_SERVER['PHP_SELF'],0,strrpos($_SERVER['PHP_SELF'],"/")+1);
 $httpPath = str_replace('/index.php',"",$httpPath);
-$httpPath = str_replace('/web/',"/",$httpPath);
 
 $domain = str_replace(CATALOG.".","",$_SERVER['HTTP_HOST']);
 $domain = str_replace("www.","",$domain);
@@ -24,11 +23,9 @@ if(isset($matches[1]) && $matches[1]==CATALOG) {
     $httpAppPath = $httpPath;
 }
 
-$httpPath = str_replace('/web',"",$httpPath);
 $httpPath = str_replace(CATALOG.'/'.CATALOG,'/'.CATALOG,$httpPath);
 $httpPath = str_replace('//','/',$httpPath);
 
-$httpAppPath = str_replace('/web/',"/",$httpAppPath);
 $httpAppPath = str_replace(CATALOG.'/'.CATALOG,'/'.CATALOG,$httpAppPath);
 $httpAppPath = str_replace('//','/',$httpAppPath);
 
@@ -44,6 +41,7 @@ define('HTTP_DOWNLOAD', str_replace(CATALOG."/","",HTTP_HOME) . "upload/");
 define('HTTP_THEME_CSS',HTTP_APP ."theme/%theme%/css/");
 define('HTTP_THEME_JS', HTTP_APP ."theme/%theme%/js/");
 define('HTTP_THEME_IMAGE', HTTP_APP ."theme/%theme%/images/");
+define('HTTP_THEME_FONT', HTTP_APP . "assets/theme/%theme%/fonts/");
 
  // HTTPS addresses
 define('HTTPS_HOME',     "https://". $httpPath ."/");
@@ -53,9 +51,10 @@ define('HTTPS_CSS',      HTTPS_HOME . "assets/css/");
 define('HTTPS_JS',       HTTPS_HOME . "assets/js/");
 define('HTTPS_UPLOAD',   HTTPS_HOME . "upload/");
 define('HTTPS_DOWNLOAD', HTTPS_HOME . "upload/");
-define('HTTPS_THEME_CSS',HTTP_APP ."theme/%theme%/css/");
-define('HTTPS_THEME_JS', HTTP_APP ."theme/%theme%/js/");
-define('HTTPS_THEME_IMAGE', HTTP_APP ."theme/%theme%/images/");
+define('HTTPS_THEME_CSS',HTTPS_APP ."theme/%theme%/css/");we
+define('HTTPS_THEME_JS', HTTPS_APP ."theme/%theme%/js/");
+define('HTTPS_THEME_IMAGE', HTTPS_APP ."theme/%theme%/images/");
+define('HTTPS_THEME_FONT', HTTPS_APP . "assets/theme/%theme%/fonts/");
 
 define('DIR_APPLICATION',$privatePath);
 define('DIR_MODEL',     $privatePath . "model" . DIRECTORY_SEPARATOR);

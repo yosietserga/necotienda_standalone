@@ -94,6 +94,15 @@ class ControllerSettingSetting extends Controller {
         $this->setvar('config_title');
         $this->setvar('config_meta_description');
         $this->setvar('config_template');
+        $this->setvar('config_mobile_template');
+        $this->setvar('config_tablet_template');
+        $this->setvar('config_facebook_template');
+        $this->setvar('config_mobile_url');
+        $this->setvar('config_tablet_url');
+        $this->setvar('config_facebbok_url');
+        $this->setvar('config_redirect_when_mobile');
+        $this->setvar('config_redirect_when_tablet');
+        $this->setvar('config_redirect_when_facebook');
         $this->setvar('config_decimal_separator');
         $this->setvar('config_thousands_separator');
         $this->setvar('config_country_id');

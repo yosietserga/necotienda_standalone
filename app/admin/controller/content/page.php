@@ -598,6 +598,7 @@ class ControllerContentPage extends Controller {
 
         $this->setvar('post_id', $page_info, '');
         $this->setvar('parent_id', $page_info, '');
+        $this->setvar('image', $page_info, '');
 
         $this->data['languages'] = $this->modelLanguage->getAll();
         $this->data['pages'] = $this->modelPage->getAll();
@@ -606,6 +607,12 @@ class ControllerContentPage extends Controller {
         $this->data['customerGroups'] = $this->modelCustomergroup->getAll();
         $this->data['customer_groups'] = $this->modelPage->getProperty($this->request->getQuery('page_id'), 'customer_groups', 'customer_groups');
         $this->data['layout'] = $this->modelPage->getProperty($this->request->getQuery('page_id'), 'style', 'view');
+
+        if (!empty($page_info['image']) && file_exists(DIR_IMAGE . $page_info['image'])) {
+            $this->data['preview'] = NTImage::resizeAndSave($page_info['image'], 100, 100);
+        } else {
+            $this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
 
         if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
             $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';

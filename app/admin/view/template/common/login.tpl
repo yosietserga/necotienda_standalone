@@ -49,6 +49,7 @@ function submit() {
         {
             username:$('input[name=username]').val(),
             password:$('input[name=password]').crypt({method:'md5'}),
+            redirect:$('input[name=redirect]').val(),
             fid:'<?php echo $this->session->get('fid'); ?>'
         })
         .done(function(response){

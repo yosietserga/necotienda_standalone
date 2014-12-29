@@ -2,9 +2,12 @@
     <h2>Im&aacute;genes</h2>
     <div class="row">
         <label><?php echo $Language->get('entry_logo'); ?></label>
-        <img src="<?php echo $preview_logo; ?>" id="preview_logo" class="image necoLogo" onclick="image_upload('logo', 'preview_logo');" />
+        
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=logo&amp;preview=preview_logo">
+        <img src="<?php echo $preview_logo; ?>" id="preview_logo" class="image necoLogo" width="100" />
+        </a>
         <br />
-        <a onclick="image_upload('logo', 'preview_logo');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=logo&amp;preview=preview_logo" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
         <a onclick="image_delete('logo', 'preview_logo');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
         <input type="hidden" showquick="off" id="logo" name="config_logo" value="<?php echo $config_logo; ?>" />
     </div>
@@ -13,11 +16,41 @@
     
     <div class="row">
         <label><?php echo $Language->get('entry_icon'); ?></label>
-        <img src="<?php echo $preview_icon; ?>" id="preview_icon" class="image necoIcon" onclick="image_upload('icon', 'preview_icon');" />
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=icon&amp;preview=preview_icon">
+        <img src="<?php echo $preview_icon; ?>" id="preview_icon" class="image necoIcon" width="100" />
+        </a>
         <br />
-        <a onclick="image_upload('icon', 'preview_icon');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=icon&amp;preview=preview_icon" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
         <a onclick="image_delete('icon', 'preview_icon');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
         <input type="hidden" showquick="off" id="icon" name="config_icon" value="<?php echo $config_icon; ?>" />
+    </div>
+                                          
+    <div class="clear"></div>
+    
+    <div class="row">
+        <label><?php echo $Language->get('entry_email_logo'); ?></label>
+        
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=email_logo&amp;preview=preview_email_logo">
+        <img src="<?php echo $preview_email_logo; ?>" id="preview_email_logo" class="image necoEmailLogo" width="100" />
+        </a>
+        <br />
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=email_logo&amp;preview=preview_email_logo" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+        <a onclick="image_delete('email_logo', 'preview_email_logo');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
+        <input type="hidden" showquick="off" id="email_logo" name="config_email_logo" value="<?php echo $config_email_logo; ?>" />
+    </div>
+                                          
+    <div class="clear"></div>
+    
+    <div class="row">
+        <label><?php echo $Language->get('entry_mobile_logo'); ?></label>
+        
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=mobile_logo&amp;preview=preview_mobile_logo">
+        <img src="<?php echo $preview_mobile_logo; ?>" id="preview_mobile_logo" class="image necoMobileLogo" width="100" />
+        </a>
+        <br />
+        <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=mobile_logo&amp;preview=preview_mobile_logo" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+        <a onclick="image_delete('mobile_logo', 'preview_mobile_logo');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
+        <input type="hidden" showquick="off" id="mobile_logo" name="config_mobile_logo" value="<?php echo $config_mobile_logo; ?>" />
     </div>
                                           
     <div class="clear"></div>

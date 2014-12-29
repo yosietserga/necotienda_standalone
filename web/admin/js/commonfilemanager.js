@@ -85,19 +85,24 @@ function loadFiles(path) {
             });
 }
 
-function ntDeleteFileFromMgr(path) {
-    $.post('index.php?r=content/file/delete&token=' + token,
-            {
-                path: path
-            }).then(function (json) {
-        if (json.success) {
-            var tree = $.tree.focused();
-            tree.select_branch(tree.selected);
-        }
-        if (json.error) {
-            alert(json.error);
-        }
-    });
+function ntDeleteFileFromMgr(id,path) {
+    if (confirm('Est\u00E1s seguro que deseas eliminar estos ficheros?')) {
+        $.post('index.php?r=content/file/delete&token=' + token, 
+        {
+            filess:[path]
+        })
+        .done(function (resp) {
+            data = $.parseJSON(resp);
+            if (data.error) {
+                alert(data.error);
+                return false;
+            } else {
+                $('#'+ id).remove();
+                /* $('#column_left').jstree('refresh'); */
+                return true;
+            }
+        });
+    }
 }
 
 function bindEventsRenderedFiles() {
@@ -153,7 +158,7 @@ function deleteFile() {
             return false;
         } else {
             $('#column_right li.liSelected').remove();
-            $('#column_left').jstree('refresh');
+            /* $('#column_left').jstree('refresh'); */
             return true;
         }
     });
@@ -468,6 +473,7 @@ $(function () {
             done: function (e, data) {
                 var that = $(this).data('fileupload');
                 if (data.context) {
+                    $('#column_left').jstree('refresh');
                     data.context.each(function (index) {
                         $('html,body').animate(
                                 {

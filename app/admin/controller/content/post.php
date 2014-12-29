@@ -577,6 +577,7 @@ class ControllerContentPost extends Controller {
 
         $this->setvar('post_id', $post_info, '');
         $this->setvar('parent_id', $post_info, '');
+        $this->setvar('image', $post_info);
 
         $this->data['languages'] = $this->modelLanguage->getAll();
         $this->data['stores'] = $this->modelStore->getAll();
@@ -584,6 +585,12 @@ class ControllerContentPost extends Controller {
         $this->data['customerGroups'] = $this->modelCustomergroup->getAll();
         $this->data['customer_groups'] = $this->modelPost->getProperty($this->request->getQuery('post_id'), 'customer_groups', 'customer_groups');
         $this->data['layout'] = $this->modelPost->getProperty($this->request->getQuery('post_id'), 'style', 'view');
+
+        if (!empty($post_info['image']) && file_exists(DIR_IMAGE . $post_info['image'])) {
+            $this->data['preview'] = NTImage::resizeAndSave($post_info['image'], 100, 100);
+        } else {
+            $this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
 
         if (file_exists(DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/common/home.tpl')) {
             $folderTPL = DIR_CATALOG . 'view/theme/' . $this->config->get('config_template') . '/';

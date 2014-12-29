@@ -342,7 +342,7 @@ class ControllerContentFile extends Controller {
         $this->load->language('common/filemanager');
 
         $json = array();
-
+        
         if (!$this->user->hasPermission('modify', 'common/filemanager')) {
             $json['error'] = $this->language->get('error_permission');
         }
@@ -365,7 +365,6 @@ class ControllerContentFile extends Controller {
                     if (is_dir($path)) {
                         $this->recursiveDelete($path);
                     }
-                    $json['success'] = $this->language->get('text_delete');
                 }
             }
         } elseif ($this->request->hasPost('filess')) {
@@ -732,7 +731,7 @@ class ControllerContentFile extends Controller {
             $error = $files['error'][0];
 
             $name = str_replace('.' . $ext, '', $name);
-            $name = $this->config->get('config_name') . "-" . $name;
+            $name = $name . "-" . $this->config->get('config_name');
             $name = strtolower($name);
             $name = str_replace(' ', '-', $name);
             $name = str_replace('á', 'a', $name);
@@ -846,7 +845,7 @@ class ControllerContentFile extends Controller {
         } else {
             $json['error'] = $this->language->get('error_file') . __LINE__;
         }
-
+        $this->load->auto('json');
         $this->response->setOutput(Json::encode($json));
     }
 

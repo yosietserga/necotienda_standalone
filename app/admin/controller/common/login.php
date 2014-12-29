@@ -14,11 +14,8 @@ class ControllerCommonLogin extends Controller {
         }
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            if (isset($this->request->post['redirect'])) {
-                $this->redirect(Url::createUrl($this->request->post['redirect'], array('token' => $this->session->get('ukey'))));
-            } else {
-                $this->redirect(Url::createUrl('common/home', array('token' => $this->session->get('ukey'))));
-            }
+            $redirect = ($this->request->hasPost('redirect') && $this->request->getPost('redirect') !== 'common/login') ? $this->request->getPost('redirect') : 'common/home';
+            $this->redirect(Url::createUrl($redirect, array('token' => $this->session->get('ukey'))));
         }
 
         if (!$this->session->has('ukey') || !isset($this->request->get['token']) || ($this->request->get['token'] != $this->session->get('ukey'))) {
@@ -32,10 +29,10 @@ class ControllerCommonLogin extends Controller {
         $this->setvar('username');
         $this->setvar('password');
 
-        if (isset($this->request->get['r'])) {
-            $route = $this->request->get['r'];
+        if ($this->request->hasQuery('r')) {
+            $route = $this->request->getQuery('r');
             unset($this->request->get['r']);
-            if (isset($this->request->get['token'])) {
+            if ($this->request->hasQuery('token')) {
                 unset($this->request->get['token']);
             }
             $url = '';
@@ -76,8 +73,8 @@ class ControllerCommonLogin extends Controller {
             $userInfo = $this->db->query("SELECT user_id FROM ". DB_PREFIX ."user WHERE username = '". $this->request->post['username'] ."'");
             $this->user->registerActivity($userInfo->row['user_id'], 'user', 'Intento de inicio de sesión fallido', 'login');
         } elseif (!$json['error']) {
-            $json['redirect'] = isset($this->request->post['redirect']) ?
-                    Url::createUrl($this->request->post['redirect'], array('token' => $this->session->get('ukey'))) :
+            $json['redirect'] = ($this->request->hasPost('redirect') && $this->request->getPost('redirect') !== 'common/login') ?
+                    Url::createUrl($this->request->getPost('redirect'), array('token' => $this->session->get('ukey'))) :
                     Url::createUrl('common/home', array('token' => $this->session->get('ukey')));
             $this->user->registerActivity($this->user->getId(), 'user', 'Inicio de sesión', 'login');
             $json['success'] = 1;

@@ -285,56 +285,40 @@ function a(e) {
 	}
 }
 </script>
-<script type="text/javascript">
+<div id="jsWrapper"></div>
+<script>
+$(function() {
+    if (!$.fn.fancybox) {
+        $(document.createElement('script')).attr({
+            src:'js/vendor/jquery.fancybox.pack.js',
+            type:'text/javascript'
+        }).appendTo('#jsWrapper');
+    }
+    if ($('link[href="<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css"]')) {
+        $(document.createElement('link')).attr({
+            href:'<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css',
+            rel:'stylesheet'
+        }).appendTo('head');
+    }
+    
+    var height = $(window).height() * 0.8;
+    var width = $(window).width() * 0.8;
+    
+    $(".filemanager").fancybox({
+            maxWidth	: width,
+            maxHeight	: height,
+            fitToView	: false,
+            width	: '90%',
+            height	: '90%',
+            autoSize	: false,
+            closeClick	: false,
+            openEffect	: 'none',
+            closeEffect	: 'none'
+    });
+});
+
 $('#template').load('<?php echo $Url::createAdminUrl("store/store/template"); ?>&template=' + encodeURIComponent($('select[name=\'config_template\']').attr('value')));
-$("#_textos").click(function(){
-    $("#textos").slideToggle();
-    if ($(this).hasClass('slideOff')) {
-        $(this).removeClass().addClass("slideOn");
-    } else {
-        $(this).removeClass().addClass("slideOff");
-    }
-});
-$("#_fondos").click(function(){
-    $("#fondos").slideToggle();
-    if ($(this).hasClass('slideOff')) {
-        $(this).removeClass().addClass("slideOn");
-    } else {
-        $(this).removeClass().addClass("slideOff");
-    }
-});
-$("#_bordes").click(function(){
-    $("#bordes").slideToggle();
-    if ($(this).hasClass('slideOff')) {
-        $(this).removeClass().addClass("slideOn");
-    } else {
-        $(this).removeClass().addClass("slideOff");
-    }
-});
-$("#_imagenes").click(function(){
-    $("#imagenes").slideToggle();
-    if ($(this).hasClass('slideOff')) {
-        $(this).removeClass().addClass("slideOn");
-    } else {
-        $(this).removeClass().addClass("slideOff");
-    }
-});
-$("#_sombras").click(function(){
-    $("#sombras").slideToggle();
-    if ($(this).hasClass('slideOff')) {
-        $(this).removeClass().addClass("slideOn");
-    } else {
-        $(this).removeClass().addClass("slideOff");
-    }
-});
-$("#_botones").click(function(){
-    $("#botones").slideToggle();
-    if ($(this).hasClass('slideOff')) {
-        $(this).removeClass().addClass("slideOn");
-    } else {
-        $(this).removeClass().addClass("slideOff");
-    }
-});
+
 $('#zone').load('<?php echo $Url::createAdminUrl("store/store/zone"); ?>&country_id=<?php echo $config_country_id; ?>&zone_id=<?php echo $config_zone_id; ?>');
 </script>
 <?php echo $footer; ?>

@@ -109,9 +109,13 @@
                             <tr id="row<?php echo $key; ?>" class="row">
                                 <td style="width: 110px;text-align: left;">
                                     <input type="hidden" name="items[<?php echo $key; ?>][image]" value="<?php echo $banner_item['image']; ?>" id="image<?php echo $key; ?>" />
-                                    <img src="<?php echo ($banner_item['image'] && file_exists(DIR_IMAGE . $banner_item['image'])) ? $NTImage::resizeAndSave($banner_item['image'], 100, 100) : $NTImage::resizeAndSave('no_image.jpg', 100, 100); ?>" id="preview<?php echo $key; ?>" class="image" onclick="image_upload('image<?php echo $key; ?>', 'preview<?php echo $key; ?>');" />
+                                    
+                                    <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image<?php echo $key; ?>&amp;preview=preview<?php echo $key; ?>">
+
+                                        <img src="<?php echo ($banner_item['image'] && file_exists(DIR_IMAGE . $banner_item['image'])) ? $NTImage::resizeAndSave($banner_item['image'], 100, 100) : $NTImage::resizeAndSave('no_image.jpg', 100, 100); ?>" id="preview<?php echo $key; ?>" class="image" width="100" />
+                                    </a>
                                     <br />
-                                    <a onclick="image_upload('image<?php echo $key; ?>', 'preview<?php echo $key; ?>');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+                                    <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image<?php echo $key; ?>&amp;preview=preview<?php echo $key; ?>" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
                                     <a onclick="image_delete('image<?php echo $key; ?>', 'preview<?php echo $key; ?>');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
                                 </td>
                                 <td><input type="text" name="items[<?php echo $key; ?>][link]" value="<?php echo $banner_item['link']; ?>" placeholder="<?php echo $Language->get('entry_link'); ?>" showquick="off" /></td>
@@ -191,8 +195,38 @@
         </form>
     </div>
 </div>
+<div id="jsWrapper"></div>
 <script type="text/javascript">
 $(function(){
+    
+    if (!$.fn.fancybox) {
+        $(document.createElement('script')).attr({
+            src:'js/vendor/jquery.fancybox.pack.js',
+            type:'text/javascript'
+        }).appendTo('#jsWrapper');
+    }
+    if ($('link[href="<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css"]')) {
+        $(document.createElement('link')).attr({
+            href:'<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css',
+            rel:'stylesheet'
+        }).appendTo('head');
+    }
+    
+    var height = $(window).height() * 0.8;
+    var width = $(window).width() * 0.8;
+    
+    $(".filemanager").fancybox({
+            maxWidth	: width,
+            maxHeight	: height,
+            fitToView	: false,
+            width	: '90%',
+            height	: '90%',
+            autoSize	: false,
+            closeClick	: false,
+            openEffect	: 'none',
+            closeEffect	: 'none'
+    });
+    
     $('.tab:first-child').show();
     $('#items tbody').sortable({
         opacity: 0.6, 
@@ -208,17 +242,20 @@ $(function(){
 });
 function addItem() {
     _row = ($('#items tbody tr:last-child').index() + 1);
-	html = '<tr id="row'+ _row +'" class="row">';
-	html += '<td style="width: 110px;text-align: left;">';
-	html += '<input type="hidden" name="items['+ _row +'][image]" value="" id="image'+ _row +'" />';
-	html += '<img src="<?php echo HTTP_IMAGE; ?>cache/no_image-100x100.jpg" id="preview'+ _row +'" class="image" onclick="image_upload(\'image'+ _row +'\', \'preview'+ _row +'\');" />';
-	html += '<div class="clear"></div>';
-	html += '<a onclick="image_upload(\'image'+ _row +'\', \'preview'+ _row +'\');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>';
-	html += '<a onclick="image_delete(\'image'+ _row +'\', \'preview'+ _row +'\');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>';
-	html += '</td>';
-    html += '<td><input type="text" name="items['+ _row +'][link]" value="" placeholder="<?php echo $Language->get('entry_link'); ?>" /></td>';
-	html += '<td>';
-	html += '<div class="htabs">';
+	html = '<tr id="row'+ _row +'" class="row">'
+	+ '<td style="width: 110px;text-align: left;">'
+	+ '<input type="hidden" name="items['+ _row +'][image]" value="" id="image'+ _row +'" />'
+        + '<a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image'+ _row +'&amp;preview=preview'+ _row +'">'
+        + '<img src="<?php echo HTTP_IMAGE; ?>cache/no_image-100x100.jpg" id="preview'+ _row +'" class="image" width="100" />'
+        + '</a>'
+	+ '<div class="clear"></div>'
+        + '<a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image'+ _row +'&amp;preview=preview'+ _row +'" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>'
+        
+	+ '<a onclick="image_delete(\'image'+ _row +'\', \'preview'+ _row +'\');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>'
+	+ '</td>'
+        + '<td><input type="text" name="items['+ _row +'][link]" value="" placeholder="<?php echo $Language->get('entry_link'); ?>" /></td>'
+	+ '<td>'
+	+ '<div class="htabs">';
     
     <?php foreach ($languages as $language) { ?>
 	html += '<a onclick="showTab(this,\'language_'+ _row +'_<?php echo $language['code']; ?>\')" class="htab"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>';

@@ -226,14 +226,14 @@
         </form>
     </div>
 </div>
-<div id="jsProductWrapper"></div>
+<div id="jsWrapper"></div>
 <script>
 $(function() {
     if (!$.fn.fancybox) {
         $(document.createElement('script')).attr({
             src:'js/vendor/jquery.fancybox.pack.js',
             type:'text/javascript'
-        }).appendTo('#jsProductWrapper');
+        }).appendTo('#jsWrapper');
     }
     if ($('link[href="<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css"]')) {
         $(document.createElement('link')).attr({

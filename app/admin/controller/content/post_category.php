@@ -583,6 +583,7 @@ class ControllerContentPostCategory extends Controller {
         $this->data['categories'] = $this->modelPost_category->getAll();
         $this->data['stores'] = $this->modelStore->getAll();
         $this->data['_stores'] = $this->modelPost_category->getStores($this->request->get['category_id']);
+        $this->data['layout'] = $this->modelPost_category->getProperty($this->request->get['category_id'], 'style', 'view');
 
 
         if (!empty($category_info['image']) && file_exists(DIR_IMAGE . $category_info['image'])) {

@@ -519,6 +519,8 @@ class ControllerStoreStore extends Controller {
         $this->setVarData('config_review', $store_info, '');
         $this->setVarData('config_review_approve', $store_info, '');
         $this->setVarData('config_logo', $store_info, '');
+        $this->setVarData('config_email_logo', $store_info, '');
+        $this->setVarData('config_mobile_logo', $store_info, '');
         $this->setVarData('config_icon', $store_info, '');
         $this->setVarData('config_image_thumb_width', $store_info, '');
         $this->setVarData('config_image_thumb_height', $store_info, '');
@@ -627,6 +629,22 @@ class ControllerStoreStore extends Controller {
             $this->data['preview_logo'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
         }
 
+        if (!empty($this->request->post['config_email_logo']) && file_exists(DIR_IMAGE . $this->request->post['config_email_logo'])) {
+            $this->data['preview_email_logo'] = HTTP_IMAGE . $this->request->post['config_email_logo'];
+        } elseif (!empty($store_info['config_email_logo']) && file_exists(DIR_IMAGE . $store_info['config_email_logo'])) {
+            $this->data['preview_email_logo'] = HTTP_IMAGE . $store_info['config_email_logo'];
+        } else {
+            $this->data['preview_email_logo'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
+
+        if (!empty($this->request->post['config_mobile_logo']) && file_exists(DIR_IMAGE . $this->request->post['config_mobile_logo'])) {
+            $this->data['preview_mobile_logo'] = HTTP_IMAGE . $this->request->post['config_mobile_logo'];
+        } elseif (!empty($store_info['config_mobile_logo']) && file_exists(DIR_IMAGE . $store_info['config_mobile_logo'])) {
+            $this->data['preview_mobile_logo'] = HTTP_IMAGE . $store_info['config_mobile_logo'];
+        } else {
+            $this->data['preview_mobile_logo'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
+
         if (!empty($this->request->post['config_icon']) && file_exists(DIR_IMAGE . $this->request->post['config_icon'])) {
             $this->data['preview_icon'] = HTTP_IMAGE . $this->request->post['config_icon'];
         } elseif (!empty($store_info['config_logo']) && file_exists(DIR_IMAGE . $store_info['config_icon'])) {
@@ -679,7 +697,7 @@ class ControllerStoreStore extends Controller {
                 	filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "'
                 });
                 editor". $language["language_id"] .".products = '". $json['products'] ."';
-                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css';
+                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". (isset($store_info['config_template']) ? $store_info['config_template'] : 'choroni') ."/css/theme.css';
                 editor". $language["language_id"] .".config.allowedContent = true;
                     ");
         }
@@ -688,36 +706,7 @@ class ControllerStoreStore extends Controller {
             "function image_delete(field, preview) {
                 $('#' + field).val('');
                 $('#' + preview).attr('src','" . HTTP_IMAGE . "cache/no_image-100x100.jpg');
-            }
-            
-            function image_upload(field, preview) {
-                var height = $(window).height() * 0.8;
-                var width = $(window).width() * 0.8;
-                
-            	$('#dialog').remove();
-            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"" . Url::createAdminUrl("common/filemanager") . "&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
-                
-                $('#dialog').dialog({
-            		title: '" . $this->data['text_image_manager'] . "',
-            		close: function (event, ui) {
-            			if ($('#' + field).attr('value')) {
-            				$.ajax({
-            					url: '" . Url::createAdminUrl("common/filemanager/image") . "',
-            					type: 'POST',
-            					data: 'image=' + encodeURIComponent($('#' + field).val()),
-            					dataType: 'text',
-            					success: function(data) {
-            						$('#' + preview).replaceWith('<img src=\"' + data + '\" id=\"' + preview + '\" class=\"image\" onclick=\"image_upload(\'' + field + '\', \'' + preview + '\');\">');
-            					}
-            				});
-            			}
-            		},	
-            		bgiframe: false,
-            		width: width,
-            		height: height,
-            		resizable: false,
-            		modal: false
-            	});}");
+            }");
 
         $this->scripts = array_merge($this->scripts, $scripts);
 

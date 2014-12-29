@@ -82,129 +82,133 @@ class ControllerSettingSetting extends Controller {
         $this->data['cancel'] = Url::createAdminUrl('setting/setting');
 
         $this->data['action'] = Url::createAdminUrl('setting/setting');
+        
+        $model = $this->modelSetting->getSetting('config');
+        
+        $this->setvar('config_name',$model);
+        $this->setvar('config_rif',$model);
+        $this->setvar('config_url',$model);
+        $this->setvar('config_owner',$model);
+        $this->setvar('config_address',$model);
+        $this->setvar('config_email',$model);
+        $this->setvar('config_telephone',$model);
+        $this->setvar('config_fax',$model);
+        $this->setvar('config_title',$model);
+        $this->setvar('config_meta_description',$model);
+        $this->setvar('config_template',$model);
+        $this->setvar('config_mobile_template',$model);
+        $this->setvar('config_tablet_template',$model);
+        $this->setvar('config_facebook_template',$model);
+        $this->setvar('config_mobile_url',$model);
+        $this->setvar('config_tablet_url',$model);
+        $this->setvar('config_facebbok_url',$model);
+        $this->setvar('config_redirect_when_mobile',$model);
+        $this->setvar('config_redirect_when_tablet',$model);
+        $this->setvar('config_redirect_when_facebook',$model);
+        $this->setvar('config_decimal_separator',$model);
+        $this->setvar('config_thousands_separator',$model);
+        $this->setvar('config_country_id',$model);
+        $this->setvar('config_zone_id',$model);
+        $this->setvar('config_language',$model);
+        $this->setvar('config_admin_language',$model);
+        $this->setvar('config_currency',$model);
+        $this->setvar('config_currency_auto',$model);
+        $this->setvar('config_tax',$model);
+        $this->setvar('config_customer_group_id',$model);
+        $this->setvar('config_customer_price',$model);
+        $this->setvar('config_customer_approval',$model);
+        $this->setvar('config_account_id',$model);
+        $this->setvar('config_store_mode',$model);
+        $this->setvar('config_checkout_id',$model);
+        $this->setvar('config_stock_display',$model);
+        $this->setvar('config_stock_checkout',$model);
 
-        $this->setvar('config_name');
-        $this->setvar('config_rif');
-        $this->setvar('config_url');
-        $this->setvar('config_owner');
-        $this->setvar('config_address');
-        $this->setvar('config_email');
-        $this->setvar('config_telephone');
-        $this->setvar('config_fax');
-        $this->setvar('config_title');
-        $this->setvar('config_meta_description');
-        $this->setvar('config_template');
-        $this->setvar('config_mobile_template');
-        $this->setvar('config_tablet_template');
-        $this->setvar('config_facebook_template');
-        $this->setvar('config_mobile_url');
-        $this->setvar('config_tablet_url');
-        $this->setvar('config_facebbok_url');
-        $this->setvar('config_redirect_when_mobile');
-        $this->setvar('config_redirect_when_tablet');
-        $this->setvar('config_redirect_when_facebook');
-        $this->setvar('config_decimal_separator');
-        $this->setvar('config_thousands_separator');
-        $this->setvar('config_country_id');
-        $this->setvar('config_zone_id');
-        $this->setvar('config_language');
-        $this->setvar('config_admin_language');
-        $this->setvar('config_currency');
-        $this->setvar('config_currency_auto');
-        $this->setvar('config_tax');
-        $this->setvar('config_customer_group_id');
-        $this->setvar('config_customer_price');
-        $this->setvar('config_customer_approval');
-        $this->setvar('config_account_id');
-        $this->setvar('config_store_mode');
-        $this->setvar('config_checkout_id');
-        $this->setvar('config_stock_display');
-        $this->setvar('config_stock_checkout');
+        $this->setvar('config_order_status_id',$model);
+        $this->setvar('config_order_status_paid',$model);
+        $this->setvar('config_order_status_nulled',$model);
+        $this->setvar('config_order_status_shipping',$model);
+        $this->setvar('config_order_status_delivered',$model);
+        $this->setvar('config_order_status_aborted',$model);
+        $this->setvar('config_order_status_loading',$model);
+        $this->setvar('config_order_status_returned',$model);
 
-        $this->setvar('config_order_status_id');
-        $this->setvar('config_order_status_paid');
-        $this->setvar('config_order_status_nulled');
-        $this->setvar('config_order_status_shipping');
-        $this->setvar('config_order_status_delivered');
-        $this->setvar('config_order_status_aborted');
-        $this->setvar('config_order_status_loading');
-        $this->setvar('config_order_status_returned');
+        $this->setvar('config_order_payment_status_id',$model);
+        $this->setvar('config_order_payment_status_approved',$model);
+        $this->setvar('config_order_payment_status_no_approved',$model);
+        $this->setvar('config_order_payment_status_returned',$model);
 
-        $this->setvar('config_order_payment_status_id');
-        $this->setvar('config_order_payment_status_approved');
-        $this->setvar('config_order_payment_status_no_approved');
-        $this->setvar('config_order_payment_status_returned');
-
-        $this->setvar('config_shipping_session');
-        $this->setvar('config_admin_limit');
-        $this->setvar('config_catalog_limit');
-        $this->setvar('config_new_days');
-        $this->setvar('config_cart_weight');
-        $this->setvar('config_review');
-        $this->setvar('config_review_approve');
-        $this->setvar('config_logo');
-        $this->setvar('config_icon');
-        $this->setvar('config_image_thumb_width');
-        $this->setvar('config_image_thumb_height');
-        $this->setvar('config_image_popup_width');
-        $this->setvar('config_image_popup_height');
-        $this->setvar('config_image_category_width');
-        $this->setvar('config_image_category_height');
-        $this->setvar('config_image_post_width');
-        $this->setvar('config_image_post_height');
-        $this->setvar('config_image_product_width');
-        $this->setvar('config_image_product_height');
-        $this->setvar('config_image_additional_width');
-        $this->setvar('config_image_additional_height');
-        $this->setvar('config_image_related_width');
-        $this->setvar('config_image_related_height');
-        $this->setvar('config_image_cart_width');
-        $this->setvar('config_image_cart_height');
-        $this->setvar('config_mail_protocol');
-        $this->setvar('config_smtp_host');
-        $this->setvar('config_pop3_host');
-        $this->setvar('config_smtp_from_email');
-        $this->setvar('config_smtp_from_name');
-        $this->setvar('config_smtp_username');
-        $this->setvar('config_smtp_password');
-        $this->setvar('config_smtp_method', null, 'mail');
-        $this->setvar('config_smtp_port', null, 25);
-        $this->setvar('config_pop3_protocol', null, 'pop3');
-        $this->setvar('config_pop3_port', null, 110);
-        $this->setvar('config_smtp_timeout', null, 5);
-        $this->setvar('config_smtp_maxsize', null, 0);
-        $this->setvar('config_smtp_charset', null, 'iso-8859-1');
-        $this->setvar('config_alert_mail');
-        $this->setvar('config_smtp_auth');
+        $this->setvar('config_shipping_session',$model);
+        $this->setvar('config_admin_limit',$model);
+        $this->setvar('config_catalog_limit',$model);
+        $this->setvar('config_new_days',$model);
+        $this->setvar('config_cart_weight',$model);
+        $this->setvar('config_review',$model);
+        $this->setvar('config_review_approve',$model);
+        $this->setvar('config_logo',$model);
+        $this->setvar('config_email_logo',$model);
+        $this->setvar('config_mobile_logo',$model);
+        $this->setvar('config_icon',$model);
+        $this->setvar('config_image_thumb_width',$model);
+        $this->setvar('config_image_thumb_height',$model);
+        $this->setvar('config_image_popup_width',$model);
+        $this->setvar('config_image_popup_height',$model);
+        $this->setvar('config_image_category_width',$model);
+        $this->setvar('config_image_category_height',$model);
+        $this->setvar('config_image_post_width',$model);
+        $this->setvar('config_image_post_height',$model);
+        $this->setvar('config_image_product_width',$model);
+        $this->setvar('config_image_product_height',$model);
+        $this->setvar('config_image_additional_width',$model);
+        $this->setvar('config_image_additional_height',$model);
+        $this->setvar('config_image_related_width',$model);
+        $this->setvar('config_image_related_height',$model);
+        $this->setvar('config_image_cart_width',$model);
+        $this->setvar('config_image_cart_height',$model);
+        $this->setvar('config_mail_protocol',$model);
+        $this->setvar('config_smtp_host',$model);
+        $this->setvar('config_pop3_host',$model);
+        $this->setvar('config_smtp_from_email',$model);
+        $this->setvar('config_smtp_from_name',$model);
+        $this->setvar('config_smtp_username',$model);
+        $this->setvar('config_smtp_password',$model);
+        $this->setvar('config_smtp_method', $model, 'mail');
+        $this->setvar('config_smtp_port', $model, 25);
+        $this->setvar('config_pop3_protocol', $model, 'pop3');
+        $this->setvar('config_pop3_port', $model, 110);
+        $this->setvar('config_smtp_timeout', $model, 5);
+        $this->setvar('config_smtp_maxsize', $model, 0);
+        $this->setvar('config_smtp_charset', $model, 'iso-8859-1');
+        $this->setvar('config_alert_mail',$model);
+        $this->setvar('config_smtp_auth',$model);
         $this->setvar('config_alert_emails');
-        $this->setvar('config_mail_parameter');
-        $this->setvar('config_ssl');
-        $this->setvar('config_pop3_ssl');
-        $this->setvar('config_smtp_ssl');
-        $this->setvar('config_bounce_email', null, $this->config->get('config_pop3_email'));
-        $this->setvar('config_replyto_email', null, '');
-        $this->setvar('config_bounce_server', null, '');
-        $this->setvar('config_bounce_username', null, '');
-        $this->setvar('config_bounce_password', null, '');
-        $this->setvar('config_bounce_protocol', null, '');
-        $this->setvar('config_bounce_extra_settings', null, '');
-        $this->setvar('config_bounce_protocol', null, 'pop3');
-        $this->setvar('config_bounce_process', null, 0);
-        $this->setvar('config_bounce_agree_delete', null, 0);
-        $this->setvar('config_bounce_extra_settings', null, '');
-        $this->setvar('config_bounce_extra_settings', null, '');
-        $this->setvar('config_maintenance');
-        $this->setvar('config_encryption');
-        $this->setvar('config_js_security');
-        $this->setvar('config_js_security');
-        $this->setvar('config_server_security');
-        $this->setvar('config_password_security');
-        $this->setvar('config_seo_url');
-        $this->setvar('config_compression');
-        $this->setvar('config_error_display');
-        $this->setvar('config_error_log');
-        $this->setvar('config_error_filename');
-        $this->setvar('config_dir_export');
+        $this->setvar('config_mail_parameter',$model);
+        $this->setvar('config_ssl',$model);
+        $this->setvar('config_pop3_ssl',$model);
+        $this->setvar('config_smtp_ssl',$model);
+        $this->setvar('config_bounce_email', $model, $this->config->get('config_pop3_email'));
+        $this->setvar('config_replyto_email', $model, '');
+        $this->setvar('config_bounce_server', $model, '');
+        $this->setvar('config_bounce_username', $model, '');
+        $this->setvar('config_bounce_password', $model, '');
+        $this->setvar('config_bounce_protocol', $model, '');
+        $this->setvar('config_bounce_extra_settings', $model, '');
+        $this->setvar('config_bounce_protocol', $model, 'pop3');
+        $this->setvar('config_bounce_process', $model, 0);
+        $this->setvar('config_bounce_agree_delete', $model, 0);
+        $this->setvar('config_bounce_extra_settings', $model, '');
+        $this->setvar('config_bounce_extra_settings', $model, '');
+        $this->setvar('config_maintenance',$model);
+        $this->setvar('config_encryption',$model);
+        $this->setvar('config_js_security',$model);
+        $this->setvar('config_js_security',$model);
+        $this->setvar('config_server_security',$model);
+        $this->setvar('config_password_security',$model);
+        $this->setvar('config_seo_url',$model);
+        $this->setvar('config_compression',$model);
+        $this->setvar('config_error_display',$model);
+        $this->setvar('config_error_log',$model);
+        $this->setvar('config_error_filename',$model);
+        $this->setvar('config_dir_export',$model);
 
         $directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
         $this->data['templates'] = array();
@@ -214,21 +218,27 @@ class ControllerSettingSetting extends Controller {
 
         $languages = $this->data['languages'] = $this->modelLanguage->getAll();
 
-        foreach ($languages as $language) {
+        foreach ($languages as $language) {            
             if (isset($this->request->post['config_title_' . $language['language_id']])) {
                 $this->data['config_title_' . $language['language_id']] = $this->request->post['config_title_' . $language['language_id']];
+            } elseif ($model['config_title_' . $language['language_id']]) {
+                $this->data['config_title_' . $language['language_id']] = $model['config_title_' . $language['language_id']];
             } else {
                 $this->data['config_title_' . $language['language_id']] = $this->config->get('config_title_' . $language['language_id']);
             }
 
             if (isset($this->request->post['config_meta_description_' . $language['language_id']])) {
                 $this->data['config_meta_description_' . $language['language_id']] = $this->request->post['config_meta_description_' . $language['language_id']];
+            } elseif ($model['config_meta_description_' . $language['language_id']]) {
+                $this->data['config_meta_description_' . $language['language_id']] = $model['config_meta_description_' . $language['language_id']];
             } else {
                 $this->data['config_meta_description_' . $language['language_id']] = $this->config->get('config_meta_description_' . $language['language_id']);
             }
 
             if (isset($this->request->post['config_description_' . $language['language_id']])) {
                 $this->data['config_description_' . $language['language_id']] = $this->request->post['config_description_' . $language['language_id']];
+            } elseif ($model['config_description_' . $language['language_id']]) {
+                $this->data['config_description_' . $language['language_id']] = $model['config_description_' . $language['language_id']];
             } else {
                 $this->data['config_description_' . $language['language_id']] = $this->config->get('config_description_' . $language['language_id']);
             }
@@ -241,14 +251,34 @@ class ControllerSettingSetting extends Controller {
         $this->data['order_payment_statuses'] = $this->modelOrderpaymentstatus->getAll();
         $this->data['stock_statuses'] = $this->modelStockstatus->getAll();
 
-        if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-            $this->data['preview_logo'] = HTTP_IMAGE . $this->config->get('config_logo');
+        if (!empty($this->request->post['config_logo']) && file_exists(DIR_IMAGE . $this->request->post['config_logo'])) {
+            $this->data['preview_logo'] = HTTP_IMAGE . $this->request->post['config_logo'];
+        } elseif (!empty($model['config_logo']) && file_exists(DIR_IMAGE . $model['config_logo'])) {
+            $this->data['preview_logo'] = HTTP_IMAGE . $model['config_logo'];
         } else {
             $this->data['preview_logo'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
         }
 
-        if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_icon'))) {
-            $this->data['preview_icon'] = HTTP_IMAGE . $this->config->get('config_icon');
+        if (!empty($this->request->post['config_email_logo']) && file_exists(DIR_IMAGE . $this->request->post['config_email_logo'])) {
+            $this->data['preview_email_logo'] = HTTP_IMAGE . $this->request->post['config_email_logo'];
+        } elseif (!empty($model['config_email_logo']) && file_exists(DIR_IMAGE . $model['config_email_logo'])) {
+            $this->data['preview_email_logo'] = HTTP_IMAGE . $model['config_email_logo'];
+        } else {
+            $this->data['preview_email_logo'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
+
+        if (!empty($this->request->post['config_mobile_logo']) && file_exists(DIR_IMAGE . $this->request->post['config_mobile_logo'])) {
+            $this->data['preview_mobile_logo'] = HTTP_IMAGE . $this->request->post['config_mobile_logo'];
+        } elseif (!empty($model['config_mobile_logo']) && file_exists(DIR_IMAGE . $model['config_mobile_logo'])) {
+            $this->data['preview_mobile_logo'] = HTTP_IMAGE . $model['config_mobile_logo'];
+        } else {
+            $this->data['preview_mobile_logo'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
+
+        if (!empty($this->request->post['config_icon']) && file_exists(DIR_IMAGE . $this->request->post['config_icon'])) {
+            $this->data['preview_icon'] = HTTP_IMAGE . $this->request->post['config_icon'];
+        } elseif (!empty($model['config_logo']) && file_exists(DIR_IMAGE . $model['config_icon'])) {
+            $this->data['preview_icon'] = HTTP_IMAGE . $model['config_icon'];
         } else {
             $this->data['preview_icon'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
         }
@@ -277,8 +307,8 @@ class ControllerSettingSetting extends Controller {
 
         if (isset($this->request->post['config_token_ignore'])) {
             $this->data['config_token_ignore'] = $this->request->post['config_token_ignore'];
-        } elseif ($this->config->get('config_token_ignore')) {
-            $this->data['config_token_ignore'] = unserialize($this->config->get('config_token_ignore'));
+        } elseif (isset($model['config_token_ignore'])) {
+            $this->data['config_token_ignore'] = unserialize($model['config_token_ignore']);
         } else {
             $this->data['config_token_ignore'] = array();
         }
@@ -294,7 +324,7 @@ class ControllerSettingSetting extends Controller {
                 	filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "'
                 });
                 editor". $language["language_id"] .".products = '". $json['products'] ."';
-                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css';
+                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". (isset($model['config_template']) ? $model['config_template'] : 'choroni') ."/css/theme.css';
                 editor". $language["language_id"] .".config.allowedContent = true;
                     ");
         }
@@ -303,36 +333,7 @@ class ControllerSettingSetting extends Controller {
             "function image_delete(field, preview) {
                 $('#' + field).val('');
                 $('#' + preview).attr('src','" . HTTP_IMAGE . "cache/no_image-100x100.jpg');
-            }
-            
-            function image_upload(field, preview) {
-                var height = $(window).height() * 0.8;
-                var width = $(window).width() * 0.8;
-                
-            	$('#dialog').remove();
-            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"" . Url::createAdminUrl("common/filemanager") . "&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000;\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
-                
-                $('#dialog').dialog({
-            		title: '" . $this->data['text_image_manager'] . "',
-            		close: function (event, ui) {
-            			if ($('#' + field).attr('value')) {
-            				$.ajax({
-            					url: '" . Url::createAdminUrl("common/filemanager/image") . "',
-            					type: 'POST',
-            					data: 'image=' + encodeURIComponent($('#' + field).val()),
-            					dataType: 'text',
-            					success: function(data) {
-            						$('#' + preview).replaceWith('<img src=\"' + data + '\" id=\"' + preview + '\" class=\"image\" onclick=\"image_upload(\'' + field + '\', \'' + preview + '\');\">');
-            					}
-            				});
-            			}
-            		},	
-            		bgiframe: false,
-            		width: width,
-            		height: height,
-            		resizable: false,
-            		modal: false
-            	});}");
+            }");
 
         $this->scripts = array_merge($this->scripts, $scripts);
 

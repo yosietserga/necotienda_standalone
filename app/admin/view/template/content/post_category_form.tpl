@@ -105,10 +105,12 @@
             
             <div class="row">
                 <label><?php echo $Language->get('entry_image'); ?></label>
-                <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
-                <img alt="Imagen de la categor&iacute;a" src="<?php echo $preview; ?>" id="preview" class="image" onclick="image_upload('image', 'preview');" width="100" height="100" />
+                <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image&amp;preview=preview">
+                <img src="<?php echo $preview; ?>" id="preview" class="image necoImage" width="100" />
+                </a>
+                <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" onchange="$('#preview').attr('src', this.value);" />
                 <br />
-                <a onclick="image_upload('image', 'preview');" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+                <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image&amp;preview=preview" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
                 <a onclick="image_delete('image', 'preview');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
             </div>
                    
@@ -181,22 +183,36 @@
         <div class="toolWrapper"></div>
     </div>
 </div>
-<div class="sidebar" id="helpPanel">
-    <div class="tab"></div>
-    <div class="content">
-        <h2>Ayuda</h2>
-        <p>No entres en p&aacute;nico, todo tiene una soluci&oacute;n.</p>
-        <ul>
-            <li><a>&iquest;C&oacute;mo se come esto?</a></li>
-            <li><a>&iquest;C&oacute;mo relleno este formulario?</a></li>
-            <li><a>&iquest;Qu&eacute; significan las figuritas al lado de los campos?</a></li>
-            <li><a>&iquest;C&oacute;mo me desplazo a trav&eacute;s de las pesta&ntilde;as?</a></li>
-            <li><a>&iquest;Pierdo la informaci&oacute;n si me cambio de pesta&ntilde;a?</a></li>
-            <li><a>Preguntas Frecuentes</a></li>
-            <li><a>Manual de Usuario</a></li>
-            <li><a>Videos Tutoriales</a></li>
-            <li><a>Auxilio, por favor ay&uacute;denme!</a></li>
-        </ul>
-    </div>
-</div>
+<div id="jsWrapper"></div>
+<script>
+$(function() {
+    if (!$.fn.fancybox) {
+        $(document.createElement('script')).attr({
+            src:'js/vendor/jquery.fancybox.pack.js',
+            type:'text/javascript'
+        }).appendTo('#jsWrapper');
+    }
+    if ($('link[href="<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css"]')) {
+        $(document.createElement('link')).attr({
+            href:'<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css',
+            rel:'stylesheet'
+        }).appendTo('head');
+    }
+    
+    var height = $(window).height() * 0.8;
+    var width = $(window).width() * 0.8;
+    
+    $(".filemanager").fancybox({
+            maxWidth	: width,
+            maxHeight	: height,
+            fitToView	: false,
+            width	: '90%',
+            height	: '90%',
+            autoSize	: false,
+            closeClick	: false,
+            openEffect	: 'none',
+            closeEffect	: 'none'
+    });
+});
+</script>
 <?php echo $footer; ?>

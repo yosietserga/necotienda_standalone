@@ -201,8 +201,10 @@ class ControllerStoreCategory extends Controller {
         $this->data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
         $this->data['success'] = $this->session->has('success') ? $this->session->get('success') : '';
         $this->session->clear('success');
-
-
+        
+        $javascripts[] = "js/vendor/jquery.nestedSortable.js";
+        $this->javascripts = array_merge($javascripts, $this->javascripts);   
+        
         // SCRIPTS
         $scripts[] = array('id' => 'categoryList', 'method' => 'function', 'script' =>
             "function activate(e) {
@@ -651,21 +653,22 @@ class ControllerStoreCategory extends Controller {
             $('#addsPanel').on('click',function(){ $('#addsWrapper').slideToggle() });");
 
         foreach ($this->data['languages'] as $language) {
-            $scripts[] = array('id' => 'categoryLanguage' . $language["language_id"], 'method' => 'ready', 'script' =>
-                "var editor". $language["language_id"] ." = CKEDITOR.replace('description" . $language["language_id"] . "', {
-                	filebrowserBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserImageBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserFlashBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserImageUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                    height:600
-                });
-                editor". $language["language_id"] .".products = '". $json['products'] ."';
-                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css';
-                editor". $language["language_id"] .".config.allowedContent = true;
-                    
-                $('#description_" . $language["language_id"] . "_name').change(function(e){
+            $code = "var editor" . $language["language_id"] . " = CKEDITOR.replace('description" . $language["language_id"] . "', {"
+                    . "filebrowserBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserImageBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserFlashBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserImageUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "height:600"
+                . "});"
+                . "editor". $language["language_id"] .".products = '". $json['products'] ."';"
+                . "editor". $language["language_id"] .".config.allowedContent = true;";
+            $cssrules = "assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css";
+            if (file_exists(DIR_ROOT . $cssrules)) {
+                $code .= "editor". $language["language_id"] .".config.contentsCss = '". HTTP_CATALOG . $cssrules ."';";
+            }
+            $code .= "$('#description_" . $language["language_id"] . "_name').change(function(e){
                     $.getJSON('" . Url::createAdminUrl('common/home/slug') . "',
                     { 
                         slug : $(this).val(),
@@ -674,7 +677,8 @@ class ControllerStoreCategory extends Controller {
                     function(data){
                         $('#description_" . $language["language_id"] . "_keyword').val(data.slug);
                     });
-                });");
+                });";
+            $scripts[] = array('id' => 'pageLanguage' . $language["language_id"], 'method' => 'ready', 'script' => $code );
         }
 
         $scripts[] = array('id' => 'categoryFunctions', 'method' => 'function', 'script' =>

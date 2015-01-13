@@ -672,31 +672,33 @@ class ControllerContentPage extends Controller {
             });");
 
         foreach ($this->data['languages'] as $language) {
-            $scripts[] = array('id' => 'pageLanguage' . $language["language_id"], 'method' => 'ready', 'script' =>
-                "var editor" . $language["language_id"] . " = CKEDITOR.replace('description" . $language["language_id"] . "', {
-                	filebrowserBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserImageBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserFlashBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserImageUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                	filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',
-                    height:600
-                });
-                editor". $language["language_id"] .".products = '". $json['products'] ."';
-                editor". $language["language_id"] .".config.contentsCss = '/assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css';
-                editor". $language["language_id"] .".config.allowedContent = true;
-                    
+            $code = "var editor" . $language["language_id"] . " = CKEDITOR.replace('description" . $language["language_id"] . "', {"
+                    . "filebrowserBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserImageBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserFlashBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserImageUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "filebrowserFlashUploadUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
+                    . "height:600"
+                . "});"
+                . "editor". $language["language_id"] .".products = '". $json['products'] ."';"
+                . "editor". $language["language_id"] .".config.allowedContent = true;";
+            $cssrules = "assets/theme/". ($this->config->get('config_template') ? $this->config->get('config_template') : 'choroni') ."/css/theme.css";
+            if (file_exists(DIR_ROOT . $cssrules)) {
+                $code .= "editor". $language["language_id"] .".config.contentsCss = '". HTTP_CATALOG . $cssrules ."';";
+            }
+            $code .= "$('#description_" . $language["language_id"] . "_title').change(function(e){"
+                    . "$.getJSON('" . Url::createAdminUrl('common/home/slug') . "',"
+                    . "{"
+                        . "slug : $(this).val(),"
+                        . "query : 'page_id=" . $this->request->getQuery('page_id') . "',"
+                    . "},"
+                    . "function(data){"
+                        . "$('#description_" . $language["language_id"] . "_keyword').val(data.slug);"
+                    . "});"
+                . "});";
+            $scripts[] = array('id' => 'pageLanguage' . $language["language_id"], 'method' => 'ready', 'script' => $code );
                 
-                $('#description_" . $language["language_id"] . "_title').change(function(e){
-                    $.getJSON('" . Url::createAdminUrl('common/home/slug') . "',
-                    { 
-                        slug : $(this).val(),
-                        query : 'page_id=" . $this->request->getQuery('page_id') . "',
-                    },
-                    function(data){
-                            $('#description_" . $language["language_id"] . "_keyword').val(data.slug);
-                    });
-                });");
         }
 
         $this->scripts = array_merge($this->scripts, $scripts);

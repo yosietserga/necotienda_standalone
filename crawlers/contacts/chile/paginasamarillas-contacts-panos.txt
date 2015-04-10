@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"PAÑOS PARA AUTOMÓVILES Y REPASO DE VAJILLA OSNABURGO";;;"(56) (2) 6896679";"Gorbea 2994 Santigo Chile, Santiago"
+DIPALIM;;;"(56) (2) 6813352";"Av. El Arrayán 3680 Estación Central Chile, Santiago"
+TECNOCLEANER;;;"(56) (32) 2648660";"Pje. Julia 180 Chile, Viña del Mar"
+"NAZAR E HIJOS JORGE";;;"(56) (2) 8582127";"Eyzaguirre 565 Piso 2 San Bernardo Chile, Santiago"
+"FÁBRICA DE HUAIPE Y PAÑOS VIÑA";;;"(56) (32) 2482802";"Las Magnolias 114 Achupallas Viña Del Mar Chile, Viña del Mar"
+"HILACHAS LTDA.";;;"(56) (2) 5526299";"Av. Carlos Valdovino 157 San Joaquín Santiago Chile, Santiago"

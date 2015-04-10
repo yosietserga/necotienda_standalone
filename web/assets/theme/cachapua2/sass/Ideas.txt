@@ -1,0 +1,5 @@
+Systema de Cuentas de neco tienda:
+
+Mejorar la experencia de usuario el area de la cuentas recortando tareas y pasos
+cuales el usuario debe realizar las acciones relacionadas dada a su grado de intención
+en la tienda, delegandolas dada

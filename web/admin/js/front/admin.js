@@ -1,97 +1,185 @@
 $(function(){
-    $('.dd').click(function () {
-		$('ul.menu_body').slideUp(200);
-		$(this).find('ul.menu_body').slideDown(200);
-	});
-	
-	$(document).bind('click', function(e) {
-    	var $clicked = $(e.target);
-    	if (! $clicked.parents().hasClass("dd"))
-    		$("ul.menu_body").slideUp(200);
-	});
-    if (typeof $.ntTips == 'function') {
-        $('.panel-lateral .help').ntTips();
-    }
-    
+    var elements = {
+        'body': {
+            childrens: [
+                '#overheader',
+                '#overheader .nt-editable',
+                '#header',
+                '#header .nt-editable',
+                '#logo',
+                '#search',
+                '#nav',
+                '#nav .nt-editable',
+                '#maincontent',
+                '#content',
+                '#column_left',
+                '#column_right',
+                '#footer',
+                '#footer .nt-editable'
+            ],
+            selector: 'body'
+        },
+        'column_left_box': {
+            childrens: ['.header', '.content'],
+            selector: '#column_left li.nt-editable',
+            parents: ['column_left'],
+            canMove: true,
+            canDelete: true
+        },
+        'column_right_box': {
+            childrens: ['.header', '.content'],
+            selector: '#column_right li.nt-editable',
+            parents: ['column_right'],
+            canMove: true,
+            canDelete: true
+        },
+        'footer_widgets': {
+            childrens: ['.header', '.content'],
+            selector: '#footerWidgets li.nt-editable',
+            parents: ['footerWidgets'],
+            canMove: true,
+            canDelete: true
+        },
+        'content_widgets': {
+            childrens: ['.header', '.content'],
+            selector: '#content li.nt-editable',
+            parents: ['maincontent'],
+            canMove: true,
+            canDelete: true
+        }
+    };
+
+    addAdminControls(elements);
+
+    $('.panel-lateral-tab').hide();
+    $('#tabWidgetConfigurator').show();
+    $('.panel-lateral-tabs span').on('click', function(){
+        $('.panel-lateral-tab').hide();
+        $('#'+ $(this).data('tab')).show();
+    });
 });
 
 /**
- * Muestra y oculta los paneles laterales
+ * Reconoce todos los elementos administrables y le asigna los botones de las acciones
  *
- * @param panel el identificador del panel.
- * @return false si panel es undefined.
+ * @param elements object con los elementos a administrar
+ * @param areChildrens boolean si los elementos pasados son hijos de otro 
+ * @return void.
  */
-function slidePanel__(panel,forceSlide) {
-    if (typeof panel == 'undefined') {
-        return false;
-    }
-    if (typeof forceSlide == 'undefined') {
-        forceSlide = true;
-    }
-    that = $('#' + panel);
-
-    /* ocultamos todos los paneles y les quitamos las clases ON */
-    $('.panel-lateral').each(function(){
-        if (this.id != that.attr('id')) {
-            $('body,html').animate({
-                'marginLeft':'0px'
-            });
-                    
-            $(this).removeClass('on')
-                .animate({
-                    'marginLeft':'0px',
-                })
-                .find('.label')
-                .css({
-                    'display':'none'
-                });
-        }
-    });
-        
-    if (that.hasClass('on') && forceSlide) {
-        $('body,html').animate({
-            'marginLeft':'0px'
-        });
-        
-        that.animate({
-            'marginLeft':'0px'
-        })
-        .removeClass('on');
-            
-        $('.panel-lateral').find('.label')
-        .css({
-            'display':'block'
-        });
-    } else {
-        $('body,html').animate({
-            'marginLeft':'20%'
-        });
-        
-        that.animate({
-            'marginLeft':'30%'
-        }).addClass('on')
-        .find('.label')
-        .css({
-            'display':'block'
-        });
+function addAdminControls(elements, areChildrens) {
+    if (typeof areChildrens == 'undefined') {
+        areChildrens = false;
     }
     
-    /* autohide
-    that.mouseover(function(){
-        clearTimeout($(this).data('timeoutId'));
-    }).mouseout(function(){
-        var timeoutId = setTimeout(function(){
-            if (that.hasClass("on")) {
-                $('body,html').animate({ 'marginLeft':'0px' });
-                that.removeClass('on').animate({'marginLeft':'0px'});
-                $('.panel-lateral').find('.label').css({ 'display':'block' });
+    if (typeof elements == 'undefined') {
+        var elements = {
+            'body': {
+                childrens: [
+                    '#overheader',
+                    '#overheader .nt-editable',
+                    '#header',
+                    '#header .nt-editable',
+                    '#logo',
+                    '#search',
+                    '#nav',
+                    '#nav .nt-editable',
+                    '#maincontent',
+                    '#content',
+                    '#column_left',
+                    '#column_right',
+                    '#footer',
+                    '#footer .nt-editable'
+                ],
+                selector: 'body'
+            },
+            'column_left_box': {
+                childrens: ['.header', '.content'],
+                selector: '#column_left li.nt-editable',
+                parents: ['column_left'],
+                canMove: true,
+                canDelete: true
+            },
+            'column_right_box': {
+                childrens: ['.header', '.content'],
+                selector: '#column_right li.nt-editable',
+                parents: ['column_right'],
+                canMove: true,
+                canDelete: true
+            },
+            'footer_widgets': {
+                childrens: ['.header', '.content'],
+                selector: '#footerWidgets li.nt-editable',
+                parents: ['footerWidgets'],
+                canMove: true,
+                canDelete: true
+            },
+            'content_widgets': {
+                childrens: ['.header', '.content'],
+                selector: '#content li.nt-editable',
+                parents: ['maincontent'],
+                canMove: true,
+                canDelete: true
             }
-        }, 900);
-        $(this).data('timeoutId', timeoutId); 
-    });
-    */
-}
+        };
 
+    }
+    
+    $.each(elements, function (i, el) {
+        if (!$(el.selector) && !areChildrens) {
+            return true;
+        } else {
+            if (areChildrens) {
+                ele = $(el);
+            } else {
+                ele = $(el.selector);
+            }
+            $(ele).each(function () {
+                var that = $(this);
+
+                if (that.hasClass('administrable')) {
+                    return true;
+                }
+
+                if (!that.attr('id') || that.attr('id').length == 0) {
+                    that.attr('id', 'widget-' + getParentId(that) + '-' + this.tagName.toLowerCase() + '-' + that.index());
+                }
+
+                var html = "";
+                html += '<div class="actions actions' + i + '">';
+                html += '<a class="admin-icons style" onclick="renderPanels(\'#' + that.attr('id') + '\');$.sidr(\'open\', \'simpleMenu\');"></a>';
+
+                if (el.canConfig) {
+                    html += '<a class="admin-icons config" onclick=""></a>';
+                }
+
+                if (el.canMove) {
+                    html += '<a class="admin-icons move"></a>';
+                }
+
+                if (el.canDelete) {
+                    html += '<a class="admin-icons delete" onclick=""></a>';
+                }
+
+                /*  */
+                html += '</div>';
+
+                that.addClass('administrable').prepend(html);
+                that.find('.actions' + i).mouseenter(function (e) {
+                    that.css({
+                        border: 'dashed 1px #900'
+                    });
+                }).mouseleave(function (e) {
+                    that.css({
+                        border: 'none'
+                    });
+                });
+                if (!areChildrens && typeof el.childrens !== 'undefined') {
+                    addAdminControls(el.childrens, true);
+                }
+            });
+        }
+    });
+}
 /**
  * Muestra y oculta las opciones avanzadas de los paneles
  *

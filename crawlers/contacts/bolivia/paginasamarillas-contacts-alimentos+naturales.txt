@@ -1,0 +1,6 @@
+"First Name";"Email Address";Url;Telephone;Address
+"SÉSAMO GOURMET CATERIMG";;;"(591) (33) 60953706";"Santa Cruz Bolivia, Santa Cruz de la Sierra"
+"QUINOA FOODS COMPANY";;;"(591) (22) 2430327";"Av 20 de Octubre No 2473 Edif Topater No2473 Of 204 Bolivia, La Paz"
+"GRUPO DE ALIMENTOS BOLIVIANOS S.R.L.";;;"(591) (33) 70079619";"C / Buena Vista No.2330 Bolivia, Santa Cruz de la Sierra"
+"LOGAL-PRODUCTOS NATURALES";;;"(591) (22) 2832404";"Av Cecilio Acosa No 2000 Villa Adela el Alto Bolivia, La Paz"
+"GUARANA RAPHECA";;;"(591) (4) 4528675";"Cochabamba Bolivia, Cochabamba"

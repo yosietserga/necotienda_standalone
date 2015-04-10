@@ -14,6 +14,48 @@
                         
     <div class="clear"></div>
          
+    <div class="row">
+        <label><?php echo $Language->get('entry_mobile_template'); ?></label>
+        <select name="config_mobile_template" onchange="$('#mobile_template').load('<?php echo $Url::createAdminUrl("setting/setting/template"); ?>&template=' + encodeURIComponent(this.value));">
+        <?php foreach ($templates as $template) { ?>
+            
+            <option value="<?php echo $template; ?>"<?php if ($template == $config_mobile_template) { ?> selected="selected"<?php } ?>><?php echo $template; ?></option>
+        <?php } ?>
+        </select>
+        <div class="clear"></div>
+        <div style="margin-left: 220px;" id="mobile_template"></div>
+    </div>
+                        
+    <div class="clear"></div>
+         
+    <div class="row">
+        <label><?php echo $Language->get('entry_tablet_template'); ?></label>
+        <select name="config_tablet_template" onchange="$('#tablet_template').load('<?php echo $Url::createAdminUrl("setting/setting/template"); ?>&template=' + encodeURIComponent(this.value));">
+        <?php foreach ($templates as $template) { ?>
+            
+            <option value="<?php echo $template; ?>"<?php if ($template == $config_tablet_template) { ?> selected="selected"<?php } ?>><?php echo $template; ?></option>
+        <?php } ?>
+        </select>
+        <div class="clear"></div>
+        <div style="margin-left: 220px;" id="tablet_template"></div>
+    </div>
+                        
+    <div class="clear"></div>
+         
+    <div class="row">
+        <label><?php echo $Language->get('entry_facebook_template'); ?></label>
+        <select name="config_facebook_template" onchange="$('#facebook_template').load('<?php echo $Url::createAdminUrl("setting/setting/template"); ?>&template=' + encodeURIComponent(this.value));">
+        <?php foreach ($templates as $template) { ?>
+            
+            <option value="<?php echo $template; ?>"<?php if ($template == $config_facebook_template) { ?> selected="selected"<?php } ?>><?php echo $template; ?></option>
+        <?php } ?>
+        </select>
+        <div class="clear"></div>
+        <div style="margin-left: 220px;" id="facebook_template"></div>
+    </div>
+                        
+    <div class="clear"></div>
+         
     <div id="languages" class="htabs necoContent">
     <?php foreach ($languages as $language) { ?>
         <a tab="#language<?php echo $language['language_id']; ?>" class="htab"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>

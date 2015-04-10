@@ -5,6 +5,7 @@ class ControllerCheckoutCart extends Controller {
     private $error = array();
 
     public function index() {
+        $Url = new Url($this->registry);
         if ($this->config->get('config_store_mode') != 'store') {
             $this->redirect(HTTP_HOME);
         }
@@ -504,10 +505,11 @@ class ControllerCheckoutCart extends Controller {
                             if (!error) { " . $script . " }
                                 
                         } else if(isLogged && hasAddress && !shippingMethods) {
-                            $.post('" . Url::createUrl("checkout/confirm") . "',
+                            $.post('" . Url::createUrl("checkout/confirm") . "&resp=json',
                                 $('#orderForm').serialize(),
-                                function(){
-                                    location.href = '" . Url::createUrl("checkout/success") . "';
+                                function(data) {
+                                    data = $.parseJSON(data);
+                                    location.href = '" . Url::createUrl("checkout/success") . "&order_id='+ order_id;
                                 }
                             );
                         }
@@ -566,10 +568,11 @@ class ControllerCheckoutCart extends Controller {
                             
                             if (!error) { " . $scriptShippingAddress . " }
                         } else {
-                            $.post('" . Url::createUrl("checkout/confirm") . "',
+                            $.post('" . Url::createUrl("checkout/confirm") . "&resp=json',
                                 $('#orderForm').serialize(),
-                                function(){
-                                    location.href = '" . Url::createUrl("checkout/success") . "';
+                                function(data) {
+                                    data = $.parseJSON(data);
+                                    location.href = '" . Url::createUrl("checkout/success") . "&order_id='+ data.order_id;
                                 }
                             );
                         }
@@ -580,10 +583,11 @@ class ControllerCheckoutCart extends Controller {
                         var error = false;
                         var isLogged = " . (int) $this->customer->isLogged() . ";
                         if (isLogged > 0) {
-                            $.post('" . Url::createUrl("checkout/confirm") . "',
+                            $.post('" . Url::createUrl("checkout/confirm") . "&resp=json',
                                 $('#orderForm').serialize(),
-                                function(){
-                                    location.href = '" . Url::createUrl("checkout/success") . "';
+                                function(data) {
+                                    data = $.parseJSON(data);
+                                    location.href = '" . Url::createUrl("checkout/success") . "&order_id='+ data.order_id;
                                 }
                             );
                         }
@@ -682,7 +686,6 @@ class ControllerCheckoutCart extends Controller {
 
             // javascript files
             $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
-
             $javascripts[] = $jspath . "necojs/neco.form.js";
             $javascripts[] = $jspath . "necojs/neco.wizard.js";
             $javascripts[] = $jspath . "vendor/jquery-ui.min.js";
@@ -690,168 +693,40 @@ class ControllerCheckoutCart extends Controller {
 
             // style files
             $csspath = defined("CDN") ? CDN . CSS : HTTP_CSS;
-
             $styles[] = array('media' => 'all', 'href' => $csspath . 'jquery-ui/jquery-ui.min.css');
             $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.form.css');
             $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.wizard.css');
-
-            $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-                $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            } else {
-                $csspath = str_replace("%theme%", "default", $csspath);
-            }
-
-            if (fopen($csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'), 'r')) {
-                $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-            }
-
-            if (count($styles)) {
-                $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-            }
-
-            $this->load->helper('widgets');
-            $widgets = new NecoWidget($this->registry, $this->Route);
-            foreach ($widgets->getWidgets('main') as $widget) {
-                $settings = (array) unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id' => $widget['name'],
-                        'method' => 'ready',
-                        'script' =>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload'])
-                            $this->data['widgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-
-            foreach ($widgets->getWidgets('featuredContent') as $widget) {
-                $settings = (array) unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id' => $widget['name'],
-                        'method' => 'ready',
-                        'script' =>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload'])
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
+            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
+            
+            $this->loadWidgets();
 
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/checkout/cart.tpl')) {
                 $this->template = $this->config->get('config_template') . '/checkout/cart.tpl';
             } else {
                 $this->template = 'choroni/checkout/cart.tpl';
             }
-
-            $this->children[] = 'common/column_left';
-            $this->children[] = 'common/column_right';
-            $this->children[] = 'common/nav';
-            $this->children[] = 'common/header';
-            $this->children[] = 'common/footer';
-
-            $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         } else {
             $this->data['heading_title'] = $this->language->get('heading_title');
             $this->data['text_error'] = $this->language->get('text_error');
             $this->data['button_continue'] = $this->language->get('button_continue');
             $this->data['continue'] = Url::createUrl("common/home");
 
-            $this->load->helper('widgets');
-            $widgets = new NecoWidget($this->registry, $this->Route);
-            foreach ($widgets->getWidgets('main') as $widget) {
-                $settings = (array) unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id' => $widget['name'],
-                        'method' => 'ready',
-                        'script' =>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload'])
-                            $this->data['widgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-
-            foreach ($widgets->getWidgets('featuredContent') as $widget) {
-                $settings = (array) unserialize($widget['settings']);
-                if ($settings['asyn']) {
-                    $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                    $scripts[$widget['name']] = array(
-                        'id' => $widget['name'],
-                        'method' => 'ready',
-                        'script' =>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                    );
-                } else {
-                    if (isset($settings['route'])) {
-                        if ($settings['autoload'])
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
+            $this->loadWidgets();
 
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
                 $this->template = $this->config->get('config_template') . '/error/not_found.tpl';
             } else {
                 $this->template = 'choroni/error/not_found.tpl';
             }
-
-            $this->children[] = 'common/column_left';
-            $this->children[] = 'common/column_right';
-            $this->children[] = 'common/nav';
-            $this->children[] = 'common/header';
-            $this->children[] = 'common/footer';
-
-            $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }
+        
+        $this->children[] = 'common/column_left';
+        $this->children[] = 'common/column_right';
+        $this->children[] = 'common/nav';
+        $this->children[] = 'common/header';
+        $this->children[] = 'common/footer';
+
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
     public function json() {
@@ -898,7 +773,7 @@ class ControllerCheckoutCart extends Controller {
 
             $json['success'] = 1;
             $json['urlToCart'] = Url::createUrl('checkout/cart');
-            
+
             if ($this->config->get('marketing_page_new_customer')) {
                 $this->load->model("marketing/newsletter");
 
@@ -962,7 +837,7 @@ class ControllerCheckoutCart extends Controller {
                 $json['html'] .= '<div class="message success">Se ha agregado el producto al carrito satisfactoriamente.</div>';
             }
             $json['html'] .= '<div class="clear"></div><br />';
-                $json['html'] .= '<a style="width:99%" class="button" href="' . Url::createUrl("checkout/cart") . '">' . $this->language->get('text_go_to_cart') . '</a>';
+            $json['html'] .= '<a style="width:99%" class="button" href="' . Url::createUrl("checkout/cart") . '">' . $this->language->get('text_go_to_cart') . '</a>';
             $json['html'] .= '<a style="width:99%" class="button" href="' . Url::createUrl('checkout/confirm') . '">' . $this->language->get('text_buy') . '</a>';
 
             $this->session->set('redirect', Url::createUrl('checkout/confirm'));
@@ -1038,7 +913,7 @@ class ControllerCheckoutCart extends Controller {
             foreach ($this->cart->getProducts() as $product) {
                 $output .= '<div>';
                 //$output .= '<td class="cartRemove" id="remove_ ' . $product['key'] . '">&nbsp;</td>';
-                if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode')=='store') {
+                if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode') == 'store') {
                     $output .= '<p>' . $product['quantity'] . '&nbsp;x&nbsp;' . $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))) . '</p>';
                 } else {
                     $output .= '<p>' . $product['quantity'] . '</p>';
@@ -1060,7 +935,7 @@ class ControllerCheckoutCart extends Controller {
             $total = 0;
             $taxes = $this->cart->getTaxes();
 
-            if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode')=='store') {
+            if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode') == 'store') {
                 $this->load->model('checkout/extension');
                 $sort_order = array();
                 $results = $this->modelExtension->getExtensions('total');
@@ -1089,7 +964,7 @@ class ControllerCheckoutCart extends Controller {
                 $output .= '</table>';
             }
             $output .= '<div><a style="width:95%" class="button" href="' . Url::createUrl("checkout/cart") . '">' . $this->language->get('text_cart') . '</a></div>';
-            
+
             $output .= '</li>';
         } else {
             $output .= '<li style="text-align: center;">' . $this->language->get('text_empty') . '</li>';
@@ -1116,6 +991,100 @@ class ControllerCheckoutCart extends Controller {
 
     public function islogged() {
         echo (int) $this->customer->islogged();
+    }
+
+    protected function loadWidgets() {
+        $this->load->helper('widgets');
+        $widgets = new NecoWidget($this->registry, $this->Route);
+        foreach ($widgets->getWidgets('main') as $widget) {
+            $settings = (array) unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'" . $widget['name'] . "'
+                        })
+                        .html(makeWaiting())
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['widgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+        }
+
+        foreach ($widgets->getWidgets('featuredContent') as $widget) {
+            $settings = (array) unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'" . $widget['name'] . "'
+                        })
+                        .html(makeWaiting())
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+        }
+        
+        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
+            $settings = (array) unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'" . $widget['name'] . "'
+                        })
+                        .html(makeWaiting())
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredFooterWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -16,11 +16,19 @@ class ControllerStoreSearch extends Controller {
         $this->data['urlQuery']['order'] = ($this->request->hasQuery('order')) ? '&order=' . $this->request->getQuery('order') : '';
         $this->data['urlQuery']['limit'] = ($this->request->hasQuery('limit')) ? '&limit=' . $this->request->getQuery('limit') : '';
 
-        $this->data['urlBase'] = HTTP_HOME . 'buscar/' . $_GET['q'];
-        $this->data['urlSearch'] = HTTP_HOME . 'buscar/' . $_GET['q'] . '?' . implode('', $this->data['urlQuery']);
+        if ($this->config->get('config_seo_url')) {
+            $this->data['urlBase'] = HTTP_HOME . 'buscar/' . $_GET['q'];
+            $this->data['urlSearch'] = HTTP_HOME . 'buscar/' . $_GET['q'] . '?' . implode('', $this->data['urlQuery']);
+        } else {
+            $this->data['urlBase'] = HTTP_HOME . 'index.php?r=store/search&q=' . $_GET['q'];
+            $this->data['urlSearch'] = HTTP_HOME . 'index.php?r=store/search&q=' . $_GET['q'] . '&' . implode('', $this->data['urlQuery']);
+        }
 
         $this->cacheId = 'search_page_' . md5($this->data['urlSearch']) .
                 $this->config->get('config_language_id') . "." .
+                $this->request->hasQuery('hl') . "." .
+                $this->request->hasQuery('cc') . "." .
+                $this->customer->getId() . "." .
                 $this->config->get('config_currency') . "." .
                 (int) $this->config->get('config_store_id');
 
@@ -630,38 +638,6 @@ class ControllerStoreSearch extends Controller {
     }
 
     protected function loadWidgets() {
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
-
-        if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
-
         $this->load->helper('widgets');
         $widgets = new NecoWidget($this->registry, $this->Route);
         foreach ($widgets->getWidgets('main') as $widget) {
@@ -682,10 +658,14 @@ class ControllerStoreSearch extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['widgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['widgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }
@@ -708,10 +688,44 @@ class ControllerStoreSearch extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['featuredWidgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+        }
+        
+        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
+            $settings = (array) unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'" . $widget['name'] . "'
+                        })
+                        .html(makeWaiting())
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredFooterWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }

@@ -23,7 +23,12 @@ if (($dia = $dia - $l) <= 0) {
         $ano = $ano - 1;
     }
 }
-foreach ($results as $result) {
+if (!$this->config->get('config_customer_price') || $this->customer->isLogged() && $this->config->get('config_store_mode') === 'store') {
+    $this->data['display_price'] = true;
+} else {
+    $this->data['display_price'] = false;
+}
+foreach ($results as $k => $result) {
     $image = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
 
     if ($this->config->get('config_review')) {
@@ -66,17 +71,15 @@ foreach ($results as $result) {
     }
 
     $this->load->auto('image');
-    $this->data['products'][] = array(
+    $this->data['products'][$k] = array(
         'product_id' => $result['product_id'],
         'name' => $result['name'],
         'model' => $result['model'],
         'overview' => $result['meta_description'],
         'rating' => $rating,
         'stars' => sprintf($this->language->get('text_stars'), $rating),
-        'price' => $price,
         'sticker' => $sticker,
         'options' => $options,
-        'special' => $special,
         'image' => NTImage::resizeAndSave($image, 38, 38),
         'lazyImage' => NTImage::resizeAndSave('no_image.jpg', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
         'thumb' => NTImage::resizeAndSave($image, $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
@@ -84,10 +87,8 @@ foreach ($results as $result) {
         'add' => $add,
         'created' => $result['created']
     );
-}
-
-if (!$this->config->get('config_customer_price') || $this->customer->isLogged()) {
-    $this->data['display_price'] = true;
-} else {
-    $this->data['display_price'] = false;
+    if ($this->config->get('config_store_mode') === 'store') {
+        $this->data['products'][$k]['price'] = $price;
+        $this->data['products'][$k]['special'] = $special;
+    }
 }

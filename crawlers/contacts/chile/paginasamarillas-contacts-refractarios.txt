@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"REFRACTARIOS LUNGE LTDA.";;;"(56) (2) 7453613";"Cam. Santa Teresa de Colina s/n Parcela 5-A Lampa Chile, Santiago"
+"REFRACTRIOS RICHTER";;;"(56) (2) 2852919";"Perpetua Freire 1030 La Florida Chile, Santiago"
+REFRAMEC;;;"(56) (2) 6415995";"Anibal Zañártu 2546 Renca Chile, Santiago"
+"RHI CHILE S.A.";;;"(56) (2) 3854200";"Av. Presidente Eduardo Frei Montalva 3076 Renca Chile, Santiago"
+"REFRACTARIOS CÉSAR FLORIO S.A.";;;"(56) (2) 6715929";"Av. Libertador Bernardo O©Higgins 949 Of.602 Santiago Chile, Santiago"
+"REFRACTARIOS COBIAN";;;"(56) (2) 5422815";"Av. Lo Blanco 1551 Chile, Santiago"

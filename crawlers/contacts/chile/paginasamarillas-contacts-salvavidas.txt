@@ -1,0 +1,4 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ACADEMIA DE SALVAVIDAS";;;"(56) (2) 3180552";"San Hipólito 3314, La Florida Chile, Santiago"
+"RESTAURANT BOTE SALVAVIDAS";;;"Telefax: (56) (32) 2251477";"Muelle Prat S/N P.2 - Valparaíso Chile, Valparaiso"
+"ESCUELA NACIONAL DE SALVAVIDAS";;;"(56) (2) 4247053";"Maule 173 Chile, Santiago"

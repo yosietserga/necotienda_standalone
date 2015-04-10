@@ -1,0 +1,20 @@
+.thumb  {
+  & + .quick-view {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -300%);
+    opacity: 0;
+    color: $light-color;
+    background: rgba($emerald, 1);
+    padding: ($h6-font-size / 2) $milli-font-size;
+    font-size: $milli-font-size;
+    font-family: $base-font-family;
+    @include  buttonable();
+    @include single-transition();
+  }
+  &:hover + .quick-view, & + .quick-view:hover {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}

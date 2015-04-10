@@ -1,0 +1,16 @@
+/*------------------------------------------------*/
+// SORT WIDGET
+
+.sort {
+  padding-bottom: $h6-font-size;
+  border-bottom: 1px solid $dark-light-color;
+  margin: 0 0 $h6-font-size 0;
+  select {
+    margin: 0 0 $h6-font-size 0;
+    font-family: $alter-font-family;
+    background: $light-color;
+  }
+}
+
+/*------------------------------------------------*/
+// SORT WIDGET ENDS

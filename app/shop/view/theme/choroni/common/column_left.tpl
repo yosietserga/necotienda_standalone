@@ -1,1 +1,1 @@
-<ul class="aside widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul>
+<ul class="aside widgets" data-position="column_left"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul>

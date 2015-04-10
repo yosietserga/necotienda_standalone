@@ -3,6 +3,7 @@
 class ControllerCheckoutSuccess extends Controller {
 
     public function index() {
+        $Url = new Url($this->registry);
         if ($this->config->get('config_store_mode') != 'store') {
             $this->redirect(HTTP_HOME);
         }
@@ -323,26 +324,10 @@ class ControllerCheckoutSuccess extends Controller {
 
         // style files
         $csspath = defined("CDN") ? CDN . CSS : HTTP_CSS;
-
         $styles[] = array('media' => 'all', 'href' => $csspath . 'jquery-ui/jquery-ui.min.css');
         $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.form.css');
-
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-        }
-
-        if (fopen($csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'), 'r')) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
+        $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
+        
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/checkout/success.tpl')) {
             $this->template = $this->config->get('config_template') . '/checkout/success.tpl';
         } else {
@@ -350,8 +335,6 @@ class ControllerCheckoutSuccess extends Controller {
         }
 
         $this->children[] = 'common/nav';
-        $this->children[] = 'common/column_left';
-        $this->children[] = 'common/column_right';
         $this->children[] = 'common/footer';
         $this->children[] = 'common/header';
 

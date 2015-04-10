@@ -1,0 +1,366 @@
+$see-button-present: false;
+
+$action-x-display: inline-block;
+$action-x-text-align: center;
+$action-x-width: auto;
+
+$action-button-padding: 0 ($micro-font-size / 2);
+$action-button-min-width: $h1-font-size * 3;
+$action-button-font-size: $micro-font-size;
+$action-button-font-family: $base-font-family;
+$action-button-font-weight: 400;
+$action-button-display: inline-block;
+$action-button-text-transform: capitalize;
+$action-button-text-align: center;
+
+$action-button-text-padding: $micro-font-size $h3-font-size;
+
+$action-add-color: $light-color;
+$action-add-background: $dark-color;
+$action-add-border: 1px solid $action-add-background;
+
+$action-add-hover-color: $light-color;
+$action-add-hover-background: $emerald;
+$action-add-hover-border: 1px solid $action-add-hover-background;
+
+$action-see-color: $dark-color;
+$action-see-background: $light-color;
+$action-see-border: $dark-light-border;
+
+$action-see-hover-color: $emerald;
+$action-see-hover-background: $light-color;
+$action-see-hover-border: 1px solid $dark-light-border;
+
+$single-product-action-button-padding: ($micro-font-size / 2) ($micro-font-size / 4);
+$single-product-action-button-font-size: $micro-font-size;
+
+$widget-latest-actions-width: auto;
+
+$latest-home-actions-width: 100%;
+
+$action-step-color: $light-color;
+$action-step-font-size: $micro-font-size;
+$action-step-padding: ($h6-font-size / 2) $micro-font-size;
+$action-step-display: inline-block;
+$action-step-font-family: $base-font-family;
+
+$action-step-prev-background: $river;
+$action-step-next-background: $emerald;
+
+/*------------------------------------------------*/
+// ACTIONS AND BUTTONS
+
+.actions {
+  display: $action-x-display;
+  text-align: $action-x-text-align;
+  width: $action-x-width;
+  .action-button {
+    padding: $action-button-padding;
+  }
+  @include breakpoint("small") {
+    width: 100%;
+  }
+}
+.actions-grid {
+  padding: $micro-font-size;
+}
+.actions-pad {
+  margin-left: -$micro-font-size / 2;
+}
+
+.action-button {
+  min-width: $action-button-min-width;
+  display: $action-button-display;
+
+}
+.action-button a {
+  text-transform: $action-button-text-transform;
+  font-family: $action-button-font-family;
+  font-size: $action-button-font-size;
+  font-weight: $action-button-font-weight;
+  text-align: $action-button-text-align;
+  padding: $action-button-text-padding;
+  display: inline-block;
+  @include buttonable();
+  @extend %fill;
+  @include single-transition(background);
+
+}
+//[.actions-button-see]
+
+.action-see a, .action-contact a{
+  color: $action-see-color;
+  border: $action-see-border;
+  background: $action-see-background;
+  &:hover {
+    color: $action-see-hover-color;
+    background: $action-see-hover-background;
+    border: $action-see-hover-border;
+  }
+}
+
+// [.actions-button-add]
+
+.action-add a {
+  color: $action-add-color;
+  border: $action-add-border;
+  background: $action-add-background;
+  &:hover {
+    color: $action-add-hover-color;
+    background: $action-add-hover-background;
+    border: $action-add-hover-border;
+  }
+}
+
+// [.control-flow]
+
+@if $see-button-present {
+  .action-see {
+    display: inline-block;
+  }
+}
+@else {
+  .action-see {
+    display: none;
+  }
+  .catalog-list .action-button.action-add,
+  .single-product .action-button.action-add,
+  .overlay-view .action-button.action-add{
+    padding-left: 0;
+  }
+}
+
+// [.catalog .actions]
+
+.catalog-grid {
+  .actions {
+    width: 100%;
+    text-align: center;
+  }
+}
+.latest-home {
+  .actions {
+    width: $latest-home-actions-width;
+  }
+}
+
+// [.widget-latest .actions]
+.widget-latest {
+  .actions {
+    text-align: center;
+    width: $widget-latest-actions-width;
+  }
+}
+
+// [.single-product .action-button]
+
+.single-product, .overlay-view {
+  .actions {
+    text-align: left;
+  }
+}
+
+.single-product {
+  .action-button a {
+    padding: $single-product-action-button-padding;
+    font-size: $single-product-action-button-font-size;
+  }
+  .action-button:first-child {
+    padding-left: 0;
+  }
+  .action-button:last-child {
+    padding-right: 0;
+  }
+}
+
+
+/*------------------------------------------------*/
+// Action filter
+
+.filter-action {
+  margin-top: ($h6-font-size / 2);
+}
+
+/*------------------------------------------------*/
+// Confirm and CRUD actions
+
+
+.action-update a,
+.action-delete a,
+.action-new a,
+.action-cancel a,
+.action-accept a,
+.action-subscribe a,
+.action-login a,
+.action-google a,
+.action-facebook a,
+.action-twitter a,
+.action-live a,
+.action-success a,
+.action-alert a,
+.action-default a{
+  color: $light-color;
+  margin-right: $micro-font-size;
+  &:hover {
+    color: $light-color;
+  }
+}
+
+.action-live a {
+  background: $belize;
+}
+
+.action-facebook a {
+  color: darken($belize, 10%);
+}
+
+.action-update a, .action-login a, .action-twitter a, .action-default {
+  background: $river;
+}
+
+.action-delete a, .action-cancel a, .action-google a, .action-alert{
+  background: $alizarin;
+}
+
+.data  ul li.address-info {
+  margin-bottom: $h6-font-size;
+}
+
+.action-new a, .action-accept a, .action-subscribe a, .action-success a {
+  background: $emerald;
+}
+/*------------------------------------------------*/
+// CONFIRM AND CRUD ACTIONS ENDS
+
+
+/*------------------------------------------------*/
+// ACTION INPUT
+
+.action-input-inverse, %action-input-inverse {
+  .row {
+    background: lighten($dark-color, 15%);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  input[type="search"],
+  input[type="text"],
+  input[type="email"], a {
+    color: $dark-light-color;
+
+    &::-webkit-input-placeholder {
+      color: $dark-light-color;
+    }
+
+    &:-moz-placeholder {
+      color: $dark-light-color;
+    }
+
+    &::-moz-placeholder {
+      color: $dark-light-color;
+    }
+
+    &:-ms-input-placeholder {
+      color: $dark-light-color;
+    }
+    &, &:focus {
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
+.action-input {
+  display: block;
+  padding: ($h6-font-size / 2) 0;
+  div {
+    height: auto;
+    display: block;
+  }
+  input[type="search"],
+  input[type="text"],
+  input[type="email"], a {
+    @extend %fill;
+    height: $h2-font-size;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-size: $micro-font-size;
+    position: relative;
+  }
+  i {
+    position: absolute;
+    right: 0;
+    top:50%;
+    transform: translate3d(-$micro-font-size, -$micro-font-size / 2, 0);
+  }
+  input {
+    font-family: $alter-font-family;
+    font-weight: normal;
+    padding: 0 $h6-font-size;
+    margin: 0;
+  }
+}
+
+
+/*------------------------------------------------*/
+// ACTION INPUT ENDS
+
+
+/*------------------------------------------------*/
+// Action Iconed
+
+%action-iconed, .action-iconed {
+  i {
+    margin: 0 $milli-font-size 0 0;
+    color: $dark-light-color;
+  }
+  * {
+    font-size: $micro-font-size;
+    color: $dark-color;
+  }
+  *:not(i) {
+    font-family: $alter-font-family;
+  }
+}
+
+/*------------------------------------------------*/
+// Neco Wizar Steps
+
+%action-step, .action-step {
+  color: $action-step-color;
+  font-size: $action-step-font-size;
+  font-family: $action-step-font-family;
+  padding: ($h6-font-size / 2) $micro-font-size;
+  display: inline-block;
+  cursor: pointer;
+  @include buttonable();
+  @include single-transition();
+
+  &.neco-wizard-prev {
+    margin-right: $micro-font-size;
+    background: $action-step-prev-background;
+    &:hover {
+      background: $action-step-next-background;
+    }
+  }
+  &.neco-wizard-next {
+    background: $action-step-next-background;
+    &:hover {
+      background: $action-step-prev-background;
+    }
+  }
+}
+
+#orderForm {
+  .action-accept, .action-cancel {
+    margin-bottom: $h1-font-size;
+  }
+}
+
+/*------------------------------------------------*/
+// Neco Wizard Steps Ends
+
+
+/*------------------------------------------------*/
+// Clear Action
+

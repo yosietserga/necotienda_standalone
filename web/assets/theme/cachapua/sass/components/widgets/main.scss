@@ -1,0 +1,26 @@
+
+
+$widgets-item-margin-bottom: $h1-font-size;
+
+
+/*------------------------------------------------*/
+// WIDGET CONTAINER
+
+.widgets {
+  margin-left: 0;
+  list-style: none;
+  margin-bottom: 0;
+  > li {
+    margin-bottom: $widgets-item-margin-bottom;
+    height: auto;
+    max-width: 100%;
+  }
+  @include breakpoint("small-to-medium") {
+    > li:not(:last-child) {
+      margin-bottom: 0;
+    }
+    > li:last-child {
+      margin-bottom: $widgets-item-margin-bottom * 0.5 ;
+    }
+  }
+}

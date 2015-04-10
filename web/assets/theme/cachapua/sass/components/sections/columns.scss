@@ -1,0 +1,19 @@
+/*------------------------------------------------*/
+// CATALOG COLUMN CENTER
+
+ .column-center {
+  @extend %page-heading;
+  > h1, >h2, > h3, > h4, > h5, > h6, > span {
+    margin: 0 $micro-font-size $h4-font-size 0;
+  }
+
+  p {
+    color: $light-dark-color;
+    font-family: $alter-font-family;
+    font-size: $micro-font-size;
+
+  }
+}
+
+/*------------------------------------------------*/
+// CATALOG COLUMN CENTER ENDS

@@ -58,6 +58,7 @@ class ControllerStyleWidget extends Controller {
          */
 
         $this->data['hasFeaturedContent'] = true;
+        $this->data['hasFeaturedFooter'] = true;
         $this->data['hasColumnLeft'] = true;
         $this->data['hasColumnRight'] = true;
         $this->data['hasFooter'] = true;
@@ -137,6 +138,33 @@ class ControllerStyleWidget extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST')) {
             $this->modelWidget->sortWidget($this->request->post);
         }
+    }
+
+    public function getalljson() {
+    $this->load->auto('setting/extension');
+        $extensions = $this->modelExtension->getInstalled('module');
+        $json = array();
+        $modules = glob(DIR_APPLICATION . "controller/module/$filter_name*");
+        if ($modules) {
+            foreach ($modules as $module) {
+                if (!file_exists($module . '/widget.php'))
+                    continue;
+                $extension = basename($module, '/widget.php');
+                $this->load->language('module/' . $extension);
+                $action = array();
+
+                if (in_array($extension, $extensions)) {
+                    $json['modules'][] = array(
+                        'widget' => $extension,
+                        'name' => $this->language->get('heading_title'),
+                        'description' => $this->language->get('description')
+                    );
+                }
+            }
+        }
+        $this->load->auto('json');
+        
+        $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
 
 }

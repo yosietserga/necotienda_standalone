@@ -390,10 +390,6 @@
     </div>
     
     </div>
-    <div class="clear"></div>
-    <div class="grid_12">
-            <?php if($widgets) { ?><ul class="widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
-    </div>
         </section>
     </section>
 </div>

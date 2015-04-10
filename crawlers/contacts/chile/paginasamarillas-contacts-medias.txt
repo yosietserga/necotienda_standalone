@@ -1,0 +1,6 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ABASTECEDORA MAZAL";;;"(56) (2) 6892461";"San Alfonso 125 Chile, Santiago"
+"INGESA S.A.";;;"(56) (2) 2441586";"Av. Once de Septiembre 1881 Of.213 Providencia Chile, Santiago"
+"MONARCH EMPRESAS";;;"(56) (2) 4789100";"Jose Ananias 530, Macul Chile, Santiago"
+IBICI;;;"(56) (2) 2389602";"Av. Marathon 2879, Macul Chile, Santiago"
+"MILANO COMERCIAL ITALIA LTDA";;;"(56) (2) 5560045";"Marina de Gaete 1079 Chile, Santiago"

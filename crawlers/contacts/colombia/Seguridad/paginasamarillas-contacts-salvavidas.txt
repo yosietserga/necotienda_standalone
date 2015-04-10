@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"AGENCIA PROFSERVINT";jairorojas123@hotmail.com;;"(57) (7) 6798822";"Cl 197 15-382 Colombia, Bucaramanga"
+"ALEJANDRO CEDEÑO FERNÁNDEZ";aleceden@yahoo.com;www.facebook.com/deportesalextremo;"(57) (2) 5512000";"Cl 3 63-34 B-9 Ap 102 Colombia, Cali"
+FERREMARINA;ferremarina2@yahoo.es;;"(57) (5) 6622663";"Bosque Dg21 40-75 Colombia, Cartagena"
+"H2O MANTENIMIENTO Y SALVAMENTO";;;"(57) (4) 3764467";"Cl 81 54-44 Int 107 Itagüí Colombia, Itagüí"
+"ACADEMIA NAUTICA ALEMANA";;;"(57) (1) 3186025008";"Dg61 D 27 A-43 Colombia, Bogotá"
+"BUZCODE S.A.S.";;;"(57) (5) 6650733";"Cr2 15-364 Sector El Limbo Colombia, Cartagena"

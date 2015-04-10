@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+"COMERCIALIZADORA DISTRIMEZCLAS";distrimezclas1@hotmail.com;www.distrimezclas.com;"(57) (4) 4613654";"Cr45 22 D-178 Colombia, Medellín"
+"AGROINSUMOS S.A.";jcastano@agroinsumossa.com;www.agroinsumossa.com;"(57) (2) 2113910";"Cl 13 56-20 Zaragoza Colombia, Cartago"
+BIOFINES;info@biogines.com;biofines.com;"(57) (1) 6694128";"Cl 183 11-55 B-59 Ap 202 Colombia, Bogotá"
+"SERVICIOS MENFORES S.A.S.";;;"(57) (7) 6835627";"Cr18 29-30 Centro Colombia, Bucaramanga"

@@ -1,0 +1,8 @@
+"First Name";"Email Address";Url;Telephone;Address
+"EMBOTELLADORAS UNIDAS S.R.L.";;;"(591) (33) 3462911";"Parque Industrial P.I. 22 Bolivia, Santa Cruz de la Sierra"
+"PEDRO CRUZ - DISTRIBUIDORA";;;"(591) (33) 3585159";"Guarayos No. 575 Bolivia, Santa Cruz de la Sierra"
+"EMBOL S.A";;;"(591) (33) 3461604";"Parque Industrial Manzana Pl-6 Bolivia, Santa Cruz de la Sierra"
+"BODEGAS Y VIÑEDOS LA CABAÑA - VINOS KOHLBERG";;;"(591) (66) 6636366";"Av Francisco Lazcano Barrio San Jorge, Tarija Bolivia, Tarija"
+"EMBOTELLADORA DE REFRESCOS INTERNACIONALES LTDA.";;;"(591) (33) 3465040";"Parque Industrial Pesado Manzana 23 Bolivia, Santa Cruz de la Sierra"
+"D & M LTDA.";;;"(591) (33) 3433463";"Av Banzer 1 Cuadra Antes 4to. Anillo (Detras Saci) Bolivia, Santa Cruz de la Sierra"
+"CERVECERÍA DEL SUR S.A.";;;"(591) (33) 3470000";"4to Anillo Parque Industrial UV P1, Mz.6 Bolivia, Santa Cruz de la Sierra"

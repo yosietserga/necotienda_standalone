@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"INMOBILIARIA MC S.A. INVERSIONES E";;;"(56) (2) 2116480";"Cl Nuestra Señora Del Rosario 581, Las Condes Chile, Santiago"
+"SANTA RITA LIMITADA INVERSIONES";;;"(56) (2) 2156697";"La Capellanía 1996, Lo Barnechea Chile, Santiago"

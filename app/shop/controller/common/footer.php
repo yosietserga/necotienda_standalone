@@ -29,18 +29,27 @@ class ControllerCommonFooter extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['widgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['widgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }
 
         // SCRIPTS
+        if ($this->config->get('config_seo_url')) {
+            $urlBase = HTTP_HOME . 'buscar/';
+        } else {
+            $urlBase = HTTP_HOME . 'index.php?r=store/search&q=';
+        }
         $scripts[] = array('id' => 'search', 'method' => 'function', 'script' =>
             "function moduleSearch(keyword) {
-            var url = '" . HTTP_HOME . "buscar/';
+            var url = '" . $urlBase . "';
             var form = $(keyword).closest('form');
             var category = $('#'+ $(keyword).attr('id').replace('Keyword','Category')).val();
             var store = $('#'+ $(keyword).attr('id').replace('Keyword','Store')).val();
@@ -96,7 +105,23 @@ class ControllerCommonFooter extends Controller {
             }
         }
 
-        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
+            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
+        } else {
+            $jspath = str_replace("%theme%", "choroni", $jspath);
+            $jsFolder = str_replace("%theme%", "choroni", DIR_THEME_JS);
+        }
+
+        if (file_exists($jsFolder . str_replace('/', '', strtolower($this->Route) . '.js'))) {
+            $javascripts[] = $jspath . str_replace('/', '', strtolower($this->Route) . '.js');
+        }
+
+        if (count($javascripts)) {
+            $this->javascripts = array_merge($this->javascripts, $javascripts);
+        }
+        
         foreach ($this->javascripts as $key => $js) {
             $f_output .= file_get_contents($js);
             unset($this->javascripts[$key]);
@@ -110,6 +135,8 @@ class ControllerCommonFooter extends Controller {
         $this->data['scripts'] .= ($w_output) ? "<script> \n (function($){ $(window).load(function(){ " . $w_output . " }); })(jQuery);</script>" : "";
         $this->data['scripts'] .= ($f_output) ? "<script> \n " . $f_output . " </script>" : "";
 
+        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
+        
         // javascript files
         if ($this->user->getId()) {
             $javascripts[] = HTTP_ADMIN . "js/front/admin.js";
@@ -118,7 +145,6 @@ class ControllerCommonFooter extends Controller {
                 $javascripts[] = $jspath . "vendor/jquery-ui.min.js";
                 $javascripts[] = $jspath . "necojs/neco.css.js";
                 $javascripts[] = $jspath . "necojs/neco.colorpicker.js";
-                $javascripts[] = $jspath . "necojs/neco.tips.js";
                 $javascripts[] = HTTP_ADMIN . "js/front/theme_editor.js";
             }
         }
@@ -140,5 +166,4 @@ class ControllerCommonFooter extends Controller {
 
         $this->render();
     }
-
 }

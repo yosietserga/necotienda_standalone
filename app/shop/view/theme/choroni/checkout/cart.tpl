@@ -400,6 +400,14 @@
     <div class="grid_12">
             <?php if($widgets) { ?><ul class="widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
     </div>
+            <div class="clear"></div>
+
+            <div class="grid_12">
+                <div id="featuredFooter">
+                <ul class="widgets" data-position="featuredFooter"><?php if($featuredFooterWidgets) { foreach ($featuredFooterWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+                </div>
+            </div>
+
         </section>
     </section>
 </div>

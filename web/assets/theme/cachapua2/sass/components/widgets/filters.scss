@@ -1,0 +1,54 @@
+/*------------------------------------------------*/
+// FILTERS
+
+.sidebar-list.filters-list {
+  margin-left: 0;
+}
+
+.filters li {
+  overflow: hidden;
+}
+.filter-options {
+  @include single-transition(all, 450ms, ease-out);
+  @extend %fill;
+  overflow: hidden;
+}
+.filter-heading {
+  @include droppable(0, 0);
+  & + .filter-options {
+    max-height: 0;
+  }
+  > * {
+    position: relative;
+    @extend %fill;
+  }
+}
+.price-controls {
+  border-bottom: $clouds-border;
+  padding: $micro-font-size;
+  position: relative;
+  &:before {
+    content: " ";
+    min-width: $h5-font-size;
+    margin-left: -$h5-font-size / 2;
+    height: 1px;
+    color: $dark-light-color;
+    background: $dark-light-color;
+    display: block;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    z-index: 100;
+  }
+}
+
+.price-filter-trigger {
+  &, a {
+    display: inline-block;
+  }
+}
+
+/*------------------------------------------------*/
+// FILTERS ENDS
+
+

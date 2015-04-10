@@ -16,6 +16,16 @@
     </div>
     
     <div class="row">
+        <label><?php echo $Language->get('Show On Mobile'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showonmobile]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
+        <label><?php echo $Language->get('Show On Desktop'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showondesktop]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
         <label><?php echo $Language->get('entry_pageid'); ?></label>
         <input title="<?php echo $Language->get('help_pageid'); ?>" type="text" name="Widgets[<?php echo $name; ?>][settings][fblike_pageid]" value="<?php echo isset($settings['fblike_pageid']) ? $settings['fblike_pageid'] : ''; ?>" />
     </div>

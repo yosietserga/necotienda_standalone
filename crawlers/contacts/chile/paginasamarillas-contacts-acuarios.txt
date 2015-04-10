@@ -1,0 +1,9 @@
+"First Name";"Email Address";Url;Telephone;Address
+"AQUAPLANT LTDA";;;"(56) (2) 4186727";"Santiago Chile, Santiago"
+AQUAZOO;;;"(56) (2) 2297760";"Av. Cristobal Colon 6498 - Las Condes Chile, Santiago"
+AQUALONSO;;;"(56) (2) 24931080";"Av. Tabalaba 14087 Chile, Santiago"
+"AQUART DISEÑOS";;;"(56) (2) 6967361";"Compañia 1513 Chile, Santiago"
+"ACUARIOS CABA";;;"(56) (32) 2591382";"Condell 1585 Loc. 5 - Valparaíso Chile, Valparaiso"
+"ACUARIOS BENSEN";;;"(56) (32) 2233246";"Pedro Montt 1922 Local 25 Chile, Valparaiso"
+"ACUARIOS Y VIDRIERÍA LA CONCEPCIÓN";;;"Telefax: (56) (32) 2255731";"Almirante Goñi 161 - Valparaíso - Viña Chile, Valparaiso"
+"ACUARIOS MARCELA LTDA";;;"(56) (2) 22462202";"Apoquindo 4900 Loc. 55 Chile, Santiago"

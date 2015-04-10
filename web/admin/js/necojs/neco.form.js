@@ -33,7 +33,7 @@
             complete:   function(){},
             success:    function(){},
             submit: function(){}
-        }
+        };
         
         var settings = {};
         var data = {};
@@ -53,7 +53,7 @@
             cancel: function() {
                 $(this).find('.cancel').trigger('click');
             }
-        }
+        };
 
         var helpers = {
             _create: function() {                
@@ -293,7 +293,7 @@
                     $(data.submitButton).trigger('click');$(data.element).submit();
                 }
             }
-        }
+        };
         
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -333,7 +333,7 @@
                 image:'../loader.gif',
                 classname:'neco-input-loading'
             }
-        }
+        };
         
         var settings = {};
         var data = {};
@@ -349,7 +349,7 @@
                     helpers._change();
                 });
             }
-        }
+        };
  
         var helpers = {
             _create: function() {
@@ -734,7 +734,7 @@
                     helpers.showError();
                 }
             }
-        }
+        };
         
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -772,7 +772,7 @@
                 image:'../loader.gif',
                 classname:'neco-input-loading'
             }
-        }
+        };
         
         var settings = {};
         var data = {};
@@ -788,7 +788,7 @@
                     helpers._change();
                 });
             }
-        }
+        };
  
         var helpers = {
             _create: function() {
@@ -929,7 +929,7 @@
                     helpers.showError();
                 }
             }
-        }
+        };
         
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -964,7 +964,7 @@
                 image:'../loader.gif',
                 classname:'neco-select-loading'
             }
-        }
+        };
         
         var settings = {};
         var data = {};
@@ -979,7 +979,7 @@
                     helpers._change();
                 });
             }
-        }
+        };
  
         var helpers = {
             _create: function() {
@@ -1105,7 +1105,7 @@
                     helpers.showError();
                 }
             }
-        }
+        };
         
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));

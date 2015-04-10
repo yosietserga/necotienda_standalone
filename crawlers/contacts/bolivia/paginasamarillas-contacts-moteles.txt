@@ -1,0 +1,6 @@
+"First Name";"Email Address";Url;Telephone;Address
+"VIP'S MOTEL";;;"(591) (33) 3433652";"Km 5 Y 1/2 Al Norte Detras De Clinica Ucebol Bolivia, Santa Cruz de la Sierra"
+"LUNA AZUL";;;"(591) (22) 4722000";"Carretera Sacaba Km.4 1/2 (Quintanilla) Bolivia, La Paz"
+"MOTEL EL PARAÍSO";;;"(591) (33) 3421314";"Carret Al Norte Km 5 1/2 Lado Este Bolivia, Santa Cruz de la Sierra"
+"MOTEL AVEK";;;"(591) (33) 3449947";"5to Anillo (Entre Av. Beni Y Alemania) Bolivia, Santa Cruz de la Sierra"
+"MOTEL SOLOS SUITES";;;"(591) (33) 3488639";"Carret Al Norte Km 5 1/2 Lado Este Bolivia, Santa Cruz de la Sierra"

@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"AUTOESCUELA CETA";;;"(591) (33) 3341254";"Av Argamosa No 91 Esq. Charcas (1er Anillo) Bolivia, Santa Cruz de la Sierra"
+"CENTRO CULTURAL KJARKAS";;;"(591) (22) 2240867";"Av Illimani No 1938 Media cuadra del Estadio Hernando Siles Bolivia, La Paz"
+"ACADEMIA DE EXPRESION ORAL BOLIVIA";;;"(591) (22) 2231798";"Rosendo Gutierrez No 109 Esq Capitan Ravelo Bolivia, La Paz"
+"ACADEMIA DE MUSICA UBAL";;;"(591) (22) 2317159";"Edificio Mexico Subsuelo Of 2 Centro Colombia y Mexico Bolivia, La Paz"
+"ACADEMIA MUSICAL VILLAZON";;;"(591) (4) 4510505";"Calama E-0679 Bolivia, Cochabamba"
+"LA ACADEMIA BOLIVIANA DE CANTO";;;"(591) (22) 2114090";"Av Saavedra 1979 Entre Diaz Romero y Villalobos Bolivia, La Paz"

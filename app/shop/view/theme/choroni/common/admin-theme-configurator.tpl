@@ -3,14 +3,17 @@
     <input type="hidden" id="selector" name="selector" value="" />
     <input type="hidden" id="mainselector" name="mainselector" value="" />
 
-    <a class="style-icons nuevo" href="'<?php echo $new_theme; ?>'"></a>
-    <a class="style-icons save" onclick="saveStyle('<?php echo $save_theme; ?>')"></a>
+    <a class="style-icons nuevo" href="'<?php echo $Url::createAdminUrl('style/theme/insert', [], 'NONSSL', HTTP_ADMIN); ?>'"></a>
+    <a class="style-icons save" onclick="saveStyle('<?php echo $Url::createAdminUrl('style/theme/save', array('theme_id' => $this->request->getQuery('theme_id'), 'template' => $this->request->getQuery('template')), 'NONSSL', HTTP_ADMIN); ?>')"></a>
     <a class="style-icons clean" onclick="cleanStyle()"></a>
     <a class="style-icons copy" onclick="copyStyle()"></a>
     <a class="style-icons paste" onclick="pasteStyle()"></a>
-    <a class="style-icons print" onclick="printStyle()"></a>
-    <!-- <a class="style-icons close" onclick="slidePanel('style')"><?php echo $Language->get('text_close'); ?></a> -->
-
+    <!--<a class="style-icons print" onclick="printStyle()"></a>-->
+    <!-- 
+    <a class="style-icons download" onclick="saveStyle('<?php echo $Url::createAdminUrl('style/theme/download', array('theme_id' => $this->request->getQuery('theme_id'), 'template' => $this->request->getQuery('template')), 'NONSSL', HTTP_ADMIN); ?>')"></a>
+    
+    <a class="style-icons close" onclick="slidePanel('style')"><?php echo $Language->get('text_close'); ?></a>
+     -->
     <div class="clear"></div>
 
     <select id="selectors" onchange="setElementToStyle($(this).val())">
@@ -48,7 +51,7 @@
 
         <optgroup label="<?php echo $Language->get('text_others'); ?>">
             <option value="li"><?php echo $Language->get('text_list_items'); ?></option>
-            <option value="li:hover"><?php echo $Language->get('text_list_items_hover'); ?></option>
+            <!--<option value="li:hover"><?php echo $Language->get('text_list_items_hover'); ?></option>-->
             <option value="span"><?php echo $Language->get('text_span'); ?></option>
             <option value=".header"><?php echo $Language->get('text_headers'); ?></option>
             <option value=".content"><?php echo $Language->get('text_contents'); ?></option>

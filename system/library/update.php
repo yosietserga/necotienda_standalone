@@ -72,7 +72,7 @@ class Update {
         $this->db = $registry->get('db');
         $this->load = $registry->get('load');
 
-        $this->update_info = "http://www.necotienda.org/index.php?r=update/info"
+        $this->update_info = "http://www.necotienda.org/api/index.php?r=update/info"
                 . "&p=" . urlencode(PACKAGE)
                 . "&v=" . urlencode(VERSION)
                 . "&c=" . urlencode(C_CODE)
@@ -126,7 +126,7 @@ class Update {
                     if (file_exists(DIR_ROOT.'update.php')) {
                         include_once(DIR_ROOT.'update.php');
                         if (function_exists('upgradeNecoTienda')) {
-                            upgradeNecoTienda($this->registry);
+                            upgradeNecoTienda($this->registry, VERSION);
                         }
                         unlink(DIR_ROOT.'update.php');
                     }

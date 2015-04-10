@@ -161,6 +161,8 @@ class ControllerModuleLatest extends Controller {
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
             if ((!$this->config->get('config_customer_price') || $this->customer->isLogged()) && $this->config->get('config_store_mode')==='store') {
                 $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
+            } else {
+                $json['results'][$k]['price'] = null;
             }
             $json['results'][$k]['config_store_mode'] = $this->config->get('config_store_mode');
             $json['results'][$k]['seeProduct_url'] = $Url::createUrl('store/product',array('product_id'=>$v['product_id']));

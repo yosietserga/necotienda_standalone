@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"PIARLI (EMPRESA DE SERVICIO ESPECIALIZADO EN PINTADO)";;;"(591) (33) 3526131";"Av Escuadrón Velasco Nú 315 (Zona El Pari) Bolivia, Santa Cruz de la Sierra"
+"BOINCOS PINTADO INDUSTRIAL S.A.";;;"(591) (33) 3438380";"Av Pedro Ribera M. No. 1000 Entre Av Alemania Y Mutualista Bolivia, Santa Cruz de la Sierra"

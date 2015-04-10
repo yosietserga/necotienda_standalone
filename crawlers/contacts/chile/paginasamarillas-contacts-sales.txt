@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+"SAL CARIBE";;;"(56) (2) 8138286";"Santiago de Chile Chile, Santiago"
+SALZBURGO;;;"(56) (2) 2214171";"Bellavista 7080 La Florida Chile, Santiago"
+"SAL LOBOS";;;"(56) (32) 353300";"Angamos 1681 Chile, Valparaiso"
+"IODINEX CHILE LTDA.";;;"(56) (2) 6278459";"Av. Bulnes 79 Of.62 Santiago Chile, Santiago"

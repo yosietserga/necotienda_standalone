@@ -1,0 +1,13 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ACROSS WORLD LOGISTICS S.A.S.";info@acrossworldlogistics.com;www.acrossworldlogistics.com;"(57) (1) 4316755";"Cl 63 104-68 P-2 Colombia, Bogotá"
+"GRUPO IART SAS";ventas@grupoiart.com;www.grupoiart.com;"(57) (1) 8052794";"Cr69 J 63-85 Colombia, Bogotá"
+"PORTADA INMOBILIARIA S.A.S";info@portadainmobiliaria.com;www.portadainmobiliaria.com;"(57) (4) 4487771";"Cr80 AA No. 36-57 Colombia, Medellín"
+"BOTERO YEPES ASOCIADOS S.A.S.";boteroyepes@une.net.co;0;"(57) (4) 4112697";"Cl 32 F 76-35 Colombia, Medellín"
+"ALPES PUBLICIDAD";alpespublicidad@gmail.com;;"(57) (1) 2474425";"Cl 5 A 26 A-34 Colombia, Bogotá"
+"INVERSIONES Y REPRESENTACIONES CONSULTAR S.A.S.";gerencia@ircsas.com;www.ircsas.com;"(57) (4) 4120822";"Cl 44 77-26 Colombia, Medellín"
+"AGENCIA DE ADUANAS MOVE CARGO S.A. NIVEL 1";luis.acevedo@move.com.co;www.move.com.co;"(57) (5) 6607785";"Manga 4 Ta Av Calle-29 23 A-46 Of. 201 Colombia, Cartagena"
+"AGENCIA DE ADUANAS COINTER S.A.S. NIVEL 1";;www.grupocointer.com.co;"(57) (1) 4223340";"Cr97 24 C-75 Bdg 41 Colombia, Bogotá"
+"ASHLEY MADISON";;;"(57) 3107681392";"Cl 126 50-72 Colombia, Bogotá"
+ASEICOLMEX;;;"(57) (5) 3579566";"Cr52 75-27 L 18 Colombia, Barranquilla"
+"AGENCIA DE ADUANAS COLMAS LTDA.";;;"(57) (5) 6609614";"Manga Cl 25 24 A-16 Of 1802 Edif Twins Bay Colombia, Cartagena"
+"AGENCIA DE ADUANAS REPRESENTACIONES J.GUTIÉRREZ Y CÍA LTDA. NIVEL 1";;;"(57) (7) 5818181";"Av Camilo Daza 12-85 Zona Industrial Colombia, Cúcuta"

@@ -1,0 +1,11 @@
+"First Name";"Email Address";Url;Telephone;Address
+"A'A'A'ALO""SERVITEC";;;"(56) (32) 2683586";"13 Norte 1105 - Viña Del Mar Chile, Viña del Mar"
+FRIOTAL;;;"(56) (71) 212036";"8 Oriente 1411- B Chile, Talca"
+"ABATECNO REFRIGERACION";;;"(56) (2) 6213814";"Av. Mexico 1061 Recoleta Chile, Santiago"
+"AAA. AARONITA";;;"(56) (32) 2687530";"14 Norte 1134 Chile, Viña del Mar"
+"REFRIGERACION COMERCIAL Y DOMESTICA AGUILAR";;;"(56) (32) 2246462";"Valparaiso Chile, Valparaiso"
+"ABASERVICE FARICH";;;"(56) (32) 2865197";"Elicura 144-M Achupallas Chile, Viña del Mar"
+"ASISTENCIA A DOMICILIO DEL PINO";;;"(56) (32) 2864164";"Viña del Mar Chile, Viña del Mar"
+SERVILUV;;;"Telefax: (56) (72) 241236";"Cuevas 839 Chile, Rancagua"
+"A-AABCO (MR) REFRIGERACION";;;"(56) (32) 2947035";"Valparaiso Chile, Valparaiso"
+"A. AABACO REFRIGERACION";;;"(56) (32) 2955110";"Valparaiso Chile, Valparaiso"

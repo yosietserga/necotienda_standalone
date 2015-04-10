@@ -1,0 +1,6 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ROTOPLAST S.A.";mercadeo@rotoplast.com.co;www.rotoplast.com.co;"(57) (4) 4481101";"Cr42 50-195 Itagüí Colombia, Medellín"
+"CJS CANECAS";ventas@cjcanecas.com;www.cjscanecas.com;"(57) (1) 4910100";"Av Ciudad de Cali 68 A-03 Colombia, Bogotá"
+"AGENCIA FULLER S.A.S.";ventas@agenciafuller.com;www.agenciafuller.com;"(57) (5) 3565678";"Cr53 76-41 Colombia, Barranquilla"
+"SOMECOL S.A.S.";somecol@somecol.com;www.somecol.com;"(57) (1) 8053366";"Cr28 6-71 Colombia, Bogotá"
+"TANQUES ROTOPLAST S.A.";;;"(57) (4) 4481101";"Cr42 50-195 Itagüí Colombia, Medellín"

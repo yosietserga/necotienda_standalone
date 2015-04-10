@@ -1,0 +1,410 @@
+
+$overheader-background: rgba($dark-color, 0);
+$overheader-position: absolute;
+/*------------------------------------------------*/
+// OVERHEADER
+
+.overheader {
+  background: $overheader-background;
+  z-index: $main-overheader-index;
+  position: $overheader-position;
+  width: 100%;
+  height: auto;
+  .shop {
+    height: 100%;
+    position: relative;
+  }
+  .config-actions {
+    min-width: 15.625rem;
+    &, .location,{
+      height: auto;
+      display: block;
+    }
+  }
+  @include  breakpoint("large-up") {
+    display: none;
+  }
+}
+
+.overheader-action, .search-action {
+  height: auto;
+  display: inline-block;
+  padding: $micro-font-size;
+  @include single-transition();
+
+  a,
+  i,
+  small,
+  span {
+    font-size: $micro-font-size;
+  }
+
+  i {
+    margin-right: $milli-font-size / 2;
+  }
+
+  & > span,
+  & > a,
+  & > small {
+    font-family: $base-font-family;
+    font-weight: 600;
+  }
+  &:hover {
+    background: lighten($dark-color, 5%);
+  }
+}
+
+.overheader-action {
+  cursor: pointer;
+  @include breakpoint("small-to-medium") {
+    .overheader-heading {
+      padding:  0 $micro-font-size;
+    }
+
+    & {
+      border-left: 1px solid rgba($light-dark-color, 0.3);
+    }
+
+    &:last-child {
+      border-right: 1px solid rgba($light-dark-color, 0.3);
+    }
+  }
+}
+
+
+.overheader-heading {
+  @extend %fill;
+  display: inline-block;
+  font-family: $base-font-family;
+  &, &:after {
+    color: $dark-light-color;
+    font-size: $micro-font-size;
+  }
+  &:after {
+    content: "\f0d7";
+    font-family: "FontAwesome";
+    @include absolute-nw(0 , 100%);
+  }
+  & ~ .menu {
+    @include absolute-nw(100%, 100%);
+    @extend %dropdown-list;
+    @include top-arrow($milli-font-size, $milli-font-size * 1.1, $light-color, $clouds, 90%);
+    margin-top: $milli-font-size * 1.5;
+    margin-left:  -$h1-font-size * 5;
+    padding: $h6-font-size ;
+    border: $clouds-border;
+    min-width: $h1-font-size * 5;
+    position: absolute;
+    background: $light-color;
+    display: inline-block;
+  }
+  @include breakpoint("small-to-medium") {
+    &:after {
+       @include absolute-nw(0 , 75%);
+    }
+  }
+}
+
+.location-lists {
+  * {
+    font-family: $alter-font-family;
+  }
+  * a{
+    font-size: $milli-font-size;
+  }
+  span:first-child {
+    color: $light-dark-color;
+    margin-right: ($h6-font-size / 2);
+  }
+  .currencies-list {
+    border-bottom: 1px solid $clouds;
+    a {
+      @extend %fill;
+      color: $light-dark-color;
+    }
+
+  }
+  .languages-list {
+    margin-top: ($h6-font-size / 2);
+  }
+  .list {
+    @extend %fill;
+    @include inline-list();
+    list-style: none;
+    min-width: 100%;
+    margin-bottom: ($h6-font-size / 2);
+    margin-left: 0;
+    li {
+      margin-left: 0;
+      padding: ($h6-font-size / 2) ($h6-font-size / 2) ($h6-font-size / 2) 0;
+    }
+    a {
+      display: inline-block;
+      span {
+        color: $light-dark-color;
+        margin-left: ($h6-font-size / 2);
+        text-transform: capitalize;
+        font-size: $milli-font-size;
+      }
+    }
+  }
+  li {
+    display: inline-block;
+    min-width: $h2-font-size;
+    min-height: $h4-font-size;
+  }
+  a {
+    @include basic-transition();
+    @extend %fill;
+    padding:  $milli-font-size / 4 $milli-font-size / 2;
+    border: 1px $clouds solid;
+    &:hover {
+      background: $clouds;
+    }
+  }
+}
+
+/*------------------------------------------------*/
+// Javascript: Drop downs
+
+*[data-show="conf"].reveal-dropdown ~ .menu{
+  @extend %dropdown-list-open;
+}
+
+*[data-show="conf"] {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: $h1-font-size + $milli-font-size * 0.8;
+  display: block;
+}
+
+/*------------------------------------------------*/
+// Javascript: Drop downs Ends
+
+
+/*------------------------------------------------*/
+// Account Panel
+
+.account-register {
+  margin-top: $h1-font-size / 2;
+  border-top: $clouds-border;
+  padding-top: ($h1-font-size / 2) - ($micro-font-size / 2);
+}
+
+.account-register, .account-forgotten {
+  color: $dark-color;
+  font-family: $alter-font-family;
+  font-size: $micro-font-size;
+  @extend %fill
+}
+
+.account-panel {
+  .button {
+     margin-top: $micro-font-size / 2;
+     text-transform: uppercase;
+     @include buttonable();
+  }
+}
+
+.phone {
+  font-family: $alter-font-family;
+  padding: $h6-font-size 0;
+  .tel {
+    margin: 0 0 0 $h6-font-size;
+  }
+  i {
+    margin: 0 ($h6-font-size / 2) 0 0;
+  }
+  i, .tel{
+    font-size: $micro-font-size;
+    color: $dark-light-color;
+    &:hover {
+      color: $light-color;
+    }
+  }
+}
+
+/*------------------------------------------------*/
+// Account Pannel Ends
+
+
+/*------------------------------------------------*/
+// Cart-Pannel
+
+ .menu.cart-panel {
+   min-width: $h1-font-size * 8;
+   left: 100%;
+   margin-left: -$h1-font-size * 8;
+ }
+
+.cart-panel {
+  @include clearfix();
+  ul {
+    margin: 0;
+  }
+  li > div {
+    margin-bottom: $h1-font-size /2;
+  }
+  div > p {
+    &:first-child {
+      color: $dark-light-color;
+      font-style: italic;
+    }
+    margin-bottom: 0;
+    &, a {
+      color: $dark-color;
+      font-family: $alter-font-family;
+      font-size: $micro-font-size;
+    }
+    a {
+      @extend %fill;
+    }
+  }
+  table {
+    border-top: $clouds-border;
+    &, tr, tbody {
+      @extend %fill;
+    }
+    tr{
+      @include clearfix();
+      strong {
+        font-size: $micro-font-size;
+        font-family: $alter-font-family;
+        font-weight: normal;
+      }
+      td {
+        display: inline-block;
+      }
+      td, td strong {
+        color: $dark-color;
+      }
+      td:last-child{
+        float: right;
+        font-family: $base-font-family;
+        font-weight: bold;
+      }
+    }
+  }
+  table > tbody, .button {
+    margin-top: $h1-font-size / 2;
+  }
+  .button {
+    display: inline-block;
+    padding: ($h6-font-size / 2) $micro-font-size;
+    width: auto !important;
+    float: right;
+    text-transform: uppercase;
+    font-family: $base-font-family;
+    @include buttonable();
+  }
+}
+
+.overheader-action .added-count {
+  position: absolute;
+  @include rounded();
+  transform: translate(-80%, -60%);
+  background: $emerald;
+  width: $h6-font-size;
+  height: $h6-font-size;
+  small {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: -$milli-font-size / 4;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: $light-color;
+    font-size: $milli-font-size;
+    font-family: $alter-font-family;
+    text-align: center;
+  }
+ }
+
+.cart.overheader-action {
+ @include breakpoint("sall-to-medium") {
+   span:after {
+    display: none;
+  }
+ }
+}
+
+
+/*------------------------------------------------*/
+// Mobile Nav
+
+.nav {
+  @include breakpoint("small-to-medium") {
+    .left-offcanvas-trigger {
+      vertical-align: middle;
+      height: $h1-font-size * 1.25;
+      width: $h1-font-size * 1.25;
+      transform: translate3d( -$h6-font-size, 0, 0);
+      display: block;
+      cursor: pointer;
+      background: $base-color;
+    }
+  }
+  @include breakpoint("medium") {
+    .left-offcanvas-trigger {
+      margin-left: $h6-font-size;
+    }
+  }
+  @include breakpoint("small") {
+    .left-offcanvas-trigger {
+      margin-left: 0;
+    }
+  }
+}
+
+.hamburger {
+ @include breakpoint("small-to-medium") {
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-align: center;
+    i {
+       top: 50%;
+       color: $light-color;
+       font-size: $micro-font-size;
+       @extend %fill;
+       @include translate2d(0, (-$micro-font-size / 2));
+     }
+  }
+}
+
+.search {
+   @extend %action-input-inverse;
+   @include breakpoint("small-to-medium") {
+     position: absolute;
+     z-index: 1;
+     top: 100%;
+     left: 0;
+     float: none;
+     display: block;
+     margin: 0;
+     opacity: 0;
+     padding: $micro-font-size;
+     background: $light-color;
+     @include single-transition();
+     transform-origin: 50% 0;
+     transform: scale(0);
+   }
+ }
+
+ .reveal-search {
+   @include breakpoint("small-to-medium") {
+     opacity: 1 !important;
+     transform: scale(1) !important;
+   }
+
+ }
+
+ .top-bar {
+   @include breakpoint("small-to-medium") {
+     overflow: visible;
+   }
+ }

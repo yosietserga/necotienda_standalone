@@ -1506,9 +1506,9 @@ class ControllerStoreProduct extends Controller {
            
             $('.vtabs_page').hide();
             $('.vtabs_page:first-child').show();");
-
+        
         foreach ($this->data['languages'] as $language) {
-            $code = "var editor" . $language["language_id"] . " = CKEDITOR.replace('description" . $language["language_id"] . "', {"
+            $code = "var editor" . $language["language_id"] . " = CKEDITOR.replace('description_" . $language["language_id"] . "_description', {"
                     . "filebrowserBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
                     . "filebrowserImageBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
                     . "filebrowserFlashBrowseUrl: '" . Url::createAdminUrl("common/filemanager") . "',"
@@ -1584,8 +1584,6 @@ class ControllerStoreProduct extends Controller {
         $this->scripts = array_merge($this->scripts, $scripts);
 
         // javascript files
-        $javascripts[] = "js/vendor/fileUploader/jquery.iframe-transport.js";
-        $javascripts[] = "js/vendor/fileUploader/jquery.fileupload.js";
         $javascripts[] = "js/vendor/ckeditor/ckeditor.js";
         $this->javascripts = array_merge($javascripts, $this->javascripts);
         

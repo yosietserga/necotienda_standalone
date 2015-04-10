@@ -1,0 +1,18 @@
+/*------------------------------------------------*/
+// PAYMENT PAGE
+
+.filter-action, .register-payment-action {
+  color: $light-color;
+  &:hover {
+    color: $light-color;
+  }
+}
+.filter-action {
+  background: $emerald;
+}
+.register-payment-action {
+  background: $river;
+}
+
+/*------------------------------------------------*/
+// PAYMENT PAGE ENDS

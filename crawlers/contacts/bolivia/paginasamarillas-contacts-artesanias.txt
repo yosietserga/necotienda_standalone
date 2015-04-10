@@ -1,0 +1,9 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ARTESANÍAS BOLIVIAN SOUVERNIRS";;;"(591) (33) 3337805";"Plaza 24 De Septiembre Bolívar Shopping No. 27 Local 10-A Y 11-A Suc. Aeropuerto Viru Viru Pre Embarque Internacional Bolivia, Santa Cruz de la Sierra"
+"ARTESANÍAS ""LOBA""";;;"(591) (33) 3375802";"Shopping Bolívar 15 A Bolivia, Santa Cruz de la Sierra"
+"ARTESANÍAS PEWTER PALACE";;;"(591) (33) 3376447";"Shopping Bolívar (Frente A La Plaza 24 De Sepbre. Local 2A-4A) Bolivia, Santa Cruz de la Sierra"
+"ARTESANIAS INCA PRODUCTS";;;"Telefax: (591) (33) 3337049";"Av.Cañoto - Av.Landivar Bolivia, Santa Cruz de la Sierra"
+"EL GRAN PAITITÍ LOW PRICES";;;"(591) (33) 3372316";"Cl Ingavi, Local No. 1 Bolivia, Santa Cruz de la Sierra"
+DIGIBOL;;;"(591) (33) 3584479";"Santa Cruz Bolivia, Santa Cruz de la Sierra"
+"AYNI RUWAY-ARTESANIAS";;;"(591) (4) 4408476";"Av Calancha No 1297 Bolivia, Cochabamba"
+"PARQUE ECOLOGICO Y VAGA GUAZU PARAISO GRANDE";;;"(591) (33) 3527971";"Km 12 1/2 Doble Via La Guardia Santa Cruz Bolivia Bolivia, Santa Cruz de la Sierra"

@@ -1,0 +1,168 @@
+$main-nav-items-color: $light-color;
+$main-nav-items-text-transform: uppercase;
+$main-nav-items-padding: 0 $micro-font-size;
+$main-nav-items-font-family: $alter-font-family;
+$main-nav-items-font-weight: 700;
+$main-nav-items-font-size: $micro-font-size;
+$main-nav-items-background: rgba($dark-color , 0);
+$main-nav-items-hover-background: $light-color;
+
+$main-nav-sub-items-background: $base-color;
+$main-nav-sub-items-color: $dark-color;
+$main-nav-sub-items-border-width: 0 0 0 0;
+$main-nav-sub-items-border-color: rgba(0, 0, 0, 0);
+$main-nav-sub-items-border-style: none;
+$main-nav-sub-items-padding: ($h6-font-size / 2) 0;
+$main-nav-sub-items-font-size: $milli-font-size;
+$main-nav-sub-items-font-family: $alter-font-family;
+$main-nav-sub-items-font-weight: 400;
+$main-nav-sub-items-text-transform: capitalize;
+$main-nav-sub-items-hover-background: rgba(0, 0, 0, 0.024);
+
+/*------------------------------------------------*/
+// NAV SHARED SYLES
+
+
+.custom-links > ul > li > a, .nav-default-trigger {
+   line-height: 3.5rem;
+}
+.main-header .nav {
+  min-height: 4.5rem;
+  li:last-child a {
+    border-bottom: none;
+  }
+}
+
+/*------------------------------------------------*/
+// NAV SHARED STYLES ENDS
+
+/*------------------------------------------------*/
+// NAV MAIN LEVEL
+
+
+.nav {
+  position: relative;
+  z-index: $main-header-index;
+  height: auto;
+}
+
+.nav-links > ul {
+  @include inline-list;
+  @extend %fill;
+  display: table;
+  overflow:visible;
+  margin: 0;
+}
+
+.nav-links > ul {
+  & ul > a:hover {
+    background: $main-nav-sub-items-hover-background;
+  }
+  & > li > a:hover{
+    background: $main-nav-items-hover-background;
+    color: $dark-color;
+  }
+  li {
+    position: relative;
+    &:hover{
+      & > ul,
+      & > ul > li:hover > ul
+      {
+        @extend %dropdown-list-open;
+      }
+    }
+  }
+}
+
+
+.nav-links {
+  li {
+    background: $main-nav-items-background;
+  }
+  & > ul ul li {
+    background: $main-nav-sub-items-background;
+  }
+  a {
+    background: $main-nav-items-background;
+    color: $main-nav-items-color;
+    padding: $main-nav-items-padding;
+    font-family: $main-nav-items-font-family;
+    font-size: $main-nav-items-font-size;
+    font-weight: $main-nav-items-font-weight;
+    text-transform: $main-nav-items-text-transform;
+    display: block;
+    width: 100%;
+    height: auto;
+    @include single-transition();
+    i {
+      font-size: 1.3rem;
+    }
+  }
+  & > ul ul a {
+    padding: $main-nav-sub-items-padding;
+    font-size: $main-nav-sub-items-font-size;
+    font-family: $main-nav-sub-items-font-family;
+    font-weight: $main-nav-sub-items-font-weight;
+    text-transform: $main-nav-sub-items-text-transform;
+    background: $main-nav-sub-items-background;
+    color: $main-nav-sub-items-color;
+    text-align: center;
+  }
+}
+
+/*------------------------------------------------*/
+// NAV MAIN LEVEL ENDS
+
+
+/*------------------------------------------------*/
+// NAV SUB LEVELS
+
+.nav-links > ul > li > ul {
+  padding-top: $h2-font-size;
+}
+
+.nav-links > ul ul {
+  @extend  %dropdown-list;
+  left: 50%;
+  margin-left: -(($h1-font-size * 3.5) / 2);
+  min-width: $h1-font-size * 3.5;
+  li {
+    &:not(:first-child) a {
+      border-width: $main-nav-sub-items-border-width;
+      border-color: $main-nav-sub-items-border-color;
+      border-style: $main-nav-sub-items-border-style;
+    }
+  }
+  ul {
+    @include absolute-nw(0, 100%);
+    margin: 0;
+    opacity: 0;
+    transform-origin: 0% 50%;
+    transform: scale(0);
+    @include basic-transition();
+  }
+}
+
+/*------------------------------------------------*/
+// NAV SUB LEVELS ENDS
+
+
+/*------------------------------------------------*/
+// Default Links
+
+.custom-links {
+  > ul {
+    > li {
+      float: right;
+    }
+  }
+}
+
+.default-links {
+  float: left !important;
+  > ul {
+   > li {
+
+   }
+  }
+}

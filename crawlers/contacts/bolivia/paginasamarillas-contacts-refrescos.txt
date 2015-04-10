@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+PROESA;;;"(591) (33) 3468694";"Parque Industrial Mza. 31 Bolivia, Santa Cruz de la Sierra"
+"FABRICA CRUCEÑA DE LEVADURAS S.A.";;;"(591) (33) 9232083";"Km 27 Carr Al Nte Bolivia, Santa Cruz de la Sierra"

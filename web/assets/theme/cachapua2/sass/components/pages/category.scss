@@ -1,0 +1,15 @@
+/*------------------------------------------------*/
+// CATEGORY PAGE
+
+.category-description {
+  margin-bottom: $h1-font-size;
+  p:empty  {
+    display: none;
+  }
+  p:not(:nth-child(2)):not(:empty) {
+    margin-top: $h6-font-size;
+  }
+}
+
+/*------------------------------------------------*/
+// CATEGORY PAGE ENDS

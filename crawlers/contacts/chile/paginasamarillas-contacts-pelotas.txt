@@ -1,0 +1,4 @@
+"First Name";"Email Address";Url;Telephone;Address
+PUBLIPLAST;;;"(56) (2) 7528534";"Arauco 327 Santiago Chile, Santiago"
+PUBLIBALONES;;;"(56) (2) 5642475";"Cam. Santa Margarita 0601 Galpón 17 San Bernardo Chile, Santiago"
+"PUBLICENTER BOWL";;;"(56) (2) 5567198";"Arauco 327 Santiago Chile, Santiago"

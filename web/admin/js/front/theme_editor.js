@@ -1,71 +1,4 @@
 $(function () {
-    var elements = {
-        'body': {
-            childrens: [
-                '#overheader',
-                '#overheader .nt-editable',
-                '#header',
-                '#header .nt-editable',
-                '#logo',
-                '#search',
-                '#nav',
-                '#nav .nt-editable',
-                '#maincontent',
-                '#content',
-                '#column_left',
-                '#column_right',
-                '#footer',
-                '#footer .nt-editable'
-            ],
-            selector: 'body'
-        },
-        'column_left_box': {
-            childrens: ['.header', '.content'],
-            selector: '#column_left li.nt-editable',
-            parents: ['column_left'],
-            canMove: true,
-            canDelete: true
-        },
-        'column_right_box': {
-            childrens: ['.header', '.content'],
-            selector: '#column_right li.nt-editable',
-            parents: ['column_right'],
-            canMove: true,
-            canDelete: true
-        },
-        'footer_widgets': {
-            childrens: ['.header', '.content'],
-            selector: '#footerWidgets li.nt-editable',
-            parents: ['footerWidgets'],
-            canMove: true,
-            canDelete: true
-        },
-        'content_widgets': {
-            childrens: ['.header', '.content'],
-            selector: '#content li.nt-editable',
-            parents: ['maincontent'],
-            canMove: true,
-            canDelete: true
-        }
-    };
-
-    addAdminControls(elements);
-
-    $('ul.widgets').sortable({
-        forceHelperSize: true,
-        forcePlaceholderSize: true,
-        connectWith: 'ul.widgets',
-        handle: '.move',
-        opacity: 0.8,
-        dropOnEmpty: true,
-        placeholder: 'placeholder',
-        update: function () {
-            /* update widget position and config */
-        }
-    })
-            .disableSelection()
-            .append('<li>&nbsp;</li>');
-
     var width = $(window).width();
     var height = $(window).height();
     var tooltip = $('<div id="tooltip" />').css({
@@ -697,7 +630,7 @@ function loadStyle() {
             if (IsNumber(style.padding.left)) {
                 style.padding.left += 'px';
             }
-            console.log(el +': '+ style.background.image);
+            
             if (style.background.image) {
                 that.css({
                     'backgroundImage': 'url(' + style.background.image + ')'
@@ -1551,11 +1484,14 @@ function setStyle() {
     if ($('#backgroundColor').val().length) {
         style.background.color = $('#backgroundColor').val();
         $(that).css({'backgroundColor': $('#backgroundColor').val()});
-    }
+    }/*
     if ($('#backgroundImage').val().length) {
         style.background.image = $('#backgroundImage').val();
         $(that).css('backgroundImage', 'url(' + $('#backgroundImage').val() + ')');
     }
+    */
+        style.background.image = $('#backgroundImage').val();
+        $(that).css('backgroundImage', 'url(' + $('#backgroundImage').val() + ')');
     if ($('#backgroundRepeat').val().length) {
         style.background.repeat = $('#backgroundRepeat').val();
         $(that).css('backgroundRepeat', $('#backgroundRepeat').val());
@@ -2433,72 +2369,4 @@ function getParentId(el) {
     } else {
         return false;
     }
-}
-
-/**
- * Reconoce todos los elementos administrables y le asigna los botones de las acciones
- *
- * @param elements object con los elementos a administrar
- * @param areChildrens boolean si los elementos pasados son hijos de otro 
- * @return void.
- */
-function addAdminControls(elements, areChildrens) {
-    if (typeof areChildrens == 'undefined') {
-        areChildrens = false;
-    }
-    $.each(elements, function (i, el) {
-        if (!$(el.selector) && !areChildrens) {
-            return true;
-        } else {
-            if (areChildrens) {
-                ele = $(el);
-            } else {
-                ele = $(el.selector);
-            }
-            $(ele).each(function () {
-                var that = $(this);
-
-                if (that.hasClass('administrable')) {
-                    return true;
-                }
-
-                if (!that.attr('id') || that.attr('id').length == 0) {
-                    that.attr('id', 'widget-' + getParentId(that) + '-' + this.tagName.toLowerCase() + '-' + that.index());
-                }
-
-                var html = "";
-                html += '<div class="actions actions' + i + '">';
-                html += '<a class="admin-icons style" onclick="renderPanels(\'#' + that.attr('id') + '\');"></a>';
-
-                if (el.canConfig) {
-                    html += '<a class="admin-icons config" onclick=""></a>';
-                }
-
-                if (el.canMove) {
-                    html += '<a class="admin-icons move"></a>';
-                }
-
-                if (el.canDelete) {
-                    html += '<a class="admin-icons delete" onclick=""></a>';
-                }
-
-                /*  */
-                html += '</div>';
-
-                that.addClass('administrable').prepend(html);
-                that.find('.actions' + i).mouseenter(function (e) {
-                    that.css({
-                        border: 'dashed 1px #900'
-                    });
-                }).mouseleave(function (e) {
-                    that.css({
-                        border: 'none'
-                    });
-                });
-                if (!areChildrens && typeof el.childrens !== 'undefined') {
-                    addAdminControls(el.childrens, true);
-                }
-            });
-        }
-    });
 }

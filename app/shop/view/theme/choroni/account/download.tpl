@@ -73,6 +73,14 @@
         
         <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
 
+            <div class="clear"></div>
+
+            <div class="grid_12">
+                <div id="featuredFooter">
+                <ul class="widgets" data-position="featuredFooter"><?php if($featuredFooterWidgets) { foreach ($featuredFooterWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+                </div>
+            </div>
+
         </section>
     </section>
 </div>

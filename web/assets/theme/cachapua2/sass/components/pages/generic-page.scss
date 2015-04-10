@@ -1,0 +1,21 @@
+/*------------------------------------------------*/
+// GENERIC PAGE
+
+.generic-page {
+  padding: 0 $h6-font-size 0 0;
+  background: rgba(0, 0, 0, 0);
+  margin: 0 0 $h1-font-size 0;
+  p:empty {
+    display: none;
+  }
+  span {
+    color: $dark-light-color;
+  }
+  ul {
+    @extend %content-block-list;
+  }
+}
+.social-actions {
+  max-width: $h1-font-size * 10;
+  margin: 0 0 $h1-font-size 0;
+}

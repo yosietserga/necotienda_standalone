@@ -1,0 +1,6 @@
+"First Name";"Email Address";Url;Telephone;Address
+TAURUSFER;;;"(591) (33) 3368787";"Av Melchor Pinto Esq. Av Argamosa Bolivia, Santa Cruz de la Sierra"
+FERROTODO;;;"(591) (33) 3561527";"Av. Santos Dumont pasando entre 4to. y 5to. Anillo Bolivia, Santa Cruz de la Sierra"
+"IMPORTADORA MONTERREY";;;"(591) (33) 3471960";"3er Anillo Interno Entre Av. Mutualista Y Paragua Bolivia, Santa Cruz de la Sierra"
+"ELECTROGIS S.R.L";;;"(591) (33) 3324343";"Cl Florida Esq. España 325 Bolivia, Santa Cruz de la Sierra"
+"IMPORT - EXPORT LAS LOMAS LTDA.";;;"(591) (33) 3426905";"Carret Al Norte Km 2 Bolivia, Santa Cruz de la Sierra"

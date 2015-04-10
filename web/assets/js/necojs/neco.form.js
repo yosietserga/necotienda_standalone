@@ -205,7 +205,7 @@
                             $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes rellenar este campo con la informaci\u00F3n correspondiente'});
                         }
                         
-                        var pattern = new RegExp(/.["\\\/\{\}\[\]\+']/i);
+                        var pattern = new RegExp(/.["\\\{\}\[\]\+']/i);
                         if (pattern.test($(this).val()) && !error && $(this).attr('type') != 'password' && $(this).attr('type') != 'hidden' && $(this).attr('type') != 'date') {
                             error = true;
                             $("#tempError").remove();
@@ -350,7 +350,7 @@
                 if (data.type == 'rif') {
                     settings.pattern = /\b[JGVE]-[0-9]{8}-[0-9]{1}\b/i;
                     settings.help = "Por favor ingrese su numero de cedula, RIF Natural o RIF de su empresa";
-                    settings.tip = "Si eres una persona y no posees RIF, ingresa tu número de cédula con un cero (0) al final";
+                    settings.tip = "Si eres una persona y no posees RIF, ingresa tu nï¿½mero de cï¿½dula con un cero (0) al final";
                     $(data.element).mask("a-99999999-9",{placeholder:" "});
                     data.element.on('change',function(event){
                         data.error = helpers.checkPattern();

@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"CAMBIO ALEMAN TRANSATLANTICO S.R.L.";;;"(591) (33) 3324114";"24 De Septiembre Shopping Bolivar L.16-A Bolivia, Santa Cruz de la Sierra"
+"EFEX BOLIVIA S.R.L.";;;"(591) (33) 3119254";"Calle Sucre Nú 28, Santa Cruz Bolivia, Santa Cruz de la Sierra"

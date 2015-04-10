@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"IMBA S.A.";;;"Telefax: (591) (33) 3464683";"Parque Industrial Mz 11 Bolivia, Santa Cruz de la Sierra"
+"EXIM S.R.L.";;;"(591) (33) 3336363";"Cl.Florida No.475 Bolivia, Santa Cruz de la Sierra"
+"INDUSTRIA AVICOLA SANTA CRUZ-INACRUZ";;;"(591) (33) 3430022";"Barrio Sirari C/ Los Nogales No. 100 Bolivia, Santa Cruz de la Sierra"
+"SINA S.R.L.";;;"Telefax: (591) (33) 9232471";"Carr Al Nte Km 37 Bolivia, Santa Cruz de la Sierra"
+"SÉSAMO GOURMET CATERIMG";;;"(591) (33) 60953706";"Santa Cruz Bolivia, Santa Cruz de la Sierra"
+"ALSA ALIMENTO SOCIEDAD ANONIMA";;;"(591) (33) 9232161";"Warnes Carretera A La Bélgica Km 1 1/2 Bolivia, Santa Cruz de la Sierra"

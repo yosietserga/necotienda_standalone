@@ -1,0 +1,10 @@
+"First Name";"Email Address";Url;Telephone;Address
+"SAN AGUSTÍN EVENTOS Y TURISMO";pradocentro@tusanagustin.com;www.tusanagustin.com;"(57) (4) 4444494";"Cl 60 45 D-71 Colombia, Medellín"
+EDELWEISS;;;"(57) (1) 8831212";"Vía Cajicá Zipaquirá Km 1 Colombia, Bogotá"
+"COMIDAS RAPIDAS FRANCHYES";;;"(57) (4) 2666337";"Cr37 # 10-42 Colombia, Medellín"
+"MUCSI HORNO & VINO";;;"(57) (6) 3333388";"Cr13 13-62 L-1 Colombia, Pereira"
+"DIE GLOKE";;;"(57) (1) 6348600";"Cr12 98-61 Colombia, Bogotá"
+"DONER KING";;;"(57) (4) 3115357";"Cl 10 35-27 Colombia, Medellín"
+"RESTAURANTE BAR LEÓN DE BAVIERA";;;"(57) (5) 6644450";"Cl 24 10 B-65 L-201 Calle del Arsenal Colombia, Cartagena"
+"RESTAURANTE ALEMAN ZUHAUSE";;;"(57) (1) 2521575";"Cl 66 77-65 Colombia, Bogotá"
+"RESTAURANTES COCINA ALEMANA";;;"(57) (1) 6177885";"Av (Cl) 116 70 C-68 Colombia, Bogotá"

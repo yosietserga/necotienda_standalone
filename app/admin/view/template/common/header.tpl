@@ -32,6 +32,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>window.Modernizr || document.write('<script src="js/vendor/modernizr.js"><\/script>')</script>
     <script>window.$ || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
+    <script type="text/javascript">window.CKEDITOR_BASEPATH = '<?php echo HTTP_ADMIN_JS; ?>vendor/ckeditor/';</script>
 </head>
 <body>
 

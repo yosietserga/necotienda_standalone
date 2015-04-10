@@ -5,7 +5,7 @@
         <section id="content">
             <div class="grid_12">
                 <div id="featuredContent">
-                <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+                <ul class="widgets" data-position="featuredContent"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
                 </div>
             </div>
 
@@ -20,10 +20,18 @@
             <?php } else { ?>
             <div class="grid_12">
             <?php } ?>
-                <?php if($widgets) { ?><ul class="widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
+                <?php if($widgets) { ?><ul class="widgets" data-position="main"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
             </div>
 
             <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
+
+            <div class="clear"></div>
+
+            <div class="grid_12">
+                <div id="featuredFooterWidgets">
+                <ul class="widgets" data-position="featuredFooter"><?php if($featuredFooterWidgets) { foreach ($featuredFooterWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+                </div>
+            </div>
 
         </section>
     </section>

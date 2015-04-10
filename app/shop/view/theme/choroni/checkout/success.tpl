@@ -23,15 +23,7 @@
             
         <div class="clear"></div>
         
-        <?php if ($column_left) { ?><aside id="column_left" class="grid_3"><?php echo $column_left; ?></aside><?php } ?>
-        
-        <?php if ($column_left && $column_right) { ?>
-        <div class="grid_6">
-        <?php } elseif ($column_left || $column_right) { ?>
-        <div class="grid_9">
-        <?php } else { ?>
         <div class="grid_12">
-        <?php } ?>
         
             <h1><?php echo $heading_title; ?></h1>
             <p><?php echo $text_message; ?></p>
@@ -104,7 +96,14 @@
     
         </div>
         
-        <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
+            <div class="clear"></div>
+
+            <div class="grid_12">
+                <div id="featuredFooter">
+                <ul class="widgets" data-position="featuredFooter"><?php if($featuredFooterWidgets) { foreach ($featuredFooterWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+                </div>
+            </div>
+
         </section>
     </section>
 </div>

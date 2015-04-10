@@ -1,0 +1,4 @@
+"First Name";"Email Address";Url;Telephone;Address
+"MUSEO DE HISTORIA NATURAL NOEL KEMPFF MERCADO";;;"(591) (33) 3363710";"Av. Irala No. 565 Bolivia, Santa Cruz de la Sierra"
+"MUSEO FOTOGRÁFICO NUÑEZ DE ARCO";;;"(591) (22) 2116661";"Av 16 de julio No 1615 El Prado Bolivia, La Paz"
+"MUSEO SAN FRANCISCO CENTRO CULTURAL";;;"(591) (22) 2318472";"Plaza San Francisco No 503 Bolivia, La Paz"

@@ -1,0 +1,108 @@
+$underbottom-background: $dark-color;
+$underbottom-padding: $h1-font-size 0 0 0;
+
+$terms-text-align: center;
+$terms-background: darken($dark-color, 5%);
+$terms-color: $dark-light-color;
+$terms-font-size: $milli-font-size;
+$terms-font-family: $alter-font-family;
+
+$topper-background: $emerald;
+$topper-border: 1px solid $light-color;
+
+/*------------------------------------------------*/
+// UDERBOTTOM
+ 
+.underbottom {
+  background: $dark-color;
+  .underbottom-widgets {
+    padding: $underbottom-padding;
+  }
+}
+.terms {
+  text-align: $terms-text-align;
+  background: $terms-background;
+  em, a {
+    font-style: normal;
+    font-weight: normal;
+    font-family: $terms-font-family;
+    color: $terms-color;
+    font-size: $terms-font-size;
+  }
+}
+
+/*------------------------------------------------*/
+// UDERBOTTOM ENDS
+
+/*------------------------------------------------*/
+// TO TOP 
+
+#toTop {
+  width: 40px;
+  height: 40px;
+  right: $h3-font-size;
+  bottom: $h6-font-size;
+  position: fixed;
+  background: $topper-background;
+  border: $topper-border;
+  border-radius: 50%;
+  z-index: 100000;
+  i {
+    color: $light-color;
+    font-size: $h4-font-size;
+    padding: ($milli-font-size / 1.5) $micro-font-size $micro-font-size $milli-font-size;
+  }
+}
+
+/*------------------------------------------------*/
+// TO TOP
+
+/*------------------------------------------------*/
+// UNDERBOTTOM WIDGETS
+
+
+*[data-component="dropdown"] {
+  @include breakpoint("small-to-medium") {
+    overflow: hidden;
+    position: relative;
+    *[data-trigger="dropdown"].reveal-dropdown + *[data-wrapper="dropdown"] > *[data-dropdown] {
+      max-height: 2000px;
+      transform: translate3d(0, 0%, 0);
+    }
+    *[data-dropdown] {
+      max-height: 0;
+      transform: translate3d(0, -100%, 0);
+      @include single-transition(all);
+    }
+    *[data-wrapper="dropdown"] {
+      overflow: hidden;
+    }
+  }
+}
+
+
+
+/*---------------------------------------------------------------------------*/
+/** UNDERBOTTOM MEDIA
+/*---------------------------------------------------------------------------*/
+
+.widget-links {
+  @include breakpoint("small-to-medium") {
+    *[data-trigger="dropdown"]{
+      position: relative;
+      &:after {
+        content: "\f055";
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        right: $micro-font-size;
+        font-size: $micro-font-size;
+        font-family: "FontAwesome";
+        color: $light-dark-color;
+      }
+    }
+    *[data-wrapper="dropdown"] {
+      margin: 0 0 $h5-font-size 0;
+    }
+  }
+}

@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"PEÑA RESTAURANT HUARI";;;"(591) (22) 2316225";"Sagaranga 339 Bolivia, La Paz"
+"PEÑA PUB PUERTA DEL SOL";;;"(591) (22) 2457978";"Sagarnaga Esq. Max Paredes 879 Bolivia, La Paz"

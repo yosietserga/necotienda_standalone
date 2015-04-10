@@ -189,16 +189,31 @@ abstract class Controller {
                     $content = str_replace('{%' . $this->data[$key . "_hook"] . '%}', $this->data[$key . "_code"], $content);
                 }
             }
-            
+            /*
             $content = str_replace("\n", "", $content);
             $content = str_replace("\r", "", $content);
             $content = preg_replace('/\s{2,}/', "", $content);
             $content = preg_replace('/\n\s*\n/', "\n", $content);
-            
+            */
             return $content;
         } else {
             exit('Error: Could not load template ' . $file . '!');
         }
     }
 
+    public function renderChild($view, $template = null) {
+        $config = $this->registry->get('config');
+        if ($config->get('config_template') !== 'choroni' && !$template) {
+            $template = $config->get('config_template');
+        } else {
+            $template = 'choroni';
+        }
+        if (file_exists(DIR_TEMPLATE . $template ."/". $view .".tpl")) {
+            include_once(DIR_TEMPLATE . $template ."/". $view .".tpl");
+        } else {
+            //TODO: mostrar mensaje de error
+            echo "No se pudo cargar el archivo $view";
+        }
+        //TODO: integrate view engine render
+    }
 }

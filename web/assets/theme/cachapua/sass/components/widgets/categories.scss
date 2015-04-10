@@ -1,0 +1,23 @@
+
+.widget-category {
+  .hasCategories {
+    position: relative;
+    @include droppable();
+    &:hover > ul{
+      @include mh-reveal;
+    }
+    & > ul {
+      @include mh-hide;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      li a {
+        padding-left: $h4-font-size;
+        &:hover {
+          background: $dark-light-color;
+          color: $light-color;
+        }
+      }
+    }
+  }
+}

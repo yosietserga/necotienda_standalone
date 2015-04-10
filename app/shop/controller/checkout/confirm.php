@@ -5,6 +5,7 @@ class ControllerCheckoutConfirm extends Controller {
     private $error = array();
 
     public function index() {
+        $Url = new Url($this->registry);
         if ($this->config->get('config_store_mode') != 'store') {
             $this->redirect(HTTP_HOME);
         }
@@ -185,7 +186,14 @@ class ControllerCheckoutConfirm extends Controller {
         if ($order_id) {
             $this->session->set('order_id', $order_id);
             $this->modelOrder->confirm($order_id, $this->config->get('cheque_order_status_id'));
-            $this->redirect(Url::createUrl('checkout/success', array('order_id' => $order_id)));
+            if ($this->request->hasQuery('resp') && $this->request->getQuery('resp') === 'json') {
+                $this->load->auto('json');
+                $this->response->setOutput(Json::encode([
+                    'order_id'=>$order_id
+                ]), $this->config->get('config_compression'));
+            } else {
+                $this->redirect(Url::createUrl('checkout/success', array('order_id' => $order_id)));
+            }
         }
     }
 

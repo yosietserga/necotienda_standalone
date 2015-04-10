@@ -82,10 +82,15 @@
     
     <div class="clear"></div>
     
-    <div class="grid_12">
+    <div class="grid_5" style="margin-right:0px;padding:0px;">
         <div class="box">
             <div id="gridPreloader"></div>
             <div id="gridWrapper"></div>
+        </div>
+    </div>
+    <div class="grid_7" style="margin:0px;padding:0px;">
+        <div class="box">
+            <div style="text-align:center;font:normal 19px verdana, sans-serif;color:#ccc;min-height:200px;margin-top:160px;">Seleccione un contacto</div>
         </div>
     </div>
 </div>

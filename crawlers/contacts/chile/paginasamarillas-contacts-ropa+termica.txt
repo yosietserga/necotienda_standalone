@@ -1,0 +1,4 @@
+"First Name";"Email Address";Url;Telephone;Address
+"GHATTAS ABUSADA E HIJOS Y COMPAÑÍA LTDA.";;;"(56) (2) 7378172";"Av. Recoleta 857 Recoleta Chile, Santiago"
+"BAJO CERO";;;"(56) (2) 7374730";"Av. Vivaceta 1495 Chile, Santiago"
+"NOVA-PIEL LTDA.";;;"(56) (2) 5562180";"Santiago 1147 Chile, Santiago"

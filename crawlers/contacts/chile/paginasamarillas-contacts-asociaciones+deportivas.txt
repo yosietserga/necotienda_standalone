@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+CORDEP;;;"(56) (2) 5501600";"Lago Ranco 1890, Pedro Aguirre Cerda Chile, Santiago"
+"FEDERACIÓN CHILENA DE ESGRIMA";;;"(56) (2) 6395089";"Tarapacá 739 Metro Santa Lucía Chile, Santiago"
+"ACEBAL CHILE";;;"(56) (2) 2267573";"Itata 4172, Ñuñoa Chile, Santiago"
+"AGRUPACIÓN DEPORTIVA BANCARIA CHILE A.D.B.";;;"(56) (2) 6320139";"Paseo Estado 57 Of. 904 Chile, Santiago"
+ARFA;;;"(56) (2) 6970617";"Av España 57 Chile, Santiago"
+"ASOCIACIÓN ATLÉTICA SANTIAGO";;;"(56) (2) 2221281";"Santo Toribio 658, Ñuñoa Chile, Santiago"

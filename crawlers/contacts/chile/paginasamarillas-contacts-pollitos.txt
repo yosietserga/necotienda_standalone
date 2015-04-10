@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"EL POLLITO BAILARIN";;;"(56) (2) 6887855";"Rosas 1858 Chile, Santiago"
+"LOS POLLITOS DICEN...";;;"(56) (2) 6968308";"Ahumada 189 Chile, Santiago"

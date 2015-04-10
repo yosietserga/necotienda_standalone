@@ -1,0 +1,114 @@
+$sidebar-list-margin-bottom: $h1-font-size;
+
+$sidebar-list-lv-head-tail-padding: 0;
+$sidebar-list-lv-head-tail-background: $light-color;
+
+$sidebar-list-lv-head-tail-link-color: $dark-color;
+$sidebar-list-lv-head-tail-link-border-bottom: $clouds-border;
+
+$sidebar-list-lv-head-link-font-family: $base-font-family;
+
+$sidebar-list-lv-tail-link-font-family: $alter-font-family;
+$sidebar-list-lv-tail-link-background: $light-color;
+$sidebar-list-lv-tail-link-color: $dark-color;
+$sidebar-list-lv-tail-border-bottom: none !important;
+
+
+/*------------------------------------------------*/
+// SIDE-BAR LIST 
+
+ %sidebar-list, .sidebar-list {
+   margin-bottom: $sidebar-list-margin-bottom;
+   > ul {
+     border-bottom: none;
+     a {
+       font-family: $sidebar-list-lv-head-link-font-family;
+     }
+   }
+   ul {
+     @include side-nav;
+     background:$sidebar-list-lv-head-tail-background;
+     padding: $sidebar-list-lv-head-tail-padding;
+     li {
+       margin-bottom:0;
+     }
+   }
+   ul li a:not(.button) {
+     color: $sidebar-list-lv-head-tail-link-color;
+     @include  stacked-list-item();
+   }
+   ul li:not(:last-child) a:not(.button) {
+     border-bottom: $sidebar-list-lv-head-tail-link-border-bottom;
+   }
+   ul ul li a:not(.button) {
+     font-family: $sidebar-list-lv-tail-link-font-family;
+     background: $sidebar-list-lv-tail-link-background;
+     color: $sidebar-list-lv-tail-link-color;
+     border-bottom: $sidebar-list-lv-tail-border-bottom;
+   }
+   @include breakpoint("small-to-medium") {
+    margin-bottom: 0;
+  }
+}
+
+/*------------------------------------------------*/
+// Sidebar List Ends
+
+
+/*------------------------------------------------*/
+// Stacked List
+
+%stacked-input-list, .stacked-input-list {
+  ul {
+    margin: 0;
+    height: auto;
+    display: block;
+    background: $light-color;
+    li {
+      display: block;
+      margin: ($micro-font-size / 2) 0;
+    }
+    li:first-child {
+      margin-top: 0;
+    }
+  }
+  input {
+    margin: 0 0 $micro-font-size 0;
+  }
+}
+
+%stacked-simple-links-list, .stacked-simple-links-list {
+
+}
+
+
+/*------------------------------------------------*/
+// Content block list
+
+
+%content-block-list, .content-block-list {
+  margin: 0;
+  li {
+    margin: $micro-font-size;
+    position: relative;
+    &:before {
+      content: "\f105";
+      display: inline-block;
+      font-family: "FontAwesome";
+      position: absolute;
+      transform: translate3d(-$micro-font-size, -50%, 0);
+      top: 50%;
+      left: 0;
+    }
+    &, &:before {
+      font-size: $micro-font-size;
+      color: $dark-color;
+    }
+    & {
+     font-family: $alter-font-family;
+    }
+    b, strong, em {
+      font-weight: 600;
+    }
+  }
+}

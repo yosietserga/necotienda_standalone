@@ -30,7 +30,7 @@ class ControllerModuleInviteFriends extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/invitefriends.tpl')) {
             $this->template = $this->config->get('config_template') . '/module/invitefriends.tpl';
         } else {
-            $this->template = 'default/module/invitefriends.tpl';
+            $this->template = 'choroni/module/invitefriends.tpl';
         }
         $this->render();
     }

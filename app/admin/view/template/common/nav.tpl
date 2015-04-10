@@ -84,9 +84,11 @@
         <li>
             <a><i class="fa fa-book"></i>&nbsp;&nbsp;<?php echo $Language->get('tab_admon'); ?><i class="fa fa-arrow-circle-right" style=float:right;margin-top:13px;margin-right:5px;"></i></a>
             <ul>
+                <!--
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('sale/sale'); ?>"><?php echo $Language->get('text_sale'); ?></a>
                 </li>
+                -->
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('sale/order'); ?>"><?php echo $Language->get('text_order'); ?></a>
                 </li>

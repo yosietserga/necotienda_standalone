@@ -1,0 +1,50 @@
+.home-grid-small,
+.home-grid-medium,
+.home-grid-full{
+  @extend %fill;
+  display: inline-block;
+}
+
+.home-grid-small {
+  .block-grid, .catalog-grid ul {
+    @include  breakpoint("large-up") {
+      @include block-grid(2);
+    }
+    @include  breakpoint("medium") {
+      @include block-grid(2);
+    }
+    @include breakpoint("small") {
+      @include block-grid(1);
+    }
+  }
+}
+
+
+.home-grid-medium {
+  .block-grid, .catalog-grid ul {
+    @include  breakpoint("large-up") {
+      @include block-grid(3);
+    }
+    @include  breakpoint("medium") {
+      @include block-grid(2);
+    }
+    @include breakpoint("small") {
+      @include block-grid(1);
+    }
+  }
+}
+
+
+.home-grid-full {
+  .block-grid, .catalog-grid ul {
+    @include  breakpoint("large-up") {
+      @include block-grid(4);
+    }
+    @include  breakpoint("medium") {
+      @include block-grid(2);
+    }
+    @include breakpoint("small") {
+      @include block-grid(1);
+    }
+  }
+}

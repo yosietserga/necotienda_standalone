@@ -1,0 +1,8 @@
+"First Name";"Email Address";Url;Telephone;Address
+JOLMEPACK;comercial@jolsas.com;www.jolsas.com;"(57) (1) 7529812";"Cr3 113-65 Ap 201 Colombia, Bogotá"
+"BODEGA GYM MUELLE";muellesandino@hotmail.com;www.bodegagymmuelle.com;"(57) (2) 3161976";"Cr83 18-30 Brr. Ingenio III Colombia, Cali"
+"INVEPAR S.A.S (METALSOUZA)";info@inveparsas.com;www.inveparsas.com;"(57) (1) 6301894";"Tr69 B BIS 73-49 Colombia, Bogotá"
+"INDUSTRIAL DE HERRAMIENTAS";industrialdeherramientas@hotmail.com;;"(57) (4) 2323333";"Cr50 42-52 Colombia, Medellín"
+BROTHER;brothermiamiusa@aol.com;www.brotherbordadoras.com;"(57) (4) 2311247";"Cl 50 52-69 Colombia, Medellín"
+"INDUSTRIAS FITNESS";;;"(57) (2) 4877037";"Cl 36 2 AN-92 Colombia, Cali"
+"BEJARANO E.U.";;;"(57) (1) 7579573";"Cr77 B 69-12 Colombia, Bogotá"

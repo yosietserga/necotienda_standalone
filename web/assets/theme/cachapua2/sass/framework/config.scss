@@ -1,0 +1,439 @@
+/****************************************************************************************\
+** DEFAULT COLORS
+\*****************************************************************************************/
+
+$abestos: #7f8c8d;
+$concrete: #95a5a6;
+$whitenight: #ffffff;
+$midnight: #2c3e50;
+$wet: #34495e;
+$silver: #bdc3c7;
+$clouds: #ecf0f1;
+$wisteria: #8e44ad;
+$amethys: #9b59b6;
+$pomegranate: #c0392b;
+$alizarin: #e74c3c;
+$belize: #2980b9;
+$river: #3498db;
+$pupmkin: #d35400;
+$carrot: #e67e22;
+$nephritis: #27ae60;
+$emerald: #2ecc71;
+$orange: #f39c12;
+$tournasol: #f1c40f;
+$aquamarine: #16a085;
+$turquois: #1abc9c;
+
+$light-color: $whitenight;
+$dark-color: #333;
+$light-dark-color: darken($abestos, 15%);
+$dark-light-color: $silver;
+$dark-dark-color: darken($dark-color, 5%);
+$base-color: lighten($tournasol, 18%);
+/****************************************************************************************\
+** DEFAULT TYPE
+\*****************************************************************************************/
+$base-font-family:  'Ubuntu', 'Roboto Condensed', 'Helvetica Neue', Helvetica, Roboto, "Droid Sans", Ubuntu, Cantarell, sans-serif !default;
+$alter-font-family: 'Ubuntu', 'Roboto', 'Roboto Slab', 'Open Sans', Times, Helvetica, Roboto, Arial, "Droid Sans", Ubuntu, Cantarell, serif !default;
+
+/****************************************************************************************\
+** $GLOBA VARIABLES
+\*****************************************************************************************/
+
+$base-line-height: 1.5rem;
+$double-line-height: 3rem;
+
+//Fonts
+
+$h1-font-size: rem-calc(44) !default;
+$h2-font-size: rem-calc(37) !default;
+$h3-font-size: rem-calc(27) !default;
+$h4-font-size: rem-calc(23) !default;
+$h5-font-size: rem-calc(18) !default;
+$h6-font-size: 1rem !default;
+$micro-font-size: rem-calc(13) !default;
+$milli-font-size: rem-calc(11) !default;
+
+//Radius
+
+$global-radius: 2px !default;
+
+
+//Z-Index
+$main-header-index: 1000;
+$main-overheader-index: 2000;
+$main-footer-index: $main-header-index;
+
+// Borders
+
+$light-dark-border: 1px solid $light-dark-color;
+$dark-light-border: 1px solid $dark-light-color;
+$clouds-border: 1px solid $clouds;
+
+
+/****************************************************************************************\
+** MIXINS
+\*****************************************************************************************/
+
+@mixin side-radius($side, $radius:$global-radius) {
+  @if ($side == left or $side == right) {
+    -webkit-border-bottom-#{$side}-radius: $radius;
+    -webkit-border-top-#{$side}-radius: $radius;
+    -moz-border-bottom-#{$side}-radius: $radius;
+    -moz-border-top-#{$side}-radius: $radius;
+    border-bottom-#{$side}-radius: $radius;
+    border-top-#{$side}-radius: $radius;
+  } @else {
+    -webkit-#{$side}-left-radius: $radius;
+    -webkit-#{$side}-right-radius: $radius;
+    -moz-#{$side}-left-radius: $radius;
+    -moz-#{$side}-right-radius: $radius;
+    border-#{$side}-left-radius: $radius;
+    border-#{$side}-right-radius: $radius;
+  }
+}
+@mixin rounded () {
+  border-radius: 50%;
+}
+
+@mixin single-transition($property:all, $speed:300ms, $ease:cubic-bezier(0.785, 0.135, 0.15, 0.86)) {
+  transition: $property $speed $ease;
+}
+
+@mixin clearfix {
+  &:before, &:after { content: " "; display: table; }
+  &:after { clear: both; }
+}
+
+@mixin translate2d($horizontal:0, $vertical:0) {
+  transform: translate($horizontal,$vertical)
+}
+
+@mixin absolute-nw($top, $left) {
+	position: absolute;
+	top: $top;
+	left: $left;
+	display: block;
+}
+
+@mixin absolute-ne($top, $right) {
+	position: absolute;
+	top: $top;
+	right: $right;
+	display: block;
+}
+@mixin absolute-sw($bottom, $left) {
+	position: absolute;
+	bottom: $bottom;
+	left: $left;
+	display: block;
+}
+@mixin absolute-se($bottom, $right) {
+	position: absolute;
+	bottom: $bottom;
+	right: $right;
+	display: block;
+}
+
+@mixin element-invisible-off {
+  position: static;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  clip: auto;
+}
+
+@mixin solid-border ($size: 1px, $color: $clouds) {
+	border: $size solid $color;
+}
+@mixin dotted-border ($size, $color) {
+	border: $size dotted $color;
+}
+
+@mixin isPresent($element) {
+  @if $element {
+    display: block;
+  }
+  @else {
+    display: none;
+  }
+}
+
+@mixin breakpoint($name) {
+  @if $name == "small" {
+  	@media only screen and (max-width: 40em) {
+      @content;
+  	}
+  }
+  @if $name == "small-up" {
+  	@media only screen {
+      @content;
+  	}
+  }
+  @else if $name == "medium" {
+    @media only screen and (min-width:40.063em) and (max-width:62em) {
+      @content;
+    }
+  }
+  @else if $name == "medium-up" {
+    @media only screen and (min-width: 40.063em) {
+      @content;
+    }
+  }
+  @else if $name == "small-to-medium" {
+    @media only screen and (max-width: 62em) {
+      @content;
+    }
+  }
+  @else if $name == "large" {
+    @media only screen and (min-width:62.063em) and (max-width:90em) {
+      @content;
+    }
+  }
+  @else if $name == "large-up" {
+    @media only screen and (min-width:62.063em){
+      @content;
+    }
+  }
+}
+@mixin ellipse () {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin mh-hide() {
+  @include single-transition(all, 500ms, ease-in-out);
+  max-height: 0;
+}
+
+@mixin mh-reveal() {
+  max-height: rem-calc(400);
+}
+
+@mixin hide-visually () {
+  max-height: 0;
+  clip: rect(0, 0, 0, 0);
+}
+@mixin show ($height) {
+  max-height: 500px;
+  clip: rect(0, $height, $height, 0);
+}
+
+@mixin size($width, $height: $width) {
+    width: $width;
+    height: $height;
+}
+ 
+@mixin position($position, $args) {
+  @each $o in top right bottom left {
+        $i: index($args, $o);
+    @if $i and $i + 1 <= length($args) and type-of(nth($args, $i + 1)) == number  {
+          #{$o}: nth($args, $i + 1);
+    }
+  }
+  position: $position;
+}
+ 
+@mixin absolute($args) {
+    @include position(absolute, $args);
+}
+
+@mixin absolute-center-x($offset-x: 50%, $backtrace: 50%) {
+	left: 50%;
+	margin-left: -(50%);
+}
+@mixin fill-by-font-size($font-size) {
+	font-size: $font-size;
+	padding: $font-size;
+}
+@mixin basic-transition($time: 300ms) {
+	transition: all $time cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+@mixin arrow-lazy($direction: top, $size: 10px, $color: #ccc, $center: 50%, $margin: -1px, $pseudo: before){
+    border-color: $color;
+    &:#{$pseudo} {
+      position: absolute;
+      content: "";
+      width: 0;
+      height: 0;
+      border-color: $color;
+
+      @if $direction == "right" {
+        top: $center;
+        left: 100%;
+        margin-left: $margin;
+        margin-top: $size * -1;
+        border-top: $size solid transparent;
+        border-bottom: $size solid transparent;
+        border-left: $size solid $color;
+        border-left-color: inherit;
+      } @else if $direction == "down" {
+        top: 100%;
+        left: $center;
+        margin-top: $margin;
+        margin-left: $size * -1;
+        border-left: $size solid transparent;
+        border-right: $size solid transparent;
+        border-top: $size solid $color;
+        border-top-color: inherit;
+      } @else if $direction == "left" {
+        top: $center;
+        right: 100%;
+        margin-right: $margin;
+        margin-top: $size * -1;
+        border-top: $size solid transparent;
+        border-bottom: $size solid transparent;
+        border-right:$size solid $color;
+        border-right-color: inherit;
+      } @else {
+        bottom: 100%;
+        left: $center;
+        margin-bottom: $margin;
+        margin-left: $size * -1;
+        border-left: $size solid transparent;
+        border-right: $size solid transparent;
+        border-bottom: $size solid $color;
+        border-bottom-color: inherit;
+    }
+  }
+}
+@mixin top-arrow($size: 12px, $border-size: 13px, $color: $whitenight, $border-color: $clouds, $offset: 50%) {
+	&:after, 
+	&:before {
+		bottom: 100%; 
+		left: $offset;
+		border: solid transparent; 
+		content: " "; 
+		height: 0; 
+		width: 0; 
+		position: absolute; 
+		pointer-events: none;
+		z-index: 100;
+	}
+	
+	 &:after {
+		border-color: rgba($color, 0); 
+		border-bottom-color: $color; 
+		border-width: $size; 
+		margin-left: -($size); 
+	} 
+	&:before { 
+		border-color: rgba($border-color, 0);
+		border-bottom-color: $border-color; 
+		border-width: $border-size; 
+		margin-left: -$border-size;
+	 }
+}
+
+@mixin buttonable() {
+  cursor: pointer;
+  border-radius: 0;
+  box-shadow: none;
+    &:active
+  , &:focus {
+      box-shadow: inset 0px 0px 0px 1px rgba($light-dark-color, 0.2);
+  }
+}
+
+@mixin droppable ($offset-x: $micro-font-size, $offset-y: $micro-font-size ) {
+    >  *:first-child{
+    &:after {
+      content: "\f107";
+      color: $dark-color;
+      font-size: $micro-font-size;
+      font-family: "FontAwesome";
+      position: absolute;
+      top: $offset-y;
+      right: $offset-x;
+      display: inline-block;
+    }
+  }
+}
+
+@mixin action-button ($size: $micro-font-size){
+    font-size: $size;
+    font-family: $base-font-family;
+    padding: ($size / 2) $size;
+    @include buttonable();
+}
+
+/****************************************************************************************\
+** CLASSES
+\*****************************************************************************************/
+
+
+%fill, .fill {
+  width: 100%;
+  height: auto;
+  position: relative;
+  display: block;
+}
+
+.dropdown-list, %dropdown-list {
+	@include absolute-nw(100%, 50%);
+	@include basic-transition();
+	width: 100%;
+	height: auto;
+	opacity: 0;
+	transform: scale(0);
+	transform-origin: 50% 0%;
+	list-style: none;
+}
+.dropdown-list-open, %dropdown-list-open {
+   transform: scale(1);
+   opacity: 1;
+}
+
+
+
+
+.data {
+  margin-bottom: $h1-font-size;
+  ul {
+    @extend %fill;
+    background: $light-color;
+    min-height: 150px;
+    padding: $h6-font-size;
+    margin-left: 0;
+    max-height: 100%;
+    li {
+      margin: $h6-font-size / 2;
+      span {
+        color: $dark-color;
+        font-family: $base-font-family;
+        font-size: $h6-font-size;
+        display: inline;
+        margin-right: $h6-font-size;
+        &:last-child {
+          color: $dark-light-color;
+        }
+      }
+    }
+  }
+}
+.data-heading {
+  color: $dark-color;
+  font-size: $h4-font-size;
+  font-family: $base-font-family;
+  font-weight: bold;
+  margin-bottom: ($h3-font-size / 2);
+}
+
+.pagination {
+  margin-bottom: $h1-font-size;
+  .results {
+    font-size: $micro-font-size;
+    font-family: $alter-font-family;
+    font-weight: bold;
+  }
+}
+
+.break {
+  margin: 0 0 $h1-font-size 0;
+}
+
+.catalog-break {
+  margin: 0 0 ($h1-font-size - 1.250rem) 0;
+}
+

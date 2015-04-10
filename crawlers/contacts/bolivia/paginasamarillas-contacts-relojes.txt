@@ -1,0 +1,2 @@
+"First Name";"Email Address";Url;Telephone;Address
+"EURO JOYAS & RELOJES";;;"(591) (33) 3360993";"Av.Velarde No.113 Bolivia, Santa Cruz de la Sierra"

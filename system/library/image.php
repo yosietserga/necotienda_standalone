@@ -76,10 +76,10 @@ final class Image {
         $this->image = imagecreatetruecolor($width, $height);
 
         if (isset($this->info['mime']) && $this->info['mime'] == 'image/png') {
-            imagealphablending($this->image, false);
-            imagesavealpha($this->image, true);
             $background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
             imagecolortransparent($this->image, $background);
+            imagealphablending($this->image, false);
+            imagesavealpha($this->image, true);
         } else {
             $background = imagecolorallocate($this->image, 255, 255, 255);
         }

@@ -1,0 +1,33 @@
+/*------------------------------------------------*/
+// LOGIN PAGE
+
+.account-heading{
+  @extend %page-heading;
+}
+
+.access-action {
+  overflow: hidden;
+}
+*[data-section='register'] {
+  display: none;
+}
+*[data-section='login'] {
+  display: block;
+}
+
+
+.action-forgotten {
+  color: $light-dark-color;
+  font-family: $alter-font-family;
+  margin: 0 $h6-font-size ;
+  font-size: $micro-font-size;
+}
+.account-action {
+  @include action-button($h6-font-size);
+  display: inline-block;
+  color: $light-color;
+  background: $dark-color;
+}
+
+/*------------------------------------------------*/
+// LOGIN PAGE ENDS

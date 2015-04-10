@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+"SGS BOLIVIA S.A.(SOCIETE GENERALE DE SURVEILLANCE)";;;"(591) (33) 3471523";"Cl. 15 de Agosto No. 16, 4to. Anillo, Zona Sud Este (Guaracachi) Bolivia, Santa Cruz de la Sierra"
+"ARTES GRAFICAS SAGITARIO S.R.L";;;"(591) (22) 2486815";"C. Almirante Grau 349 Bolivia, La Paz"
+"PRODUCTOS LACTEOS TARIJA";;;"(591) (22) 6633834";"Barrio San Jorge Zona Industrial Bolivia, La Paz"
+"PINTURAS MONOPOL";;;"(591) (33) 3470707";"Parque Industrial 4 Anillo Av Brasil P.O. Box 6499 Bolivia, Santa Cruz de la Sierra"

@@ -1,0 +1,72 @@
+
+/***********************************************************************************************************************/
+/** PRIVATE PROPERTIES
+/**********************************************************************************************************************/
+
+/*----[.tabs]----*/
+
+$tabs-margin: 0 0 $h6-font-size 0;
+
+/*----[.tab-item]----*/
+$tab-item-background: $light-color;
+$tab-item-color: $dark-light-color;
+$tab-item-padding: $h6-font-size / 2 $h6-font-size * 2;
+$tab-item-font-family: $base-font-family;
+$tab-item-font-size: $micro-font-size;
+$tab-item-font-weight: 600;
+$tab-item-text-transform: uppercase;
+
+/*----[.tab-active .tab-item]----*/
+
+$tab-active-background: rgba(0, 0, 0, 0.024);
+$tab-active-color: $dark-color;
+
+
+/***********************************************************************************************************************/
+/** PRIVATE ENDS
+/**********************************************************************************************************************/
+
+
+/***********************************************************************************************************************/
+/** TABS
+/**********************************************************************************************************************/
+
+.tabs {
+  @include inline-list();
+  margin: $tabs-margin;
+  .tab-item {
+    color: $tab-item-color;
+    padding: $tab-item-padding;
+    font-family: $tab-item-font-family;
+    font-size: $tab-item-font-size;
+    font-weight: $tab-item-font-weight;
+    text-transform: $tab-item-text-transform;
+    cursor: pointer;
+  }
+  .tab  {
+    margin: 0;
+    background: $tab-item-background;
+  }
+  .tab:first-child {
+    margin-left: 0;
+  }
+  .tab.active .tab-item, .tab-item.active {
+    background: $tab-active-background;
+    color: $tab-active-color;
+  }
+}
+
+/***********************************************************************************************************************/
+/** TABS ENDS
+/**********************************************************************************************************************/
+
+
+/***********************************************************************************************************************/
+/** TABS MEDIA
+/**********************************************************************************************************************/
+
+.tabs > li {
+  @include breakpoint("small") {
+    float: none;
+  }
+}

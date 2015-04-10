@@ -1,9 +1,5 @@
 @charset "utf-8";
-html, body {margin-top:18px; margin-left: 200px !important;}
 #adminTopNav {
-    position:absolute !important;
-    top:0px !important;
-    left:0px !important;
     background:#000 !important;
     width:100% !important;
     height:36px !important;
@@ -167,33 +163,24 @@ html, body {margin-top:18px; margin-left: 200px !important;}
     float:right;
     border:solid 1px #ccc;
 }
-.panel-lateral {
-    position:fixed !important;
-    top: 0px !important;
-    left:0px !important;
-    padding:10px !important;
-    padding-top:40px !important;
-    background: #f3f3f3 !important;
-    border-right:solid 1px #ccc !important;
-    width:280px !important;
-    height:90% !important;
-    overflow:auto  !important;
-    box-shadow: 0px 3px 15px #666 !important;
-    z-index:990 !important;
-    font:normal 8px Verdana, sans-serif;
+.closeSidePanel {
+    float:right;
 }
 .panel-lateral > div:first-child {
     margin:0px auto !important;
-    width:260px !important;
+    width:350px !important;
 }
 .panel-lateral a, .panel-lateral a:visited {
     background:transparent !important;
     color:#233BBD !important;
-    font:normal 10px Arial !important;
+    font:normal 11px Arial !important;
 }
 .panel-lateral .button {
     background:#233BBD !important;
     color:#fff !important;
+}
+.panel-lateral td:first-child {
+    width:140px !important;
 }
 .panel-lateral input {
     border:solid 1px #ccc !important;
@@ -220,7 +207,7 @@ html, body {margin-top:18px; margin-left: 200px !important;}
 }
 .panel-lateral td {
     padding:0px !important;
-    font:normal 8px arial !important;
+    font:normal 11px arial !important;
 }
 .panel-lateral .label {
     position:absolute !important;
@@ -244,6 +231,14 @@ html, body {margin-top:18px; margin-left: 200px !important;}
 }
 .panel-lateral .style { background-image:url(../../image/icons/color/palette.png) !important; background-repeat: no-repeat !important; margin-top:10px !important; }
 .panel-lateral .tools { background-image:url(../../image/icons/color/wrench-screwdriver.png) !important; background-repeat: no-repeat !important; margin-top:40px !important; }
+
+.panelWrapper input {
+    width:120px !important;
+}
+.panelWrapper input[type=checkbox],
+.panelWrapper input[type=radio] {
+    
+}
 .style-icons {
     margin:5px !important;
     width:24px !important;
@@ -252,9 +247,6 @@ html, body {margin-top:18px; margin-left: 200px !important;}
     float: left !important;
 }
 .neco-color-picker-wrapper {
-    background:#ccc !important;
-    box-shadow:0px 0px 12px #333 !important;
-    border:solid 1px #777 !important;
 }
 .neco-color-picker-transparency {
     margin-left:90% !important;

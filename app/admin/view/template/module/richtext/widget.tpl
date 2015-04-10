@@ -16,6 +16,16 @@
     </div>
     
     <div class="row">
+        <label><?php echo $Language->get('Show On Mobile'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showonmobile]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
+        <label><?php echo $Language->get('Show On Desktop'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showondesktop]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
         <label><?php echo $Language->get('entry_richtext'); ?></label>
         <select name="Widgets[<?php echo $name; ?>][settings][post_id]" id="widget_richtext<?php echo $name; ?>" showquick="off">
             <option value=""><?php echo $Language->get('text_select'); ?></option>

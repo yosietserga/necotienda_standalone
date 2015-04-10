@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"TRANSPORTADORA ""ORIENTE""";;;"Telefax: (591) (33) 3524837";"Av. Grigotá Entre 3er Y 4to. Anillo Bolivia, Santa Cruz de la Sierra"
+"TRANS SERV. OL S.R.L.";;;"(591) (33) 3427476";"Av. Japón No. 3070 Entre Alemania Y Beni (Antes Cushing) Bolivia, Santa Cruz de la Sierra"
+"TRANSPORTADORA ""INGAVI""";;;"(591) (33) 4623488";"Av. Panamericana S/n Trinidad Bolivia, Santa Cruz de la Sierra"
+"TRANS EXPRESS ""CAMBA""";;;"(591) (33) 3552378";"5to. Anillo Oeste, Carret. Antigua A Cochabamba 2 Cuadras A La Derecha Bolivia, Santa Cruz de la Sierra"
+"ASTRA CRUZ ASOCIACIÓN DE TRANSPORTADORES CRUCEÑOS";;;"(591) (33) 3525064";"Santa Cruz Bolivia, Santa Cruz de la Sierra"
+"BOLIVIA TRANSPORTES INTERNACIONALES (B.T.I) S.R.L.";;;"Telefax: (591) (33) 3489568";"Parque Industrial P.I.19 Bolivia, Santa Cruz de la Sierra"

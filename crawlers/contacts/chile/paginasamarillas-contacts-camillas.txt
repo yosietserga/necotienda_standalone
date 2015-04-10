@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+MARAVILL;;;"(56) (2) 2252806";"Av. Italia 1235,Providencia Chile, Santiago"
+"ARRIENDO Y VENTAS MEDICAL ASSIST";;;"(56) (2) 2250047";"Av Sucre 1389, Ñuñoa Chile, Santiago"

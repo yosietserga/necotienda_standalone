@@ -1,0 +1,10 @@
+"First Name";"Email Address";Url;Telephone;Address
+"MAURICIO MAVEVA";;;"(56) 98410956";"Lanceros 1134 Chile, Santiago"
+"TRANSPORT PET";;;"(56) (2) 7331115";"Santiago de Chile Chile, Santiago"
+"ZOO MARKET LTDA.";;;"(56) (2) 2971036";"Av. Santa Amalia 1763 Loc.24 Chile, Santiago"
+"MASCOTA'S DEL RODOVIARIO";;;"(56) (72) 237032";"Rodoviario Local H Pasillo 3 Chile, Rancagua"
+ACUARAMA;;;"Telefax: (56) (61) 212797";"Suiza 01616 Chile, Punta Arenas"
+"AGUILA PETS";;;"(56) (61) 241146";"21 De Mayo 1261 Chile, Punta Arenas"
+"EL MEJOR AMIGO";;;"(56) (61) 212922";"Punta Arenas Chile, Punta Arenas"
+PEZMANIA;;;"Telefax: (56) (61) 281256";"Fagnano 0357 Chile, Punta Arenas"
+"CRIADERO CANINO";;;"(56) (2) 9053531";"Criadero de Welsh Pembroke Corgi, Beagle, Boxer Chile, Santiago"

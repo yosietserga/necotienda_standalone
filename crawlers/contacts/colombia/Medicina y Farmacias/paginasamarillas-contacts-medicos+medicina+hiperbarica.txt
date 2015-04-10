@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"GASTROQUIRÚRGICA S.A.S.";gastroquirurgicaltda@yahoo.com;www.gastroquirurgica.co;"(57) (7) 5777676";"Cl 7 10 E-72 Colsag Colombia, Cúcuta"
+"IPS CLIMHA";;www.climha.com;"(57) (4) 4483730";"Cl 33 78-98 Consult 921 Trr Méedica Espacio Colombia, Medellín"

@@ -528,6 +528,8 @@ class ModelStoreProduct extends Model {
                 'p.sort_order'
             );
 
+                $sql .= " GROUP BY p.product_id";
+                
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
                 $sql .= " ORDER BY " . $data['sort'];
             } else {

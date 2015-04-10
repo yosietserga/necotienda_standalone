@@ -1,0 +1,11 @@
+"First Name";"Email Address";Url;Telephone;Address
+"EDITORIAL SCHOENSTATT";;;"(56) (2) 2853499";"La Concepción 7626, La Florida Chile, Santiago"
+"LIBRERIA KERIGMA";;;"(56) (2) 6729146";"Av Libertador Bernardo O'Higgins 1632 Chile, Santiago"
+"IMÁGENES CRISTO REDENTOR";;;"(56) (2) 2814276";"Ecuador 9055, La Florida Chile, Santiago"
+"LIBRERIA RELIGIOSA EL SEMBRADOR";;;"(56) (2) 8729786";"Clavero 127, Puente Alto Chile, Santiago"
+"MEDALLA MILAGROSA";;;"(56) (2) 2520322";"Av Nueva de Lyon 45, Providencia Chile, Santiago"
+"LIBRERÍA DEL ROSARIO";;;"(56) (32) 2485157";"Av. Borgoño 14000 Reñaca Viña Del Mar Chile, Viña del Mar"
+"DON BOSCO LIBRERIAS";;;"(56) (2) 6961685";"Av Libertador Bernardo O'Higgins 2373 Chile, Santiago"
+"BUEN CONSEJO";;;"(56) (2) 7762085";"Constantino 185, Estación Central Chile, Santiago"
+"BORDADOS PERSONALIZADOS Y ECLESIÁSTICOS JEANNE D'ARC";;;"(56) (2) 6395609";"Paseo Estado 235 Lc. 15 Chile, Santiago"
+"LA TRINIDAD LTDA.";;;"(56) (2) 2183503";"Av Vitacura 5480 Esq. Luis Carrera Lc. 77 Chile, Santiago"

@@ -1,0 +1,4 @@
+"First Name";"Email Address";Url;Telephone;Address
+KAUFMANN;;;"(56) (32) 2997522";"Ruta 68 No.1350 Placilla Chile, Valparaiso"
+AGROPARTS;;;"(56) (32) 6986707";"Av. Libertad B. O'higgins 1850 - Los Heroes Chile, Valparaiso"
+SERGO;;;"(56) (32) 2219298";"Av. Francia 365 - Valparaíso Chile, Valparaiso"

@@ -1,0 +1,13 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ARRIENDO SERVISOLD";;;"Telefax: (56) (55) 477476";"Av. E. Pérez Zujovic 7562 - Antofagasta Chile, Antofagasta"
+"ARRIENDO DE FOTOCOPIADORAS ICOTAL LTDA";;;"(56) (71) 216622";"1 Oriente 1654 Chile, Talca"
+VENDOMÁTICA;;;"(56) (2) 5600600";"Santiago Chile, Santiago"
+"DIMACOFI S.A.";;;"(56) (57) 475171";"Patricio Lynch 467 - Iquique Chile, Iquique"
+"INCOTAL LTDA.";;;"(56) (71) 216622";"1 Oriente 1654 Chile, Talca"
+"ARRIENDO FOTOCOPIADORAS INFOSER LTDA";;;"(56) (71) 238796";"2 Norte 524 Chile, Talca"
+MAQCHIN;;;"(56) (2) 7865200";"J.J. Pérez 5085 - Qta. Normal Chile, Santiago"
+"SERVICIO TECNICO MAQUINAS OFICINA COMPUTACIONY FOTOCOPIADORAS TEC & MAQ";;;"Telefax: (56) (72) 512356";"Guevara 116 Rengo Chile, Rancagua"
+"SERVICIO TECNICO HECTOR IRIART DROGUETT";;;"(56) (72) 214623";"Hector Zamorano 265 Chile, Rancagua"
+"TECNO ARRIENDO CARLOS CABEZAS";;;"(56) (2) 3619820";"Santiago Chile, Santiago"
+"ARAMBARRI LTDA.";;;"(56) (72) 239808";"G. Riesco 256 Chile, Rancagua"
+"ARRIENDOS VELMAQ LTDA.";;;"Telefax: (56) (2) 3245532";"Santiago Chile, Santiago"

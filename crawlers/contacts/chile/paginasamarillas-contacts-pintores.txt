@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"BROCHAS PINTOR LTDA.";;;"(56) (2) 5251811";"Santa Clara 280, La Cisterna Chile, Santiago"
+"HOSTAL DEL PINTOR Y PINACOTECA DE RAÚL PIZARRO";;;"(56) (32) 501326";"Calle Juan Rosas 1535 Putaendo Chile, Valparaiso"

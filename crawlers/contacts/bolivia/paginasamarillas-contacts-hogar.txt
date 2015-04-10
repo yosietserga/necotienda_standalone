@@ -1,0 +1,8 @@
+"First Name";"Email Address";Url;Telephone;Address
+"HOGAR SOLIDARIO";;;"(591) (33) 3585222";"CL Manuel Ma Caballero No 07 Uv 50-Mz 5--Mzr 58-Radial 15 Barrio Villa W arnes Alto San Pedro Santa Cruz Bolivia Bolivia, Santa Cruz de la Sierra"
+"HOGAR CENTER";;;"Telefax: (591) (33) 3366212";"Cl Colón No. 146 Bolivia, Santa Cruz de la Sierra"
+"CABAÑAS DULCE HOGAR";;;"(591) (33) 9446066";"Calle Avaroa Nú 84 Bolivia, Santa Cruz de la Sierra"
+"ELECTRO HOGAR S.R.L";;;"(591) (33) 3365500";"Cl. 21 De Mayo No 666 Bolivia, Santa Cruz de la Sierra"
+"HOGAR SAN JOSE";;;"(591) (33) 3426666";"Km 6 Carretera al Norte, Diganal Sede de Blooming Bolivia, Santa Cruz de la Sierra"
+"SAN JUAN HOGAR";;;"Telefax: (591) (33) 3323790";"Ayacucho Nú 289 Bolivia, Santa Cruz de la Sierra"
+"HOGAR GERIATRICO EL REMANSO";;;"(591) (22) 2723456";"La Paz Bolivia, La Paz"

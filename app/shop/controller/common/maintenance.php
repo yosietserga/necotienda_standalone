@@ -1,174 +1,180 @@
 <?php
+
 class ControllerCommonMaintenance extends Controller {
-	public function index() {
+
+    public function index() {
+        $Url = new Url($this->registry);
         $this->load->language('common/maintenance');
-		$this->language->load('common/footer');
-        $this->document->title = $this->language->get('heading_title') ." - ". $this->config->get('config_title');
-		$this->data['text_powered_by'] = sprintf($this->language->get('text_powered_by'), $this->config->get('config_name'), date('Y', time()));
-        
-		if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-			$this->data['base'] = HTTPS_HOME;
-		} else {
-			$this->data['base'] = HTTP_HOME;
-		}
-		
-		if ($this->config->get('config_icon') && file_exists(DIR_IMAGE . $this->config->get('config_icon'))) {
-			$this->data['icon'] = HTTP_IMAGE . $this->config->get('config_icon');
-		} else {
-			$this->data['icon'] = '';
-		}
-		
-		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = HTTP_IMAGE . $this->config->get('config_logo');
-		} else {
-			$this->data['logo'] = '';
-		}
-        
-		$this->data['title']      = $this->document->title;
-		$this->data['keywords']   = $this->document->keywords;
-		$this->data['description']= $this->document->description;
-		$this->data['template']   = $this->config->get('config_template');
-		$this->data['charset']    = $this->language->get('charset');
-		$this->data['lang']       = $this->language->get('code');
-		$this->data['direction']  = $this->language->get('direction');
-		$this->data['links']      = $this->document->links;			
-		$this->data['breadcrumbs']= $this->document->breadcrumbs;
-        
+        $this->language->load('common/footer');
+        $this->document->title = $this->language->get('heading_title') . " - " . $this->config->get('config_title');
+        $this->data['text_powered_by'] = sprintf($this->language->get('text_powered_by'), $this->config->get('config_name'), date('Y', time()));
+
+        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+            $this->data['base'] = HTTPS_HOME;
+        } else {
+            $this->data['base'] = HTTP_HOME;
+        }
+
+        if ($this->config->get('config_icon') && file_exists(DIR_IMAGE . $this->config->get('config_icon'))) {
+            $this->data['icon'] = HTTP_IMAGE . $this->config->get('config_icon');
+        } else {
+            $this->data['icon'] = '';
+        }
+
+        if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $this->data['logo'] = HTTP_IMAGE . $this->config->get('config_logo');
+        } else {
+            $this->data['logo'] = '';
+        }
+
+        $this->data['title'] = $this->document->title;
+        $this->data['keywords'] = $this->document->keywords;
+        $this->data['description'] = $this->document->description;
+        $this->data['template'] = $this->config->get('config_template');
+        $this->data['charset'] = $this->language->get('charset');
+        $this->data['lang'] = $this->language->get('code');
+        $this->data['direction'] = $this->language->get('direction');
+        $this->data['links'] = $this->document->links;
+        $this->data['breadcrumbs'] = $this->document->breadcrumbs;
+
         $this->document->breadcrumbs = array();
         $this->document->breadcrumbs[] = array(
-            'href'      => (Url::createUrl('common/maintenance')),
-            'text'      => $this->language->get('text_maintenance'),
+            'href' => (Url::createUrl('common/maintenance')),
+            'text' => $this->language->get('text_maintenance'),
             'separator' => false
-        ); 
+        );
         $this->data['google_analytics_code'] = $this->config->get('google_analytics_code');
-        
+
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
         $this->data['message'] = $this->language->get('text_message');
-        
+
         // style files
         $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
         //TODO: detectar browser y cargar el estilo adecuado
-        $styles[] = array('media'=>'all','href'=>$csspath.'screen.css'); 
+        $styles[] = array('media' => 'all', 'href' => $csspath . 'screen.css');
         //$styles[] = array('media'=>'print','href'=>$csspath.'print.css');
-        
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-			$styles[] = array('media'=>'all','href'=> str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_CSS) . 'theme.css');
-		} else {
-			$styles[] = array('media'=>'all','href'=> str_replace('%theme%','default',HTTP_THEME_CSS) . 'theme.css');
-		}
-        
-        if (is_file(DIR_CSS."custom-". $this->config->get('config_theme_id') ."-". $this->config->get('config_template') .".css")) {
-            $styles[] = array('media'=>'all','href'=>$csspath."custom-". $this->config->get('config_theme_id') ."-". $this->config->get('config_template') .".css");
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $styles[] = array('media' => 'all', 'href' => str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS) . 'theme.css');
+        } else {
+            $styles[] = array('media' => 'all', 'href' => str_replace('%theme%', 'default', HTTP_THEME_CSS) . 'theme.css');
         }
-        
+
+        if (is_file(DIR_CSS . "custom-" . $this->config->get('config_theme_id') . "-" . $this->config->get('config_template') . ".css")) {
+            $styles[] = array('media' => 'all', 'href' => $csspath . "custom-" . $this->config->get('config_theme_id') . "-" . $this->config->get('config_template') . ".css");
+        }
+
         $this->loadWidgets();
 
-        $this->data['styles'] = array_merge($styles,$this->styles);
-        
+        $this->data['styles'] = array_merge($styles, $this->styles);
+
         $template = ($this->config->get('default_view_maintenance')) ? $this->config->get('default_view_maintenance') : 'common/maintenance.tpl';
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $template)) {
-        	$this->template = $this->config->get('config_template') .'/'. $template;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
+            $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/'. $template;
+            $this->template = 'choroni/' . $template;
         }
-        
+
         $this->response->setOutput($this->render(true));
     }
-    
+
     public function check() {
         if ($this->config->get('config_maintenance')) {
             // Show site if logged in as admin
-			require_once(DIR_SYSTEM . 'library/user.php');
-			$this->registry->set('user', new User($this->registry));
+            require_once(DIR_SYSTEM . 'library/user.php');
+            $this->registry->set('user', new User($this->registry));
             if (!$this->user->isLogged()) {
                 return $this->forward('common/maintenance');
             }
         }
     }
-    
+
     protected function loadWidgets() {
         $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
         $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%",$this->config->get('config_template'),$csspath);
-            $cssFolder = str_replace("%theme%",$this->config->get('config_template'),DIR_THEME_CSS);
-            
-            $jspath = str_replace("%theme%",$this->config->get('config_template'),$jspath);
-            $jsFolder = str_replace("%theme%",$this->config->get('config_template'),DIR_THEME_JS);
+            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
+            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
+
+            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
+            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
         } else {
-            $csspath = str_replace("%theme%","default",$csspath);
-            $cssFolder = str_replace("%theme%","default",DIR_THEME_CSS);
-            
-            $jspath = str_replace("%theme%","default",$jspath);
-            $jsFolder = str_replace("%theme%","default",DIR_THEME_JS);
+            $csspath = str_replace("%theme%", "default", $csspath);
+            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
+
+            $jspath = str_replace("%theme%", "default", $jspath);
+            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
         }
-        
-        if (file_exists($cssFolder.str_replace('controller','',strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media'=>'all','href'=>$csspath.str_replace('controller','',strtolower(__CLASS__) . '.css'));
+
+        if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
+            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
         }
-        
+
         if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles,$styles);
+            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
         }
-        
-        if (file_exists($jsFolder.str_replace('controller','',strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath.str_replace('controller','',strtolower(__CLASS__) . '.js');
+
+        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
         }
-        
+
         if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts,$javascripts);
+            $this->javascripts = array_merge($this->javascripts, $javascripts);
         }
-        
+
         $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry,$this->Route);
+        $widgets = new NecoWidget($this->registry, $this->Route);
         foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array)unserialize($widget['settings']);
+            $settings = (array) unserialize($widget['settings']);
             if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
                 $scripts[$widget['name']] = array(
-                    'id'=>$widget['name'],
-                    'method'=>'ready',
-                    'script'=>
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
                     "$(document.createElement('div'))
                         .attr({
-                            id:'".$widget['name']."'
+                            id:'" . $widget['name'] . "'
                         })
                         .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload']) $this->data['widgets'][] = $widget['name'];
+                    if ($settings['autoload'])
+                        $this->data['widgets'][] = $widget['name'];
                     $this->children[$widget['name']] = $settings['route'];
                     $this->widget[$widget['name']] = $widget;
                 }
             }
         }
-            
+
         foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array)unserialize($widget['settings']);
+            $settings = (array) unserialize($widget['settings']);
             if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}",$settings['params']);
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
                 $scripts[$widget['name']] = array(
-                    'id'=>$widget['name'],
-                    'method'=>'ready',
-                    'script'=>
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
                     "$(document.createElement('div'))
                         .attr({
-                            id:'".$widget['name']."'
+                            id:'" . $widget['name'] . "'
                         })
                         .html(makeWaiting())
-                        .load('". $url . "')
-                        .appendTo('".$settings['target']."');"
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload']) $this->data['featuredWidgets'][] = $widget['name'];
+                    if ($settings['autoload'])
+                        $this->data['featuredWidgets'][] = $widget['name'];
                     $this->children[$widget['name']] = $settings['route'];
                     $this->widget[$widget['name']] = $widget;
                 }
             }
         }
     }
+
 }

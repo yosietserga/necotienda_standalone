@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+"BARBIAN COMUNICACION";;;"(591) (33) 3145216";"Cl.5 Oeste Pasillo.1 No.9 Equipetrol Bolivia, Santa Cruz de la Sierra"
+"BZ DESIGNERS";;;"(591) (33) 3415941";"Av.Beni No.277 Of.206 Bolivia, Santa Cruz de la Sierra"
+"MINDMAP S.R.L";;;"Telefax: (591) (33) 3366346";"Cl Charagua No. 30 Bolivia, Santa Cruz de la Sierra"
+NEG'S;;;"(591) (33) 3301858";"Cl Nicolás Ortiz No. 166, Santa Cruz Bolivia, Santa Cruz de la Sierra"

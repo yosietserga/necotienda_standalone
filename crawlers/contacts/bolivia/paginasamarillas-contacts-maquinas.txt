@@ -1,0 +1,9 @@
+"First Name";"Email Address";Url;Telephone;Address
+"HALCON - SRL IMPORT & EXPORT";;;"(591) (22) 3476464";"Av. Mutualista No. 3365 Y Cl. No. 41 (Entre 3er Y 4to Anillo) Bolivia, La Paz"
+MAINTER;;;"(591) (22) 3424251";"Tercer Anillo Esq. Av. La Salle Bolivia, La Paz"
+"MAGENSA LTDA";;;"(591) (33) 3428000";"Km 5 1/2 Carret Al Norte Bolivia, Santa Cruz de la Sierra"
+FINNING.;;;"(591) (33) 3429688";"Carret Al Norte Km. 3 1/2 Casilla 2369 Bolivia, Santa Cruz de la Sierra"
+"COMPAÑIA DE SUMINISTROS E INGENIERIA 1Ú DE MAYO LTDA. COMSI";;;"(591) (33) 3332822";"Av.San Martin C/La Plata No.24 Bolivia, Santa Cruz de la Sierra"
+TRANSAR;;;"(591) (33) 3556130";"Santa Cruz Bolivia, Santa Cruz de la Sierra"
+BOLBRAS;;;"(591) (22) 3584654";"4to Anillo Entre Radial 17/2 Y Av Gricola No 12 Bolivia, La Paz"
+"FINNING BOLIVIA S A";;;"(591) (22) 3429027";"Carr Al Norte Km 3 1/2 Bolivia, La Paz"

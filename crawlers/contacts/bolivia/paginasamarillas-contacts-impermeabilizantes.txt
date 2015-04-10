@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"IMPRESUR S.R.L";;;"Telefax: (591) (66) 46633788";"Calle delfin Pino 1555 Entre España y Lazcano Bolivia, Tarija"
+ASTECI;;;"Telefax: (591) (33) 3642078";"Av.Virgen De Cotoca No.2516 Bolivia, Santa Cruz de la Sierra"

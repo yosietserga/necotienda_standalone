@@ -16,6 +16,16 @@
     </div>
     
     <div class="row">
+        <label><?php echo $Language->get('Show On Mobile'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showonmobile]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
+        <label><?php echo $Language->get('Show On Desktop'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showondesktop]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
         <label><?php echo $Language->get('entry_twitter_search'); ?></label>
         <input title="<?php echo $Language->get('help_twitter_search'); ?>" name="Widgets[<?php echo $name; ?>][settings][twitter_search]" type="text" size="20" required="required" value="<?php echo $settings['twitter_search'] ?>" />
     </div>

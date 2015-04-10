@@ -58,7 +58,6 @@ class ControllerContentFile extends Controller {
             $this->data['fckeditor'] = false;
         }
         
-        $this->loadAssets();
         $this->scripts = array_merge($this->scripts, $scripts);
 
         $this->template = 'content/file_list.tpl';
@@ -320,7 +319,8 @@ class ControllerContentFile extends Controller {
             $json['id'] = $this->request->getQuery('id');
             $json['name'] = $path;
             $json['path'] = $path;
-            if ($this->request->getQuery('directory') == 'undefined' || empty($this->request->getQuery('directory'))) {
+            $directory_ = $this->request->getQuery('directory');
+            if ($directory_ == 'undefined' || empty($directory_)) {
                 $json['directory'] = $path;
             } else {
                 $json['directory'] = $this->request->getQuery('directory') .'/'. $path;
@@ -848,23 +848,4 @@ class ControllerContentFile extends Controller {
         $this->load->auto('json');
         $this->response->setOutput(Json::encode($json));
     }
-
-    protected function loadAssets() {
-        if (file_exists(DIR_ADMIN_CSS . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => HTTP_ADMIN_CSS . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (file_exists(DIR_ADMIN_JS . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = HTTP_ADMIN_JS . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
-    }
-
 }

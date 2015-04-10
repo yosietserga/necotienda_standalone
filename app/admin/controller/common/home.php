@@ -55,24 +55,25 @@ class ControllerCommonHome extends Controller {
             $this->load->auto('localisation/currency');
             $this->modelCurrency->updateAll();
         }
-        
+/*
         $this->load->library('update');
         $update = new Update($this->registry);
         $this->data['msg'] = $update->checkForUpdates();
-        //var_dump($update->getInfo());
-
-        $this->loadAssets();
+ * 
+ */
         
+        $this->loadAssets();
+
         // javascript files
         $javascripts['highcharts'] = "js/vendor/highcharts-4.0.1/highcharts.js";
         $this->javascripts = array_merge($javascripts, $this->javascripts);
 
         $this->template = 'common/home.tpl';
-        
+
         $this->children[] = 'common/header';
         $this->children[] = 'common/nav';
         $this->children[] = 'common/footer';
-        
+
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 

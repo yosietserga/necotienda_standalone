@@ -1,0 +1,11 @@
+"First Name";"Email Address";Url;Telephone;Address
+"CINE CAPRI";;;"(56) (2) 2051703";"Marchant Pereira 433 Providencia Chile, Santiago"
+"CINE HOYTS";;;"(56) (32) 2594706";"Av. Pedro Montt 2111 Valparaíso Chile, Valparaiso"
+"CINE COLÓN";;;"(56) (58) 231165";"7 de Junio 190 - Arica Chile, Arica"
+"CINE ARTE";;;"(56) (32) 2882798";"Plaza Vergara 142 Viña Del Mar Chile, Viña del Mar"
+"CINE CONDELL";;;"(56) (32) 2212027";"Condell 1585 Valparaíso Chile, Valparaiso"
+"130 PRODUCCIONES DE PELÍCULAS CINEMA";;;"(56) (2) 3215451";"Av. Holanda 3622 Ñuñoa Chile, Santiago"
+"CINE ARTE NORMANDIE";;;"(56) (2) 6972979";"Tarapacá 1181 Chile, Santiago"
+"ARAUCO FILMS CINE T.V.";;;"(56) (2) 2092091";"Silvina Hurtado 1789 Providencia Chile, Santiago"
+"JPF CINE LTDA";;;"(56) (2) 6241700";"Calle Nueva 1757 Huechuruba Chile, Santiago"
+"ESCUELA DE CINE DE CHILE INSTITUTO PROFESIONAL";;;"(56) (2) 2726332";"Av. Macul 2320 Chile, Santiago"

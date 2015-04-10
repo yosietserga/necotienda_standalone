@@ -1,0 +1,2 @@
+"First Name";"Email Address";Url;Telephone;Address
+"INGEMAQ TALLERES";;;"Telefax: (591) (33) 3376363";"Av. El Trompillo No 1077 Bolivia, Santa Cruz de la Sierra"

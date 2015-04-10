@@ -1,0 +1,2 @@
+"First Name";"Email Address";Url;Telephone;Address
+"TEXTIL CASALE LTDA.";;;"Telefax: (56) (2) 6235083";"Av. Eduardo Frei Montalva 5050 Renca Chile, Santiago"

@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ARTESANIAS EL ZIPA";artezipa@etb.net.co;www.artesaniaselzipa.com.co;"(57) (1) 2130064";"Av (Cr) 15 124-30 L-2-110 Colombia, Bogotá"
+"GALERIA MINAS DE COLOMBIA";galeriaminasdecolombia@hotmail.com;www.galeriaminasdecolombia.com;"(57) (1) 2816523";"Dg20 A 0-12 Colombia, Bogotá"
+"COMRACOL Y CIA LTDA.";comracol@yahoo.es;;"(57) (1) 2830401";"Cl 12 B 6-82 Of 207 Colombia, Bogotá"
+"ALHAJA JOYERÍA RELOJERÍA";alajarelojeria@yahoo.es;www.alhajajoyeria.com;"(57) (1) 8617675";"Av Pradilla 900 Este L-1082 C.C. Centro Chía Colombia, Bogotá"
+"JOYERÍA Y RELOJERÍA RAMÍREZ";kalicheramirez@hotmail.com;;"(57) (6) 8844015";"Cr20 18-52 Centro Colombia, Manizales"
+"JOYÁNGEL S.A.S.";joyangel@une.net.co;www.joyangel.com.co;"(57) (4) 3117318";"Cr43 A 1 A   S-29 Of 309 Colombia, Medellín"

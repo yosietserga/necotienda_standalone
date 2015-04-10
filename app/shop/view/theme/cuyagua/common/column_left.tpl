@@ -1,0 +1,1 @@
+<ul class="column-left__widgets aside widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul>

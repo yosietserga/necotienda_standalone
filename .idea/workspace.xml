@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b135e05f-5428-4ece-a568-da82faa2faca" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/necotienda_standalone.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/controller/email/bounce.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/controller/email/lists.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/controller/email/member.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/controller/email/newsletter.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/language/spanish/email/bounce.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/language/spanish/email/lists.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/language/spanish/email/member.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/language/spanish/email/newsletter.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/model/email/lists.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/model/email/member.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/model/email/newsletter.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/bounce_test.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/lists_form.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/lists_list.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/member_export.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/member_form.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/member_import.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/member_list.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/newsletter_form.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/newsletter_list.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/email/newsletter_products.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/fullcontent.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/fullcontentfeatured.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/onecolleft.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/onecolleftfeatured.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/onecolright.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/onecolrightfeatured.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/twocolscenter.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/twocolscenterfeatured.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/twocolsleft.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/twocolsleftfeatured.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/twocolsright.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/admin/view/template/layout/twocolsrightfeatured.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/shop/view/theme/choroni/common/footer2.tpl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/admin/css/admin.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/admin/css/catalog_category_addproducts.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/admin/css/chosen-sprite.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/admin/css/chosen.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/admin/css/colorpicker.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/admin/css/invoice.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/admin/css/jquery-ui.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/assets/images/data/background-linen.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/assets/images/data/profiles/avatar (3ª copia).png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/assets/images/data/profiles/avatar (4ª copia).png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/assets/images/data/profiles/avatar (5ª copia).png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/assets/images/data/profiles/avatar (6ª copia).png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/assets/images/data/profiles/avatar (copia).png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/web/assets/images/data/profiles/avatar (otra copia).png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/account.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/account.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/view/theme/choroni/account/account.tpl" afterPath="$PROJECT_DIR$/app/shop/view/theme/choroni/account/account.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/address.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/address.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/view/theme/choroni/common/admin-theme-configurator.tpl" afterPath="$PROJECT_DIR$/app/shop/view/theme/choroni/common/admin-theme-configurator.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/admin/css/front/admin.css" afterPath="$PROJECT_DIR$/web/admin/css/front/admin.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/admin/js/front/admin.js" afterPath="$PROJECT_DIR$/web/admin/js/front/admin.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/view/theme/choroni/common/admin.tpl" afterPath="$PROJECT_DIR$/app/shop/view/theme/choroni/common/admin.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/balance.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/balance.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/payment/bank_transfer.php" afterPath="$PROJECT_DIR$/app/shop/controller/payment/bank_transfer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/content/banner.php" afterPath="$PROJECT_DIR$/app/admin/controller/content/banner.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/module/bestseller.php" afterPath="$PROJECT_DIR$/app/shop/controller/module/bestseller.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/marketing/campaign.php" afterPath="$PROJECT_DIR$/app/shop/controller/marketing/campaign.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/checkout/cart.php" afterPath="$PROJECT_DIR$/app/shop/controller/checkout/cart.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/content/category.php" afterPath="$PROJECT_DIR$/app/shop/controller/content/category.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/store/category.php" afterPath="$PROJECT_DIR$/app/shop/controller/store/category.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/model/store/category.php" afterPath="$PROJECT_DIR$/app/shop/model/store/category.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/assets/theme/choroni/css/checkoutsuccess.css" afterPath="$PROJECT_DIR$/web/assets/theme/choroni/css/checkoutsuccess.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/admin/js/vendor/ckeditor/ckeditor.js" afterPath="$PROJECT_DIR$/web/admin/js/vendor/ckeditor/ckeditor.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/column_left.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/column_left.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/view/theme/choroni/account/column_left.tpl" afterPath="$PROJECT_DIR$/app/shop/view/theme/choroni/account/column_left.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/config/config_browser.php" afterPath="$PROJECT_DIR$/system/config/config_browser.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/checkout/confirm.php" afterPath="$PROJECT_DIR$/app/shop/controller/checkout/confirm.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/page/contact.php" afterPath="$PROJECT_DIR$/app/shop/controller/page/contact.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/view/template/marketing/contact_grid.tpl" afterPath="$PROJECT_DIR$/app/admin/view/template/marketing/contact_grid.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/view/template/marketing/contact_list.tpl" afterPath="$PROJECT_DIR$/app/admin/view/template/marketing/contact_list.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/engine/controller.php" afterPath="$PROJECT_DIR$/system/engine/controller.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/page/deprecated.php" afterPath="$PROJECT_DIR$/app/shop/controller/page/deprecated.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/download.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/download.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/edit.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/edit.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/api/facebook.php" afterPath="$PROJECT_DIR$/app/shop/controller/api/facebook.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/module/featured.php" afterPath="$PROJECT_DIR$/app/shop/controller/module/featured.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/content/file.php" afterPath="$PROJECT_DIR$/app/admin/controller/content/file.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/common/footer.php" afterPath="$PROJECT_DIR$/app/admin/controller/common/footer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/common/footer.php" afterPath="$PROJECT_DIR$/app/shop/controller/common/footer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/forgotten.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/forgotten.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/common/header.php" afterPath="$PROJECT_DIR$/app/admin/controller/common/header.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/common/header.php" afterPath="$PROJECT_DIR$/app/shop/controller/common/header.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/view/template/common/header.tpl" afterPath="$PROJECT_DIR$/app/admin/view/template/common/header.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/history.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/history.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/common/home.php" afterPath="$PROJECT_DIR$/app/admin/controller/common/home.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/common/home.php" afterPath="$PROJECT_DIR$/app/shop/controller/common/home.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/module/banner/install.php" afterPath="$PROJECT_DIR$/app/admin/controller/module/banner/install.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/module/plugin_template/install.php" afterPath="$PROJECT_DIR$/app/admin/controller/module/plugin_template/install.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/module/invitefriends.php" afterPath="$PROJECT_DIR$/app/shop/controller/module/invitefriends.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/invoice.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/invoice.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/module/latest.php" afterPath="$PROJECT_DIR$/app/shop/controller/module/latest.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/login.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/login.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/logout.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/logout.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/admin/js/main.js" afterPath="$PROJECT_DIR$/web/admin/js/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/common/maintenance.php" afterPath="$PROJECT_DIR$/app/shop/controller/common/maintenance.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/store/manufacturer.php" afterPath="$PROJECT_DIR$/app/shop/controller/store/manufacturer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/map.php" afterPath="$PROJECT_DIR$/app/shop/map.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/content/menu.php" afterPath="$PROJECT_DIR$/app/admin/controller/content/menu.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/message.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/message.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/database/mysql.php" afterPath="$PROJECT_DIR$/system/database/mysql.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/view/template/common/nav.tpl" afterPath="$PROJECT_DIR$/app/admin/view/template/common/nav.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/assets/css/neco.form.css" afterPath="$PROJECT_DIR$/web/assets/css/neco.form.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/admin/js/necojs/neco.form.js" afterPath="$PROJECT_DIR$/web/admin/js/necojs/neco.form.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/assets/js/necojs/neco.form.js" afterPath="$PROJECT_DIR$/web/assets/js/necojs/neco.form.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/newsletter.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/newsletter.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/error/not_found.php" afterPath="$PROJECT_DIR$/app/shop/controller/error/not_found.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/order.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/order.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/view/theme/choroni/account/order_payment.tpl" afterPath="$PROJECT_DIR$/app/shop/view/theme/choroni/account/order_payment.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/content/page.php" afterPath="$PROJECT_DIR$/app/shop/controller/content/page.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/library/pagination.php" afterPath="$PROJECT_DIR$/system/library/pagination.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/password.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/password.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/payment.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/payment.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/content/post.php" afterPath="$PROJECT_DIR$/app/shop/controller/content/post.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nbproject/private/private.xml" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/store/product.php" afterPath="$PROJECT_DIR$/app/admin/controller/store/product.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/store/product.php" afterPath="$PROJECT_DIR$/app/shop/controller/store/product.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/model/store/product.php" afterPath="$PROJECT_DIR$/app/shop/model/store/product.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/store/product_array.php" afterPath="$PROJECT_DIR$/app/shop/controller/store/product_array.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/module/random.php" afterPath="$PROJECT_DIR$/app/shop/controller/module/random.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/module/recommended.php" afterPath="$PROJECT_DIR$/app/shop/controller/module/recommended.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/register.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/register.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/review.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/review.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/store/search.php" afterPath="$PROJECT_DIR$/app/shop/controller/store/search.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/library/session.php" afterPath="$PROJECT_DIR$/system/library/session.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/view/template/setting/setting_form_store.tpl" afterPath="$PROJECT_DIR$/app/admin/view/template/setting/setting_form_store.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/page/sitemap.php" afterPath="$PROJECT_DIR$/app/shop/controller/page/sitemap.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/module/special.php" afterPath="$PROJECT_DIR$/app/shop/controller/module/special.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/store/special.php" afterPath="$PROJECT_DIR$/app/shop/controller/store/special.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/startup.php" afterPath="$PROJECT_DIR$/system/startup.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/view/template/store/store_form_store.tpl" afterPath="$PROJECT_DIR$/app/admin/view/template/store/store_form_store.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/account/success.php" afterPath="$PROJECT_DIR$/app/shop/controller/account/success.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/controller/checkout/success.php" afterPath="$PROJECT_DIR$/app/shop/controller/checkout/success.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/shop/view/theme/choroni/checkout/success.tpl" afterPath="$PROJECT_DIR$/app/shop/view/theme/choroni/checkout/success.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/admin/js/front/theme_editor.js" afterPath="$PROJECT_DIR$/web/admin/js/front/theme_editor.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/library/update.php" afterPath="$PROJECT_DIR$/system/library/update.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/controller/module/banner/widget.php" afterPath="$PROJECT_DIR$/app/admin/controller/module/banner/widget.php" />
+    </list>
+    <ignored path="necotienda_standalone.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="necotienda_standalone" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="update.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/system/library/update.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="95" column="31" selection-start="2079" selection-end="2079" vertical-scroll-proportion="0.5533454" vertical-offset="1242" max-vertical-offset="4698">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-2" />
+    <option name="width" value="1370" />
+    <option name="height" value="745" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="necotienda_standalone" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="necotienda_standalone" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="necotienda_standalone" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="PublishConfig" serverName="NecoTienda Standalone" serverId="0d1e63ae-5abd-4510-8b13-6df6a71b5e15">
+    <servers>
+      <server id="0d1e63ae-5abd-4510-8b13-6df6a71b5e15">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </server>
+    </servers>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b135e05f-5428-4ece-a568-da82faa2faca" name="Default" comment="" />
+      <created>1423408922568</created>
+      <updated>1423408922568</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-2" y="0" width="1370" height="745" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/system/library/update.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="31" selection-start="2079" selection-end="2079" vertical-scroll-proportion="0.5533454" vertical-offset="1242" max-vertical-offset="4698">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

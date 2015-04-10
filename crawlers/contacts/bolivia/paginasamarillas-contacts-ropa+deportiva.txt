@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+"CASA ROA";;;"(591) (33) 3333020";"Cl.Sucre No.527 Bolivia, Santa Cruz de la Sierra"
+REDIF;;;"(591) (2) 5275426";"Bolivar No 348 Bolivia, Oruro"
+"ROPA DEPORTIVA ALAN";;;"(591) (22) 5244221";"C. Ayacuho No 1454 Entre 6 De OCtubre Y Soria Galvarro Bolivia, La Paz"
+"SALTO'S S.R.L";;;"(591) (33) 3434000";"Av Cesar Cronembol No. 115 Bolivia, Santa Cruz de la Sierra"

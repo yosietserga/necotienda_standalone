@@ -1,0 +1,8 @@
+"First Name";"Email Address";Url;Telephone;Address
+"HOSPITAL UNIVERSITARIO JAPONES";;;"(591) (33) 3473197";"3er Anillo Interno Av. Japón Bolivia, Santa Cruz de la Sierra"
+"HOSPITAL PSIQUIATRICO "" FUNDACIÓN """;;;"(591) (33) 3521925";"3er Anillo Interno Lado Hipermax Sur Bolivia, Santa Cruz de la Sierra"
+"DPC MEDLAB BOLIVIA LTDA.";;;"(591) (33) 3421718";"Cl.Quitachiyu B.Fleig No.76 Bolivia, Santa Cruz de la Sierra"
+"BIOELECTROMEDICA LTDA.";;;"(591) (33) 3330528";"Cl.España No.520 Esq.Cuellar Bolivia, Santa Cruz de la Sierra"
+"HOSPITAL AGRAMONT";;;"(591) (22) 2822822";"Cl.11 No4035 Villa Dolores El Alto Bolivia, La Paz"
+"SAN GABRIEL HOSPITAL";;;"(591) (22) 2231816";"Av. Nuñez Del Prado S/N Villa Copacabana Bolivia, La Paz"
+"HOSPITAL METODISTA";;;"(591) (22) 2783509";"Av. 14 De Sept. No5809 C. 12 Obrajes Bolivia, La Paz"

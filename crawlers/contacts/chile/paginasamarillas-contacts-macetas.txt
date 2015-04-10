@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+MAZZA;;;"(56) (2) 7453575";"Santiago de Chile Chile, Santiago"
+"PLÁSTICOS RAQUEL";;;"Telefax: (56) (2) 7370100";"Buenos Aires 338 Patronato Recoleto Chile, Santiago"

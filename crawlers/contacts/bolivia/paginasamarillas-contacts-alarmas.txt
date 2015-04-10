@@ -1,0 +1,11 @@
+"First Name";"Email Address";Url;Telephone;Address
+"VIGITEK S.R.L.";;;"Telefax: (591) (33) 3392300";"Av Velarde No. 432 Bolivia, Santa Cruz de la Sierra"
+ZUDEN;;;"(591) (22) 8980181";"Lg Bolivia, La Paz"
+"KEMAR LTDA.";;;"(591) (33) 3540281";"Av Landívar No. 389, Santa Cruz Bolivia, Santa Cruz de la Sierra"
+"TERMATEL - TECNOLOGIA Y MARCAS EN TELEFONIA";;;"(591) (33) 3341741";"Cl. Manuel Ignacio Salvatierra No. 548 Bolivia, Santa Cruz de la Sierra"
+"AUDIO SYSTEM";;;"(591) (33) 3369721";"Av Uruguay No. 407 Bolivia, Santa Cruz de la Sierra"
+"P T A SECURITY SYSTEMS";;;"(591) (33) 3558544";"Av Las Palmas No. 67 (Diagonal Del Country Club Las Palmas) Bolivia, Santa Cruz de la Sierra"
+"K 2 ALARMAS";;;"(591) (33) 3302451";"Cl Bolívar No. 191 Diagonal A Cotas Bolivia, Santa Cruz de la Sierra"
+"FERDDY AUTO PARTS";;;"Telefax: (591) (33) 3301414";"Celso Castedo N³196/Aroma Bolivia, Santa Cruz de la Sierra"
+"MÁXIMA TECHNOLOGY";;;"(591) (33) 3368284";"Cl Vallegrande Casi Esquina Irala No. 753 Bolivia, Santa Cruz de la Sierra"
+"S C S SPY CAMERAS SPECIAL";;;"Telefax: (591) (33) 3333592";"Cl Pari Esq. Velasco No. 301 Bolivia, Santa Cruz de la Sierra"

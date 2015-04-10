@@ -8,8 +8,8 @@ $loader->auto('weight');
 $loader->auto('length');
 $loader->auto('cart');
 $loader->auto('validar');
-$loader->auto('recaptcha');
 $loader->auto('encoder');
+$loader->auto('browser');
 
 $registry->set('load', $loader);
 $registry->set('config', $config);
@@ -30,6 +30,7 @@ $registry->set('tax', new Tax($registry));
 $registry->set('weight', new Weight($registry));
 $registry->set('length', new Length($registry));
 $registry->set('cart', new Cart($registry));
+$registry->set('browser', new Browser);
 $registry->set('javascripts', array());
 $registry->set('styles', array());
 $registry->set('scripts', array());
@@ -40,7 +41,7 @@ $language->load('common/header');
 $loader->auto('account/customer');
 $loader->auto('store/product');
 $loader->auto('store/category');
- //TODO: rediseñar clase de URLs
+ //TODO: rediseï¿½ar clase de URLs
 $loader->auto('localisation/language');
 $loader->auto('localisation/currency');
 
@@ -53,7 +54,6 @@ $loader->auto('localisation/currency');
 //$registry->set('utf8', new utf8());
 $registry->set('encoder', new Encoder());
 $registry->set('validar', new Validar());
-$registry->set('recaptcha', new Recaptcha(C_RPUBLIC_KEY,C_RPRIVATE_KEY));
 
 
 

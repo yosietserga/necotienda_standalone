@@ -1,0 +1,10 @@
+"First Name";"Email Address";Url;Telephone;Address
+"BELLAS Y TRAVIESAS";bellasytraviesas@hotmail.com;www.bellasytraviesas.co;"(57) (2) 4477432";"Cr1 A 9-69 -44 Colombia, Cali"
+"LUNA LUNERA";lunalunera@une.net.co;www.lunalunera.com.co;"(57) (4) 2354700";"Av33 63 B-215 Conquistadores Colombia, Medellín"
+"CLUB SYRENAS.COM";info@syrenas.com;www.syrenas.com;"(57) (2) 6679560";"Servicio a Domicilio Colombia, Cali"
+"FUN FACTORY COLOMBIA SEX-SHOP";info@funfactory-colombia.com;www.funfactory-colombia.com;"(57) (1) 2232831";"Cr92 64 C-59 Colombia, Bogotá"
+"FISIO ALTERNATIVAS";schm1971@gmail.com;www.fisio-alternativas.com;"(57) (1) 8104354";"Cl 66 8-25 Consult 301 Colombia, Bogotá"
+"CLASS MODELS";oscarhsierra@hotmail.com;;"(57) (1) 2102426";"DOMICILIOS Colombia, Bogotá"
+"CNANXING RELAX";;;"(57) (1) 3435615";"Cl 51 14-71 Colombia, Bogotá"
+"MANIZALITAS BELLAS.COM";;;"(57) 3116664127";"Bogotá D.C Colombia, Bogotá"
+"CENTRO DE RELAJACIÓN CORPORAL ENERGY";;;"(57) (4) 4361131";"Cr74 49-101 Colombia, Medellín"

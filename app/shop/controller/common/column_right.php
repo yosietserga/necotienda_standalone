@@ -23,10 +23,14 @@ class ControllerCommonColumnRight extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['widgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['widgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }

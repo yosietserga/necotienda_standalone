@@ -1,0 +1,17 @@
+/** categoryWidget *
+.categoryWidget .content {
+    background:#FFF;
+}
+.categoryWidget ul {
+    list-style:none;
+}
+.categoryWidget ul ul a {
+    color:#333 !important;
+}
+.categoryWidget ul ul li:hover a {
+    color:#fff !important;
+}
+.hasCategories {
+    background:url(../images/arrow-down.png) right top no-repeat;
+}*/
+/** /categoryWidget **/

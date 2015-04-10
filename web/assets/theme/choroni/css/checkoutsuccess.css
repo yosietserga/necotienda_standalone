@@ -17,9 +17,9 @@ label {
 .guide {
     margin:5px;
     padding:5px;
-    background:#f6f6f6;
+    background:#fefefe;
     width: 96%;
-    border: solid 1px #e0e0e0;
+    border: solid 1px #f9f9f9;
     border-radius:4px;
     overflow:hidden;
 }

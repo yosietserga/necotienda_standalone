@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"LECHONERÍA BOULEVAR";loncheria_boulevar1962@outloc;;"(57) (7) 6424456";"Cr19 19 10-12 San Francisco Colombia, Bucaramanga"
+"MASATO DE LA ABUELA";masatodelaabuela@gmail.com;;"(57) (1) 6974979";"Cl 139 108 A-75 Colombia, Bogotá"
+"DISTRIBUIDORA DE MASATOS DOÑA JULIA";yovany2014@hotmail.com;;"(57) (1) 7713853";"Cl 48 X 5 F-06 Colombia, Bogotá"
+"MASATO VITAMINIZADO";;;"(57) (7) 6479435";"Cr17 67-88 Colombia, Bucaramanga"
+"GALVAN DURÁN LUIS";;;"(57) (1) 6095061";"Cr 150 143 B-17 Colombia, Bogotá"
+"MASATO EL NORTEÑO";;;"(57) (7) 5743986";"Cl 14 N 17 Este-55 Niza Colombia, Cúcuta"

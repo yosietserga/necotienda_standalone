@@ -3,9 +3,10 @@
 class ControllerStoreCategory extends Controller {
 
     public function index() {
+        $Url = new Url($this->registry);
         $this->document->breadcrumbs = array();
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl('common/home'),
+            'href' => $Url::createUrl('common/home'),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
@@ -22,7 +23,7 @@ class ControllerStoreCategory extends Controller {
                         $path .= '_' . $path_id;
                     }
                     $this->document->breadcrumbs[] = array(
-                        'href' => Url::createUrl('store/category', array('path' => $path)),
+                        'href' => $Url::createUrl('store/category', array('path' => $path)),
                         'text' => $category_info['name'],
                         'separator' => $this->language->get('text_separator')
                     );
@@ -36,14 +37,17 @@ class ControllerStoreCategory extends Controller {
         $category_info = $this->modelCategory->getCategory($this->data['category_id']);
 
         if ($category_info) {
-            $this->session->set('redirect', Url::createUrl('store/category', array('category_id' => $this->data['category_id'])));
-            
+            $this->session->set('redirect', $Url::createUrl('store/category', array('path' => $this->data['category_id'])));
+
             $this->modelCategory->updateStats($this->request->getQuery('path'), $this->customer->getId());
 
             $cached = $this->cache->get('category.' .
                     $this->request->get['path'] .
                     $this->data['category_id'] .
                     $this->config->get('config_language_id') . "." .
+                    $this->request->hasQuery('hl') . "." .
+                    $this->request->hasQuery('cc') . "." .
+                    $this->customer->getId() . "." .
                     $this->config->get('config_currency') . "." .
                     (int) $this->config->get('config_store_id')
             );
@@ -71,7 +75,7 @@ class ControllerStoreCategory extends Controller {
 
                         $this->data['categories'][] = array(
                             'name' => $result['name'],
-                            'href' => Url::createUrl('store/category', array("path" => $this->request->get['path'] . '_' . $result['category_id'])) . $url,
+                            'href' => $Url::createUrl('store/category', array("path" => $this->request->get['path'] . '_' . $result['category_id'])) . $url,
                             'thumb' => NTImage::resizeAndSave($image, $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'))
                         );
                     }
@@ -84,7 +88,7 @@ class ControllerStoreCategory extends Controller {
                 $scripts[] = array(
                     'id' => 'category_page',
                     'method' => 'ready',
-                    'script' => "$('#products').load('" . Url::createUrl('store/category/home', array('category_id' => $this->data['category_id'])) . "');"
+                    'script' => "$('#products').load('" . $Url::createUrl('store/category/home', array('category_id' => $this->data['category_id'])) . "');"
                 );
 
                 if ($scripts)
@@ -95,6 +99,9 @@ class ControllerStoreCategory extends Controller {
                             $this->request->get['path'] .
                             $this->data['category_id'] .
                             $this->config->get('config_language_id') . "." .
+                            $this->request->hasQuery('hl') . "." .
+                            $this->request->hasQuery('cc') . "." .
+                            $this->customer->getId() . "." .
                             $this->config->get('config_currency') . "." .
                             (int) $this->config->get('config_store_id');
                 }
@@ -315,38 +322,6 @@ class ControllerStoreCategory extends Controller {
     }
 
     protected function loadWidgets() {
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
-
-        if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
-
         $this->load->helper('widgets');
         $widgets = new NecoWidget($this->registry, $this->Route);
         foreach ($widgets->getWidgets('main') as $widget) {
@@ -367,10 +342,14 @@ class ControllerStoreCategory extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['widgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['widgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }
@@ -393,10 +372,44 @@ class ControllerStoreCategory extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['featuredWidgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+        }
+        
+        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
+            $settings = (array) unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'" . $widget['name'] . "'
+                        })
+                        .html(makeWaiting())
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredFooterWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }

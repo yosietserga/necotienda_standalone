@@ -14,7 +14,17 @@
         <label><?php echo $Language->get('entry_load'); ?></label>
         <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][autoload]" value="1" checked="checked" />
     </div>
-          
+         
+    <div class="row">
+        <label><?php echo $Language->get('Show On Mobile'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showonmobile]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
+        <label><?php echo $Language->get('Show On Desktop'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showondesktop]" value="1" checked="checked" />
+    </div>
+ 
     <div class="row">
         <label><?php echo $Language->get('entry_landing_page'); ?></label>
         <ul class="scrollbox">

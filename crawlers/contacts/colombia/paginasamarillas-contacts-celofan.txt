@@ -1,0 +1,11 @@
+"First Name";"Email Address";Url;Telephone;Address
+"MARIA LA INMACULADA";dpclainmaculada@emcali.net.co;www.velaslainmaculada.com;"(57) (2) 8852166";"Cr10 22 A-31 Colombia, Cali"
+ALPEN;jpenagos11@une.net.co;www.alpencolombia.com;"(57) (4) 3780707";"Cr47 C 79 A SUR-53 Colombia, Medellín"
+"CAUCHOS ITAGÜÍ S.A.S.";cauchositagui@hotmail.com;www.cauchositagui.com;"(57) (4) 2776047";"Cr50 46 A-04 Itagüí Colombia, Medellín"
+"COOPERATIVA DE IMPRESORES Y PAPELEROS DE COLOMBIA COIMPRESORES DE COLOMBIA";pcomunicaciones@coimpresores.com.co;www.coimpresores.com.co;"(57) (4) 3207740";"Cl 55 67 B-63 Colombia, Medellín"
+"COMERCIALIZADORA L.C.S.";comercializadoral.c.s.@hotmail.com;;"(57) (5) 3704046";"Cl 40 39-49 Colombia, Barranquilla"
+"CELOFÁN Y MOÑOS PARA ANCHETAS";;;"(57) (1) 5994356";"Cr1 57-75 S Colombia, Bogotá"
+"FERTIABONOS - PARAFÍN";;;"(57) (4) 5119650";"Cl 45 54-33 Colombia, Medellín"
+MILEMPAQUES;;;"(57) (1) 2861246";"Av Caracas 11-32 Colombia, Bogotá"
+"CONFETI DE COLORES";;;"(57) 3165012032";"Cl 13 31-45 L-15-A C.C. PRYCA Colombia, Cali"
+PROPILENE;;;"(57) (1) 4372977";"Av Boyacá 64B-15 Colombia, Bogotá"

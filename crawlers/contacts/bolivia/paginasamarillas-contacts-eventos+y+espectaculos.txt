@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"HOTEL YOTAU";;;"(591) (33) 3367799";"Av. San Martín No 7 Barrio Equipetrol Bolivia, Santa Cruz de la Sierra"
+"FABIANA CLAVIJO EVENTOS";;;"(591) (22) 2441111";"Hotel Radisson Int 41 62 Bolivia, La Paz"
+"MASHA LTDA";;;"(591) (33) 3348798";"Quijarro 248 Bolivia, Santa Cruz de la Sierra"
+"BRISBANIA EVENTOS ESPECIALES";;;"(591) (22) 2114084";"Av Saavedra Esq Posnasky 1594 (Entre Plaza Stadium y Plaza Uyuni Bolivia, La Paz"
+TAPEKUA;;;"(591) (33) 3345905";"Ballivián La Paz Bolivia, Santa Cruz de la Sierra"
+"TAITAS EVENTOS Y SERVICIOS";;;"(591) (33) 3371740";"Cl Rafael Peña No. 111 Bolivia, Santa Cruz de la Sierra"

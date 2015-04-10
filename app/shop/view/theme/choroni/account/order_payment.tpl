@@ -38,7 +38,47 @@
         
         <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
 
+            <div class="clear"></div>
+
+            <div class="grid_12">
+                <div id="featuredFooter">
+                <ul class="widgets" data-position="featuredFooter"><?php if($featuredFooterWidgets) { foreach ($featuredFooterWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+                </div>
+            </div>
+
         </section>
     </section>
 </div>
+<div id="jsWrapper"></div>
+<script>
+$(function(){
+    if (!$.ui) {
+        $(document.createElement('script')).attr({
+            src:'assets/js/vendor/jquery-ui.min.js',
+            type:'text/javascript'
+        }).appendTo('#jsWrapper');
+    }
+    if (!$.fn.ntForm) {
+        $(document.createElement('script')).attr({
+            src:'assets/js/necojs/neco.form.js',
+            type:'text/javascript'
+        }).appendTo('#jsWrapper');
+    }
+    if (!$('link[rel="assets/css/neco.form.css"]').length) {
+        $(document.createElement('link')).attr({
+            href:'assets/css/neco.form.css',
+            rel:'stylesheet',
+            media:'screen'
+        }).appendTo('head');
+    }
+    if (!$('link[rel="assets/css/jquery-ui/jquery-ui.min.css"]').length) {
+        $(document.createElement('link')).attr({
+            href:'assets/css/jquery-ui/jquery-ui.min.css',
+            rel:'stylesheet',
+            media:'screen'
+        }).appendTo('head');
+    }
+    $('input[type="necoDate"]').datepicker();
+});
+</script>
 <?php echo $footer; ?>

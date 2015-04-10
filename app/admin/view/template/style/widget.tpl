@@ -290,6 +290,55 @@
                 <div class="clear"></div>
                 
                 <div class="grid_11">
+                    <h2>Antes del Pie de P&aacute;gina</h2>
+                    <ul id="featuredFooter" class="widgetWrapper" data-position="featuredFooter">
+                    <?php foreach ($widgets['featuredFooter'] as $widget) { ?>
+                        <li class="widgetSet" id="<?php echo $widget['name']; ?>">
+                            <b class="widgetTitle"><?php echo $Language->get('text_'.$widget['extension']); ?></b><br />
+                            <a class="advanced"><?php echo $Language->get('text_advanced'); ?></a><br />
+                            <div class="attributes"></div>
+                            <div style="float:right">
+                                <a class="moveWidget button" style="padding:2px;cursor:move">Mover</a>
+                                <a class="deleteWidget button" onclick="deleteWidget(this)" style="padding:2px;">Eliminar</a>
+                            </div>
+                        </li>
+                        <script type="text/javascript">
+                        $(function(){
+                            $.ajaxQueue({
+                                url: "index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&w=1",
+                                dataType: "json",
+                                data:{
+                                    'extension':'<?php echo $widget['extension']; ?>',
+                                    'position':'<?php echo $widget['position']; ?>',
+                                    'name':'<?php echo $widget['name']; ?>'
+                                }
+                            }).done(function( data ) {
+                                $('#<?php echo $widget['name']; ?> .attributes').html(data.html);
+                                $('#<?php echo $widget['name']; ?>_form').append('<input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][position]" value="<?php echo $widget['position']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][order]" value="<?php echo (int)$widget['order']; ?>" /><input type="hidden" name="Widgets[<?php echo $widget['name']; ?>][name]" value="<?php echo $widget['name']; ?>" />');
+                                $('.widgetWrapper').find("input, select, textarea, p")
+                                .bind('mousedown.ui-disableSelection selectstart.ui-disableSelection', function(e) {
+                                    e.stopImmediatePropagation();
+                                });
+                                $('#<?php echo $widget['name']; ?>').find('input, select, textarea').on('change',function(event){
+                                    $('.saving').remove();
+                                    $('#<?php echo $widget['name']; ?> .widgetTitle').after('<img src="<?php echo HTTP_ADMIN_IMAGE; ?>small_loading.gif" class="saving" />');
+                                    $.post('index.php?r=module/<?php echo $widget['extension']; ?>/widget&token=<?php echo $_GET['token']; ?>&name=<?php echo $widget['name']; ?>&order=<?php echo (int)$widget['order']; ?>&position=<?php echo $widget['position']; ?>', 
+                                    $('#<?php echo $widget['name']; ?>_form').serialize(),
+                                    function(respons){
+                                        $('.saving').remove();
+                                        resp = $.parseJSON(respons);
+                                    });
+                                });
+                            });
+                        });
+                        </script>
+                    <?php } ?>
+                    </ul>
+                </div>
+                
+                <div class="clear"></div>
+                
+                <div class="grid_11">
                     <h2>Pie de P&aacute;gina</h2>
                     <ul id="widgetFooter" class="widgetWrapper" data-position="footer">
                     <?php foreach ($widgets['footer'] as $widget) { ?>

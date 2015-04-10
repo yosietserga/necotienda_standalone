@@ -1,0 +1,12 @@
+"First Name";"Email Address";Url;Telephone;Address
+"YAMAHA GENUINE PARTS & ACCESORIES";;;"(591) (33) 3489090";"Av. Principal Parque Ind. Pesado Bolivia, Santa Cruz de la Sierra"
+"PUMA MOTOS";;;"(591) (33) 3463728";"3er Anillo Int # 3170 (Entre Av. Paraguá Y Mutualista) Bolivia, Santa Cruz de la Sierra"
+"TODO MOTOS";;;"(591) (33) 3540839";"Av. Omar Chávez No. 1268 Esq. FGrancisco López 2 Cuadras Antes Del 2do An illo En Inmediaciones De La Prefectura Bolivia, Santa Cruz de la Sierra"
+"VALDIVIA REPUESTOS";;;"Fax: (591) (33) 3541930";"Av. 26 De Febrero No.15 2do Anillo (Monumento Chiriguano) Bolivia, Santa Cruz de la Sierra"
+"ZBINDEN LTDA";;;"(591) (33) 3325007";"Independencia 442 Casilla 158 Bolivia, Santa Cruz de la Sierra"
+"HONDA VISAL";;;"(591) (33) 3414141";"Av. Cristo Redentor Entre 3er Anillo Interno Y 3er Anillo Externo Bolivia, Santa Cruz de la Sierra"
+"MOTO CLUB CAP";;;"(591) (22) 2490605";"C. Gral. Gonzales No 1362 Bolivia, La Paz"
+"ANDY MOTORS";;;"(591) (33) 3422013";"Av.Beni No.299 Bolivia, Santa Cruz de la Sierra"
+"VICAR 1961 S.A.";;;"(591) (33) 3348048";"Av.Viedma Esq.Tte. Rivero No.540 Bolivia, Santa Cruz de la Sierra"
+"CHINBOL S.R.L.";;;"(591) (33) 3338390";"Cl.Sucre No.646 Bolivia, Santa Cruz de la Sierra"
+"VISAL IMPORT - EXPORT";;;"(591) (33) 3414141";"Av Benzer 3er Anillo Bolivia, Santa Cruz de la Sierra"

@@ -1,0 +1,72 @@
+$neco-wizard-control-active-done-color: $light-color;
+$neco-wizard-control-active-background: $river;
+$neco-wizard-control-done-background: $emerald;
+
+$neco-wizard-controls-text-align: center;
+$neco-wizard-controls-padding: $h6-font-size / 2 $h6-font-size;
+$neco-wizard-controls-color: $dark-color;
+$neco-wizard-controls-background: $light-color;
+$neco-wizard-controls-font-family: $alter-font-family;
+$neco-wizard-controls-font-size: $h5-font-size;
+$neco-wizard-controls-font-weight: 400;
+
+/*------------------------------------------------*/
+// NECO WIZARD
+
+.checkout-heading {
+  @extend %page-heading;
+}
+.neco-wizard-control-active, .neco-wizard-control-done {
+  span {
+      color: $neco-wizard-control-active-done-color !important;
+  }
+}
+.neco-wizard-control-active span {
+    background: $neco-wizard-control-active-background !important;
+}
+.neco-wizard-control-done span {
+    background: $neco-wizard-control-done-background !important;
+}
+.neco-wizard-controls {
+  @include inline-list();
+  margin: 0 0 $h6-font-size 0;
+  counter-reset: steps;
+  li {
+    width: 20%;
+    margin: 0;
+    text-align: $neco-wizard-controls-text-align;
+    span {
+      padding: $neco-wizard-controls-padding;
+      color: $neco-wizard-controls-color;
+      font-family: $neco-wizard-controls-font-family;
+      background: $neco-wizard-controls-background;
+      font-size: $neco-wizard-controls-font-size;
+      font-weight: normal;
+      &:before {
+        counter-increment: steps;
+        content: "0" counter(steps) ".";
+        margin-right: $micro-font-size / 2;
+      }
+    }
+  }
+}
+
+/*------------------------------------------------*/
+// NECO WIZARD
+
+/*------------------------------------------------*/
+// CONFIRMATION COMMENT
+
+.confirmation-comment {
+  margin-top: $h6-font-size;
+  textarea {
+    @extend %fill;
+    color: $light-dark-color;
+    font-family: $alter-font-family;
+    height: $h1-font-size * 2;
+    width: 100%;
+  }
+}
+
+/*------------------------------------------------*/
+// COMFIRMATION COMMENT ENDS

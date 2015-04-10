@@ -1,0 +1,10 @@
+"First Name";"Email Address";Url;Telephone;Address
+"FABRICACIONES TUBULARES E.U.";;;"(57) (1) 8263906";"Cr9 6 A-24 Funza Colombia, Bogotá"
+"ABC METAL LTDA.";;;"(57) (1) 3421909";"Cr15 12-33 Colombia, Bogotá"
+"PULIMENTOS NARANJO";;;"(57) (1) 2300600";"Cl 37 B S 68 I-89 Colombia, Bogotá"
+FAVILCROM;;;"(57) (1) 7275137";"Cr25 26-63 S Colombia, Bogotá"
+"PULIMIENTOS VICTORINO";;;"(57) (4) 2325820";"Cr44 38-22 Colombia, Medellín"
+PULCROM;;;"(57) (1) 4945724";"Cl 12 42 B-12 Colombia, Bogotá"
+"PULIMENTOS AGUSTÍN";;;"(57) (4) 5217728";"Cl 96 51 A-39 Colombia, Medellín"
+TECNI-RIN;;;"(57) (4) 2317323";"Cl 44 59-48 Colombia, Medellín"
+"METALMIND S.A.S.";;;"Telefax: (57) (1) 2600206";"Cr67 10 - 92P-1 Colombia, Bogotá"

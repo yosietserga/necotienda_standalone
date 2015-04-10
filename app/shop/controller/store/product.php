@@ -15,6 +15,9 @@ class ControllerStoreProduct extends Controller {
                 $cached = $this->cache->get('product.' .
                         $product_id .
                         $this->config->get('config_language_id') . "." .
+                        $this->request->hasQuery('hl') . "." .
+                        $this->request->hasQuery('cc') . "." .
+                        $this->customer->getId() . "." .
                         $this->config->get('config_currency') . "." .
                         (int) $this->config->get('config_store_id')
                 );
@@ -297,6 +300,9 @@ class ControllerStoreProduct extends Controller {
                         $this->cacheId = 'product.' .
                                 $product_id .
                                 $this->config->get('config_language_id') . "." .
+                                $this->request->hasQuery('hl') . "." .
+                                $this->request->hasQuery('cc') . "." .
+                                $this->customer->getId() . "." .
                                 $this->config->get('config_currency') . "." .
                                 (int) $this->config->get('config_store_id');
                     }
@@ -375,18 +381,19 @@ class ControllerStoreProduct extends Controller {
     }
 
     public function all() {
+        $Url = new Url($this->registry);
         $this->language->load('store/product');
         $this->document->title = $this->language->get('heading_title');
 
         $this->document->breadcrumbs = array();
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("common/home"),
+            'href' => $Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("store/product/all"),
+            'href' => $Url::createUrl("store/product/all"),
             'text' => $this->language->get('text_products'),
             'separator' => false
         );
@@ -437,43 +444,43 @@ class ControllerStoreProduct extends Controller {
         $this->data['sorts'][] = array(
             'text' => $this->language->get('text_default'),
             'value' => 'p.sort_order-ASC',
-            'href' => Url::createUrl("store/product/all", '&sort=p.sort_order&order=ASC' . $url)
+            'href' => $Url::createUrl("store/product/all", '&sort=p.sort_order&order=ASC' . $url)
         );
 
         $this->data['sorts'][] = array(
             'text' => $this->language->get('text_name_asc'),
             'value' => 'pd.name-ASC',
-            'href' => Url::createUrl("store/product/all", '&sort=pd.name&order=ASC' . $url)
+            'href' => $Url::createUrl("store/product/all", '&sort=pd.name&order=ASC' . $url)
         );
 
         $this->data['sorts'][] = array(
             'text' => $this->language->get('text_name_desc'),
             'value' => 'pd.name-DESC',
-            'href' => Url::createUrl("store/product/all", '&sort=pd.name&order=DESC' . $url)
+            'href' => $Url::createUrl("store/product/all", '&sort=pd.name&order=DESC' . $url)
         );
 
         $this->data['sorts'][] = array(
             'text' => $this->language->get('text_price_asc'),
             'value' => 'p.price-ASC',
-            'href' => Url::createUrl("store/product/all", '&sort=p.price&order=ASC' . $url)
+            'href' => $Url::createUrl("store/product/all", '&sort=p.price&order=ASC' . $url)
         );
 
         $this->data['sorts'][] = array(
             'text' => $this->language->get('text_price_desc'),
             'value' => 'p.price-DESC',
-            'href' => Url::createUrl("store/product/all", '&sort=p.price&order=DESC' . $url)
+            'href' => $Url::createUrl("store/product/all", '&sort=p.price&order=DESC' . $url)
         );
 
         $this->data['sorts'][] = array(
             'text' => $this->language->get('text_rating_asc'),
             'value' => 'p.rating-ASC',
-            'href' => Url::createUrl("store/product/all", '&sort=p.rating&order=ASC' . $url)
+            'href' => $Url::createUrl("store/product/all", '&sort=p.rating&order=ASC' . $url)
         );
 
         $this->data['sorts'][] = array(
             'text' => $this->language->get('text_rating_desc'),
             'value' => 'p.rating-DESC',
-            'href' => Url::createUrl("store/product/all", '&sort=p.rating&order=DESC' . $url)
+            'href' => $Url::createUrl("store/product/all", '&sort=p.rating&order=DESC' . $url)
         );
 
         $this->load->model('store/product');
@@ -540,9 +547,9 @@ class ControllerStoreProduct extends Controller {
                 $options = $this->modelProduct->getProductOptions($result['product_id']);
 
                 if ($options) {
-                    $add = Url::createUrl('store/product', array('product_id' => $result['product_id']));
+                    $add = $Url::createUrl('store/product', array('product_id' => $result['product_id']));
                 } else {
-                    $add = Url::createUrl('checkout/cart') . '&product_id=' . $result['product_id'];
+                    $add = $Url::createUrl('checkout/cart') . '&product_id=' . $result['product_id'];
                 }
 
                 $this->data['products'][] = array(
@@ -577,14 +584,14 @@ class ControllerStoreProduct extends Controller {
             $pagination->page = $data['page'];
             $pagination->limit = $data['limit'];
             $pagination->text = $this->language->get('text_pagination');
-            $pagination->url = Url::createUrl("store/product/all", $url . '&page={page}');
+            $pagination->url = $Url::createUrl("store/product/all", $url . '&page={page}');
 
-            $this->session->set('redirect', Url::createUrl("store/product/all", $url . '&page=' . $data['page']));
+            $this->session->set('redirect', $Url::createUrl("store/product/all", $url . '&page=' . $data['page']));
 
             $this->data['pagination'] = $pagination->render();
 
-            $this->data['gridView'] = Url::createUrl("store/product/all", $url . '&v=grid');
-            $this->data['listView'] = Url::createUrl("store/product/all", $url . '&v=list');
+            $this->data['gridView'] = $Url::createUrl("store/product/all", $url . '&v=grid');
+            $this->data['listView'] = $Url::createUrl("store/product/all", $url . '&v=list');
 
             if ($this->request->hasQuery('v')) {
                 $url .= '&v=' . $this->request->getQuery('v');
@@ -680,6 +687,57 @@ class ControllerStoreProduct extends Controller {
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+    
+    //TODO: crear servicio para comparar productos dentro de library
+    public function addProductToCompare() {
+        $this->load->auto('store/product');
+        $this->load->auto('json');
+        $json = array();
+        $product_id = ($this->request->hasPost('product_id')) ? $this->request->getPost('product_id') : $this->request->getQuery('product_id');
+        $result = $this->modelProduct->getProduct($product_id);
+        if (is_numeric($product_id) && $product_id && $result) {
+            $compare = $this->session->get('products_to_compare');
+            if ($compare && !in_array($product_id, $compare)) {
+                array_push($compare, $product_id);
+            } else {
+                $compare = [$product_id];
+            }
+            $this->session->set('products_to_compare', $compare);
+        } else {
+            $json['error'] = 1;
+            $json['message'] = $this->language->get('error_product_not_exists');
+        }
+        $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
+    }
+    
+    //TODO: crear servicio para comparar productos dentro de library
+    public function removeProductToCompare() {
+        $this->load->auto('store/product');
+        $this->load->auto('json');
+        $json = array();
+        $product_id = ($this->request->hasPost('product_id')) ? $this->request->getPost('product_id') : $this->request->getQuery('product_id');
+        
+        $compare = $this->session->get('products_to_compare');
+        if ($compare) {
+            if(($key = array_search($product_id, $compare)) !== false) {
+                unset($compare[$key]);
+            }
+        }
+    }
+
+    //TODO: crear servicio para comparar productos dentro de library
+    public function getProductsToCompare() {
+        $this->load->auto('store/product');
+        $this->load->auto('json');
+        $json = array();
+        
+        $results = $this->modelProduct->getProductsToCompare(array_unique($this->session->get('products_to_compare')));
+        include_once('product_array.php');
+        $json['results'] = $this->data['products'];
+        $json['display_price'] = $this->data['display_price'];
+        
+        $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
 
     public function comment() {
@@ -1028,7 +1086,7 @@ class ControllerStoreProduct extends Controller {
                 $json['results'][$k]['image'] = HTTP_IMAGE . "no_image.jpg";
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
             $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
-            $json['results'][$k]['href'] = $Url::createUrl('store/product',array('product_id'=>$v['product_id']));
+            $json['results'][$k]['href'] = $Url::createUrl('store/product', array('product_id' => $v['product_id']));
         }
 
         if (!count($json['results']))
@@ -1039,7 +1097,7 @@ class ControllerStoreProduct extends Controller {
 
     public function quickViewJson() {
         $this->load->auto('store/product');
-        
+
         $this->product_id = $product_id = isset($this->request->get['product_id']) ? (int) $this->request->get['product_id'] : $product_id = 0;
         $product_info = $this->modelProduct->getProduct($product_id);
 
@@ -1047,6 +1105,9 @@ class ControllerStoreProduct extends Controller {
             $cached = $this->cache->get('product.json.callback' .
                     $product_id .
                     $this->config->get('config_language_id') . "." .
+                    $this->request->hasQuery('hl') . "." .
+                    $this->request->hasQuery('cc') . "." .
+                    $this->customer->getId() . "." .
                     $this->config->get('config_currency') . "." .
                     (int) $this->config->get('config_store_id')
             );
@@ -1063,7 +1124,7 @@ class ControllerStoreProduct extends Controller {
                 $this->load->auto('json');
                 $this->load->auto('url');
                 $this->language->load('store/product');
-                
+
                 $Url = new Url($this->registry);
                 $average = ($this->config->get('config_review')) ? $this->modelReview->getAverageRating($product_id) : false;
 
@@ -1096,7 +1157,7 @@ class ControllerStoreProduct extends Controller {
                 }
 
                 $discounts = $this->modelProduct->getProductDiscounts($product_id);
-                
+
                 if ($discounts) {
                     $this->data['discounts'] = array();
                     foreach ($discounts as $discount) {
@@ -1124,7 +1185,7 @@ class ControllerStoreProduct extends Controller {
                 }
 
                 $this->data['model'] = $product_info['model'];
-                $this->data['href'] = $Url::createUrl('store/product',array('product_id'=>$product_info['product_id']));
+                $this->data['href'] = $Url::createUrl('store/product', array('product_id' => $product_info['product_id']));
                 $this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
                 $this->data['product_id'] = $product_id;
                 $this->data['average'] = $average;
@@ -1189,6 +1250,9 @@ class ControllerStoreProduct extends Controller {
                     $this->cacheId = 'product.json.callback' .
                             $product_id .
                             $this->config->get('config_language_id') . "." .
+                            $this->request->hasQuery('hl') . "." .
+                            $this->request->hasQuery('cc') . "." .
+                            $this->customer->getId() . "." .
                             $this->config->get('config_currency') . "." .
                             (int) $this->config->get('config_store_id');
                 }
@@ -1272,38 +1336,6 @@ class ControllerStoreProduct extends Controller {
     }
 
     protected function loadWidgets() {
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
-
-        if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
-
         $this->load->helper('widgets');
         $widgets = new NecoWidget($this->registry, $this->Route);
         foreach ($widgets->getWidgets('main') as $widget) {
@@ -1324,10 +1356,14 @@ class ControllerStoreProduct extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['widgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['widgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }
@@ -1350,10 +1386,44 @@ class ControllerStoreProduct extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['featuredWidgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
+                }
+            }
+        }
+        
+        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
+            $settings = (array) unserialize($widget['settings']);
+            if ($settings['asyn']) {
+                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $scripts[$widget['name']] = array(
+                    'id' => $widget['name'],
+                    'method' => 'ready',
+                    'script' =>
+                    "$(document.createElement('div'))
+                        .attr({
+                            id:'" . $widget['name'] . "'
+                        })
+                        .html(makeWaiting())
+                        .load('" . $url . "')
+                        .appendTo('" . $settings['target'] . "');"
+                );
+            } else {
+                if (isset($settings['route'])) {
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['featuredFooterWidgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }

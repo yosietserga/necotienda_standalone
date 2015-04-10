@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+"CASA KOREA LTDA";;;"(591) (33) 3367171";"Cl.Ayacucho No.244 Bolivia, Santa Cruz de la Sierra"
+"PRIMEX LTDA.";;;"(591) (33) 3335068";"Ayacucho No. 285 Bolivia, Santa Cruz de la Sierra"
+"EURO JOYAS & RELOJES";;;"(591) (33) 3360993";"Av.Velarde No.113 Bolivia, Santa Cruz de la Sierra"
+"S & K CASA TOKYO";;;"(591) (33) 3332960";"Cl Ayacucho No. 229 Bolivia, Santa Cruz de la Sierra"

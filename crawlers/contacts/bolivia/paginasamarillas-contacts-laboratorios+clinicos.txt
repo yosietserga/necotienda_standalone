@@ -1,0 +1,6 @@
+"First Name";"Email Address";Url;Telephone;Address
+ALCAZAR;;;"(591) (22) 4542507";"Av. Heroinas No 656 (Entre Lanza Y Antezana) Bolivia, La Paz"
+ILLIMANI;;;"(591) (22) 2317290";"Juan De La Riva Esq. Loayza Bolivia, La Paz"
+"KOZINER & WATSON";;;"(591) (22) 2152169";"C. Otero De La Vega 292/ Cañada Strongest Y Mexico Bolivia, La Paz"
+MIC;;;"(591) (22) 2492082";"Cl.Colombia No 257 Bolivia, La Paz"
+"LABORATORIOS DE ANALISIS MEDICOS CATEDRAL SRL";;;"(591) (33) 3333305";"Libertad/Andres Ibañez Bolivia, Santa Cruz de la Sierra"

@@ -106,7 +106,7 @@
 
                     <div class="row">
                         <label><?php echo $Language->get('entry_sexo'); ?></label>
-                        <select id="sexo" name="sexo" title="Seleccione su sexo" showquick="off" style="160px">
+                        <select id="sexo" name="sexo" title="Seleccione su sexo" showquick="off">
                             <option value="false">Seleccione su sexo</option>
                             <option value="m"<?php if (strtolower($sexo) == 'm') { ?> selected="selected"<?php } ?>>Hombre</option>
                             <option value="f"<?php if (strtolower($sexo) == 'f') { ?> selected="selected"<?php } ?>>Mujer</option>
@@ -285,6 +285,14 @@
         </div>
         
         <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>
+
+            <div class="clear"></div>
+
+            <div class="grid_12">
+                <div id="featuredFooter">
+                <ul class="widgets" data-position="featuredFooter"><?php if($featuredFooterWidgets) { foreach ($featuredFooterWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
+                </div>
+            </div>
 
         </section>
     </section>

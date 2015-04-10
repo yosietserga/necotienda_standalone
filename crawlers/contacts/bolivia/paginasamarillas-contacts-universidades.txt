@@ -1,0 +1,12 @@
+"First Name";"Email Address";Url;Telephone;Address
+"UNIVERSAL PRIV.FRANZ TAMAYO S.R.L.";;;"(591) (33) 3310571";"Av.Uruguay No.252 Edif.Bolivar Bolivia, Santa Cruz de la Sierra"
+"UNIVERSIDAD TEC.PRIVADA DE SANTA CRUZ S.A.";;;"Telefax: (591) (33) 3411919";"3ú Anillo Interno Entre Av.Busch Y Av.San Martin Bolivia, Santa Cruz de la Sierra"
+"UPSA-UNIVERSIDAD PRIVADA DE SANTA CRUZ DE LA SIERRA";;;"(591) (33) 3464000";"Av Paragua 4 Anillo Bolivia, Santa Cruz de la Sierra"
+"OICE CEPADE";;;"Telefax: (591) (22) 2311517";"Av. 16 De Julio Edificio San Pablo Piso 16 Of.1603 Bolivia, La Paz"
+CELAF;;;"Telefax: (591) (22) 4141248";"Plazuela Quintanilla No 1042 Esq.Fray Tomas Bolivia, La Paz"
+"UNIVERSIDAD EMPRESARIAL MATEO KULJIS";;;"Telefax: (591) (33) 3365173";"Cl. 24 De Septiembre No. 444 Bolivia, Santa Cruz de la Sierra"
+"UNIVERSIDAD CRISTIANA DE BOLIVIA";;;"(591) (33) 3426311";"Av. Banzer Km. 5 1/2 Al Norte Bolivia, Santa Cruz de la Sierra"
+"UNIVERSIDAD SALESIANA DE BOLIVIA";;;"(591) (22) 2305210";"Av. Chacaltaya No 1258 Plaza ""Don Bosco"" (Zona Achachicala) Bolivia, La Paz"
+"UNIVERSIDAD EVANGELICA BOLIVIANA";;;"(591) (33) 3560990";"Barrio Cruz Del Sur U.V. 117 Bolivia, Santa Cruz de la Sierra"
+"UNIVERSIDAD NACIONAL ECOLOGICA (UNE)";;;"(591) (33) 3460232";"Carret. A Cotoca Km. 5 Bolivia, Santa Cruz de la Sierra"
+"UNIVERSIDAD NUR";;;"(591) (33) 3363939";"Av. Cristo Redentor No. 100 Bolivia, Santa Cruz de la Sierra"

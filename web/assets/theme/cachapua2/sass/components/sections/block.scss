@@ -1,0 +1,27 @@
+
+%block-item-title, .block-item-title {
+  font-family: $base-font-family;
+  color: $dark-color;
+  font-size: $micro-font-size;
+  font-weight: 600;
+  font-style: normal;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+%block-item-title,
+.block-item-title,
+%block-item-body,
+.block-item-body {
+  display: block;
+}
+
+%block-item-body,
+.block-item-body {
+  & {
+    color: $light-dark-color;
+    font-family: $alter-font-family;
+    font-size: $micro-font-size;
+    font-weight: 300;
+  }
+}

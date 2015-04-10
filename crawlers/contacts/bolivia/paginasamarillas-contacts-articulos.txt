@@ -1,0 +1,2 @@
+"First Name";"Email Address";Url;Telephone;Address
+"ATM ARTICULOS TODA MARCA";;;"(591) (22) 2452874";"Av Montes No 682 Bolivia, La Paz"

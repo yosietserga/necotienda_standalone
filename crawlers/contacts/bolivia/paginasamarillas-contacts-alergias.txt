@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"DR. MARIO PAZ";;;"(591) (33) 3442222";"Barrio Hamacas Cl. 2 Oeste No. 22 Bolivia, Santa Cruz de la Sierra"
+"GUTIERREZ ROJAS JORGE";;;"(591) (33) 3324940";"Clinica Del Niño Jesús 1er Piso No.110 Av. Cañoto Esq. Rafael Peña Bolivia, Santa Cruz de la Sierra"

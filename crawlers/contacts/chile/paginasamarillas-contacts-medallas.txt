@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+"FABRICA DE MEDALLAS HOURS";;;"(56) (2) 2225694";"Carmen 202 Chile, Santiago"
+MEDAL;;;"(56) (2) 5220325";"Teresa Vial 1527 Chile, Santiago"

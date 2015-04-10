@@ -188,13 +188,13 @@ function error_handler($errno, $errstr, $errfile, $errline) {
             break;
     }
 
-    echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b></br >';
+    //echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b></br >';
     $log->write('PHP ' . $error . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
     return true;
 }
 
 // Error Handler
-//set_error_handler('error_handler');
+set_error_handler('error_handler');
 // App Libs and Configs Preload
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app/shop/map.php');
 

@@ -1,0 +1,13 @@
+"First Name";"Email Address";Url;Telephone;Address
+"GRUPOAQUA S.A.";ventas@grupoaqua.com;www.grupoaqua.com;"Telefax: (57) (4) 3114347";"Tr7 A 30-224 Casa 130 Colombia, Medellín"
+"ICTIO FAUNA LTDA.";ictiofauna@hotmail.com;www.ictiofauna.com;"(57) (1) 7578251";"Cr59 C 128 B-65 Colombia, Bogotá"
+"TRUTICOR ALEVINOS";elkintruchas@gmail.com;;"(57) (4) 5800901";"Cl 49 65 A-55 Colombia, Medellín"
+"ALEVINOS DE MOJARRA ROJA";victor130255@hotmail.com;;"(57) (1) 7161548";"Cr20 C 62-54 S Colombia, Bogotá"
+"PISCÍCOLA PEZSINÚ";;;"(57) (4) 7860008";"Estación Piscícola a 800 Metros U. de Córdoba Colombia, Montería"
+"TUCHA VILLA SUSY";;;"(57) (4) 2397878";"Cr43 47-68 Of:255 Colombia, Medellín"
+"AUTOSERVICIOS DEL VALLE LTDA.";;;"(57) (2) 4402955";"Cr1A10 70-46 Ap 301 Colombia, Cali"
+"PESCADOS FRESCOS DE COLOMBIA S.A";;;"(57) (6) 3343433";"Cr16 Bis 9-120 Colombia, Pereira"
+"ACUAGRANJA S.A.S";;;"(57) (1) 6133258";"Av Boyaca 99 28 Colombia, Bogotá"
+ACUACULTIVOS;;;"(57) (5) 6670149";"Mamonal Cr56 1-274 Colombia, Cartagena"
+"TRUCHAS SIERRA CLARA";;;"(57) (4) 2708699";"Cl 26 B S 47 A-50 Ap 603 Envigado Colombia, Envigado"
+"GRANJA EL RINCON LTDA.";;;"(57) (1) 6132279";"Cr67 97-96 Trr 1 Ap 1002 Colombia, Bogotá"

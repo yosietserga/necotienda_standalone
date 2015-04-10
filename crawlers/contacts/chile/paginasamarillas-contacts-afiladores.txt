@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+"AFILADORES CASA AZUL";;;"(56) (2) 26711154";"Mencia De Nidos 1133 Chile, Santiago"
+"AFILADORES LOYALTY";;;"(56) (2) 5338346";"Av. Las Americas 568 Cerrilos Chile, Santiago"
+"ANTIGUO TALLER VACIADOR";;;"(56) (2) 26990456";"Eyzaguirre 1126 Chile, Santiago"
+"EL VACIADOR ARGENTINO";;;"Telefax: (56) (32) 2251894";"Av. Colón 1873 Valparaíso Chile, Valparaiso"

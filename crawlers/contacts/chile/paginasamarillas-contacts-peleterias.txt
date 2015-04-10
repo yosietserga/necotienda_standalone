@@ -1,0 +1,2 @@
+"First Name";"Email Address";Url;Telephone;Address
+"TALLER DE PIELES Y CUEROS ROSITA LIZAMA";;;"(56) (2) 9535166";"Candelaria Goyenechea 3820 Loc 42-43 Providencia Chile, Santiago"

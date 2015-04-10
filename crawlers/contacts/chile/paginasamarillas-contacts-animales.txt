@@ -1,0 +1,8 @@
+"First Name";"Email Address";Url;Telephone;Address
+"COLOR ANIMAL";;;"(56) (2) 2073019";"Av. Nueva Costanera 4010 Chile, Santiago"
+"ANIMAL SERVICES LATINA S.A.";;;"(56) (2) 5561098";"San Ignacio 3281 - San Miguel Chile, Santiago"
+"CINICA VETERINARIA HAPPY ANIMAL";;;"(56) (2) 8508618";"Av. San Carlos 526 Chile, Santiago"
+"ANIMAL FOOD LTDA";;;"(56) (2) 2156146";"Av. Las Condes 14884 Lobarnechea Chile, Santiago"
+"ZONA ANIMAL VETERINARIA";;;"(56) (55) 332315";"Camarones 4342 - Calama Chile, Calama"
+"HOSPITAL Y HOTEL DE MASCOTAS ANIMALS AND DOGS";;;"Telefax: (56) (55) 341375";"Latorre 1455-B Calama Chile, Calama"
+"MAQUINARIA ALIMENTARIA Y ANIMAL TEC-MILL CHILE LTDA.";;;"(56) (2) 4265748";"Rupanco 8717 Las Condes Chile, Santiago"

@@ -1,0 +1,5 @@
+"First Name";"Email Address";Url;Telephone;Address
+HAQUEDOG;;;"(56) (61) 222927";"Punta Arenas Chile, Punta Arenas"
+"ABC ADIESTRAMIENTO";;;"(56) (2) 24342036";"Diego Rojas 652 La Reina Chile, Santiago"
+"ADIESTRAMIENTO ADOLFO ROSAS";;;"(56) (2) 22735886";"Rio Lauca 396 La Reina Chile, Santiago"
+"ANG ADIESTRAMIENTO";;;"(56) (2) 2761324";"EL Atolon 6291 Peñalolen Chile, Santiago"

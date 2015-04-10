@@ -1,0 +1,35 @@
+a:17:{i:0;a:2:{s:4:"name";s:15:"
+Art & Culture
+";s:3:"url";s:52:"http://www.templatemonster.com/category/art-culture/";}i:1;a:2:{s:4:"name";s:16:"
+Animals & Pets
+";s:3:"url";s:53:"http://www.templatemonster.com/category/animals-pets/";}i:2;a:2:{s:4:"name";s:22:"
+Design & Photography
+";s:3:"url";s:59:"http://www.templatemonster.com/category/design-photography/";}i:3;a:2:{s:4:"name";s:13:"
+Electronics
+";s:3:"url";s:52:"http://www.templatemonster.com/category/electronics/";}i:4;a:2:{s:4:"name";s:27:"
+Holidays, Gifts & Flowers
+";s:3:"url";s:63:"http://www.templatemonster.com/category/holidays-gifts-flowers/";}i:5;a:2:{s:4:"name";s:19:"
+Education & Books
+";s:3:"url";s:56:"http://www.templatemonster.com/category/education-books/";}i:6;a:2:{s:4:"name";s:21:"
+Business & Services
+";s:3:"url";s:49:"http://www.templatemonster.com/category/business/";}i:7;a:2:{s:4:"name";s:20:"
+Cars & Motorcycles
+";s:3:"url";s:57:"http://www.templatemonster.com/category/cars-motorcycles/";}i:8;a:2:{s:4:"name";s:27:"
+Sports, Outdoors & Travel
+";s:3:"url";s:63:"http://www.templatemonster.com/category/sports-outdoors-travel/";}i:9;a:2:{s:4:"name";s:18:"
+Fashion & Beauty
+";s:3:"url";s:55:"http://www.templatemonster.com/category/fashion-beauty/";}i:10;a:2:{s:4:"name";s:22:"
+Computers & Internet
+";s:3:"url";s:59:"http://www.templatemonster.com/category/computers-internet/";}i:11;a:2:{s:4:"name";s:19:"
+Food & Restaurant
+";s:3:"url";s:56:"http://www.templatemonster.com/category/food-restaurant/";}i:12;a:2:{s:4:"name";s:18:"
+Society & People
+";s:3:"url";s:55:"http://www.templatemonster.com/category/society-people/";}i:13;a:2:{s:4:"name";s:15:"
+Home & Family
+";s:3:"url";s:52:"http://www.templatemonster.com/category/home-family/";}i:14;a:2:{s:4:"name";s:34:"
+Entertainment, Games & Nightlife
+";s:3:"url";s:70:"http://www.templatemonster.com/category/entertainment-games-nightlife/";}i:15;a:2:{s:4:"name";s:13:"
+Real Estate
+";s:3:"url";s:52:"http://www.templatemonster.com/category/real-estate/";}i:16;a:2:{s:4:"name";s:22:"
+Medical (Healthcare)
+";s:3:"url";s:48:"http://www.templatemonster.com/category/medical/";}}

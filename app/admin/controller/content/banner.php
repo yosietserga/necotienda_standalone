@@ -141,7 +141,7 @@ class ControllerContentBanner extends Controller {
         }
         echo 1;
     }
-
+    
     /**
      * ControllerContentBanner::getById()
      * 

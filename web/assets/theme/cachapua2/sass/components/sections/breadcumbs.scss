@@ -1,0 +1,30 @@
+/*------------------------------------------------*/
+// BREAKCRUMBS
+
+.breadcrumbs {
+  background: none;
+  padding: $micro-font-size 0;
+  border-radius: 0;
+  border-width: 1px 0 1px 0;
+  border-color: $dark-light-color;
+  border-style: solid;
+  li:last-child {
+    a {
+      color: $base-color;
+    }
+  }
+  a {
+    color: $dark-color;
+    font-family: $alter-font-family;
+    &:hover {
+      text-decoration: none;
+      color: $river;
+    }
+    &:before {
+      &:hover a{
+        text-decoration: none;
+
+      }
+    }
+  }
+}

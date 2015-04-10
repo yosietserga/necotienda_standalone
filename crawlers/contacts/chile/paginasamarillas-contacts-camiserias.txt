@@ -1,0 +1,2 @@
+"First Name";"Email Address";Url;Telephone;Address
+"CAMISERÍA EUROPEA";;;"(56) (2) 2333656";"Av Providencia 2653 L-23 Chile, Santiago"

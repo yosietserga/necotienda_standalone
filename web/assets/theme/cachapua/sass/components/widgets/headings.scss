@@ -1,0 +1,140 @@
+$icon-present: true;
+
+$heading-background: $light-color;
+
+$heading-title-icon-font-size: $h6-font-size;
+$heading-title-icon-text-transform: uppercase;
+$heading-title-icon-font-weight: 600;
+
+$heading-title-padding: 0 $h6-font-size 0 0;
+$heading-title-font-family: $base-font-family;
+
+$heading-icon-color: $light-color;
+$heading-icon-background: $dark-light-color;
+$heading-icon-padding: $milli-font-size;
+$heading-icon-margin: $heading-title-padding;
+
+@mixin heading-icon-arrow() {
+  position: relative;
+  @include arrow-lazy(right, ($milli-font-size / 2.3), $heading-icon-background, 50%, 0px, after);
+}
+
+/*------------------------------------------------*/
+// HEADING
+
+.heading, %heading {
+  background: $heading-background;
+  .heading-icon, .heading-title {
+    i, h3 {
+      font-size: $heading-title-icon-font-size;
+      text-transform: $heading-title-icon-text-transform;
+      font-weight: $heading-title-icon-font-weight;
+    }
+  }
+  .heading-icon {
+    @if $icon-present {
+      display: inline-block;
+    }
+    @else {
+      display: none;
+    }
+    margin: $heading-icon-margin;
+    padding: $heading-icon-padding;
+    background: $heading-icon-background;
+    color: $heading-icon-color;
+    @include heading-icon-arrow();
+  }
+  .heading-title{
+    display: inline-block;
+    width: 100%;
+    h3 {
+      margin: 0 ;
+      padding: $heading-title-padding;
+      font-family: $heading-title-font-family;
+    }
+  }
+  @include breakpoint("small-to-medium") {
+    margin: 0;
+    & + .widget-content {
+      margin: $h6-font-size 0;
+    }
+  }
+}
+
+/*------------------------------------------------*/
+// HEADIGN ENDS
+
+/*------------------------------------------------*/
+// HEADING DROPDOWN
+
+.heading-dropdown {
+   @include breakpoint("small-to-medium") {
+   position: relative;
+   z-index: 10;
+   cursor: pointer;
+   margin: 0;
+   .heading-title {
+     &:after {
+       content: "\f107";
+       display: inline-block;
+       font-size: $h4-font-size;
+       font-family: "FontAwesome";
+       color: $dark-color;
+       position: absolute;
+       top: 50%;
+       margin-top: -$h6-font-size;
+       right: $micro-font-size;
+       cursor: pointer;
+       z-index: 0;
+     }
+   }
+ }
+}
+
+.large-heading-dropdown {
+   position: relative;
+   z-index: 10;
+   cursor: pointer;
+   .heading-title {
+     &:after {
+       content: "\f107";
+       display: inline-block;
+       font-size: $h4-font-size;
+       font-family: "FontAwesome";
+       color: $dark-color;
+       position: absolute;
+       top: 50%;
+       margin-top: -$h6-font-size;
+       right: $micro-font-size;
+       cursor: pointer;
+       z-index: 0;
+     }
+   }
+}
+
+
+/*------------------------------------------------*/
+// HEADING DROPDOWN ENDS
+
+/*------------------------------------------------*/
+// HADING STATES
+
+.heading + .widget-content {
+  @include breakpoint('small-to-medium') {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 450ms cubic-bezier(0, 1.05, 0, 1);
+  }
+}
+
+.heading.reveal-dropdown + .widget-content, *[data-show].reveal-dropdown + *[data-dropdown]{
+  max-height: 2000px;
+}
+.filter-heading.reveal-dropdown + .filter-options {
+  max-height: 2000px;
+}
+
+/*------------------------------------------------*/
+// HEADING STATES ENDS
+
+

@@ -1,0 +1,3 @@
+"First Name";"Email Address";Url;Telephone;Address
+ASTECI;;;"Telefax: (591) (33) 3642078";"Av.Virgen De Cotoca No.2516 Bolivia, Santa Cruz de la Sierra"
+"ECHAZU & ASOCIADOS PROVEEDORES INSDUSTRIALES";;;"(591) (33) 3361160";"Cl.Buenos Aires No.66 Bolivia, Santa Cruz de la Sierra"

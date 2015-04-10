@@ -1,0 +1,52 @@
+/*------------------------------------------------*/
+// NAVIGATION
+
+.logo {
+  &, a, img {
+    display: inline-block;
+    line-height: 3rem;
+    vertical-align: middle;
+    font-size: 100%;
+  }
+
+  a, img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+    @include breakpoint("small-to-medium") {
+      min-height: rem-calc(175);
+    }
+  }
+}
+.content {
+  position: relative;
+}
+
+.main-header {
+  background: transparent url('../../../images/no-home-header-bg.jpg') no-repeat scroll 50% 0px;
+  margin: 0 0 $h1-font-size 0;
+  position: relative;
+  .nav-list {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    transform: translate3d(-0.975rem, -50%, 0);
+  }
+}
+
+.home-page .main-header {
+  background: rgba($dark-color, 0);
+  position: absolute;
+  width: 100%;
+  height: auto;
+  z-index: 1000;
+  top: $h1-font-size;
+  left: 0;
+  @include breakpoint("small-to-medium") {
+     top: $h1-font-size * 1.5;
+  }
+}
+
+/*------------------------------------------------*/
+// NAVIGATION ENDS

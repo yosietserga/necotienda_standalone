@@ -25,7 +25,7 @@ class ControllerApiFacebook extends Controller {
             if ($this->request->hasQuery('code')) {
                 $_SESSION['fcode'] = $this->request->getQuery('code');
                 //$this->redirect(Url::createUrl('api/facebook'));
-            }
+            }echo __LINE__.'<br />';
             
             $redirect_uri = HTTP_HOME . 'api/facebook';
             if (strpos($redirect_uri, 'http') === false) {
@@ -40,11 +40,14 @@ class ControllerApiFacebook extends Controller {
             }
             $redirect_uri = str_replace('/web', '', $redirect_uri);
             $helper = new FacebookRedirectLoginHelper($redirect_uri);
-            
+            $params = array(
+                'scope' => 'read_stream, friends_likes, email, user_interests, publish_actions, user_photos, read_insights, read_mailbox, read_page_mailboxes, manage_pages'
+            );
+            echo __LINE__.'<br />';
             if (!isset($_SESSION['fcode'])) {
-                $this->redirect($helper->getLoginUrl());
+                $this->redirect($helper->getLoginUrl($params));
             }
-
+echo __LINE__.'<br />';
             if (isset($_SESSION['ftoken'])) {
                 $this->fb = new FacebookSession($_SESSION['ftoken']);
                 try {
@@ -63,14 +66,19 @@ class ControllerApiFacebook extends Controller {
                     echo $ex . '<br />';
                 }
             }
-        
+        echo __LINE__.'<br />';
             if ($this->fb) {
                 if (!isset($_SESSION['ftoken'])) {
                     $_SESSION['ftoken'] = $this->fb->getToken();
                 }
-                
-                $actions = array('invitefriends', 'login', 'promote');
-                if (in_array($_SESSION['action'], $actions)) {
+                echo __LINE__.'<br />';
+                $actions = array(
+                    'invitefriends',
+                    'login',
+                    'promote',
+                    'inboxlist'
+                );
+                if (in_array($_SESSION['action'], $actions)) {echo __LINE__.'<br />';
                     if ($_SESSION['action'] === 'login') {
                         
                         try {
@@ -83,7 +91,7 @@ class ControllerApiFacebook extends Controller {
                         }
                     }
                     
-                    if ($_SESSION['action'] === 'promote') {
+                    if ($_SESSION['action'] === 'promote') {echo __LINE__.'<br />';
                         try {
                             $request = new FacebookRequest($this->fb, 'POST', '/me/feed', array(
                                 'link' => 'http://www.necoyoad.com',
@@ -97,7 +105,7 @@ class ControllerApiFacebook extends Controller {
                         }
                     }
                     
-                    if ($_SESSION['action'] === 'invitefriends') {
+                    if ($_SESSION['action'] === 'invitefriends') {echo __LINE__.'<br />';
                         
                         try {
                             $request = new FacebookRequest($this->fb, 'GET', '/me/friends');
@@ -110,6 +118,7 @@ class ControllerApiFacebook extends Controller {
                         }
                     }
                     
+                    echo __LINE__.'<br />';
                     $this->{$_SESSION['action']}($graphObject);
                 } else {
                     unset($_SESSION['ftoken']);
@@ -123,7 +132,7 @@ class ControllerApiFacebook extends Controller {
                      */
                 }
             } else {
-                $this->redirect($helper->getLoginUrl());
+                $this->redirect($helper->getLoginUrl($params));
             }
         }
     }
@@ -192,9 +201,7 @@ class ControllerApiFacebook extends Controller {
                     }
                 }
         } else {
-            echo '<script>alert("' . __LINE__ . ': ' . var_dump($this->fb->getLoginStatusUrl()) . '");</script>';
-            echo '<script>alert("' . __LINE__ . ': ' . var_dump($this->fb->getLoginUrl()) . '");</script>';
-            $this->redirect($this->fb->getLoginUrl());
+            
         }
     }
 
@@ -217,7 +224,7 @@ class ControllerApiFacebook extends Controller {
                 echo __LINE__ . ': ' . $e->getMessage() . '<br />';
             }
         } else {
-            $this->redirect($this->fb->getLoginUrl());
+            
         }
     }
 

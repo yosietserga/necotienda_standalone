@@ -1,0 +1,18 @@
+/*------------------------------------------------*/
+// GENERIC PAGE
+
+.generic-page {
+  padding: $micro-font-size;
+  background: $light-color;
+  margin: 0 0 $h1-font-size 0;
+  p:empty {
+    display: none;
+  }
+  ul {
+    @extend %content-block-list;
+  }
+}
+.social-actions {
+  max-width: $h1-font-size * 10;
+  margin: 0 0 $h1-font-size 0;
+}

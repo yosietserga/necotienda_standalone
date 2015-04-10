@@ -1,0 +1,10 @@
+"First Name";"Email Address";Url;Telephone;Address
+"HOSTAL ECUATORIAL";;;"(591) (22) 4559606";"Av. Ayacucho No 923 Casi Aroma Bolivia, La Paz"
+"HOSTAL CLAYMOR";;;"Fax: (591) (22) 5283453";"Aroma No 552, 6 De Octubre Y la Paz Bolivia, La Paz"
+"LOS COCOS";;;"(591) (22) 44136578";"Av. Benigno Paz Acera Sud Lado Farmacia Chapare Bolivia, La Paz"
+ORURO;;;"(591) (22) 4224345";"Calle Agustin Lopez No 864 Entre Montes Y Av. Aroma Bolivia, La Paz"
+PATRIMONIO;;;"(591) (22) 6448101";"Calle Grau No 154 Bolivia, La Paz"
+"HOSTAL ESTEFANIA";;;"Telefax: (591) (22) 4128416";"Ayacucho 0732 Entre L. Cabrera Y Aroma Bolivia, La Paz"
+"HOSTAL EL TURISTA";;;"(591) (33) 3354759";"Santa Cruz de la Sierra Bolivia, Santa Cruz de la Sierra"
+"BUENOS AIRES";;;"(591) (22) 4254005";"Calle 25 De Mayo No 329 Casi Ecuador Bolivia, La Paz"
+"HOSTAL TAMBO DE ORO";;;"Telefax: (591) (22) 2282181";"Av. Armentia No 367 Bolivia, La Paz"

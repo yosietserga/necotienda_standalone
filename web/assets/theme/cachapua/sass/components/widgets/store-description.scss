@@ -1,0 +1,24 @@
+/*------------------------------------------------*/
+// Store-Description-Widget
+
+.store-description-widget {
+  p:empty {
+    display: none;
+  }
+  @include breakpoint("small-to-medium") {
+    margin: 0 0 $h1-font-size 0;
+  }
+  p:not(:empty) {
+    display: block;
+    font-size: $micro-font-size;
+    font-family: $alter-font-family;
+  }
+}
+
+.underbottom-widgets.widgets .store-description-widget {
+  p:not(:empty) {
+    color: $dark-light-color;
+    padding: $micro-font-size;
+    border: 1px solid $dark-light-color;
+  }
+}

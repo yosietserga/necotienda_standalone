@@ -415,6 +415,9 @@ class ControllerContentMenu extends Controller {
 
         //$this->data['menus'] = $this->modelMenu->getMenus(0);
 
+        $javascripts[] = "js/vendor/jquery.nestedSortable.js";
+        $this->javascripts = array_merge($javascripts, $this->javascripts);   
+        
         $scripts[] = array('id' => 'menuForm', 'method' => 'ready', 'script' =>
             "$('#_name').on('change', function(){
                 $('#name').val($(this).val());

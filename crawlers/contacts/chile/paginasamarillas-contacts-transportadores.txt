@@ -1,0 +1,7 @@
+"First Name";"Email Address";Url;Telephone;Address
+"BELEN TRANSPOTES Y ARRIENDO";;;"(56) (55) 788533";"Antofagasta Chile, Antofagasta"
+"LION TRANSPORTES";;;"(56) (55) 311342";"Calama Chile, Calama"
+"BENCINA TRANSPORTES";;;"(56) (55) 233860";"Av.Industrial 720-B ndustrial Chile, Antofagasta"
+"TRANSPORTES QUINTEROS";;;"(56) (55) 551865";"Antofagasta Chile, Antofagasta"
+TAXITEL;;;"(56) (55) 311162";"Calama Chile, Calama"
+"CARGO NET";;;"(56) (2) 6905100";"Edificio Centro Aereo 317 Santiago Chile, Santiago"

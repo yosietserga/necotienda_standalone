@@ -16,6 +16,16 @@
         <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][autoload]" value="1" checked="checked" />
     </div>
     
+    <div class="row">
+        <label><?php echo $Language->get('Show On Mobile'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showonmobile]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
+        <label><?php echo $Language->get('Show On Desktop'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showondesktop]" value="1" checked="checked" />
+    </div>
+
             <div class="row">
                 <label><?php echo $Language->get('entry_code'); ?></label><br />
                 <textarea name="Widgets[<?php echo $name; ?>][settings][google_maps_code]" cols="40" rows="7"><?php echo $google_maps_code; ?></textarea>

@@ -4,17 +4,43 @@ class ControllerCommonHeader extends Controller {
 
     protected function index() {
         $this->load->library('browser');
+        $Url = new Url($this->registry);
         $browser = new Browser;
         if ($browser->getBrowser() == 'Internet Explorer' && $browser->getVersion() <= 9) {
-            $this->redirect(Url::createUrl("page/deprecated"));
+            $this->redirect($Url::createUrl("page/deprecated"));
         }
 
+        if ($this->request->hasQuery('hl') || $this->request->hasQuery('cc')) {
+            
+            if ($this->request->hasQuery('_route_')) {
+                $this->session->set('redirect', HTTP_HOME . $this->request->getQuery('_route_'));
+            } elseif ($this->request->hasQuery('r')) {
+                $data = $this->request->get;
+                unset($data['_route_']);
+                $route = $data['r'];
+                unset($data['r']);
+                unset($data['cc']);
+                unset($data['hl']);
+                $url = '';
+
+                if ($data) {
+                    $url = '&' . urldecode(http_build_query($data));
+                }
+
+                $this->session->set('redirect', $Url::createUrl($route, $url));
+            } else {
+                $this->session->set('redirect', HTTP_HOME);
+            }
+        }
+        
         if ($this->request->hasQuery('hl')) {
             $this->session->set('language', $this->request->getQuery('hl'));
-            if ($this->session->has('redirect')) {
-                $this->redirect($this->session->get('redirect'));
-            } else {
-                $this->redirect(Url::createUrl('common/home'));
+            if (!$this->request->hasQuery('cc')) {
+                if ($this->session->has('redirect')) {
+                    $this->redirect($this->session->get('redirect'));
+                } else {
+                    $this->redirect(HTTP_HOME);
+                }
             }
         }
 
@@ -25,7 +51,7 @@ class ControllerCommonHeader extends Controller {
             if ($this->session->has('redirect')) {
                 $this->redirect($this->session->get('redirect'));
             } else {
-                $this->redirect(Url::createUrl('common/home'));
+                $this->redirect(HTTP_HOME);
             }
         }
 
@@ -66,82 +92,21 @@ class ControllerCommonHeader extends Controller {
         $this->data['links'] = $this->document->links;
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
 
-        // style files
-        $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
-
-        /*
-          if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-          $styles[] = array('media'=>'all','href'=> str_replace('%theme%',$this->config->get('config_template'),HTTP_THEME_CSS) . 'theme.css');
-          } else {
-          $styles[] = array('media'=>'all','href'=> str_replace('%theme%','choroni',HTTP_THEME_CSS) . 'theme.css');
-          }
-          if (file_exists(DIR_CSS."custom-". (int)$this->config->get('theme_default_id') ."-". $this->config->get('config_template') .".css")) {
-          $styles[] = array('media'=>'all','href'=>$csspath."custom-". (int)$this->config->get('theme_default_id') ."-". $this->config->get('config_template') .".css");
-          }
-         */
-
-        $this->data['css'] = "";
-        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'vendor.css')) {
-            $this->data['css'] .= file_get_contents(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'vendor.css');
-        }
-        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'theme.css')) {
-            $this->data['css'] .= file_get_contents(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'theme.css');
-        }
-        foreach ($this->styles as $css) {
-            $this->data['css'] .= file_get_contents($css['href']);
-        }
-
-        //TODO: eliminar la compatibilidad con la version anterior
-        $this->load->auto('style/theme');
-        foreach ($this->modelTheme->getAll() as $theme) {
-            if ($this->config->get('theme_default_id') == $theme['theme_id'] && file_exists(DIR_CSS . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
-                $this->data['css'] .= file_get_contents($csspath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
-                break;
-            } elseif (file_exists(DIR_CSS . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
-                $this->data['css'] .= file_get_contents($csspath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
-                break;
-            }
-        }
-
-        if ($this->data['css']) {
-            $this->data['css'] = str_replace("../../../images/", HTTP_IMAGE, $this->data['css']);
-            $this->data['css'] = str_replace("../images/", str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_IMAGE), $this->data['css']);
-            $this->data['css'] = str_replace("../fonts/", str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_FONT), $this->data['css']);
-        }
-
         $this->load->library('user');
         if ($this->user->getId()) {
             $this->data['is_admin'] = true;
             $this->language->load('common/admin');
-            $styles[] = array('media' => 'screen', 'href' => HTTP_ADMIN . 'css/front/admin.css');
-            $styles[] = array('media' => 'screen', 'href' => $csspath . 'neco.tips.css');
-            $styles[] = array('media' => 'screen', 'href' => $csspath . 'jquery-ui/jquery-ui.min.css');
-
             if ($this->request->hasQuery('theme_editor')) {
                 $this->data['theme_editor'] = true;
-
                 if ($this->request->hasQuery('template') && file_exists(DIR_TEMPLATE . $this->request->getQuery('template') . '/common/header.tpl')) {
-                    $styles[] = array('media' => 'screen', 'href' => $csspath . 'neco.colorpicker.css');
                     $this->config->set('config_template', $this->request->getQuery('template'));
-                    $this->data['new_theme'] = Url::createAdminUrl('style/theme/insert', array(), 'NONSSL', HTTP_ADMIN);
-                    $this->data['save_theme'] = Url::createAdminUrl('style/theme/save', array('theme_id' => $this->request->getQuery('theme_id'), 'template' => $this->request->getQuery('template')), 'NONSSL', HTTP_ADMIN);
-                    $this->data['download_theme'] = Url::createAdminUrl('style/theme/download', array('theme_id' => $this->request->getQuery('theme_id'), 'template' => $this->request->getQuery('template')), 'NONSSL', HTTP_ADMIN);
                 }
             }
-
-            $this->data['create_product'] = Url::createAdminUrl('store/product/insert', array(), 'NONSSL', HTTP_ADMIN);
-            $this->data['create_page'] = Url::createAdminUrl('content/page/insert', array(), 'NONSSL', HTTP_ADMIN);
-            $this->data['create_post'] = Url::createAdminUrl('content/post/insert', array(), 'NONSSL', HTTP_ADMIN);
-            $this->data['create_manufacturer'] = Url::createAdminUrl('store/manufacturer/insert', array(), 'NONSSL', HTTP_ADMIN);
-            $this->data['create_product_category'] = Url::createAdminUrl('store/category/insert', array(), 'NONSSL', HTTP_ADMIN);
-            $this->data['create_post_category'] = Url::createAdminUrl('content/post_category/insert', array(), 'NONSSL', HTTP_ADMIN);
         }
 
-        if ($styles)
-            $this->data['styles'] = $this->styles = array_merge($styles, $this->styles);
-
+        $this->loadCss();
+        
         $this->data['store'] = $this->config->get('config_name');
-
         $this->data['isLogged'] = $this->customer->isLogged();
 
         if ($this->customer->isLogged()) {
@@ -186,7 +151,7 @@ class ControllerCommonHeader extends Controller {
          */
 
         if (!isset($this->request->get['r'])) {
-            $this->session->set('redirect', Url::createUrl('common/home'));
+            $this->session->set('redirect', HTTP_HOME);
         } else {
             $data = $this->request->get;
             unset($data['_route_']);
@@ -200,6 +165,7 @@ class ControllerCommonHeader extends Controller {
 
             $this->session->set('redirect', Url::createUrl($route, $url));
         }
+        $this->data['current_url'] = $this->session->get('redirect');
 
         $this->data['language_code'] = $this->session->get('language');
         $this->data['languages'] = array();
@@ -254,10 +220,14 @@ class ControllerCommonHeader extends Controller {
                 );
             } else {
                 if (isset($settings['route'])) {
-                    if ($settings['autoload'])
-                        $this->data['widgets'][] = $widget['name'];
-                    $this->children[$widget['name']] = $settings['route'];
-                    $this->widget[$widget['name']] = $widget;
+                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
+                        if ($settings['autoload']) {
+                            $this->data['widgets'][] = $widget['name'];
+                        }
+                        
+                        $this->children[$widget['name']] = $settings['route'];
+                        $this->widget[$widget['name']] = $widget;
+                    }
                 }
             }
         }
@@ -323,4 +293,68 @@ class ControllerCommonHeader extends Controller {
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
     
+    protected function loadCss() {
+        $this->data['css'] = "";
+        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'vendor.css')) {
+            $this->data['css'] .= file_get_contents(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'vendor.css');
+        }
+        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'theme.css')) {
+            $this->data['css'] .= file_get_contents(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'theme.css');
+        }
+        
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
+            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
+        } else {
+            $csspath = str_replace("%theme%", "choroni", $csspath);
+            $cssFolder = str_replace("%theme%", "choroni", DIR_THEME_CSS);
+        }
+
+        if (file_exists($cssFolder . str_replace('/', '', strtolower($this->Route) . '.css'))) {
+            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('/', '', strtolower($this->Route) . '.css'));
+        }
+
+        if (count($styles)) {
+            $this->styles = array_merge($this->styles, $styles);
+        }
+        
+        foreach ($this->styles as $css) {
+            $this->data['css'] .= file_get_contents($css['href']);
+        }
+
+        $this->load->auto('style/theme');
+        $cssmainpath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
+        foreach ($this->modelTheme->getAll() as $theme) {
+            if ($this->config->get('theme_default_id') === $theme['theme_id']) {
+                if (file_exists(DIR_CSS . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
+                    $this->data['css'] .= file_get_contents($cssmainpath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
+                    break;
+                } elseif (file_exists($cssFolder . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
+                    $this->data['css'] .= file_get_contents($csspath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
+                    break;
+                }
+            }
+        }
+
+        if ($this->data['css']) {
+            $this->data['css'] = str_replace("../../../images/", HTTP_IMAGE, $this->data['css']);
+            $this->data['css'] = str_replace("../images/", str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_IMAGE), $this->data['css']);
+            $this->data['css'] = str_replace("../fonts/", str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_FONT), $this->data['css']);
+        }
+
+        $this->load->library('user');
+        if ($this->user->getId()) {
+            $this->data['is_admin'] = true;
+            $styles[] = array('media' => 'screen', 'href' => $cssmainpath . 'jquery-ui/jquery-ui.min.css');
+            $styles[] = array('media' => 'screen', 'href' => HTTP_ADMIN . 'css/front/admin.css');
+            if ($this->request->hasQuery('theme_editor') && $this->request->hasQuery('template')) {
+                    $styles[] = array('media' => 'screen', 'href' => $cssmainpath . 'neco.colorpicker.css');
+            }
+        }
+
+        if ($styles)
+        $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
+    }
+
 }

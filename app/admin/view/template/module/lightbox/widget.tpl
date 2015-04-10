@@ -16,6 +16,16 @@
     </div>
     
     <div class="row">
+        <label><?php echo $Language->get('Show On Mobile'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showonmobile]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
+        <label><?php echo $Language->get('Show On Desktop'); ?></label>
+        <input type="checkbox" name="Widgets[<?php echo $name; ?>][settings][showondesktop]" value="1" checked="checked" />
+    </div>
+
+    <div class="row">
         <label><?php echo $Language->get('entry_width'); ?></label>
         <input type="text" name="Widgets[<?php echo $name; ?>][settings][width]" value="<?php echo isset($settings['title']) ? $settings['title'] : '500px'; ?>" />
     </div>

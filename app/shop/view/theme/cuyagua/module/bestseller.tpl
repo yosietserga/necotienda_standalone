@@ -7,7 +7,9 @@
         <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
             <div class="heading-title">
                 <h3>
-                    <i class="icon heading-icon fa fa-star fa-2x"></i>
+                    <i class="heading-icon icon icon-trophy">
+                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/trophy.tpl"); ?>
+                    </i>
                     <?php echo $heading_title; ?>
                 </h3>
             </div>

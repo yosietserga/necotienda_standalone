@@ -1,17 +1,20 @@
 <!-- catalog-latest -->
+
 <?php if($products) { ?>
 <li class="nt-editable latest-home latestWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
     <?php if ($heading_title) { ?>
     <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
             <h3>
-                <i class="icon heading-icon fa fa-send fa-2x"></i>
+                <i class="heading-icon icon icon-folder-open">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/newspaper.tpl"); ?>
+                </i>
                 <?php echo $heading_title; ?>
             </h3>
         </div>
     </div>
     <?php } ?>
-        
+
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/sort.tpl"); ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/pagination.tpl"); ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/blockgrid-start.tpl"); ?>

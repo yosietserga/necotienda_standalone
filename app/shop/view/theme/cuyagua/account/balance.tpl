@@ -5,25 +5,25 @@
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/messages.tpl"); ?>
 
-    <h1>Saldos</h1>
+    <h1><?php echo $heading_title; ?></h1>
 
     <div class="filter-form simple-form">
         <input type="text" name="filter_order" id="filter_order" value="" placeholder="Buscar Pago ID..." />
         <select name="filter_status" id="filter_status">
-            <option value="">Todos</option>
-            <option value="0">Pendientes</option>
-            <option value="1">Confirmados</option>
-            <option value="-1">No confirmados</option>
+            <option value=""><?php echo $Language->get('text_option_all');?></option>
+            <option value="0"><?php echo $Language->get('text_option_pending');?></option>
+            <option value="1"><?php echo $Language->get('text_option_confirmed');?></option>
+            <option value="-1"><?php echo $Language->get('text_option_no_confirmed');?></option>
         </select>
         <select name="filter_limit" id="filter_limit">
-            <option value="5">5 por p&aacute;gina</option>
-            <option value="10">10 por p&aacute;gina</option>
-            <option value="20">20 por p&aacute;gina</option>
-            <option value="50">50 por p&aacute;gina</option>
+            <option value="5"><?php echo $Language->get('text_option_5_per_page');?></option>
+            <option value="10"><?php echo $Language->get('text_option_10_per_page');?></option>
+            <option value="20"><?php echo $Language->get('text_option_20_per_page');?></option>
+            <option value="50"><?php echo $Language->get('text_option_50_per_page');?></option>
         </select>
         <?php echo $text_sort; ?>
         <div class="action-button">
-            <a href="#" id="filter" class="filter-action">Filtrar</a>
+            <a href="#" id="filter" class="filter-action"><?php echo $Language->get('text_filter');?></a>
         </div>
     </div>
 
@@ -33,12 +33,12 @@
             <table>
                 <thead>
                 <tr>
-                    <th>ID del Pago</th>
-                    <th>ID del Pedido</th>
+                    <th><?php echo $Language->get('table_head_payment_id');?></th>
+                    <th><?php echo $Language->get('table_head_order_id');?></th>
                     <th><?php echo $text_status; ?></th>
                     <th><?php echo $text_date_added; ?></th>
                     <th><?php echo $text_total; ?></th>
-                    <th>Acciones</th>
+                    <th><?php echo $Language->get('table_head_actions');?></th>
                 </tr>
                 </thead>
                         <?php foreach ($payments as $value) { ?>
@@ -48,13 +48,13 @@
                     <td><?php echo $value['status']; ?></td>
                     <td><?php echo $value['date_added'];?></td>
                     <td><?php echo $value['amount']; ?></td>
-                    <td><a href="<?php echo $Url::createUrl("account/payment/receipt",array('payment_id'=>$value['order_payment_id'])); ?>" class="button">Ver Recibo</a></td>
+                    <td><a href="<?php echo $Url::createUrl("account/payment/receipt",array('payment_id'=>$value['order_payment_id'])); ?>" class="button"><?php echo $Language->get('text_see_recipe');?></a></td>
                 </tr>
                         <?php } ?>
             </table>
             <?php if ($pagination) { ?><div class="pagination"><?php echo $pagination; ?></div><?php } ?>
             <?php } else { ?>
-                <div class="no-info">No tiene ning&uacute;n pago registrado <a class="suggestion-action" href="<?php echo $Url::createUrl("account/payment/register"); ?>">¿Deasea registrar uno?</a></div>
+                <div class="no-info"><?php echo $Language->get('text_empty_page');?>&nbsp;<a class="suggestion-action" href="<?php echo $Url::createUrl("account/payment/register"); ?>"><?php echo $Language->get('text_help');?></a></div>
             <?php } ?>
         </form>
     </div>

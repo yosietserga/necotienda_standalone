@@ -4,9 +4,11 @@
 
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/messages.tpl"); ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
-    <h1>Direcciones</h1>
+
+    <h1><?php echo $heading_title; ?></h1>
 
     <?php foreach ($addresses as $result) { ?>
+
     <div class="address-data data">
       <ul>
           <li class="address-info"><span><?php echo $result['address']; if ($result['default']) { echo " (Predeterminada)"; } ?></span></li>
@@ -26,6 +28,7 @@
           </li>
       </ul>
     </div>
+
     <?php } ?>
     <div class="action-button action-new">
         <a title="<?php echo $button_new_address; ?>" onclick="location = '<?php echo str_replace('&', '&amp;', $insert); ?>'"><?php echo $button_new_address; ?></a>

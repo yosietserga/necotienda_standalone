@@ -5,8 +5,41 @@
                 <option value="<?php echo $sorted['href']; ?>"<?php if (($sort . '-' . $order) == $sorted['value']) { ?> selected="selected"<?php } ?>><?php echo $sorted['text']; ?></option>
             <?php } ?>
         </select>
-        <a class="view_style" onclick="if ($('#productsWrapper').hasClass('catalog-list')) { $('#productsWrapper').removeClass('catalog-list').addClass('catalog-grid'); $(this).find('i').removeClass('fa-th-list').addClass('fa-th-large'); } else { $('#productsWrapper').removeClass('catalog-grid').addClass('catalog-list'); $(this).find('i').removeClass('fa-th-large').addClass('fa-th-list'); }">
-            <i class="fa fa-th-list fa-2x"></i>
+        <a data-action="sort" class="view_style">
+            <i class="icon icon-sort">
+                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/th-large.tpl"); ?> 
+            </i>
         </a>
     </div>
 <?php } ?>
+
+<script>
+(function () {
+    var listResource = '<?php include(DIR_TEMPLATE  . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
+    var gridResource = '<?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
+    var gridModeIcon = '<i class="icon icon-sort">' + gridResource + '</i>';
+    var listModeIcon = '<i class="icon icon-sort">' + listResource + '</i>';
+    var listModeFlag = 'catalog-list';
+    var gridModeFlag = 'catalog-grid';
+    var $productsWrapper = $('#productsWrapper');
+
+    $("[data-action='sort']").click(function (e) {
+        var isOnListMode = $productsWrapper.hasClass(listModeFlag);
+        var $self = $(this);
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (isOnListMode) {
+            $productsWrapper
+                .removeClass(listModeFlag)
+                .addClass(gridModeFlag);
+            $self.html(listModeIcon);
+        } else {
+            $productsWrapper
+                .removeClass(gridModeFlag)
+                .addClass(listModeFlag);
+            $self.html(gridModeIcon);
+        }
+    });
+})();
+</script>

@@ -25,7 +25,7 @@
             },
             error:      {
                 classname:'neco-form-error',
-                text:'Lo sentimos pero no se pudo procesar el formulario',
+                text:'Lo sentimos pero no se pudo procesar el formulario'
             },
             options:    {},
             create:     function(){},
@@ -34,25 +34,23 @@
             success:    function(){},
             submit: function(){}
         };
-        
+
         var settings = {};
         var data = {};
         var methods = {
-            init : function(options) {
+            init : function (options) {
                 return this.each(function() {
                     settings = $.extend({}, defaults, options);
                     data.element = $(this);
                     helpers._create();
                     data.container = data.element.find('.' + settings.classname);
-                    
                 });
             }
         };
- 
         var helpers = {
-            _create: function() {                
+            _create: function () {
                 var formCounter = 0;
-                if (data.element.length == 0) {
+                if (data.element.length === 0) {
                     data.element = $('body');
                     $(data.element).find('form').each(function() {
                         $(this).attr('id','neco-form-' + formCounter).addClass('neco-form');
@@ -70,10 +68,10 @@
                             $(this).ntTextArea();
                         });
                     });
-                } 
-                if (data.element.length > 0 && $(data.element).get(0).tagName != 'FORM') {
+                }
+                if (data.element.length > 0 && $(data.element).get(0).tagName !== 'FORM') {
                     if ($(data.element).find('form')) {
-                        $(data.element).find('form').each(function() {
+                        $(data.element).find('form').each(function () {
                             $(this).attr('id','neco-form-' + formCounter).addClass('neco-form');
                             formCounter = formCounter + 1 * 1;
                             
@@ -91,7 +89,7 @@
                         });
                     }
                 } 
-                if ($(data.element).get(0).tagName == 'FORM') {
+                if ($(data.element).get(0).tagName === 'FORM') {
                     $(data.element).addClass('neco-form').attr({
                         action:settings.url,
                         method:settings.type,
@@ -99,11 +97,6 @@
                         name:'neco-form-' + formCounter
                     });
                     $(data.element).find('input').each(function() {
-                        if (settings.map) {
-                            
-                        } else {
-                            
-                        }
                         $(this).ntInput();
                     });
                 }
@@ -111,24 +104,32 @@
                 $(data.element).find('label').each(function() {
                     $(this).addClass('neco-label');
                 });
-                
-                submitButton = $(document.createElement('a')).addClass('button').text('Aceptar').attr({
-                    title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
-                }).css({'display':'none'}).appendTo(data.element);
-                
-                cancelButton = $(document.createElement('a')).addClass('button').text('Cancelar').attr({
-                    title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
-                }).css({'display':'none'}).appendTo(data.element);
-                
-                $(cancelButton).on('click',function(e){
-                   $(data.element).find('input').each(function(){
-                        $(this).val('').removeClass('neco-input-error').removeClass('neco-input-success');
-                        $("#tempError").remove();
-                   }); 
-                }).after('<div class="clear"></div>');
+
+                var submitButton = $(
+                        "<div class='action-button action-accept' style='margin-right: 0.875rem; display:inline-block;'>" +
+                            "<a>Aceptar</a>" +
+                        "</div>");
+                var cancelButton = $(
+                        "<div class='action-button action-cancel' style='margin-right: 0.875rem; display:inline-block;'>" +
+                            "<a>Cancelar</a>" +
+                        "</div>");
+
+                setTimeout(function() {
+                    submitButton.appendTo(data.element);
+
+                    cancelButton.appendTo(data.element);
+
+                    $(cancelButton).on('click',function(e){
+                       $(data.element).find('input').each(function(){
+                            $(this).val('').removeClass('neco-input-error').removeClass('neco-input-success');
+                            $("#tempError").remove();
+                       });
+                    });
+                }, 5000);
+
                 
                 if (settings.lockButton) {
-                    unlockButton = $(document.createElement('div')).attr({
+                    var unlockButton = $(document.createElement('div')).attr({
                        id:'neco-unlock-form' 
                     }).html('<div id="slide-to-unlock"></div><div id="neco-unlock-slider-wrapper"><div id="neco-unlock-slider"><div class="ui-slider-handle"></div></div></div>').appendTo(data.element);
                     
@@ -152,67 +153,94 @@
                         }
               		});
                 } else {
-                    if (settings.submitButton) $(submitButton).fadeIn();
-                    if (settings.cancelButton) $(cancelButton).fadeIn();
+                    if (settings.submitButton){ $(submitButton).fadeIn(); }
+                    if (settings.cancelButton){ $(cancelButton).fadeIn(); }
                 }
-                $(submitButton).on('click',function(e){
+                $(submitButton).on('click',function(){
                     var msg;
                     var error = false;
                     var top, input;
                     $(data.element).find('input').each(function(){
-                        var value = !!$(this).val();
-                        var required = $(this).attr('required');
-                        var type = $(this).attr('type');
-                        var top = $(this).offset().top;
-                        
-                        if (type=='email' && $(this).val()=='@' && $(this).attr('required')) {
-                            error = true;
+
+                        var $self = $(this);
+                        top = $self.offset().top;
+                        var value = !!$self.val();
+                        var required = $self.attr('required');
+                        var type = $self.attr('type');
+                        var pattern = new RegExp(/.["\\\/\{\}\[\]\+']/i);
+                        console.log(this);
+
+                        var warnings = Object.freeze({
+                            email: 'Debes ingresar una direcci\u00F3n de E-mail v\u00E1lida.',
+                            fullname: 'Debes ingresar tu nombre completo.',
+                            firstname: 'Debes ingresar tus nombres.',
+                            lastname: 'Debes ingresar tus apellidos.',
+                            empty: 'Este campo no debe estar vacío.',
+                            notAllowed: 'No se permiten ninguno de estos caracteres especiales ["#$/\'+}{\u003C\u003E] en este formulario.',
+                            errors: 'Hay errores en el formulario, por favor revise y corr\u00EDjalos todos para poder continuar.'
+                        });
+
+                        var patterns = Object.freeze({
+                           alphaNumeric: /^\D+$/i,
+                           email: /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,4})|(aero|coop|info|museum|name))$/i,
+                           date: /^(0[1-9]|[12][0-9]|3[01])+[\-\/]+(0[1-9]|1[012])+[\-\/]+(19|20)[0-9]{2}/i,
+                           rif: /\b[JGVE]-[0-9]{8}-[0-9]{1}\b/i,
+                           numeric: /^\d+$/i ,
+                           phone: /\(?(\d{4})\)? ?(\d{3})+\.(\d{2})+\.(\d{2})/i,
+                           password: /^.*(?=.{6,})(?=.*\d)(?=.*[a-zA-Z]).*$/i
+                        });
+
+                        var showFeedbackOnSubmit = function (context, msg) {
+                            var warning;
                             $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar una direcci\u00F3n de email v\u00E1lida');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar una direcci\u00F3n de email v\u00E1lida'});
+                            warning = $('<p>')
+                                .attr("id", "tempError")
+                                .addClass("neco-submit-error")
+                                .text(msg);
+                            if (context.hasClass('neco-input-success')) {
+                                context.removeClass('neco-input-success');
+                            }
+                            context.addClass('neco-input-error');
+                            context.after(warning);
+                            context.focus();
+                        };
+
+                        var validateInput = function (pattern, element) {
+                            pattern = new RegExp(pattern);
+                            if (element.attr('required') === 'required') {
+                                return pattern.test(element.val());
+                            }
+                            return true;
+                        };
+
+                        if (type === 'email' && !validateInput(patterns.email, $self)) {
+                            error = true;
+                            showFeedbackOnSubmit($self, warnings.email);
                         }
                         
-                        if (type=='fullname' && $(this).val()=='Ingresa tu nombre completo') {
+                        if (type === 'fullname' && !validateInput(patterns.alphaNumeric, $self)) {
                             error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar tu nombre completo');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar tu nombre completo'});
+                            showFeedbackOnSubmit($self, warnings.fullname);
                         }
                         
-                        if (type=='firstname' && $(this).val()=='Ingrese sus nombres') {
+                        if (type === 'firstname' && !validateInput(patterns.alphaNumeric, $self)) {
                             error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar tus nombres');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar tus nombres'});
+                            showFeedbackOnSubmit($self, warnings.firstname);
                         }
                         
-                        if (type=='lastname' && $(this).val()=='Ingrese sus apellidos') {
+                        if (type === 'lastname' && !validateInput(patterns.alphaNumeric, $self)) {
                             error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar tus apellidos');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar tus apellidos'});
+                            showFeedbackOnSubmit($self, warnings.lastname);
                         }
                         
                         if (!value && required && !error) {
                             error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes rellenar todos los campos obligatorios identificados con asterisco (*)');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success'); }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes rellenar este campo con la informaci\u00F3n correspondiente'});
+                            showFeedbackOnSubmit($self, warnings.empty);
                         }
-                        
-                        var pattern = new RegExp(/.["\\\{\}\[\]\+']/i);
-                        if (pattern.test($(this).val()) && !error && $(this).attr('type') != 'password' && $(this).attr('type') != 'hidden' && $(this).attr('type') != 'date') {
+
+                        if (pattern.test($(this).val()) && !error && $(this).attr('type') !== 'password' && $(this).attr('type') !== 'hidden' && $(this).attr('type') !== 'date') {
                             error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('No se permiten ninguno de estos caracteres especiales ["#$/\'+}{\u003C\u003E] en este formulario');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success'); }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'No se permiten ninguno de estos caracteres especiales ["#$&/?\'+}{\u003C\u003E] en este campo'});
-                            top = $(this).offset().top;
+                            showFeedbackOnSubmit(warnings.notAllowed);
                         }
                         
                         if ($(this).hasClass('neco-input-error') && !error) {
@@ -220,7 +248,7 @@
                             $("#tempError").remove();
                             msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Hay errores en el formulario, por favor revise y corr\u00EDjalos todos para poder continuar');
                         }
-                        if (error) return false;
+                        if (error) { return false; }
                     });
                     
                     if (error) {
@@ -236,7 +264,7 @@
                                url:settings.url,
                                beforeSend:helpers._beforeSend(),
                                complete:helpers._complete(),
-                               success:function(data) {helpers._success(data)}
+                               success:function(data) { helpers._success(data); }
                             });
                         } else {
                             $(data.element).submit();
@@ -244,28 +272,28 @@
                     }
                 });
                 
-                if (typeof settings.create == 'function') {
+                if (typeof settings.create === 'function') {
                     settings.create();
                 }
             },
             _beforeSend: function() {
-                if (typeof settings.beforeSend == "function") {
+                if (typeof settings.beforeSend === "function") {
                     settings.beforeSend();
                 }
             },
             _complete: function() {
-                if (typeof settings.complete == "function") {
+                if (typeof settings.complete === "function") {
                     settings.complete();
                 }
             },
             _success: function(data) {
-                if (typeof settings.success == "function") {
+                if (typeof settings.success === "function") {
                     settings.success(data);
                 }
             },
             _submit: function() {
-                if (typeof settings.mouseleave == "function") {
-                    settings.mouseleave(this,data.li);
+                if (typeof settings.mouseleave === "function") {
+                    settings.mouseleave(this, data.li);
                 }
             }
         };
@@ -277,7 +305,7 @@
         } else {
             $.error( 'Method "' +  method + '" does not exist in ntForm plugin!');
         }
-    }
+    };
 })(jQuery);
 
 /**
@@ -289,6 +317,7 @@
  * 
  */
 (function($) {
+    'use strict';
     $.fn.ntInput = function(method) {
         var defaults = {
             error:      false,
@@ -309,11 +338,35 @@
                 classname:'neco-input-loading'
             }
         };
+        var warnings = Object.freeze({
+            alphaNumeric: "No se permiten caracteres especiales ni numéricos en este campo.",
+            rif: "Ingrese n\u00FAmero de C\u00E9dula o RIF v\u00E1lido.",
+            date: "La fecha ingresada no es\u00E1lida. Formato: dd/mm/yyyy.",
+            float: "Ingrese un valor num\u00E9rico con dos decimales. E.j: 123,00.",
+            email: "La dirección E-mail no es validada. E.j: midirecionemail@xxx.com",
+            numeric: "Solo se permiten n\u00FAmeros en este campo.",
+            phone: "Debes ingresar un n\u00FAmero de tel\u00E9fono v\u00E1lido con el formato (0000) 000.00.00.",
+            password: "Debes ingresar una contrase\u00F1a que tenga al menos una min\u00FAscula, una may\u00FAscula y un n\u00FAmero.",
+            confirm: "La confirmaci\u00F3n de la contrase\u00F1a no coincide, por favor vuelva a escribirla.",
+            plain: "Caracter(es) especial no permitido."
+        });
+
+        var patterns = Object.freeze({
+           alphaNumeric: /^\D+$/i,
+           email: /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,4})|(aero|coop|info|museum|name))$/i,
+           date: /^(0[1-9]|[12][0-9]|3[01])+[\-\/]+(0[1-9]|1[012])+[\-\/]+(19|20)[0-9]{2}/i,
+           rif: /\b[JGVE]-[0-9]{8}-[0-9]{1}\b/i,
+           numeric: /^\d+$/i ,
+           phone: /\(?(\d{4})\)? ?(\d{3})+\.(\d{2})+\.(\d{2})/i,
+           password: /^.*(?=.{6,})(?=.*\d)(?=.*[a-zA-Z]).*$/i,
+           place: /^[^!<>;?=+@#"°{}_$%]+$/,
+           plain: /^[^<>{}]+$/
+        });
         
         var settings = {};
         var data = {};
         var methods = {
-            init : function(options) {
+            init : function (options) {
                 return this.each(function() {
                     settings = $.extend({}, defaults, options);
                     data.element = $(this);
@@ -325,129 +378,84 @@
                 });
             }
         };
- 
+
         var helpers = {
             _create: function() {
                 data.type = $(data.element).attr('type');
-                if (data.type=='hidden') return;
+                if (data.type === 'hidden') { return; }
                 $(data.element).addClass('neco-input-' + data.type);
                 $('*', data.element).change(helpers._change);
                 $('*', data.element).keydown(helpers._keydown);
-                
-                if (data.type == 'text') {
-                    data.element.on('change',function(event){
-                        if (settings.pattern.length > 0) {
-                            data.error = helpers.checkPattern();
-                        }
-                        if (data.error) {
-                            helpers.showError();
-                        } else {
-                            helpers.showSuccess();
-                        }
+
+                if (data.type === 'rif') {
+                    helpers.maskInput("a-99999999-9", " ", data.element);
+
+                    data.element.on('change',function(e){
+                        e.stopPropagation();
+                        helpers.validateAndFeedInput(warnings.rif, patterns.rif, data);
                     });
-                }
-                
-                if (data.type == 'rif') {
-                    settings.pattern = /\b[JGVE]-[0-9]{8}-[0-9]{1}\b/i;
-                    settings.help = "Por favor ingrese su numero de cedula, RIF Natural o RIF de su empresa";
-                    settings.tip = "Si eres una persona y no posees RIF, ingresa tu n�mero de c�dula con un cero (0) al final";
-                    $(data.element).mask("a-99999999-9",{placeholder:" "});
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        
-                        if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"Debes ingresar un n\u00FAmero de C\u00E9dula o RIF v\u00E1lido para poder continuar"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
+
                     $(data.element).on('change',function(e){
                         $(this).val(this.value.charAt(0).toUpperCase() + this.value.slice(1));
                     });
                 }
-                
-                if (data.type == 'fullname') {
-                    settings.pattern = /^\D+$/i;
+
+
+                if (data.type === 'text') {
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.plain,
+                                                             patterns.plain, data));
+                    helpers.actionOnEvent(
+                        data.element,
+                        'focusout',
+                        helpers.validateTextInputEmptiness(data));
+                }
+
+                if (data.type === 'fullname') {
                     settings.help = "Por favor ingrese su nombre completo";
-                    if ($(data.element).val().length==0) {
-                        $(data.element).val('Ingresa tu nombre completo').focus(function(e){
-                           $(this).val('');
-                        }).blur(function(e){
-                            $(this).val('Ingrese su nombre completo');
-                        });
-                    }
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        
-                        if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No se permiten caracteres especiales ni n\u00FAmeros en este campo"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
+
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.alphaNumeric,
+                                                             patterns.alphaNumeric, data));
+                    helpers.actionOnEvent(
+                        data.element,
+                        'focusout',
+                        helpers.validateTextInputEmptiness(data));
                 }
-                
-                if (data.type == 'firstname') {
-                    settings.pattern = /^\D+$/i;
+
+                if (data.type === 'firstname') {
                     settings.help = "Por favor ingrese sus nombres";
-                    if ($(data.element).val().length==0) {
-                        $(data.element).val('Ingrese sus nombres');
-                    }
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No se permiten caracteres especiales ni n\u00FAmeros en este campo"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
-                    data.element.on('change',function(event){
-                        if ($(data.element).val().length==0) {
-                            $(data.element).val('Ingrese sus nombres').focus(function(e){
-                               $(this).val('');
-                            }).blur(function(e){
-                                $(this).val('Ingrese sus nombres');
-                            });
-                        }
-                    });
+
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.alphaNumeric,
+                                                             patterns.alphaNumeric, data));
+                    helpers.actionOnEvent(
+                        data.element,
+                        'focusout',
+                        helpers.validateTextInputEmptiness(data));
                 }
-                
-                if (data.type == 'lastname') {
-                    settings.pattern = /^\D+$/i;
+
+                if (data.type === 'lastname') {
                     settings.help = "Por favor ingrese sus apellidos";
-                    if ($(data.element).val().length==0) {
-                        $(data.element).val('Ingrese sus apellidos');
-                    }
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        
-                        if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No se permiten caracteres especiales ni n\u00FAmeros en este campo"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
-                    data.element.on('change',function(event){
-                        if ($(data.element).val().length==0) {
-                            $(data.element).val('Ingrese sus apellidos').focus(function(e){
-                               $(this).val('');
-                            }).blur(function(e){
-                                $(this).val('Ingrese sus apellidos');
-                            });
-                        }
-                    });
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.alphaNumeric,
+                                                             patterns.alphaNumeric, data));
+                    helpers.actionOnEvent(
+                        data.element,
+                        'focusout',
+                        helpers.validateTextInputEmptiness(data));
                 }
-                
-                if (data.type == 'date') {
-                    $(data.element).mask("99/99/9999",{placeholder:" "});
+
+                if (data.type === 'date') {
+                    helpers.maskInput("99/99/9999", " ", data.element);
                     $(data.element).datepicker({
                         changeMonth: true,
                         changeYear: true,
@@ -455,159 +463,120 @@
                     });
                     settings.pattern = /^(0[1-9]|[12][0-9]|3[01])+[\-\/]+(0[1-9]|1[012])+[\-\/]+(19|20)[0-9]{2}/i;
                     settings.help = "Por favor ingrese una fecha valida";
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        
-                        if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"Debes ingresar una fecha v\u00E1lida con formato dd/mm/yyyy"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.date, patterns.date, data));
                 }
-                
-                if (data.type == 'email') {
-                    settings.pattern = /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,4})|(aero|coop|info|museum|name))$/i;
-                    arroba = $(document.createElement('b')).addClass('neco-form-arroba').text('@');
-                    $(data.element).after(arroba);if ($(data.element).val().length==0) {
-                        $(data.element).val('@');
-                    }
-                    settings.help = "Por favor ingrese una direcci\u00F3n de email v\u00E1lida";
-                    settings.tip = "Las direcciones de emai ser\u00E1n validadas y de ser una direci\u00F3n inv\u00E1lida, no se procesar\u00E1 el formulario";
-                    $(arroba).on('click',function(e){
-                        currentValue = $(data.element).val();
-                        $(data.element).val(currentValue + '@').focus();
-                    });
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        
-                        if (!data.error) {
-                            helpers.showError();
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"Debes ingresar una direcci\u00F3n de email v\u00E1lida y que exista realmente"});
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
+
+                if (data.type === 'email') {
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.email, patterns.email, data));
+
+                    helpers.actionOnEvent(
+                        data.element,
+                        'focusout',
+                        helpers.validateTextInputEmptiness(data));
                 }
-                
-                if (data.type == 'number') {
-                    settings.pattern = /^\d+$/i;
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"Solo se permiten n\u00FAmeros en este campo"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
+
+                if (data.type === 'number') {
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.numeric, patterns.numeric, data));
+
+                    helpers.actionOnEvent(
+                        data.element,
+                        'focusout',
+                        helpers.validateTextInputEmptiness(data));
                 }
-                
-                if (data.type == 'money') {
+
+                if (data.type === 'money') {
                     $(data.element).autoNumeric({aSep: settings.thousands, aDec: settings.decimals});
-                    if ($(data.element).val().length==0) {
+                    if ($(data.element).val().length === 0) {
                         $(data.element).val('0' + settings.decimals + '00');
                     }
                     data.element.on('change',function(event){
                         data.error = isNaN($(data.element).val());
-                        
                         if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"Debes ingresar un valor num\u00E9rico con dos decimales. Por ejemplo, 123,00"});
+                            $(data.element).parent().find('.neco-form-error').text(warnings.float);
                             helpers.showError();
                         } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
                             helpers.showSuccess();
                         }
                     });
                 }
-                
-                if (data.type == 'phone') {
-                    settings.pattern = /\(?(\d{4})\)? ?(\d{3})+\.(\d{2})+\.(\d{2})/i;
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        if (!data.error) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"Debes ingresar un n\u00FAmero de tel\u00E9fono v\u00E1lido con el formato (0000) 000.00.00"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
-                    $(data.element).mask("(9999) 999.99.99",{placeholder:" "});
+
+                if (data.type === 'phone') {
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.phone, patterns.phone, data));
+
+                    helpers.actionOnEvent(
+                        data.element,
+                        'focusout',
+                        helpers.validateTextInputEmptiness(data));
+                    helpers.maskInput("(9999) 999.99.99", " ", data.element);
                 }
-                
-                if (data.type == 'password') {
-                    settings.pattern = /^.*(?=.{6,})(?=.*\d)(?=.*[a-zA-Z]).*$/i;
-                    data.element.on('change',function(event){
-                        data.error = helpers.checkPattern();
-                        
-                        if (!data.error && $(data.element).data('secured')==1) {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"Debes ingresar una contrase\u00F1a que tenga al menos una min\u00FAscula, una may\u00FAscula y un n\u00FAmero"});
-                            helpers.showError();
-                        } else {
-                            $(data.element).parent().find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                            helpers.showSuccess();
-                        }
-                    });
-                    
-                    if ($(data.element).data('confirm') == 1) {
-                        confirmPwd = $(document.createElement('div')).addClass('property').html('<label for="confirm">Confirmar Contrase\u00F1a:</label><input type="password" name="confirm" id="confirm" value="" autocomplete="off" required="true" title="Vuelva a escribir la contrase&ntilde;a" /><span class="neco-input-required">*</span><a class="neco-form-help"><span class="neco-tooltip">Por favor repita la contrase\u00F1a</span></a><a class="neco-form-tip"><span class="neco-tooltip">Debe repetir la contrase\u00F1a para confirmar que la haya escrito bien</span></a><a class="neco-form-error" title="No hay errores en el campo"><span class="neco-tooltip"></span></a>');
-                    
+
+                if (data.type === 'password') {
+                    helpers.actionOnEvent(
+                        data.element,
+                        'keypress',
+                        helpers.validateAndFeedTextInput(warnings.password, patterns.password, data));
+
+
+                    if ($(data.element).data('confirm') === 1) {
+                        var confirmPwd = $(document.createElement('div')).addClass('property').html('<label for="confirm">Confirmar Contrase\u00F1a:</label><input type="password" name="confirm" id="confirm" value="" autocomplete="off" required="true" title="Vuelva a escribir la contrase&ntilde;a" /><span class="neco-tooltip">Por favor repita la contrase\u00F1a</span></a><a class="neco-form-tip"><span class="neco-tooltip">Debe repetir la contrase\u00F1a para confirmar que la haya escrito bien</span></a><a class="neco-form-error" title="No hay errores en el campo"><span class="neco-tooltip"></span></a>');
+
                         $(data.element).parent('div').after(confirmPwd);
-                    
-                        $(confirmPwd).on('change',function(event){
-                            confirmInput = $(confirmPwd).find('input');
-                            if ($(data.element).val()!=confirmInput.val()) {
-                                $(confirmPwd).find('.neco-form-error').attr({'title':"La confirmaci\u00F3n de la contrase\u00F1a no coincide, por favor vuelva a escribirla"});
-                                if (confirmInput.hasClass('neco-input-success')) { confirmInput.removeClass('neco-input-success') }
-                                confirmInput.addClass('neco-input-error');
+
+                        $(confirmPwd).on('change',function(){
+                            var confirmInput = $(confirmPwd).find('input');
+                            if ($(data.element).val() !== confirmInput.val()) {
+                                $(confirmPwd).find('.neco-form-error').text(warnings.confirm);
+                                helpers.showErrorFeedback(confirmInput);
                             } else {
-                                $(confirmPwd).find('.neco-form-error').attr({'title':"No hay errores en este campo"});
-                                if (confirmInput.hasClass('neco-input-error')) { confirmInput.removeClass('neco-input-error') }
-                                confirmInput.addClass('neco-input-success');
+                                helpers.showSuccessFeedback(confirmInput);
                             }
                         });
                         $(confirmPwd).find('.neco-form-error').on('mouseover',function(){
-                            if ($(this).attr('title').length==0) return false;
+                            if ($(this).attr('title').length === 0){ return false; }
                             $(this).find('span').text($(this).attr('title'));
                             $(this).attr('title','');
-                        });            
-                    }   
+                        });
+                    }
                 }
-                
-                if (data.type == 'confirm') {
-                                       
-                }
-                
-                if ($(data.element).attr('showquick')=='off') {
-                    settings.showQuick=false; 
+
+                if ($(data.element).attr('showquick') === 'off') {
+                    settings.showQuick = false;
                 }
                 if (settings.showQuick) {
                     helpers.quickError();
                     helpers.quickTip();
-                    helpers.quickHelp(); 
+                    helpers.quickHelp();
                 }
-                helpers.isRequired();                
-                
-                if (typeof settings.create == 'function') {
+                helpers.isRequired();
+
+                if (typeof settings.create === 'function') {
                     settings.create();
                 }
             },
-            isRequired:function() {
-                var required = $(data.element).attr('required'); 
+            isRequired: function() {
+                var required = data.element.attr('required');
+                var el;
                 if (required) {
-                    var el = $(document.createElement('span')).text('*').addClass('neco-input-required');
-                    $(data.element).after(el);
+                    el = $('<span class="neco-input-required">*</span>');
+                    data.element.closest('.form-entry').find('label').append(el);
                 }
                 settings.required = required;
             },
             quickHelp:function(){
-                if (!settings.help && $(data.element).attr('title')) {
-                    settings.help = $(data.element).attr('title');
+                if (!settings.help && data.element.attr('title')) {
+                    settings.help = data.element.attr('title');
                 } else if (!settings.help) {
                     settings.help = "No se pudo cargar el mensaje";
                 }
@@ -651,10 +620,71 @@
                     $(msg).text(message);
                 });
             },
-            setQuickHelp:function(el) {
-                
+            actionOnEvent: function (input, eventType, callback) {
+                var timeoutID;
+
+                input.on(eventType, function (e) {
+                    if (timeoutID) {
+                        window.clearTimeout(timeoutID);
+                    }
+                    timeoutID = window.setTimeout(function () {
+                       callback();
+                    }, 300);
+                });
             },
-            showError:function(){
+            maskInput: function (mask, placeholder, element) {
+                if ($.fn.mask !== undefined) {
+                    $(element).mask(mask,{placeholder: placeholder});
+                }
+            },
+            validateAndFeedInput: function (message, data) {
+                data.error = helpers.checkPattern();
+                var $element = $(data.element);
+                var errorFeedback = $element.parent().find('.neco-form-error');
+                if (!data.error) {
+                    errorFeedback
+                        .addClass("active-feedback")
+                        .text(message);
+                    helpers.showError();
+                } else {
+                    errorFeedback.removeClass("active-feedback");
+                    helpers.showSuccess();
+                }
+            },
+            validateAndFeedTextInput: function (message, pattern, data) {
+                var $element;
+                    $element = $element || data.element;
+
+                return function () {
+                    var errorFeedback = $element.parent().find('.neco-form-error');
+                    data.error = helpers.matchInput(pattern, data.element);
+                    if (!data.error && $element.val() !== '') {
+                        errorFeedback
+                            .addClass("active-feedback")
+                            .text(message);
+                        helpers.showError();
+                    } else if ($element.val() === '') {
+                        errorFeedback.removeClass("active-feedback");
+                        helpers.validateTextInputEmptiness(data)();
+                    }
+                    else {
+                        errorFeedback.removeClass("active-feedback");
+                        helpers.showSuccess();
+                    }
+                };
+            },
+            validateTextInputEmptiness: function (data) {
+                var $element = data.element;
+                var placeholder = placeholder || $element.attr('placeholder');
+                var isRequired = isRequired || $element.attr('required');
+                return function () {
+                   if ($element.val() === '' && isRequired) {
+                       $element.attr('placeholder', "Este campo no puede quedar vacio!");
+                       helpers.showError();
+                   }
+                };
+            },
+            showError: function(){
                 if ($(data.element).hasClass('neco-input-success')) {
                     $(data.element).removeClass('neco-input-success');
                 }
@@ -666,42 +696,59 @@
                 }
                 $(data.element).addClass('neco-input-success');
             },
+            showErrorFeedback: function (element) {
+                if ($(element).hasClass('neco-input-success')) {
+                    $(element).removeClass('neco-input-success');
+                }
+                $(element).addClass('neco-input-error');
+            },
+            showSuccessFeedback: function (element) {
+                if ($(element).hasClass('neco-input-error')) {
+                    $(element).removeClass('neco-input-error');
+                }
+                $(element).addClass('neco-input-success');
+            },
+            matchInput: function (pattern, element) {
+                pattern = new RegExp(pattern);
+                return pattern.test(element.val());
+            },
             checkPattern:function() {
                 pattern = new RegExp(settings.pattern);
-                return pattern.test(data.element.val());  
+                return pattern.test(data.element.val());
             },
             _focus: function() {
-                $(data.element).on('focus',function(event){
-                    if (typeof settings.focus == "function") {
+                /*$(data.element).on('focus',function(event){
+                    if (typeof settings.focus === "function") {
                         settings.focus(this);
                     }
-                });
+                });*/
             },
             _blur: function() {
+                /*
                 $(data.element).on('blur',function(event){
-                    if (typeof settings.blur == "function") {
+                    if (typeof settings.blur === "function") {
                         settings.blur(this);
                     }
-                });
+                });*/
             },
             _keydown: function() {
+                /*
                 $(data.element).on('change',function(event){
-                    if (typeof settings.keydown == "function") {
+                    if (typeof settings.keydown === "function") {
                         settings.keydown(this);
                     }
-                });
+                });*/
             },
             _change: function() {
+                /*
                 $(data.element).on('change',function(event){
                    if (settings.required) {
                         helpers.checkNoEmpty();
                     }
-                    if (typeof settings.change == "function") {
+                    if (typeof settings.change === "function") {
                         settings.change(this);
                     }
-                });
-                
-                
+                });*/
             },
             checkNoEmpty: function() {
                 if (!data.element.val()) {
@@ -718,11 +765,11 @@
         } else {
             $.error( 'Method "' +  method + '" does not exist in ntCarousel plugin!');
         }
-    }
+    };
 })(jQuery);
 
 /**
- * NecoInput
+ * NecoTextArea
  * Author: Yosiet Serga
  * Version: 1.0.1
  * 
@@ -730,6 +777,7 @@
  * 
  */
 (function($) {
+    'use strict';
     $.fn.ntTextArea = function(method) {
         var defaults = {
             error:      false,
@@ -769,37 +817,18 @@
             _create: function() {
                 $('*', data.element).change(helpers._change);
                 $('*', data.element).keydown(helpers._keydown);
-                
-                data.element.on('change',function(event){
-                    if (settings.pattern.length > 0) {
-                        data.error = helpers.checkPattern();
-                    }
-                    if (data.error) {
-                        helpers.showError();
-                    } else {
-                        helpers.showSuccess();
-                    }
-                });
-                
-                if ($(data.element).attr('showquick')=='off') {
-                    settings.showQuick=false; 
-                }
-                if (settings.showQuick) {
-                    helpers.quickError();
-                    helpers.quickTip();
-                    helpers.quickHelp(); 
-                }
-                helpers.isRequired();                
-                
-                if (typeof settings.create == 'function') {
+
+
+                if (typeof settings.create === 'function') {
                     settings.create();
                 }
+                helpers.isRequired();
             },
             isRequired:function() {
                 var required = $(data.element).attr('required'); 
                 if (required) {
-                    var el = $(document.createElement('span')).text('*').addClass('neco-input-required');
-                    $(data.element).after(el);
+                    var el = $('<span class="neco-input-required">*</span>');
+                    data.element.closest('.form-entry').find('label').append(el);
                 }
                 settings.required = required;
             },
@@ -867,21 +896,21 @@
             },
             _focus: function() {
                 $(data.element).on('focus',function(event){
-                    if (typeof settings.focus == "function") {
+                    if (typeof settings.focus === "function") {
                         settings.focus(this);
                     }
                 });
             },
             _blur: function() {
                 $(data.element).on('blur',function(event){
-                    if (typeof settings.blur == "function") {
+                    if (typeof settings.blur === "function") {
                         settings.blur(this);
                     }
                 });
             },
             _keydown: function() {
                 $(data.element).on('change',function(event){
-                    if (typeof settings.keydown == "function") {
+                    if (typeof settings.keydown === "function") {
                         settings.keydown(this);
                     }
                 });
@@ -891,12 +920,10 @@
                    if (settings.required) {
                         helpers.checkNoEmpty();
                     }
-                    if (typeof settings.change == "function") {
+                    if (typeof settings.change === "function") {
                         settings.change(this);
                     }
                 });
-                
-                
             },
             checkNoEmpty: function() {
                 if (!data.element.val()) {
@@ -913,7 +940,7 @@
         } else {
             $.error( 'Method "' +  method + '" does not exist in ntTextArea plugin!');
         }
-    }
+    };
 })(jQuery);
 
 /**
@@ -924,8 +951,11 @@
  * Dual licensed under the MIT and GPL licenses
  * 
  */
+
 (function($) {
+    'use strict';
     $.fn.ntSelect = function(method) {
+        /*
         var defaults = {
             error:      false,
             message:    false,
@@ -960,14 +990,14 @@
             _create: function() {
                 $('*', data.element).change(helpers._change);
                 
-                if (typeof $.chosen != 'undefined') {
-                    if (typeof settings.chosen == 'undefined') {
+                if (typeof $.chosen !== 'undefined') {
+                    if (typeof settings.chosen === 'undefined') {
                         settings.chosen = {};
                     }
                     
                 }
                 $(data.element).chosen(settings.chosen);
-                if ($(data.element).attr('showquick')=='off') {
+                if ($(data.element).attr('showquick') === 'off') {
                     settings.showQuick=false; 
                 }
                 if (settings.showQuick) {
@@ -975,16 +1005,16 @@
                     helpers.quickTip();
                     helpers.quickHelp(); 
                 }
-                helpers.isRequired();                
-                
-                if (typeof settings.create == 'function') {
+
+                if (typeof settings.create === 'function') {
                     settings.create();
                 }
             },
             isRequired:function() {
-                var required = $(data.element).attr('required'); 
+                var required = $(data.element).attr('required');
+                var el;
                 if (required) {
-                    var el = $(document.createElement('span')).text('*').addClass('neco-input-required');
+                    el = $('<span class="neco-input-required">*</span>');
                     $(data.element).after(el);
                 }
                 settings.required = required;
@@ -1052,14 +1082,14 @@
             },
             _focus: function() {
                 $(data.element).on('focus',function(event){
-                    if (typeof settings.focus == "function") {
+                    if (typeof settings.focus === "function") {
                         settings.focus(this);
                     }
                 });
             },
             _blur: function() {
                 $(data.element).on('blur',function(event){
-                    if (typeof settings.blur == "function") {
+                    if (typeof settings.blur === "function") {
                         settings.blur(this);
                     }
                 });
@@ -1069,7 +1099,7 @@
                    if (settings.required) {
                         helpers.checkNoEmpty();
                     }
-                    if (typeof settings.change == "function") {
+                    if (typeof settings.change === "function") {
                         settings.change(this);
                     }
                 });
@@ -1089,7 +1119,8 @@
         } else {
             $.error( 'Method "' +  method + '" does not exist in ntSelect plugin!');
         }
-    }
+    */
+    };
 })(jQuery);
 
 /**
@@ -1131,11 +1162,13 @@
 	/**
 	* Cross browser routin for getting selected range/cursor position
 	*/
+    'use strict';
 	function getElementSelection(that) {
 		var position = {};
+        var select;
 		if (that.selectionStart === undefined) {
 			that.focus();
-			var select = document.selection.createRange();
+			select = document.selection.createRange();
 			position.length = select.text.length;
 			select.moveStart('character', -that.value.length);
 			position.end = select.text.length;

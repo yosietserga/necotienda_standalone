@@ -9,5 +9,4 @@
             <li><a title="<?php echo $text_sitemap; ?>" href="<?php echo str_replace('&', '&amp;', $sitemap); ?>"><?php echo $text_sitemap; ?></a></li>
         </ul>
     </div>
-    <div class="clear"></div><br />
 </li>

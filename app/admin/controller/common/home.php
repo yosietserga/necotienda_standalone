@@ -137,7 +137,7 @@ class ControllerCommonHome extends Controller {
             return $this->forward('common/login');
         }
     }
-
+    
     public function permission() {
         if (isset($this->request->get['r'])) {
             $route = '';

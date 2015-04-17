@@ -36,7 +36,7 @@
         </div>
 
         <div class="order-table">
-            <h3>Detalle de la Facturaci&oacute;n</h3>
+            <h3><?php echo $Language->get('text_recipe_details');?></h3>
             <table>
                 <tr class="order_table_header">
                     <th><?php echo $text_product; ?></th>

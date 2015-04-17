@@ -52,7 +52,7 @@
                 <a onclick="$('#contactsWrapper input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a onclick="$('#contactsWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
                 <div class="clear"></div>
-                <ul id="contactsWrapper" class="scrollbox">
+                <ul id="contactsWrapper" class="scrollbox" data-scrollbox="1">
                 <?php foreach ($contacts as $contact) { ?>
                     <li>
                         <input title="<?php echo $Language->get('help_contact'); ?>" type="checkbox" name="contact_list[]" value="<?php echo $contact['contact_id']; ?>"<?php if (in_array($contact['contact_id'], $contacts_list)) { ?> checked="checked"<?php } ?> showquick="off" />

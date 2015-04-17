@@ -113,11 +113,8 @@ function loginForm(httpHome,token) {
     })
     .append(title)
     .append(inputEmail)
-    .append('<div class="clear"></div>')
     .append(inputPwd)
-    .append('<div class="clear"></div>')
     .append(submit)
-    .append('<div class="clear"></div>')
     .append(recovery)
     .appendTo(container)
     .ntForm({
@@ -151,7 +148,7 @@ function loginForm(httpHome,token) {
     title = $(document.createElement('div')).attr({
         'class':'header'
     })
-    .html('<hgroup><h1>Crear Cuenta</h1></hgroup>');
+    .html('<h1>Crear Cuenta</h1>');
     
     form = $(document.createElement('form')).attr({
         'action':httpHome + 'index.php?r=account/register',
@@ -159,11 +156,8 @@ function loginForm(httpHome,token) {
     })
     .append(title)
     .append(inputFirstname)
-    .append('<div class="clear"></div>')
     .append(inputLastname)
-    .append('<div class="clear"></div>')
     .append(inputEmail2)
-    .append('<div class="clear"></div>')
     .appendTo(container2)
     .ntForm({
         lockButton:false,
@@ -224,7 +218,7 @@ function contactForm(data,httpHome,token) {
         'placeholder':'Ingresa tu mensaje'
     }).css({
         width:'390px'
-    }).after('<div class="clear"></div>');
+    });
     
     inputTo = $(document.createElement('input')).attr({
         'name':'to',

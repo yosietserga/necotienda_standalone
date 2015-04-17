@@ -63,7 +63,7 @@
           </tr>
           <tr>
           <td><?php echo $Language->get('entry_token_ignore'); ?></td>
-          <td><div class="scrollbox">
+          <td><div class="scrollbox" data-scrollbox="1">
               <?php $class = 'odd'; ?>
               <?php foreach ($tokens as $ignore_token) { ?>
               <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>

@@ -11,7 +11,7 @@
         </div>
 
         <div class="large-10 medium-10 small-10 columns">
-            <input type="text" id="rif" name="rif" value="<?php echo $rif; ?>" title="Por favor ingrese su RIF. Si es persona natural y a&uacute;n no posee uno, ingrese su n&uacute;mero de c&eacute;dula con un n&uacute;mero cero al final" required="required" showquick="off" />
+            <input type="rif" id="rif" name="rif" value="<?php echo $rif; ?>" title="Por favor ingrese su RIF. Si es persona natural y a&uacute;n no posee uno, ingrese su n&uacute;mero de c&eacute;dula con un n&uacute;mero cero al final" required="required" placeholder="Ingrese su rif o cedula de indentidad"/>
         </div>
     </div>
     <?php if ($error_rif) { ?><span class="error" id="error_rif"><?php echo $error_rif; ?></span><?php } ?>

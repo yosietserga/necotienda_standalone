@@ -3,7 +3,9 @@
     <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
             <h3>
-                <i class="icon heading-icon fa fa-heart fa-2x"></i>
+                <i class="heading-icon icon icon-group">
+                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/group.tpl"); ?>
+                    </i>
                 <?php echo $heading_title; ?>
             </h3>
         </div>

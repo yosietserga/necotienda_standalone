@@ -54,7 +54,7 @@
                     <a onclick="$('#storesWrapper input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a onclick="$('#storesWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
                     <div class="clear"></div>
-                    <ul id="storesWrapper" class="scrollbox">
+                    <ul id="storesWrapper" class="scrollbox" data-scrollbox="1">
                         <li class="stores">
                             <input type="checkbox" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> onclick="$('#store0').attr('checked', this.checked);" showquick="off" />
                             <b><?php echo $Language->get('text_default'); ?></b>
@@ -99,7 +99,7 @@
             <h2>P&aacute;ginas</h2>
             <input name="qp" id="qp" value="Buscar..." onfocus="if (this.value=='Buscar...') {this.value=''}" onchange="ntSearch(this.value,'pagesWrapper')" />
             <div class="row">
-                <ul id="pagesWrapper" class="scrollbox" style="width:96%;"><?php echo $pages; ?></ul>
+                <ul id="pagesWrapper" class="scrollbox" data-scrollbox="1" style="width:96%;"><?php echo $pages; ?></ul>
             </div>
             <div class="clear"></div>
             <a class="button" onclick="addPage('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
@@ -113,7 +113,7 @@
             <h2>Categor&iacute;as de Productos</h2>
             <input name="qc" id="qc" value="Buscar..." onfocus="if (this.value=='Buscar...') {this.value=''}" onchange="ntSearch(this.value,'categoriesWrapper')" />
             <div class="row">
-                <ul id="categoriesWrapper" class="scrollbox" style="width:96%;"><?php echo $categories; ?></ul>
+                <ul id="categoriesWrapper" class="scrollbox" data-scrollbox="1" style="width:96%;"><?php echo $categories; ?></ul>
             </div>
             <div class="clear"></div>
             <a class="button" onclick="addCategory('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>
@@ -127,7 +127,7 @@
             <h2>Categor&iacute;as de Art&iacute;culos</h2>
             <input name="qpc" id="qpc" value="Buscar..." onfocus="if (this.value=='Buscar...') {this.value=''}" onchange="ntSearch(this.value,'post_categoriesWrapper')" />
             <div class="row">
-                <ul id="post_categoriesWrapper" class="scrollbox" style="width:96%;"><?php echo $post_categories; ?></ul>
+                <ul id="post_categoriesWrapper" class="scrollbox" data-scrollbox="1" style="width:96%;"><?php echo $post_categories; ?></ul>
             </div>
             <div class="clear"></div>
             <a class="button" onclick="addPostCategory('<?php echo $_GET['token']; ?>')">Agregar al men&uacute;</a>

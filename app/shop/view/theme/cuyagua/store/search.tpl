@@ -2,23 +2,33 @@
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
 
+    <?php if ($column_left && $column_right) { ?>
+    <section id="content" class="home-grid-small">
+    <?php } else if ($column_left || $column_right) { ?>
+        <section id="content" class="home-grid-medium">
+    <?php } else { ?>
+    <section id="content" class="home-grid-full">
+    <?php } ?>
+
     <!-- column-left -->
         <?php if ($column_left) { ?>
-            <aside id="column_left" class="column-left large-3 medium-12 small-12 columns">
+            <aside id="column_left" class="aside-column column-left large-3 medium-12 small-12 columns">
                 <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
                     <div class="heading-title">
                     <h3>
-                        <i class="icon heading-icon fa fa-filter fa-2x"></i>
-                            Filtros
+                        <i class="heading-icon icon icon-filter">
+                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/target.tpl"); ?>
+                        </i>
+                            <?php echo $Language->get('text_filter'); ?>
                         </h3>
                     </div>
                 </div>
 
-                <div class="widget-content sidebar-list" id="filtersWidget">
+                <div class="widget-content sidebar-list break" id="filtersWidget">
                     <ul class="filters-list">
                         <?php if ($filters) { ?>
                             <li class="filter-selected">
-                                <a class="filter-heading" href="javascript:void(0)"><span>Filtros Selecionados</span></a>
+                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_select_filter'); ?></span></a>
                                 <div class="filter-options">
                                     <ul id="filter-selected" class="filter-list">
                                         <?php foreach ($filters as $key => $value) { ?>
@@ -31,7 +41,7 @@
 
                         <?php if (!empty($filterCategories) && !isset($filters['category'])) { ?>
                             <li class="filter-categories">
-                                <a class="filter-heading" href="javascript:void(0)"><span>Filtrar Por Categor&iacute;a</span></a>
+                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_category'); ?></span></a>
                                 <div class="filter-options">
                                     <ul id="filter-categories" class="filter-list">
                                         <?php foreach ($filterCategories as $key => $value) { ?>
@@ -44,7 +54,7 @@
 
                         <?php if (!empty($filterManufacturers) && !isset($filters['manufacturer'])) { ?>
                             <li class="filter-manufacturers">
-                                <a href="javascript:void(0)" class="filter-heading"><span>Filtrar Por Fabricanter</span></a>
+                                <a href="javascript:void(0)" class="filter-heading"><span><?php echo $Language->get('text_filter_per_manufacturer'); ?></span></a>
                                 <div class="filter-options">
                                     <ul id="filter-manufacturers" class="filter-list">
                                         <?php foreach ($filterManufacturers as $key => $value) { ?>
@@ -57,7 +67,7 @@
 
                         <?php if (!empty($filterZones) && !isset($filters['zone'])) { ?>
                             <li class="filter-zones">
-                                <a href="javascript:void(0)" class="filter-heading"><span>Filtrar Por Estado</span></a>
+                                <a href="javascript:void(0)" class="filter-heading"><span><?php echo $Language->get('text_filter_per_status'); ?></span></a>
                                 <div class="filter-options">
                                     <ul id="filter-zones" class="filter-list">
                                         <?php foreach ($filterZones as $key => $value) { ?>
@@ -70,7 +80,7 @@
 
                         <?php if (!empty($filterStores) && !isset($filters['stores'])) { ?>
                             <li class="filter-stores">
-                                <a class="filter-heading" href="javascript:void(0)"><span>Filtrar Por Tiendas</span></a>
+                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_store'); ?></span></a>
                                 <div class="filter-options">
                                     <ul id="filter-stores" class="filter-list">
                                         <?php foreach ($filterStores as $key => $value) { ?>
@@ -83,7 +93,7 @@
 
                         <?php if (!empty($filterSellers) && !isset($filters['seller'])) { ?>
                             <li class="filter-sellers">
-                                <a class="filter-heading" href="javascript:void(0)"><span>Filtrar Por Vendedor</span></a>
+                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_seller'); ?></span></a>
                                 <div class="filter-options">
                                     <ul id="filter-sellers" class="filter-list">
                                         <?php foreach ($filterSellers as $key => $value) { ?>
@@ -96,7 +106,7 @@
 
                         <?php if (!empty($filterPrices) && !isset($filters['price'])) { ?>
                             <li class="filter-price">
-                                <a class="filter-heading" href="javascript:void(0)"><span>Filtrar Por Precios</span></a>
+                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_price'); ?></span></a>
                                 <div id="filter-price" class="filter-options">
                                     <div class="price-controls row">
                                         <div class="large-6 medium-6 small-5 columns">
@@ -117,7 +127,7 @@
 
                         <?php if ($filterColors) { ?>
                             <li class="filter-list color-filter">
-                                <a class="filter-heading" href="javascript:void(0)"><span>Filtrar Por Colores</span></a>
+                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_color'); ?></span></a>
                                 <ul id="filter-color" class="filter-list">
                                     <li>
                                         <a href="<?php echo $Url::createUrl("store/search",array('co'=>'Rojo')) . $urlPrices; ?>" class="filterColor" title="Rojo" style="background: red;"></a>
@@ -159,8 +169,8 @@
         <div class="column-center large-12 medium-12 small-12 columns">
     <?php } ?>
 
-        <h1>Resultados de Busqueda</h1>
-        <?php if ($noResults) { ?><div class="message warning">No se encontraron resultados</div><?php } ?>
+        <h1><?php echo $Language->get('text_search_results'); ?></h1>
+        <?php if ($noResults) { ?><div class="message warning"><?php echo $Language->get('text_no_results'); ?></div><?php } ?>
         <?php if ($sorts) { ?>
             <div class="sort filter-sort">
                 <select name="sort" onchange="window.location.href = this.value">
@@ -168,8 +178,10 @@
                     <option value="<?php echo $sorted['href']; ?>"<?php if (($sort . '-' . $order) == $sorted['value']) { ?> selected="selected"<?php } ?>><?php echo $sorted['text']; ?></option>
                     <?php } ?>
                 </select>
-                <a class="view_style" onclick="if ($('#productsWrapper').hasClass('catalog-list')) { $('#productsWrapper').removeClass('catalog-list').addClass('catalog-grid'); $(this).find('i').removeClass('fa-th-list').addClass('fa-th-large'); } else { $('#productsWrapper').removeClass('catalog-grid').addClass('catalog-list'); $(this).find('i').removeClass('fa-th-large').addClass('fa-th-list'); }">
-                    <i class="fa fa-th-list fa-2x"></i>
+                <a data-action="sort" class="view_style">
+                    <i class="icon icon-sort">
+                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/th-large.tpl"); ?> 
+                    </i>
                 </a>
             </div>
         <?php } ?>
@@ -182,4 +194,34 @@
     <!-- column-right -->
 
 </section>
+<script>
+(function () {
+    var listResource = '<?php include(DIR_TEMPLATE  . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
+    var gridResource = '<?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
+    var gridModeIcon = '<i class="icon icon-sort">' + gridResource + '</i>';
+    var listModeIcon = '<i class="icon icon-sort">' + listResource + '</i>';
+    var listModeFlag = 'catalog-list';
+    var gridModeFlag = 'catalog-grid';
+    var $productsWrapper = $('#productsWrapper');
+
+    $("[data-action='sort']").click(function (e) {
+        var isOnListMode = $productsWrapper.hasClass(listModeFlag);
+        var $self = $(this);
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (isOnListMode) {
+            $productsWrapper
+                .removeClass(listModeFlag)
+                .addClass(gridModeFlag);
+            $self.html(listModeIcon);
+        } else {
+            $productsWrapper
+                .removeClass(gridModeFlag)
+                .addClass(listModeFlag);
+            $self.html(gridModeIcon);
+        }
+    });
+})();
+</script>
 <?php echo $footer; ?>

@@ -17,11 +17,17 @@
             <!--<h1><?php echo $store; ?></h1>-->
             <?php if ($contact_page) { echo $contact_page; } ?>
             <?php if ($google_maps) { echo $google_maps; } ?>
-            <p><?php echo $Language->get('text_address'); ?><?php echo $address; ?>
-            <?php if ($telephone) { ?><p><?php echo $Language->get('text_telephone'); ?><?php echo $telephone; ?></p><?php } ?>
+            <p>
+                <?php echo $Language->get('text_address'); ?><?php echo $address; ?>
+            </p>
+            <?php if ($telephone) { ?>
+                <p>
+                    <?php echo $Language->get('text_telephone'); ?><?php echo $telephone; ?>
+                </p>
+            <?php } ?>
         </div>
         <?php if (isset($success)) { ?><div class="message success"><?php echo $success; ?></div><?php } ?>
-        <div class="simple-form contact-form">
+        <div class="simple-form contact-form break">
             <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="contact">
 
                 <div class="entry-name form-entry">

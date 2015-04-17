@@ -13,7 +13,6 @@
         </div> 
     </div>
 </div>
-<div class="clear"></div><br />
 <script type="text/javascript" src="<?php echo HTTP_JS; ?>sliders/nivo-slider-v3.1/slider.js"></script>
 <script>
 $(document.createElement('link')).attr({
@@ -28,17 +27,19 @@ $(window).load(function() {
         animSpeed:600,
         pauseTime:6000,
         startSlide:0, 
-        directionNav:false, 
-        directionNavHide:true, 
-        controlNav:true, 
-        controlNavThumbs:true, 
+        directionNav: true,
+        directionNavHide: false,
+        controlNav:true,
+        controlNavThumbs: true,
         controlNavThumbsFromRel:false,
         controlNavThumbsSearch: '.jpg', 
         controlNavThumbsReplace: '_thumb.jpg',
-        keyboardNav:true, 
-        pauseOnHover:true, 
-        manualAdvance:false, 
-        captionOpacity:0.8, 
+        keyboardNav:true,
+        pauseOnHover:true,
+        manualAdvance: false,
+        prevText: '<i class="fa fa-angle-left"></i>',
+        nextText: '<i class="fa fa-angle-right"></i>',
+        captionOpacity:0.8,
         beforeChange: function(){},
         afterChange: function(){},
         slideshowEnd: function(){} 

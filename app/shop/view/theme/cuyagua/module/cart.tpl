@@ -5,7 +5,9 @@
         <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetname; ?>header">
             <div class="heading-title">
                 <h3>
-                    <i class="icon heading-icon fa fa-shopping-cart fa-2x"></i>
+                    <i class="heading-icon icon icon-cart">
+                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/cart.tpl"); ?>
+                    </i>
                     <?php echo $heading_title; ?>
                 </h3>
             </div>

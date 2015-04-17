@@ -28,6 +28,15 @@
         <?php } ?>
     <?php } ?>
     
+    <script>
+        window.nt = {};
+    <?php if (isset($_GET['token']) && !empty($_GET['token'])) { ?>
+        window.nt.token = '<?php echo $_GET['token']; ?>';
+        window.nt.uid = '<?php echo $this->session->get('user_id'); ?>';
+    <?php } ?>
+        window.nt.http_home = '<?php echo HTTP_HOME; ?>';
+        window.nt.http_admin_image = '<?php echo HTTP_ADMIN_IMAGE; ?>';
+    </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>window.Modernizr || document.write('<script src="js/vendor/modernizr.js"><\/script>')</script>

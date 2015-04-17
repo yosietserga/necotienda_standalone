@@ -1,5 +1,9 @@
 <li class="nt-editable box bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-<?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div><?php } ?>
+<?php if ($heading_title) { ?>
+        <div class="header" id="<?php echo $widgetName; ?>Header">
+            <h1><?php echo $heading_title; ?></h1>
+        </div>
+<?php } ?>
 <?php if (count($banner['items'])) { ?>
 <div class="content" id="<?php echo $widgetName; ?>Content">
     <div class="camera_wrap camera_azure_skin" id="<?php echo $widgetName; ?>camera">
@@ -15,7 +19,7 @@
     <?php } ?>
     </div>
 </div>
-<div class="clear"></div><br />
+
 <script>
 if (!$.fx.camera) {
     $(document.createElement('link')).attr({

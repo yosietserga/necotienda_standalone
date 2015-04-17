@@ -10,11 +10,16 @@
         <ul id="reviews" class="reviews">
             <?php foreach ($reviews as $value) { ?>
             <li id="pid_<?php echo $value['review_id']; ?>" class="review-item row">
-                <a class="review-product large-8 medium-8 small-12 columns" href="<?php echo $value['product_href']; ?>" title="Ver Producto">
-                    <?php echo $value['product']; ?>
-                </a>
-                <a class="review-date"><?php echo $value['date_added']; ?></a>
-                <span class="review-body large-12 medium-12 small-12 columns"><?php echo $value['text']; ?></span>
+                <div class="large-8 medium-8 small-12 columns">
+                    <a class="review-product" href="<?php echo $value['product_href']; ?>" title="Ver Producto">
+                        <?php echo $value['product']; ?>
+                    </a>
+                </div>
+                <div class="large-4 medium-4 small-12 columns"></div>
+                    <a class="review-date"><?php echo $value['date_added']; ?></a>
+                <div class="large-12 medium-12 small-12 columns">
+                    <p class="review-body"><?php echo $value['text']; ?></p>
+                </div>
                 <div class="review-actions large-12 medium-12 small-12 columns">
                     <a class='action-choice' href="javascript:void(0);" onclick="revealChoices(this,'<?php echo $value['product_id']; ?>','<?php echo $value['review_id']; ?>');" title="Eliminar">Eliminar</a>
                     <a class="read-more" href="<?php echo $value['product_href']; ?>" title="Ver Producto">

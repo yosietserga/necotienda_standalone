@@ -59,6 +59,13 @@ class ModelSettingSetting extends Model {
         AND store_id = '" . (int) $store_id . "'");
     }
 
+    public function deleteProperty($group, $key, $store_id = 0) {
+        $this->db->query("DELETE FROM " . DB_PREFIX . "setting 
+        WHERE `group` = '" . $this->db->escape($group) . "' 
+        AND `key` = '" . $this->db->escape($key) . "' 
+        AND store_id = '" . (int) $store_id . "'");
+    }
+
     /**
      * ModelCatalogProduct::sortProduct()
      * @param array $data

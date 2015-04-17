@@ -1,5 +1,20 @@
 <li class="nt-editable box searchWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-<?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div><?php } ?>
+<?php if ($heading_title) { ?>
+    <div class="header" id="<?php echo $widgetName; ?>Header">
+        <h3><?php echo $heading_title; ?></h3>
+    </div>
+    <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
+        <div class="heading-title">
+            <h3>
+                <i class="heading-icon icon icon-search">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/search.tpl"); ?>
+                </i>
+                <?php echo $heading_title; ?>
+            </h3>
+        </div>
+    </div>
+<?php } ?>
+
     <div class="content" id="<?php echo $widgetName; ?>Content">
         <input id="<?php echo $widgetName; ?>Keyword" type="text" value="" autocomplete="off" placeholder="Buscar" />
         <select id="<?php echo $widgetName; ?>Category">

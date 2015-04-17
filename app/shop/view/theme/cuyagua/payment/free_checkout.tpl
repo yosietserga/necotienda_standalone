@@ -1,22 +1,17 @@
-<div class="grid_2" onclick="$('#freeCheckoutGuide').slideToggle();">
-    <?php if ($Config->get('free_checkout_image')) { ?><img src="<?php echo $Image::resizeAndSave($Config->get('free_checkout_image'),90,90); ?>" alt="Gratis" /><?php } ?>
+<div class="heading widget-heading featured-heading large-heading-dropdown" id="<?php echo $widgetName; ?>Header">
+    <div onclick="$('#freeCheckoutGuide').slideToggle();" class="heading-title">
+        <h3>
+            <i class="heading-icon icon icon-gift">
+                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/gift.tpl"); ?>
+            </i>
+            <?php echo $Language->get('text_title'); ?>
+        </h3>
+    </div>
 </div>
 
-<div class="grid_6">
-    <h3 onclick="$('#freeCheckoutGuide').slideToggle();"><?php echo $Language->get('text_title'); ?></h3>
-</div>
-
-<div class="grid_2">
-    <a onclick="$('#freeCheckoutGuide').slideToggle();" title="<?php echo $Language->get('button_pay'); ?>" id="freeCheckoutCheckout" class="button"><?php echo $Language->get('button_pay'); ?></a>
-</div>
-
-<div class="clear"></div>
-
-<div class="guide" id="freeCheckoutGuide" style="display: none;">
+<div class="guide break" id="freeCheckoutGuide" style="display: none;">
     <?php if (!empty($instructions)) { echo $instructions; } ?>
 </div>
-    
-<div class="clear"></div>
 
 <script type="text/javascript">
 $(function(){

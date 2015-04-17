@@ -2,12 +2,19 @@
 <div class="info nt-hoverdir">
 
     <div class="sticker">
+    <?php if(!empty($product['sticker'])) { ?>
         <?php echo $product['sticker']; ?>
+    <?php } ?>
     </div>
 
-    <div class="rating">
-        <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $product['rating'] . '.png'; ?>" alt="<?php echo $product['stars']; ?>" />
-    </div>
+    <?php if ($product['rating']) { ?>
+        <div class="rating">
+            <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $product['rating'] . '.png'; ?>" alt="<?php echo $product['stars']; ?>" />
+        </div>
+    <?php }else { ?>
+        <div class="rating" style="min-height: 1.063em; width: 100%;">
+        </div>
+    <?php }?>
 
     <a href="<?php echo $Url::createUrl('store/product',array('product_id'=>$product['product_id'])); ?>" title="<?php echo $product['name']; ?>" class="name">
         <?php echo $product['name']; ?>

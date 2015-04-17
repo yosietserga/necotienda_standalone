@@ -1,1 +1,1 @@
-<p itemprop="description" class="description description"><?php echo $product['description']; ?></p>
+<p itemprop="description" class="description description"><?php echo substr(strip_tags($product['description']),0,150) . "... ";?><a href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>">Leer M&aacute;s</a></p>

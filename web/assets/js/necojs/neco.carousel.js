@@ -154,7 +154,7 @@
                         if (item.config_store_mode==='store') {
                             data.output+="<a class=\"button_add_small\" href=\"" + item.addToCart_url + "\">Agregar Al Carrito</b>";
                         }
-                        data.output+="<a class=\"button_see_small\" href=\"" + item.seeProduct_url + "\">Ver Descripci&oacute;n</b>";
+                       data.output+="<a class=\"button_see_small\" href=\"" + item.seeProduct_url + "\">Ver Descripci&oacute;n</b>";
                         data.output+="</article>";
                         data.output+="</li>";
                     });

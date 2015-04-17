@@ -54,8 +54,6 @@ function addReply(e,p,r) {
     }).css({
         'height':'40px'
     })
-    .after('<div class="clear"></div>')
-    .before('<div class="clear"></div>')
     .focus(function(e) {
         $(textarea).removeClass('neco-input-error');
         $(this).animate({
@@ -96,7 +94,7 @@ function addReply(e,p,r) {
                         $('#replyText').before('<div class="message success">Ha replicado con &eacute;xito</div>');
                         html = '<li>';
                         html += '<div class="grid_2">';
-                        html += '<b>'+ data.author +'</b><br />';
+                        html += '<b>'+ data.author +'</b>';
                         html += '<small>'+ data.date_added +'</small>';
                         html += '</div>';
                         html += '<div class="grid_10">'+ data.text +'</div>';

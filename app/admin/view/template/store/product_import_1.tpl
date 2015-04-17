@@ -81,7 +81,7 @@
                         <input type="text" title="Filtrar listado de categor&iacute;as" value="" name="q" id="q" />
                         <div class="clear"></div>
                         <a onclick="$('#categoriesWrapper :checkbox').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#categoriesWrapper :checkbox').removeAttr('checked');">Ninguno</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#categoriesWrapper :checkbox').each(function() { if ($(this).attr('checked')) { $(this).removeAttr('checked'); } else { $(this).attr('checked','checked'); } });">Alternar</a>
-                        <ul id="categoriesWrapper" class="scrollbox">
+                        <ul id="categoriesWrapper" class="scrollbox" data-scrollbox="1">
                             <?php foreach ($categories as $category) { ?>
                                 <li class="categories">
                                     <input title="<?php echo $Language->get('help_category'); ?>" type="checkbox" name="product_category[]" value="<?php echo $category['category_id']; ?>"<?php if (in_array($category['category_id'], $product_category)) { ?> checked="checked"<?php } ?> showquick="off" />

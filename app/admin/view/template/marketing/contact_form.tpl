@@ -50,7 +50,7 @@
                 <input type="text" title="Filtrar listas de contactos" value="" name="q" id="q" placeholder="Filtrar Listas de Contactos" />
                 <div class="clear"></div>
                 <label>&nbsp;</label>
-                <ul id="contactsWrapper" class="scrollbox">
+                <ul id="contactsWrapper" class="scrollbox" data-scrollbox="1">
                 <?php foreach ($lists as $list) { ?>
                     <li>
                         <input title="<?php echo $Language->get('help_contact'); ?>" type="checkbox" name="contact_list[]" value="<?php echo $list['contact_list_id']; ?>"<?php if (in_array($list['contact_list_id'], $contact_lists)) { ?> checked="checked"<?php } ?> showquick="off" />

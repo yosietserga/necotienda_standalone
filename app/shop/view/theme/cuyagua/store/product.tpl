@@ -15,14 +15,20 @@
                 <div class="nt-editable" id="images">
                     <div id="product-popup">
                         <div class="nt-editable product-gallery" id="productImages">
-                            <img class="view" id="mainProduct" src="<?php echo $images[0]['preview']; ?>" alt="<?php echo $heading_title; ?>" data-zoom-image="<?php echo $images[0]['popup']; ?>"/>
-                            <div id="mainProductGallery">
-                            <?php foreach ($images as $k => $image) { ?>
-                                <a class="thumb" href="#" data-image="<?php echo $image['preview']; ?>" data-zoom-image="<?php echo $image['popup']; ?>">
-                                     <img id="<?php echo "thumb{$k}"; ?>" src="<?php echo $image['thumb']; ?>" />
-                                </a>
-                            <?php } ?>
-                            </div>
+                            <?php if (count($images) > 0) { ?>
+                                <?php $imagesCopy = array_slice($images, 0);?>
+                                <img class="view" id="mainProduct" src="<?php echo $imagesCopy[0]['preview']; ?>" alt="<?php echo $heading_title; ?>" data-zoom-image="<?php echo $imagesCopy[0]['popup']; ?>"/>
+
+                                <div id="mainProductGallery">
+                                    <?php foreach ($images as $k => $image) { ?>
+                                        <a class="thumb" href="#" data-image="<?php echo $image['preview']; ?>" data-zoom-image="<?php echo $image['popup']; ?>">
+                                             <img id="<?php echo "thumb{$k}"; ?>" src="<?php echo $image['thumb']; ?>" />
+                                        </a>
+                                    <?php } ?>
+                                </div>
+                            <?php } else {?>
+                                <img class="view" id="mainProduct" style="width: 100%; height:auto;" src="<?php echo HTTP_IMAGE . '/no_image.jpg'; ?>" data-zoom-image="<?php echo HTTP_IMAGE . '/no_image.jpg'; ?>"/>
+                            <?php }?>
                         </div>
                     </div>
                 </div>
@@ -46,10 +52,10 @@
                 <?php } ?>
 
                 <div itemprop="model" class="property model nt-editable" id="productModel">Modelo<span><?php echo $model; ?></span></div>
-                <div itemprop="description" class="overview nt-editable" id="productDescription"><?php echo substr($description, 0, 300) . " ... "; ?></div>
-                <div itemprop="availability" href="http://schema.org/InStock" class="property availability nt-editable" id="productAvailability">
+                <div itemprop="description" class="overview nt-editable" id="productDescription"><p><?php echo trim(strip_tags(substr($description, 0, 400))) . " ... "; ?></p></div>
+                <!--<div itemprop="availability" href="http://schema.org/InStock" class="property availability nt-editable" id="productAvailability">
                     <span><?php echo $Language->get('text_availability'); ?><small><?php echo $stock . " item(s)"; ?></small></span>
-                </div>
+                </div>-->
 
                 <div class="offers" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <?php if ($display_price) { ?>
@@ -103,12 +109,12 @@
 
                     <!-- product-options -->
                     <?php if ($options) { ?>
-                    <div class="property options nt-editable" id="productOptions">
-                        <p><b><?php echo $Language->get('text_options'); ?></b></p>
+                    <div class="options nt-editable" id="productOptions">
+                        <!--<span><?php echo $Language->get('text_options'); ?></span>-->
                         <ul>
                         <?php foreach ($options as $option) { ?>
                             <li>
-                                <div class="label"><?php echo $option['name']; ?>:</div>
+                                <label for="option[<?php echo $option['option_id']; ?>]" class="label"><?php echo $option['name']; ?>:</label>
                                 <select name="option[<?php echo $option['option_id']; ?>]">
                                 <?php foreach ($option['option_value'] as $option_value) { ?>
                                     <option value="<?php echo $option_value['option_value_id']; ?>"><?php echo $option_value['name']; ?>
@@ -127,8 +133,16 @@
                     <div class="property quantity nt-editable" id="productQty">
                         <input type="text" id="quantity" name="quantity" value="<?php echo $minimum; ?>" />
                         <?php if ($minimum> 1) { ?><small><?php echo $Language->get('text_minimum'); ?></small><?php } ?>
-                        <a class="arrow-up"><i class="fa fa-plus"></i></a>
-                        <a class="arrow-down"><i class="fa fa-minus"></i></a>
+                        <a href="javascript:;"  class="arrow-up">
+                            <i data-action-count="inc" class="icon">
+                                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/plus.tpl"); ?>
+                            </i>
+                        </a>
+                        <a href="javascript:;"  class="arrow-down"  >
+                            <i data-action-count="dec" class="icon">
+                                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/minus.tpl"); ?>
+                            </i>
+                        </a>
                     </div>
                     <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
                     <input type="hidden" name="redirect" value="<?php echo str_replace('&', '&amp;', $redirect); ?>" />
@@ -180,26 +194,28 @@
         <!-- /related-actions -->
 
         <!-- engagement-actions -->
-        <div class="engagement-actions row">
-            <div class="product-tabs large-12 medium-12 small-12 columns nt-editable" id="productTabs">
-                <ul class="tabs nt-editable" id="pTabs">
-                    <li class="tab" id="description"><span class="tab-item">Descripción</span></li>
-                    <li class="tab" id="comments"><span class="tab-item">Comentarios</span></li>
-                    <li class="tab" id="facebook"><span class="tab-item">Facebook</span></li>
-                </ul>
+        <div class="engagement-actions break">
+            <div class="row">
+                <div class="product-tabs large-12 medium-12 small-12 columns nt-editable" id="productTabs">
+                    <ul class="tabs nt-editable" id="pTabs">
+                        <li class="tab" id="description"><span class="tab-item">Descripción</span></li>
+                        <li class="tab" id="comments"><span class="tab-item">Comentarios</span></li>
+                        <!--<li class="tab" id="facebook"><span class="tab-item">Facebook</span></li>-->
+                    </ul>
 
-                <div id="_description">
-                    <div itemprop="description" class="product-description nt-editable" id="productDescription"><?php echo $description; ?></div>
-                </div>
+                    <div id="_description">
+                        <div itemprop="description" class="product-description nt-editable" id="productDescription"><?php echo $description;?></div>
+                    </div>
 
-                <div id="_comments">
-                    <div id="review" class="product-review nt-editable"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
-                    <div id="comment" class="product-comment nt-editable"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
-                </div>
+                    <div id="_comments">
+                        <div id="review" class="product-review nt-editable"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
+                        <div id="comment" class="product-comment nt-editable"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
+                    </div>
 
-                <div id="_facebook">
-                    <h3>Comentarios de Facebook</h3>
-                    <div class="fb-comments" data-href="<?php echo str_replace("&","&amp",$Url::createUrl("store/product",array('product_id'=>$product_id))); ?>" data-num-posts="2" data-width="700"></div>
+                    <!--<div id="_facebook">
+                        <h3>Comentarios de Facebook</h3>
+                        <div class="fb-comments" data-href="<?php echo str_replace("&","&amp",$Url::createUrl("store/product",array('product_id'=>$product_id))); ?>" data-num-posts="2" data-width="700"></div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -213,13 +229,13 @@
 </section>
 
 <!-- facebook-footer -->
-<div id="fb-root"></div>
+<!--<div id="fb-root"></div>-->
 <!-- facebook-footer -->
 
 <script src="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/rrssb/js/rrssb.min.js'; ?>"></script>
 <script src="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/elevatezoom/jquery.elevateZoom-3.0.8.min.js'; ?>"></script>
 
-<script defer>
+<!--<script defer>
     (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) {return;}
@@ -229,10 +245,11 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-</script>
+</script>-->
 
 <script defer>
     (function(){
+        var orderQuantityAction;
         var initElevate;
 
         $('.tab').each(function(){
@@ -252,22 +269,22 @@
             $('#_' + this.id).show();
         });
 
-        $("a.arrow-up").click(function() {
-            var e = $('#quantity');
-            var v = $(e).val();
-            v++;
-            $(e).val(v);
+        orderQuantityAction = function (e, input) {
+            var target = e.target;
+            var value = ~~input.val();
+            if (target.dataset.actionCount === "inc") {
+                value++;
+            } else if (target.dataset.actionCount === "dec") {
+                value--;
+            }
+            input.val(Math.max(0, value));
+        };
+
+        $("#productQty").click(function (e) {
+            e.stopPropagation();
+            orderQuantityAction(e, $("#quantity"));
         });
 
-        $("a.arrow-down").click(function() {
-            var e = $('#quantity');
-            var v = $(e).val();
-            v--;
-            if (v <= 1) {
-                v = 1;
-            }
-            $(e).val(v);
-        });
 
         $('#review').load('<?php echo $Url::createUrl("store/product/review",array("product_id"=>$product_id)); ?>');
         $('#comment').load('<?php echo $Url::createUrl("store/product/comment",array("product_id"=>$product_id)); ?>');
@@ -287,6 +304,7 @@
                 , responsive: true
                 , zoomType: 'window'
                 , zoomWindowOffetx: 16
+                , zoomLevel: 1
                 , lensSize: 100
                 , galleryActiveClass: 'elevate-active'
                 , imageCrossfade: true

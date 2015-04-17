@@ -5,10 +5,17 @@
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/messages.tpl"); ?>
 
-    <div class="info-form">
+    <div class="info-form break">
         <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="form">
             <fieldset>
-                <legend>Datos Personales</legend>
+                <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
+                  <div class="heading-title">
+                      <h3>
+                        <i class="icon heading-icon fa fa-user fa-2x"></i>
+                          <?php echo $Language->get('text_legend_personal_data');?>
+                      </h3>
+                    </div>
+                </div>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/name.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/lastname.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/company.tpl"); ?>
@@ -19,142 +26,152 @@
             </fieldset>
 
             <fieldset>
-                <legend>Redes Sociales</legend>
-                <div class="entry-twitter">
+                <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
+                  <div class="heading-title">
+                      <h3>
+                        <i class="icon heading-icon fa fa-file-text fa-2x"></i>
+                        <?php echo $Language->get('text_legend_social_web');?>
+                      </h3>
+                    </div>
+                </div>
+                <div class="entry-twitter form-entry">
                     <label>Twitter:</label>
-                    <input type="text" name="twitter" id="twitter" title="Coloca tu nombre de twitter" value="<?php echo $twitter; ?>" />
+                    <input type="text" name="twitter" id="twitter" title="Coloca tu nombre de twitter" value="<?php echo $twitter; ?>"  placeholder="<?php echo $Language->get('text_twitter');?>" />
                 </div>
-                <div class="entry-facebook">
+                <div class="entry-facebook form-entry">
                     <label>Facebook:</label>
-                    <input type="text" name="facebook" id="facebook" title="Coloca tu nombre de facebook o ID del perfil" value="<?php echo $facebook; ?>" />
+                    <input type="text" name="facebook" id="facebook" title="Coloca tu nombre de facebook o ID del perfil" value="<?php echo $facebook; ?>" placeholder="<?php echo $Language->get('text_facebook');?>" />
                 </div>
 
-                <div class="entry-hotmail">
-                    <label>Correo Hotmail:</label>
-                    <input type="email" name="msn" id="msn" title="Coloca tu email de Hotmail o MSN" value="<?php echo $msn; ?>" />
+                <div class="entry-hotmail form-entry">
+                    <label>Hotmail:</label>
+                    <input type="email" name="msn" id="msn" title="Coloca tu email de Hotmail o MSN" value="<?php echo $msn; ?>" placeholder="<?php echo $Language->get('text_hotmail');?>"/>
                 </div>
 
-                <div class="entry-gmail">
-                    <label>Correo Gmail:</label>
-                    <input type="email" name="gmail" id="gmail" title="Coloca tu email de Gmail" value="<?php echo $gmail; ?>" />
+                <div class="entry-gmail form-entry">
+                    <label>Gmail:</label>
+                    <input type="email" name="gmail" id="gmail" title="Coloca tu email de Gmail" value="<?php echo $gmail; ?>" placeholder="<?php echo $Language->get('text_gmail');?>"/>
                 </div>
 
-                <div class="entry-yahoo">
-                    <label>Correo Yahoo:</label>
-                    <input type="email" name="yahoo" id="yahoo" title="Coloca tu email de Yahoo" value="<?php echo $yahoo; ?>" />
+                <div class="entry-yahoo form-entry">
+                    <label>Yahoo:</label>
+                    <input type="email" name="yahoo" id="yahoo" title="Coloca tu email de Yahoo" value="<?php echo $yahoo; ?>" placeholder="<?php echo $Language->get('text_yahoo');?>" />
                 </div>
 
-                <div class="entry-skype">
+                <div class="entry-skype form-entry">
                     <label>Skype:</label>
-                    <input type="text" name="skype" id="skype" title="Coloca tu usuario de Skype" value="<?php echo $skype; ?>" />
+                    <input type="text" name="skype" id="skype" title="Coloca tu usuario de Skype" value="<?php echo $skype; ?>" placeholder="<?php echo $Language->get('text_skype');?>"/>
                 </div>
             </fieldset>
 
             <fieldset>
-                <legend><?php echo $Language->get('tab_profesionales'); ?></legend>
+                <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
+                  <div class="heading-title">
+                      <h3>
+                        <i class="icon heading-icon fa fa-graduation-cap fa-2x"></i>
+                          <?php echo $Language->get('tab_profesionales'); ?>
+                      </h3>
+                    </div>
+                </div>
 
-                <div class="entry-website">
+                <div class="entry-website form-entry">
                     <label>Website:</label>
-                    <input type="url" name="website" id="website" value="<?php echo $website; ?>" title="Ingresa la direcci&oacute;n de tu website o el website de la empresa. P. ej. http://www.miweb.com/" />
+                    <input type="url" name="website" id="website" value="<?php echo $website; ?>" title="Ingresa la direcci&oacute;n de tu website o el website de la empresa. P. ej. http://www.miweb.com/" placeholder="<?php echo $Language->get('text_website');?>"/>
                 </div>
 
-                <div class="entry-blog">
+                <div class="entry-blog form-entry">
                     <label>Blog:</label>
-                    <input type="url" name="blog" id="blog" value="<?php echo $blog; ?>" title="Ingresa la direcci&oacute;n de tu blog personal. P. ej. http://www.miblog.com/" />
+                    <input type="url" name="blog" id="blog" value="<?php echo $blog; ?>" title="Ingresa la direcci&oacute;n de tu blog personal. P. ej. http://www.miblog.com/" placeholder="<?php echo $Language->get('text_blog'); ?>" />
                 </div>
 
-                <div class="entry-ta">
-                    <label>T&iacute;tulo Acad&eacute;mico:</label>
+                <div class="entry-ta form-entry">
+                    <label><?php echo $Language->get('select_option_academic_title');?></label>
+
                     <select name="titulo" title="Selecciona tu &uacute;tlimo t&iacute;tulo acad&eacute;mico obtenido">
                         <?php if (!empty($titulo)) { ?>
                         <option value="<?php echo $titulo; ?>" selected="selected"><?php echo $titulo; ?></option>
                         <?php } ?>
-                          <option value="">Seleccione su t&iacute;tulo</option>
-                          <option value="Bachiller">Bachiller</option>
-                          <option value="T&eacute;cnico Medio">T&eacute;cnico Medio</option>
-                          <option value="T&eacute;cnico Superior">T&eacute;cnico Superior</option>
-                          <option value="Ingeniero">Ingeniero</option>
-                          <option value="Licenciado">Licenciado</option>
-                          <option value="Postgrado">Postgrado</option>
-                          <option value="Especializaci&oacute;n">Especializaci&oacute;n</option>
-                          <option value="Maestr&iacute;a">Maestr&iacute;a</option>
-                          <option value="Doctorado">Doctorado</option>
+                          <option value=""><?php echo $Language->get('select_option_title');?></option>
+                          <option value="<?php echo $Language->get('select_option_bechiller');?>"><?php echo $Language->get('select_option_bechiller');?></option>
+                          <option value="<?php echo $Language->get('select_option_medico');?>"><?php echo $Language->get('select_option_medico');?></option>
+                          <option value="<?php echo $Language->get('select_option_tecnico');?>"><?php echo $Language->get('select_option_tecnico');?></option>
+                          <option value="<?php echo $Language->get('select_option_ingeniero');?>"><?php echo $Language->get('select_option_ingeniero');?></option>
+                          <option value="<?php echo $Language->get('select_option_licenciado');?>"><?php echo $Language->get('select_option_licenciado');?></option>
+                          <option value="<?php echo $Language->get('select_option_postgrado');?>"><?php echo $Language->get('select_option_postgrado');?></option>
+                          <option value="<?php echo $Language->get('select_option_especializacion');?>"><?php echo $Language->get('select_option_especializacion');?></option>
+                          <option value="<?php echo $Language->get('select_option_maestria');?>"><?php echo $Language->get('select_option_maestria');?></option>
+                          <option value="<?php echo $Language->get('select_option_doctorado');?>"><?php echo $Language->get('select_option_doctorado');?></option>
                         </select>
                 </div>
 
-                <div class="entry-profesion">
-                    <label>Profesi&oacute;n:</label>
+                <div class="entry-profesion form-entry">
+                    <label><?php echo $Language->get('text_profesion');?></label>
                     <select name="profesion" title="Selecciona el &aacute;rea donde te desempe&ntilde;as o laboras">
                             <?php if (!empty($profesion)) { ?>
                                 <option value="<?php echo $profesion; ?>" selected="selected"><?php echo $profesion; ?></option>
                             <?php } ?>
-                              <option value="">Seleccione una profesi&oacute;n</option>
-                              <option value="Estudiante">Estudiante</option>
-                              <option value="Agronom&iacute;a">Agronom&iacute;a</option>
-                              <option value="Antropolog&iacute;a">Antropolog&iacute;a</option>
-                              <option value="Arqueolog&iacute;a">Arqueolog&iacute;a</option>
-                              <option value="Arquitectura">Arquitectura</option>
-                              <option value="Artista">Artista</option>
-                              <option value="Asesor&iacute;a y Consultor&iacute;a">Asesor&iacute;a y Consultor&iacute;a</option>
-                              <option value="Astrolog&iacute;a">Astrolog&iacute;a</option>
-                              <option value="Astronom&iacute;a">Astronom&iacute;a</option>
-                              <option value="Biolog&iacute;a">Biolog&iacute;a</option>
-                              <option value="Cardiolog&iacute;a">Cardiolog&iacute;a</option>
-                              <option value="Construcci&oacute;n">Construcci&oacute;n</option>
-                              <option value="Contratista">Contratista</option>
-                              <option value="Criminalista">Criminalista</option>
-                              <option value="Decoraci&oacute;n">Decoraci&oacute;n</option>
-                              <option value="Demograf&iacute;a">Demograf&iacute;a</option>
-                              <option value="Derechos y Leyes">Derechos y Leyes</option>
-                              <option value="Dermatolog&iacute;a">Dermatolog&iacute;a</option>
-                              <option value="Dise&ntilde;o de Interiores">Dise&ntilde;o de Interiores</option>
-                              <option value="Dise&ntilde;o Gr&aacute;fico">Dise&ntilde;o Gr&aacute;fico</option>
-                              <option value="Dise&ntilde;o Web">Dise&ntilde;o Web</option>
-                              <option value="Econom&iacute;a">Econom&iacute;a</option>
-                              <option value="Educaci&oacute;n">Educaci&oacute;n</option>
-                              <option value="Electricidad">Electricidad</option>
-                              <option value="Electr&oacute;nica">Electr&oacute;nica</option>
-                              <option value="Filosof&iacute;a">Filosof&iacute;a</option>
-                              <option value="F&iacute;sica">F&iacute;sica</option>
-                              <option value="Fotograf&iacute;a">Fotograf&iacute;a</option>
-                              <option value="Geograf&iacute;a">Geograf&iacute;a</option>
-                              <option value="Geolog&iacute;a">Geolog&iacute;a</option>
-                              <option value="Historia">Historia</option>
-                              <option value="Inform&aacute;tica">Inform&aacute;tica</option>
-                              <option value="Internet">Internet</option>
-                              <option value="Invenciones">Invenciones</option>
-                              <option value="Inversiones">Inversiones</option>
-                              <option value="Jardiner&iacute;a">Jardiner&iacute;a</option>
-                              <option value="Matem&aacute;tica">Matem&aacute;tica</option>
-                              <option value="Mec&aacute;nica Aeroespacial">Mec&aacute;nica Aeroespacial</option>
-                              <option value="Mec&aacute;nica Aeron&aacute;utica">Mec&aacute;nica Aeron&aacute;utica</option>
-                              <option value="Mec&aacute;nica Automotriz">Mec&aacute;nica Automotriz</option>
-                              <option value="Mec&aacute;nica Industrial">Mec&aacute;nica Industrial</option>
-                              <option value="Mec&aacute;nica Naval">Mec&aacute;nica Naval</option>
-                              <option value="Medicina">Medicina</option>
-                              <option value="Medico">Medico</option>
-                              <option value="Metal&uacute;rjica">Metal&uacute;rjica</option>
-                              <option value="Meteorolog&iacute;a">Meteorolog&iacute;a</option>
-                              <option value="M&uacute;sica">M&uacute;sica</option>
-                              <option value="Odontolog&iacute;a">Odontolog&iacute;a</option>
-                              <option value="Periodismo">Periodismo</option>
-                              <option value="Psicolog&iacute;a">Psicolog&iacute;a</option>
-                              <option value="Psicopedagog&iacute;a">Psicopedagog&iacute;a</option>
-                              <option value="Psicoterapia">Psicoterapia</option>
-                              <option value="Psiquiatr&iacute;a">Psiquiatr&iacute;a</option>
-                              <option value="Publicidad">Publicidad</option>
-                              <option value="Qu&iacute;mica">Qu&iacute;mica</option>
-                              <option value="Quiropr&aacute;ctica">Quiropr&aacute;ctica</option>
-                              <option value="Redes y Telecomunicaciones">Redes y Telecomunicaciones</option>
-                              <option value="Rob&oacute;tica">Rob&oacute;tica</option>
-                              <option value="Seguridad">Seguridad</option>
-                              <option value="Sexolog&iacute;a">Sexolog&iacute;a</option>
-                              <option value="Sismolog&iacute;a">Sismolog&iacute;a</option>
-                              <option value="Sociolog&iacute;a">Sociolog&iacute;a</option>
-                        <option value="T&eacute;cnico">T&eacute;cnico</option>
-                        <option value="Terapia">Terapia</option>
-                        <option value="Veterinaria">Veterinaria</option>
-                        <option value="Zoolog&iacute;a">Zoolog&iacute;a</option>
+                              <option value=""><?php echo $Language->get('select_option_profesion');?></option>
+                              <option value="<?php echo $Language->get('select_option_estudiante');?>"><?php echo $Language->get('select_option_estudiante');?></option>
+                              <option value="<?php echo $Language->get('select_option_agronomia');?>"><?php echo $Language->get('select_option_agronomia');?></option>
+                              <option value="<?php echo $Language->get('select_option_antropologia');?>"><?php echo $Language->get('select_option_antropologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_arqueologia');?>"><?php echo $Language->get('select_option_arqueologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_arquitectura');?>"><?php echo $Language->get('select_option_arquitectura');?></option>
+                              <option value="<?php echo $Language->get('select_option_artista');?>"><?php echo $Language->get('select_option_artista');?></option>
+                              <option value="<?php echo $Language->get('select_option_asesoria');?>"><?php echo $Language->get('select_option_asesoria');?></option>
+                              <option value="<?php echo $Language->get('select_option_astrologia');?>"><?php echo $Language->get('select_option_astrologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_astronomia');?>"><?php echo $Language->get('select_option_astronomia');?></option>
+                              <option value="<?php echo $Language->get('select_option_biologia');?>"><?php echo $Language->get('select_option_biologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_cardiologia');?>"><?php echo $Language->get('select_option_cardiologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_construccion');?>"><?php echo $Language->get('select_option_construccion');?></option>
+                              <option value="<?php echo $Language->get('select_option_contratista');?>"><?php echo $Language->get('select_option_contratista');?></option>
+                              <option value="<?php echo $Language->get('select_option_criminalista');?>"><?php echo $Language->get('select_option_criminalista');?></option>
+                              <option value="<?php echo $Language->get('select_option_decoracion');?>"><?php echo $Language->get('select_option_decoracion');?></option>
+                              <option value="<?php echo $Language->get('select_option_demografia');?>"><?php echo $Language->get('select_option_decoracion');?></option>
+                              <option value="<?php echo $Language->get('select_option_derechos');?>"><?php echo $Language->get('select_option_derechos');?></option>
+                              <option value="<?php echo $Language->get('select_option_dermatologia');?>"><?php echo $Language->get('select_option_dermatologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_diseño_grafico');?>"><?php echo $Language->get('select_option_diseño_grafico');?></option>
+                              <option value="<?php echo $Language->get('select_option_diseño_web');?>"><?php echo $Language->get('select_option_diseño_web');?></option>
+                              <option value="<?php echo $Language->get('select_option_economia');?>"><?php echo $Language->get('select_option_economia');?></option>
+                              <option value="<?php echo $Language->get('select_option_educacion');?>"><?php echo $Language->get('select_option_educacion');?></option>
+                              <option value="<?php echo $Language->get('select_option_electricidad');?>"><?php echo $Language->get('select_option_electricidad');?></option>
+                              <option value="<?php echo $Language->get('select_option_electronica');?>"><?php echo $Language->get('select_option_electronica');?></option>
+                              <option value="<?php echo $Language->get('select_option_filosofia');?>"><?php echo $Language->get('select_option_filosofia');?></option>
+                              <option value="<?php echo $Language->get('select_option_fisica');?>"><?php echo $Language->get('select_option_fisica');?></option>
+                              <option value="<?php echo $Language->get('select_option_fotografia');?>"><?php echo $Language->get('select_option_fotografia');?></option>
+                              <option value="<?php echo $Language->get('select_option_geografia');?>"><?php echo $Language->get('select_option_geografia');?></option>
+                              <option value="<?php echo $Language->get('select_option_geologia');?>"><?php echo $Language->get('select_option_geologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_historia');?>"><?php echo $Language->get('select_option_historia');?></option>
+                              <option value="<?php echo $Language->get('select_option_informatica');?>"><?php echo $Language->get('select_option_informatica');?></option>
+                              <option value="<?php echo $Language->get('select_option_internet');?>"><?php echo $Language->get('select_option_internet');?></option>
+                              <option value="<?php echo $Language->get('select_option_invenciones');?>"><?php echo $Language->get('select_option_invenciones');?></option>
+                              <option value="<?php echo $Language->get('select_option_inversiones');?>"><?php echo $Language->get('select_option_inversiones');?></option>
+                              <option value="<?php echo $Language->get('select_option_jardineria');?>"><?php echo $Language->get('select_option_jardineria');?></option>
+                              <option value="<?php echo $Language->get('select_option_matematica');?>"><?php echo $Language->get('select_option_matematica');?></option>
+                              <option value="<?php echo $Language->get('select_option_aeroespacial');?>"><?php echo $Language->get('select_option_aeroespacial');?></option>
+                              <option value="<?php echo $Language->get('select_option_aeronautica');?>"><?php echo $Language->get('select_option_aeronautica');?></option>
+                              <option value="<?php echo $Language->get('select_option_automotriz');?>"><?php echo $Language->get('select_option_automotriz');?></option>
+                              <option value="<?php echo $Language->get('select_option_industrial');?>"><?php echo $Language->get('select_option_industrial');?></option>
+                              <option value="<?php echo $Language->get('select_option_naval');?>"><?php echo $Language->get('select_option_naval');?></option>
+                              <option value="<?php echo $Language->get('select_option_medicina');?>"><?php echo $Language->get('select_option_medicina');?></option>
+                              <option value="<?php echo $Language->get('select_option_metalurgica');?>"><?php echo $Language->get('select_option_metalurgica');?></option>
+                              <option value="<?php echo $Language->get('select_option_meteorologia');?>"><?php echo $Language->get('select_option_meteorologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_odontologia');?>"><?php echo $Language->get('select_option_odontologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_periodismo');?>"><?php echo $Language->get('select_option_periodismo');?></option>
+                              <option value="<?php echo $Language->get('select_option_psicologia');?>"><?php echo $Language->get('select_option_psicologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_psicoterapia');?>"><?php echo $Language->get('select_option_psicoterapia');?></option>
+                              <option value="<?php echo $Language->get('select_option_psiquiatria');?>"><?php echo $Language->get('select_option_psiquiatria');?></option>
+                              <option value="<?php echo $Language->get('select_option_publicidad');?>"><?php echo $Language->get('select_option_publicidad');?></option>
+                              <option value="<?php echo $Language->get('select_option_quimica');?>"><?php echo $Language->get('select_option_quimica');?></option>
+                              <option value="<?php echo $Language->get('select_option_quiropractica');?>"><?php echo $Language->get('select_option_quiropractica');?></option>
+                              <option value="<?php echo $Language->get('select_option_redes');?>"><?php echo $Language->get('select_option_redes');?></option>
+                              <option value="<?php echo $Language->get('select_option_robotica');?>"><?php echo $Language->get('select_option_robotica');?></option>
+                              <option value="<?php echo $Language->get('select_option_seguridad');?>"><?php echo $Language->get('select_option_seguridad');?></option>
+                              <option value="<?php echo $Language->get('select_option_sexologia');?>"><?php echo $Language->get('select_option_sexologia');?></option>
+                              <option value="<?php echo $Language->get('select_option_sismologia');?>"><?php echo $Language->get('select_option_sismolougia');?></option>
+                              <option value="<?php echo $Language->get('select_option_socialogia');?>"><?php echo $Language->get('select_option_socialogia');?></option>
+                              <option value="<?php echo $Language->get('select_option_tecnico');?>"><?php echo $Language->get('select_option_tecnico');?></option>
+                              <option value="<?php echo $Language->get('select_option_veterinaria');?>"><?php echo $Language->get('select_option_veterinaria');?></option>
+                              <option value="<?php echo $Language->get('select_option_zoologia');?>"><?php echo $Language->get('select_option_zoologia');?></option>
                     </select>
                 </div>
             </fieldset>

@@ -18,7 +18,7 @@
 
         <!--COLUMN LEFT-->
         <?php if ($column_left) { ?>
-            <aside id="column_left" class="column-left large-3 medium-12 small-12 columns">
+            <aside id="column_left" class="aside-column column-left large-3 medium-12 small-12 columns">
                 <?php echo $column_left; ?>
             </aside>
         <?php } ?>
@@ -39,7 +39,7 @@
             </div>
         <!--column right-->
         <?php if ($column_right) { ?>
-            <aside id="column_right" class="column-right large-3 medium-12 small-12 columns">
+            <aside id="column_right" class="aside-column column-right large-3 medium-12 small-12 columns">
                 <?php echo $column_right; ?>
             </aside>
         <?php } ?>

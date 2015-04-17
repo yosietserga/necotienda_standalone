@@ -1,25 +1,18 @@
-<div class="grid_2" onclick="$('#chequeGuide').slideToggle();">
-    <?php if ($Config->get('cheque_image')) { ?><img src="<?php echo $Image::resizeAndSave($Config->get('cheque_image'),90,90); ?>" alt="Cheque" /><?php } ?>
+<div class="heading widget-heading featured-heading large-heading-dropdown" id="<?php echo $widgetName; ?>Header">
+    <div class="heading-title" onclick="$('#chequeGuide').slideToggle();">
+        <h3>
+            <i class="heading-icon icon icon-pencil">
+                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/pencil.tpl"); ?>
+            </i> 
+            <?php echo $Language->get('text_title'); ?>
+        </h3>
+    </div>
 </div>
 
-<div class="grid_6">
-    <h3 onclick="$('#chequeGuide').slideToggle();"><?php echo $Language->get('text_title'); ?></h3>
-</div>
-
-<div class="grid_2">
-    <a onclick="$('#chequeGuide').slideToggle();" title="<?php echo $Language->get('button_pay'); ?>" id="chequeCheckoutCheckout" class="button"><?php echo $Language->get('button_pay'); ?></a>
-</div>
-
-<div class="clear"></div>
-
-<div class="guide" id="chequeGuide" style="display: none;">
+<div class="simple-form guide break" id="chequeGuide" style="display: none;">
     <?php if (!empty($instructions)) { echo $instructions; } ?>
-    
-    <div class="clear"></div>
-    
     <form id="chequeForm" name="chequeForm" method="post">
-        
-        <div class="row">
+        <div class="form-entry">
             <label for="cheque_order_id"><?php echo $Language->get('entry_cheque_order_id'); ?></label>
             <select name="cheque_order_id" title="<?php echo $Language->get('help_cheque_order_id'); ?>" showquick="off">
                 <option value="">Seleccione el ID del Pedido</option>
@@ -28,10 +21,8 @@
                 <?php } ?>
             </select>
         </div>
-            
-        <div class="clear"></div>
-            
-        <div class="row">
+
+        <div class="form-entry">
             <label for="cheque_bank_account_id"><?php echo $Language->get('entry_cheque_bank_account'); ?></label>
             <select name="cheque_bank_account_id" id="cheque_bank_account_id" title="<?php echo $Language->get('help_cheque_bank_account'); ?>" showquick="off">
                 <option value="">Seleccione la Cuenta donde deposit&oacute;</option>
@@ -41,40 +32,28 @@
             </select>
         </div>
             
-        <div class="clear"></div>
-            
-        <div class="row">
+        <div class="form-entry">
             <label for="cheque_transact"><?php echo $Language->get('entry_cheque_transact'); ?></label>
             <input type="text" name="cheque_transact" title="<?php echo $Language->get('help_cheque_transact'); ?>" value="" placeholder="Ingrese el n&uacute;mero de dep&oacute;sito" required="required" />
         </div>
-            
-        <div class="clear"></div>
-            
-        <div class="row">
+
+        <div class="form-entry">
             <label for="cheque_date_added"><?php echo $Language->get('entry_cheque_date_added'); ?></label>
-            <input type="necoDate" name="cheque_date_added" title="<?php echo $Language->get('help_cheque_date_added'); ?>" value="" placeholder="Ingrese la fecha del dep&oacute;sito" required="required" />
+            <input type="date" name="cheque_date_added" title="<?php echo $Language->get('help_cheque_date_added'); ?>" value="" placeholder="Ingrese la fecha del dep&oacute;sito" required="required" />
         </div>
             
-        <div class="clear"></div>
-            
-        <div class="row">
+        <div class="form-entry">
             <label for="cheque_amount"><?php echo $Language->get('entry_cheque_amount'); ?></label>
-            <input type="money" name="cheque_amount" title="<?php echo $Language->get('help_cheque_amount'); ?>" value="" placeholder="Ingrese el monto del dep&oacute;sito" required="required" />
+            <input type="text" name="cheque_amount" title="<?php echo $Language->get('help_cheque_amount'); ?>" value="" placeholder="Ingrese el monto del dep&oacute;sito" required="required" />
         </div>
-            
-        <div class="clear"></div>
-            
-        <div class="row">
+
+        <div class="form-entry">
             <label for="cheque_comment"><?php echo $Language->get('entry_cheque_comment'); ?></label>
             <textarea name="cheque_comment" title="<?php echo $Language->get('help_cheque_comment'); ?>" placeholder="Ingresa tu comentario aqu&iacute;" showquick="off"></textarea>
         </div>
-            
-        <div class="clear"></div>
-            
     </form>
 </div>
 
-<div class="clear"></div>
 
 <script type="text/javascript">
 $(function(){
@@ -105,6 +84,7 @@ $(function(){
             .appendTo('#chequeGuide');
         },
         success:function(data) {
+            console.log(data);
             $('#temp').remove();
             if (typeof data.error != 'undefined' && typeof data.msg != 'undefined') {
                 alert(data.msg);

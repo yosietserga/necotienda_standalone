@@ -54,18 +54,18 @@ function renderFiles(json) {
             for (j = 0; j < filename.length; j = j + 15) {
                 name += filename.substr(j, 15) + '<br>';
             }
-            name += json[i]['size'];
-            html += '<a file="' + json[i]['file'] + '">';
-            html += '<img src="' + json[i]['thumb'] + '" title="' + json[i]['filename'] + '" />';
-            html += '<p>' + name + '</p>';
-            html += '</a>';
-            html += '<input type="checkbox" name="filess[]" value="' + json[i]['file'] + '" style="display:none" />';
-            html += '<a class="selected"></a>';
-            html += '<a class="copy" onclick="copy(\'file_' + i + '\',\'' + json[i]['file'] + '\')"></a>';
-            html += '<a class="rename" onclick="rename(\'file_' + i + '\',\'' + json[i]['file'] + '\')"></a>';
-            html += '<a class="move"></a>';
-            html += '<a class="delete" onclick="ntDeleteFileFromMgr(\'file_' + i + '\',\'' + json[i]['file'] + '\')"></a>';
-            html += '</li>';
+            name += json[i]['size']
+            + '<a file="' + json[i]['file'] + '">'
+            + '<img src="' + json[i]['thumb'] + '" title="' + json[i]['filename'] + '" />'
+            + '<p>' + name + '</p>'
+            + '</a>'
+            + '<input type="checkbox" name="filess[]" value="' + json[i]['file'] + '" style="display:none" />'
+            + '<a class="selected"></a>'
+            + '<a class="copy" onclick="copy(\'file_' + i + '\',\'' + json[i]['file'] + '\')"></a>'
+            + '<a class="rename" onclick="rename(\'file_' + i + '\',\'' + json[i]['file'] + '\')"></a>'
+            + '<a class="move"></a>'
+            + '<a class="delete" onclick="ntDeleteFileFromMgr(\'file_' + i + '\',\'' + json[i]['file'] + '\')"></a>'
+            + '</li>';
         }
     }
     html += '</ul>';

@@ -10,16 +10,16 @@
         <div class="text-message"><?php echo $text_message; ?></div>
 
         <div class="payment-data tabulated-data break">
-            <h3>Tabla de Pagos Asociados al Pedido #<?php echo $order_id; ?></h3>
+            <h3><?php echo $Language->get('text_payment_title'); ?> #<?php echo $order_id; ?></h3>
             <table>
                 <tr>
-                    <th>Descripcion</th>
-                    <th>Pagos</th>
-                    <th>Total</th>
+                    <th><?php echo $Language->get('table_head_payment_description'); ?></th>
+                    <th><?php echo $Language->get('table_head_payment_payment'); ?></th>
+                    <th><?php echo $Language->get('table_head_payment_total'); ?></th>
                 </tr>
 
                 <tr>
-                    <td>Total del Pedido</td>
+                    <td><?php echo $Language->get('table_detail_payment_order_total'); ?></td>
                     <td>&nbsp;</td>
                     <td><?php echo $totals[count($totals)-1]['text']; ?></td>
                 </tr>
@@ -27,20 +27,30 @@
                 <?php foreach ($payments as $value) { ?>
                 <?php if ($value['amount'] <= 0) continue; ?>
                 <tr>
-                    <td><a href="<?php echo $Url::createUrl("account/payment/receipt",array('payment_id'=>$value['order_payment_id'])); ?>" target="_blank">Pago #<?php echo $value['order_payment_id']; ?></a></td>
-                    <td><?php echo $Currency->format($value['amount']); ?></td>
+                    <td>
+                        <a href="<?php echo $Url::createUrl("account/payment/receipt",array('payment_id'=>$value['order_payment_id'])); ?>" target="_blank">Pago #<?php echo $value['order_payment_id']; ?></a>
+                    </td>
+                    <td>
+                        <?php echo $Currency->format($value['amount']); ?>
+                    </td>
                     <td></td>
                 </tr>
                 <?php $total_payments = $total_payments + $value['amount']; ?>
                 <?php } ?>
 
                 <tr>
-                    <td><b>Total Pagos Aprobados</b></td>
-                    <td><?php echo $Currency->format($total_payments); ?></td>
+                    <td>
+                        <b><?php echo $Language->get('table_detail_payment_approved_total'); ?></b>
+                    </td>
+                    <td>
+                        <?php echo $Currency->format($total_payments); ?>
+                    </td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td>Total A Devolver</td>
+                    <td>
+                        <?php echo $Language->get('table_detail_payment_returned_total'); ?>
+                    </td>
                     <td>&nbsp;</td>
                     <td>
                         <span><?php
@@ -53,7 +63,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Total A Pagar</td>
+                    <td><?php echo $Language->get('table_detail_payment_topay_total'); ?></td>
                     <td></td>
                     <td>
                         <h2>
@@ -70,7 +80,7 @@
             </table>
         </div>
         <div class="payment-form">
-            <h2>Seleccionar Forma de Pago</h2>
+            <h2><?php echo $Language->get('form_payment_title'); ?></h2>
             <ul id="paymentMethods" class="nt-editable">
                 <?php foreach ($payment_methods as $payment_method) { ?>
                     <li>{%<?php echo $payment_method['id']; ?>%}</li>

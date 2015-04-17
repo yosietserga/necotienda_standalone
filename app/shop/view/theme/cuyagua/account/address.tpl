@@ -9,9 +9,9 @@
     <div class="simple-form">
         <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="form">
             <div class="entry-country form-entry">
-                <label for="country_id"><?php echo $Language->get('entry_country'); ?></label>
+                <label for="country_id"><?php echo $Language->get('text_option_select'); ?></label>
                 <select name="country_id" id="country_id" title="Selecciona el pa&iaacute;s de la facturaci&oacute;n" onchange="$('select[name=\'zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $zone_id; ?>');" showquick="off">
-                    <option value="false">Por Favor Seleccione</option>
+                    <option value="false"><?php echo $Language->get('entry_country'); ?></option>
                     <?php foreach ($countries as $country) { ?>
                     <option value="<?php echo $country['country_id']; ?>"<?php if ($country['country_id'] == $country_id) { ?> selected="selected"<?php } ?>><?php echo $country['name']; ?></option>
                     <?php } ?>
@@ -21,7 +21,7 @@
             <div class="entry-zone form-entry">
                 <label for="zone_id"><?php echo $Language->get('entry_zone'); ?></label>
                 <select name="zone_id" id="zone_id" title="Selecciona el estado donde reside" showquick="off">
-                    <option value="false">Seleccione un pa&iacute;s</option>
+                    <option value="false"><?php echo $Language->get('text_option_select_zone'); ?></option>
                 </select>
             </div>
 
@@ -40,7 +40,7 @@
                 <input type="text" id="address_1" name="address_1" value="<?php echo $address_1; ?>" required="required" title="Ingrese la direcci&oacute;n de habitaci&oacute;n" />
             </div>
             <div class="entry-default-address form-entry">
-                <label for="address_1">Predeterminada</label>
+                <label for="address_1"><?php echo $Language->get('text_label_check_address'); ?></label>
                 <input type="checkbox" id="default" name="default" value="1"<?php if ($default) { ?> checked="checked"<?php } ?> title="Seleccione si desea utilizar esta direcci&oacute;n como predeterminada" />
             </div>
             <input type="hidden" name="company" value="<?php echo $company; ?>" />

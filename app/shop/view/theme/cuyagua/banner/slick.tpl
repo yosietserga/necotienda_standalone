@@ -1,5 +1,5 @@
 <!-- slick-banner -->
-<li class="nt-editable slickBanner<?php echo ($settings['class']) ? " " . $settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
+<li class="nt-editable break slickBanner<?php echo ($settings['class']) ? " " . $settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
      <div class="widget-content" id="<?php echo $widgetName; ?>Content" data-banner="slick">
         <?php foreach ($banner['items'] as $item) { ?>
             <div>

@@ -4,7 +4,9 @@
     <div class="heading widget-heading feature-heading heading-dropdown heading-carousel" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
             <h3>
-                <i class="icon heading-icon fa fa-send fa-2x"></i>
+                <i class="heading-icon icon icon-star">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/star-full.tpl"); ?>
+                </i>
                 <?php echo $heading_title; ?>
             </h3>
         </div>
@@ -47,9 +49,14 @@
                 output += '</a>' ;
                 output += '</div>';
                 output += '<div class="info">';
-                output += '<span class="rating">';
-                output += '<img src="<?php echo HTTP_IMAGE; ?>stars_' +  ~~product.rating + '.png">';
-                output += '</span>';
+                if (~~product.rating !== 0) {
+                    output += '<span class="rating">';
+                    output += '<img src="<?php echo HTTP_IMAGE; ?>stars_' +  ~~product.rating + '.png">';
+                    output += '</span>';
+                } else {
+                    output += '<span class="rating" style="min-height: 0.875em; display: block; width: 100%">';
+                    output += '</span>';
+                }
                 output += '<span class="name">' + product.name + '</span>';
                 output += '<span class="price">' + product.price + '</span>';
                 output += '</div>';

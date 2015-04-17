@@ -169,7 +169,7 @@
                 <input type="text" title="Filtrar listado de categor&iacute;as" value="Ingresa el nombre de la lista" name="q" id="q" onfocus="this.value=''" />
                 <div class="clear"></div>
                 <label>&nbsp;</label>
-                <ul id="listsWrapper" class="scrollbox">
+                <ul id="listsWrapper" class="scrollbox" data-scrollbox="1">
                 <?php foreach ($lists as $list) { ?>
                     <li>
                         <input type="checkbox" name="contact_list[]" value="<?php echo $list['contact_list_id']; ?>"<?php if (in_array($list['contact_list_id'], $contacts_list)) { ?> checked="checked"<?php } ?> showquick="off" />
@@ -178,7 +178,7 @@
                 <?php } ?>
                 </ul>
                 <?php } else { ?>
-                No hay listas de contactos registradas
+                No hay listas de contactos registradas <a href="<?php echo $Url::createAdminUrl('marketing/list/insert'); ?>" title="<?php echo $Language->get('Add Contact List'); ?>"><?php echo $Language->get('Add Contact List'); ?></a>
                 <?php } ?>
             </div>
             
@@ -193,7 +193,7 @@
                 </select>
                 <a href="#" id="email_preview" title="Previsualizar Plantilla" style="margin-left: 10px;font-size: 10px;">[ Previsualizar ]</a>
                 <?php } else { ?>
-                No hay plantillas de email registradas
+                No hay plantillas de email registradas <a href="<?php echo $Url::createAdminUrl('marketing/newsletter/insert'); ?>" title="<?php echo $Language->get('Add Email Template'); ?>"><?php echo $Language->get('Add Email Template'); ?></a>
                 <?php } ?>
             </div>
             

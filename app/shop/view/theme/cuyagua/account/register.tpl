@@ -6,7 +6,7 @@
     <div class="info-form">
         <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="create">
             <fieldset>
-                <legend><?php echo $Language->get('text_your_details'); ?></legend>
+                <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fragment/form-details-heading.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/email.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/name.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/lastname.tpl"); ?>
@@ -17,7 +17,7 @@
             </fieldset>
 
             <fieldset>
-                <legend><?php echo $Language->get('text_your_address'); ?></legend>
+                <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fragment/form-address-heading.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/country.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/zone.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/city.tpl"); ?>
@@ -27,20 +27,16 @@
             </fieldset>
 
             <fieldset>
-                <legend><?php echo $Language->get('text_your_password'); ?></legend>
+                <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fragment/form-password-heading.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/password.tpl"); ?>
                 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/confirm.tpl"); ?>
             </fieldset>
 
-            <span class="terms">
-                <?php  echo sprintf($Language->get('text_agree'));?>
-                <a href="<?php $Url::createUrl('content/page',array('page_id'=>$page_legal_terms_id)); ?>">
-                    Terminos legales
-                </a>
-                <a href="<?php $Url::createUrl("content/page",array('page_id'=>$page_privacy_terms_id));?>">
-                    Terminos legales
-                </a>
-            </span>
+            <p class="reminder">
+                <?php echo $Language->get('text_agree');?>
+                <a href='<?php echo $Url::createUrl("content/page", array("page_id"=>$page_legal_terms_id)); ?>'> Legales y de
+                &nbsp;<a href='<?php echo $Url::createUrl("content/page", array("page_id"=>$page_privacy_terms_id)); ?>'>Privacidad</a>
+            </p>
             <input type="hidden" name="activation_code" value="<?php echo md5(rand(1000000,99999999)); ?>" />
         </form>
     </div>
@@ -49,38 +45,59 @@
 </section>
 <script>
 $(function(){
-    $('#create').ntForm({
-        lockButton:false
-    });
-    $('#email').on('change',function(e){
-        $.post('". Url::createUrl("account/register/checkemail") ."', {email: $(this).val()},
+    var emailField = $('#email'); 
+    var companyField = $('#company');
+    var namesFields = $('#firstname, #lastname');
+    var firstNameField = $(namesFields[0]);
+    var lastNameField = $(namesFields[1]);
+
+    var showInputErrorFeedback = function (target, message) {
+        var formEntry = target.parent();
+        var messageElement = $('<p>').attr({
+            id: 'emailCheckError',
+        })
+        .addClass('neco-submit-error')
+        .html(message);
+
+        target.removeClass('neco-input-success')
+              .addClass('neco-input-error');
+        formEntry.append(messageElement);
+    };
+
+    var showInputSuccessFeedback = function (target) {
+        var messageElement = $('#emailCheckError');
+        target.removeClass('neco-input-error')
+              .addClass('neco-input-success');
+        if (messageElement.length !== 0) {
+            messageElement.remove();
+        }
+    };
+
+    $('#create').ntForm();
+    emailField.on('change',function(e){
+        $.post('<?php echo Url::createUrl("account/register/checkemail");?>', {email: $(this).val()},
             function(response){
                 $('#tempLink').remove();
               	var data = $.parseJSON(response);
-                if (typeof data.error != 'undefined') {
-                    $('#email')
-                    .removeClass('neco-input-success')
-                    .addClass('neco-input-error')
-                    .parent()
-                        .find('.neco-form-error')
-                        .attr({'title':"Este email ya existe!"});
-                    $('#email')
-                    .closest('.row')
-                        .after('<p id="tempLink" class="error">'+ data.msg +'</p>');
+                if (typeof data.error !== 'undefined') {
+                    showInputErrorFeedback(emailField, data.msg);
                 } else {
-                    $('#email')
-                    .addClass('neco-input-success')
-                    .removeClass('neco-input-error')
-                    .parent().find('.neco-form-error')
-                        .attr({'title':"No hay errores en este campo"});
-                    $('#tempLink').remove();
+                    showInputSuccessFeedback(emailField);
           		}
             });
         }
     );
-    $('#firstname,#lastname').on('change',function(e){
-        if (($('#firstname').val().length != 0) && ($('#lastname').val().length != 0) && ($('#company').val().length == 0)) {
-            $('#company').val($('#firstname').val() +' '+ $('#lastname').val());
+    namesFields.on('change',function(e){
+        var firstNameText = firstNameField.val();
+        var lastNameText = lastNameField.val();
+        var companyText = companyField.val();
+
+        if (firstNameText.length !== 0 && lastNameText.length !== 0) {
+           if (companyText.length === 0 ) {
+              companyField.val(firstNameText.concat(' ')
+                                            .concat(lastNameText))
+                                            .trigger("keypress");
+           }
         }
     });
 });

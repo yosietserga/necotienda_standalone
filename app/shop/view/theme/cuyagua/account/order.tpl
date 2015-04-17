@@ -4,24 +4,30 @@
 
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/message.tpl"); ?>
-    <h1>Pedidos</h1>
+    <h1><?php echo $heading_title ?></h1>
 
     <div class="filter-form simple-form">
-        <input type="text" name="filter_list" id="filter_list" value="" placeholder="Buscar por ID de Pedido" />
-        <select name="filter_status" id="filter_status">
-            <option value="">Todos</option>
-            <?php foreach ($statuses as $status) { ?>
-            <option value="<?php echo $status['order_status_id']; ?>"><?php echo $status['name']; ?></option>
-            <?php } ?>
-        </select>
+        <div class="form-entry">
+            <input type="text" name="filter_list" id="filter_list" value="" placeholder="Buscar por ID de Pedido" />
+        </div>
+        <div class="form-entry">
+            <select name="filter_status" id="filter_status">
+                <option value="">Todos</option>
+                <?php foreach ($statuses as $status) { ?>
+                <option value="<?php echo $status['order_status_id']; ?>"><?php echo $status['name']; ?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div class="form-entry">
         <select name="filter_limit" id="filter_limit">
             <option value="5">5 por p&aacute;gina</option>
             <option value="10">10 por p&aacute;gina</option>
             <option value="20">20 por p&aacute;gina</option>
             <option value="50">50 por p&aacute;gina</option>
         </select>
-        <div class="action-button">
-            <a onclick="filter()" id="filter" class="filter-action">Filtrar</a>
+        </div>
+        <div class="action-button action-success">
+            <a onclick="filter()" id="filter">Filtrar</a>
         </div>
     </div>
     <div class="tabulated-data order-data" data-table="orders">

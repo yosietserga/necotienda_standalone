@@ -11,7 +11,7 @@
                 <a onclick="$('input[name@=stores]').removeAttr('checked');">Seleccionar Ninguno</a>
                 <div class="clear"></div><br />
                         
-                <ul id="storesWrapper" class="scrollbox">
+                <ul id="storesWrapper" class="scrollbox" data-scrollbox="1">
                 <?php foreach ($stores as $store) { ?>
                     <li class="stores">
                         <input type="checkbox" name="stores[]" value="<?php echo $store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />

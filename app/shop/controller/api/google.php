@@ -75,7 +75,7 @@ class ControllerApiGoogle extends Controller {
                 }
             }
         } else {
-             echo '<script>history.back()</script>';
+            echo '<script>history.back()</script>';
         }
     }
 
@@ -260,14 +260,14 @@ class ControllerApiGoogle extends Controller {
 
             $list = $this->db->query("SELECT * 
             FROM " . DB_PREFIX . "contact_list 
-            WHERE name = \"Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (". $this->db->escape(addslashes($userInfo->email)) .") en Google\"");
+            WHERE name = \"Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google\"");
 
             if ($list->num_rows) {
                 $list_id = $list->row['contact_list_id'];
             } else {
                 $this->db->query("INSERT INTO " . DB_PREFIX . "contact_list SET 
-                name        = \"Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (". $this->db->escape(addslashes($userInfo->email)) .") en Google\",
-                description = \"Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (". $this->db->escape(addslashes($userInfo->email)) .") en Google\",
+                name        = \"Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google\",
+                description = \"Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google\",
                 date_added  = NOW()");
                 $list_id = $this->db->getLastId();
             }
@@ -323,8 +323,8 @@ class ControllerApiGoogle extends Controller {
                     $product = $this->modelProduct->getProduct($product_id);
                     if ($product) {
 
-                    $this->load->model('store/product');
-                    $Url = new Url($this->registry);
+                        $this->load->model('store/product');
+                        $Url = new Url($this->registry);
                         //Libs
                         $this->load->auto('image');
                         $this->load->auto('currency');
@@ -370,13 +370,13 @@ class ControllerApiGoogle extends Controller {
                                 );
                             }
                         }
-                        
+
                         $fullname = ($userInfo->name) ? addslashes($userInfo->name) : $this->config->get('config_title');
                         $newsletter = $this->modelNewsletter->getById($this->config->get('marketing_email_promote_product'));
                         if ($newsletter) {
                             $data = array(
                                 'newsletter_id' => $newsletter['newsletter_id'],
-                                'name' => "Invitar Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (". $this->db->escape(addslashes($userInfo->email)) .") en Google",
+                                'name' => "Invitar Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google",
                                 'subject' => 'Hola',
                                 'from_name' => $this->db->escape($fullname),
                                 'from_email' => $this->db->escape($this->config->get('config_email')),
@@ -390,19 +390,19 @@ class ControllerApiGoogle extends Controller {
                                 'date_end' => date('Y-m-d h:i:s'),
                                 'date_added' => date('Y-m-d h:i:s')
                             );
-        
+
                             $this->load->model('marketing/campaign');
                             $campaign_id = $this->modelCampaign->add($data);
-        
+
                             $params = array(
                                 'job' => 'send_campaign',
                                 'product_id' => $product_id,
                                 'campaign_id' => $campaign_id
                             );
-        
+
                             $this->load->library('task');
                             $task = new Task($this->registry);
-        
+
                             $task->object_id = (int) $campaign_id;
                             $task->object_type = 'campaign';
                             $task->task = $campaign['name'];
@@ -416,7 +416,7 @@ class ControllerApiGoogle extends Controller {
                             $task->date_start_exec = date('Y-m-d H:i:s');
                             $task->date_end_exec = date('Y-m-d H:i:s');
                             $task->addMinute(15);
-        
+
                             $control = array();
                             foreach ($to as $sort_order => $contact) {
                                 if (in_array($contact['email'], $control))
@@ -438,11 +438,9 @@ class ControllerApiGoogle extends Controller {
                             }
                             $task->createSendTask();
                         }
-
                     }
                 }
                 $this->session->set('success', $this->language->get('text_promote_product_success'));
-                
             }
             $this->redirect($Url::createUrl('store/product', array('product_id' => $product['product_id'])));
         } else {

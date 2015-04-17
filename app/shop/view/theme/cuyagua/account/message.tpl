@@ -4,28 +4,33 @@
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/messages.tpl"); ?>
 
-    <div class="buttons">
-        <a href="<?php echo $Url::createUrl("account/message/create"); ?>" title="Nuevo Mensaje" class="button blue">Nuevo Mensaje</a>
-    </div>
     <div class="filter simple-form">
-        Buscar:
-        <input type="text" name="filter_subject" id="filter_subject" value="" placeholder="Buscar..." />
-        Status:
-        <select name="filter_status" id="filter_status">
-            <option value="">Todos</option>
-            <option value="1"><?php echo $text_read; ?></option>
-            <option value="2"><?php echo $text_non_read; ?></option>
-            <option value="-1"><?php echo $text_spam; ?></option>
-        </select>
-        Mostrar:
-        <select name="filter_limit" id="filter_limit">
-            <option value="5">5 por p&aacute;gina</option>
-            <option value="10">10 por p&aacute;gina</option>
-            <option value="20">20 por p&aacute;gina</option>
-            <option value="50">50 por p&aacute;gina</option>
-        </select>
+        <div class="form-entry">
+        <label for="filter_subject"><?php echo $Language->get('text_search');?>:</label>
+            <input type="text" name="filter_subject" id="filter_subject" value="" placeholder="Buscar..." />
+        </div>
+        <div class="form-entry">
+            <label for="filter_status"><?php echo $Language->get('text_status');?>:</label>
+            <select name="filter_status" id="filter_status">
+                <option value=""><?php echo $Language->get('select_option_all');?></option>
+                <option value="1"><?php echo $text_read; ?></option>
+                <option value="2"><?php echo $text_non_read; ?></option>
+                <option value="-1"><?php echo $text_spam; ?></option>
+            </select>
+        </div>
+        <div class="form-entry">
+            <label for="filter_limit"><?php echo $Language->get('text_display');?>:</label>
+            <select name="filter_limit" id="filter_limit">
+                <option value="5"><?php echo $Language->get('select_option_5_per_page');?></option>
+                <option value="10"><?php echo $Language->get('select_option_10_per_page');?></option>
+                <option value="20"><?php echo $Language->get('select_option_20_per_page');?></option>
+                <option value="50"><?php echo $Language->get('select_option_50_per_page');?></option>
+            </select>
+        </div>
         <?php echo $text_sort; ?>
-        <a href="#" id="filter" class="buttonBlue" style="padding: 3px 4px;">Filtrar</a>
+        <div class="action-button action-success filter-action">
+            <a href="#" id="filter"><?php echo $Language->get('text_filter');?></a>
+        </div>
     </div>
     <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="form">
         <?php if ($messages) { ?>
@@ -33,15 +38,16 @@
             <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" style="width: 5px !important;" /></th>
-                <th>Asunto</th>
-                <th>Mensaje</th>
-                <th>Enviado</th>
-                <th>Acciones</th>
+                <th><?php echo $Language->get('table_head_subject');?></th>
+                <th><?php echo $Language->get('table_head_message');?></th>
+                <th><?php echo $Language->get('table_head_sent');?></th>
+                <th><?php echo $Language->get('table_head_actions');?></th>
             </tr>
             </thead>
             <?php foreach ($messages as $value) { ?>
             <tr id="pid_<?php echo $value['message_id']; ?>">
-                <td><input type="checkbox" name="selected[]" value="<?php echo $value['message_id']; ?>"<?php if ($value['selected']) { ?> checked="checked"<?php } ?> style="width: 5px !important;" /></td>
+                <td>
+                    <input type="checkbox" name="selected[]" value="<?php echo $value['message_id']; ?>"<?php if ($value['selected']) { ?> checked="checked"<?php } ?> /></td>
                 <td>
                     <a href="<?php echo $Url::createUrl("account/message/read",array("message_id"=>$value['message_id'])); ?>" title="Leer Mensaje"><?php echo $value['subject']; ?></a>
                 </td>
@@ -55,7 +61,9 @@
         </table>
         <?php if ($pagination) { ?><div class="pagination"><?php echo $pagination; ?></div><?php } ?>
         <?php } else { ?>
-        <div>No tiene nin&uacute;n mensaje</div>
+        <div>
+            <div class="no-info"><?php echo $Language->get('text_empty_data');?>&nbsp;<a href="<?php echo $Url::createUrl("account/message/create"); ?>" title="Nuevo Mensaje"><?php echo $Language->get('text_help');?></a></div>
+        </div>
         <?php } ?>
     </form>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>

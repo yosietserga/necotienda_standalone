@@ -24,35 +24,26 @@
         <!-- breadcrumbs -->
 
 
-        <!-- columns left -->
-        <?php if ($column_left) { ?>
-            <aside id="column_left" class="column-left large-3 medium-12 small-12 columns">
-                <?php echo $column_left; ?>
-            </aside>
-        <?php } ?>
-        <!--/ columns-left-->
-
-        <!-- columns-center -->
-        <?php if ($column_left && $column_right) { ?>
-            <div class="column-center large-6 medium-12 small-12 columns">
-        <?php } elseif ($column_left || $column_right) { ?>
-            <div class="column-center large-9 medium-12 small-12 columns">
-        <?php } else { ?>
-            <div class="column-center large-12 medium-12 small-12 columns">
-        <?php } ?>
+        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
 
             <h1><?php echo $heading_title; ?></h1>
-            <div class="category-description">
-                <?php if ($description) { ?><p><?php echo $description; ?></p><?php } ?>
-            </div>
+            <?php if ($description && strlen($description) > 10) { ?>
+                <div class="category-description">
+                    <p><?php echo $description; ?></p>
+                </div>
+            <?php } ?>
 
             <?php if($categories) { ?>
-            <nav class="content">
-                <ul class="category_view">
+            <nav class="catalog catalog-grid catalog-break">
+                <ul class="category-view">
                 <?php foreach($categories as $category) { ?>
-                    <li
+                    <li>
+                        <figure class="picture">
                         <a class="thumb" href="<?php echo str_replace('&', '&amp;', $category['href']); ?>" title="<?php echo $category['name']; ?>"><img src="<?php echo $category['thumb']; ?>" alt="<?php echo $category['name']; ?>" /></a>
-                        <a class="name" href="<?php echo str_replace('&', '&amp;', $category['href']); ?>" title="<?php echo $category['name']; ?>"><?php echo $category['name']; ?></a>
+                        </figure>
+                        <div class="info">
+                            <a class="name" href="<?php echo str_replace('&', '&amp;', $category['href']); ?>" title="<?php echo $category['name']; ?>"><?php echo $category['name']; ?></a>
+                        </div>
                     </li>
                 <?php } ?>
                 </ul>
@@ -68,15 +59,6 @@
                  </ul>
              <?php } ?>
 
-        </div>
-        <!-- /column-center -->
-
-        <!-- column-rigth -->
-        <?php if ($column_right) { ?>
-            <aside id="column_right" class="column-right large-3 medium-12 small-12 columns">
-                <?php echo $column_right; ?>
-            </aside>
-        <?php } ?>
-        <!-- /column-right -->
+        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
     </section>
 <?php echo $footer; ?>

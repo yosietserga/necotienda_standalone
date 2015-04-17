@@ -73,7 +73,7 @@
                     <a onclick="$('#storesWrapper input[type=checkbox]').attr('checked','checked');">Seleccionar Todos</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a onclick="$('#storesWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
                     <div class="clear"></div>
-                    <ul id="storesWrapper" class="scrollbox">
+                    <ul id="storesWrapper" class="scrollbox" data-scrollbox="1">
                         <li class="stores">
                             <input type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
                             <b><?php echo $Language->get('text_default'); ?></b>

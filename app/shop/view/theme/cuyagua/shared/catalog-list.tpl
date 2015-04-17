@@ -6,9 +6,9 @@
                     <!--CATALOG PICTURE-->
                     <figure class="picture">
                         <a href="<?php echo $Url::createUrl('store/product',array('product_id'=>$product['product_id'])); ?>" class="thumb" title="<?php echo $product['name']; ?>">
-                            <img src="<?php echo HTTP_IMAGE; ?>data/preloader.gif" data-original="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" class="nt-lazyload" />
+                            <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" class="nt-lazyload" />
                         </a>
-                        <a href="#" class="quick-view" onclick="return quickView('product', '<?php echo $product['product_id']; ?>');"><?php echo $Language->get('text_quick_view'); ?>
+                        <a href="javascript:;" class="quick-view" onclick="quickView('product', '<?php echo $product['product_id']; ?>');"><?php echo $Language->get('text_quick_view'); ?>
                         </a>
                     </figure>
                     <!--/CATALOG PICTURE-->
@@ -17,7 +17,11 @@
                     <div class="info nt-hoverdir">
                         <div class="product-info">
                             <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/product/sticker.tpl"); ?>
-                            <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/product/rating.tpl"); ?>
+                            <?php if ($product['rating']) { ?>
+                                <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/product/rating.tpl"); ?>
+                            <?php }else { ?>
+                                <div style="min-height: 1.063em; width: 100%;" itemprop="aggregateRating"itemscope itemtype="http://schema.org/AggregateRating" class="rating placeholder" id="productAverage"></div>
+                            <?php } ?>
                             <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/product/name.tpl"); ?>
                             <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/product/model.tpl"); ?>
                             <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/product/overview.tpl"); ?>

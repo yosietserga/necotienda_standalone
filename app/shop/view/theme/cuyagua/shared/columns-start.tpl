@@ -1,6 +1,14 @@
+<?php if ($column_left && $column_right) { ?>
+    <section id="content" class="home-grid-small">
+<?php } else if ($column_left || $column_right) { ?>
+    <section id="content" class="home-grid-medium">
+<?php } else { ?>
+<section id="content" class="home-grid-full">
+<?php } ?>
+
 <!-- columns-left -->
 <?php if ($column_left) { ?>
-    <aside id="column_left" class="column-left large-3 medium-12 small-12 columns">
+    <aside id="column_left" class="aside-column column-left large-3 medium-12 small-12 columns">
         <?php echo $column_left; ?>
     </aside>
 <?php } ?>

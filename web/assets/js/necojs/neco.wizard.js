@@ -9,8 +9,8 @@
 (function($) {
     $.fn.ntWizard = function(method) {
         var defaults = {
-            navControl: 'li',
-            handle: 'div',
+            navControl: '*[data-wizard="nav"]',
+            handle: '[data-wizard="step"]',
             nextText: 'Siguiente',
             prevText: 'Atr\u00E1s',
             ignoreText: 'Omitir',
@@ -18,7 +18,7 @@
             begin: 0,
             error:      {
                 classname:'neco-form-error',
-                text:'Lo sentimos pero no se pudo procesar el formulario',
+                text:'Lo sentimos pero no se pudo procesar el formulario'
             },
             options:    {},
             create:     function(){},
@@ -74,17 +74,38 @@
                     });
                     
                     /* if (navCount == stepCount) { */
-                        
-                        var nextBtn = $(document.createElement('a')).attr({
-                            'class':'button neco-wizard-next'
+
+                        var createStepper = function createStepper (direction) {
+                            'use strict';
+                            var markup,
+                                stepper;
+
+                            markup = [
+                                "<div class='action-button neco-wizard-" + direction + "'>",
+                                    "<a>",
+                                        settings[direction + "Text"],
+                                    "</a>",
+                                "</div>" ];
+
+                            stepper = document.createElement('div');
+                            stepper.innerHTML = markup.join("");
+                            stepper.addEventListener('click', function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                helpers['_'.concat(direction)](e);
+                            });
+                        };
+
+                        var nextBtn = $('<div>').attr({
+                            'class':'action-step neco-wizard-next'
                         })
                         .text(settings.nextText)
                         .on('click',function(e){
                             helpers._next(e);
                         });
                         
-                        var prevBtn = $(document.createElement('a')).attr({
-                            'class':'button neco-wizard-prev'
+                        var prevBtn = $('<div>').attr({
+                            'class':'action-step neco-wizard-prev'
                         })
                         .text(settings.prevText)
                         .on('click',function(e){
@@ -92,7 +113,7 @@
                         });
                         
                         var ignoreBtn = $(document.createElement('a')).attr({
-                            'class':'button neco-wizard-ignore'
+                            'class':'action-step neco-wizard-ignore'
                         })
                         .text(settings.ignoreText)
                         .on('click',function(e){

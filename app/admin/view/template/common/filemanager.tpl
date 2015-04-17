@@ -47,6 +47,7 @@
                 <a id="refresh" class="button" style="background-image: url('image/filemanager/refresh.png');">
                     <span class="hideOnMobile hideOnTablet"><?php echo $Language->get('button_refresh'); ?></span>
                 </a>
+                <input type="text" name="qfiles" value="" onkeyup="searchFiles(this);" placeholder="<?php echo $Language->get('Search Files'); ?>" />
             </div>
             
             <div class="clear"></div>
@@ -122,6 +123,18 @@ $(function(){
     
     loadDirectories('<?php echo $GET['token']; ?>');
 });
+function searchFiles(e) {
+    var q = '';
+    q = e.value.toLowerCase().trim();
+    $('#column_right li p').each(function(){
+        name = $(this).text().replace(/-/g, ' ');
+        if (name.indexOf(q) === -1) {
+            $(this).closest('li').hide();
+        } else {
+            $(this).closest('li').show();
+        }
+    });
+}
 </script>
 </body>
 </html>

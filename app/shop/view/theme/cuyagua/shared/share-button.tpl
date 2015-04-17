@@ -1,26 +1,27 @@
 <div class="share-buttons">
     <ul class="rrssb-buttons clearfix">
         <li class="rrssb-facebook">
-            <a href="#">
-                <span class="rrssb-icon">
-                    <i class="fa fa-facebook"></i>
-                </span>
+            <a onclick="popupWindow('https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($Url::createUrl('store/product', array('product_id'=>$product_id))); ?>', 'Facebook', 600 , 480); return false;"
+               href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($Url::createUrl('store/product', array('product_id'=>$product_id))); ?>">
+                <i class="rrssb-icon">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/facebook3.tpl"); ?>
+                </i>
                 <span class="rrssb-text">facebook</span>
             </a>
         </li>
         <li class="rrssb-twitter">
-            <a href="#" class="popup">
-                <span class="rrssb-icon">
-                    <i class="fa fa-twitter"></i>
-                </span>
+            <a href="https://twitter.com/home?status=<?php echo urlencode($Url::createUrl('store/product',array('product_id'=>$product_id))); ?>" class="popup">
+                <i class="rrssb-icon">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/twitter3.tpl"); ?>
+                </i>
                 <span class="rrssb-text">twitter</span>
             </a>
         </li>
         <li class="rrssb-googleplus">
-            <a href="#" class="popup">
-                <span class="rrssb-icon">
-                    <i class="fa fa-google-plus"></i>
-                </span>
+            <a href="https://plus.google.com/share?url=<?php echo urlencode($Url::createUrl('store/product',array('product_id'=>$product_id))); ?>" class="popup">
+                <i class="rrssb-icon">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/google-plus3.tpl"); ?>
+                </i>
                 <span class="rrssb-text">google+</span>
             </a>
         </li>

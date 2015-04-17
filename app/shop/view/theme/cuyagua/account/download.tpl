@@ -7,7 +7,7 @@
 
     <?php if ($downloads) { ?>
     <div class="filter simple-form">
-        Buscar:
+        <?php echo $Language->get('text_search_label');?>
         <input type="text" name="filter_name" id="filter_name" value="" placeholder="Buscar..." />
         <select name="filter_limit" id="filter_limit">
             <option value="5">5 por p&aacute;gina</option>
@@ -15,7 +15,7 @@
             <option value="20">20 por p&aacute;gina</option>
             <option value="50">50 por p&aacute;gina</option>
         </select>
-        <a href="#" id="filter" class="button" style="padding: 3px 4px;">Filtrar</a>
+        <a href="#" id="filter" class="button"><?php echo $Language->get('text_filter_button');?></a>
     </div>
     <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="form">
         <table>
@@ -47,7 +47,7 @@
         <?php if ($pagination) { ?><div class="pagination"><?php echo $pagination; ?></div><?php } ?>
     </form>
     <?php } else { ?>
-    <div>No tiene ning&uacute;na descarga disponible</div>
+    <div><?php echo $Language->get('text_empty_page');?></div>
     <?php } ?>
 
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>

@@ -1,19 +1,15 @@
-<div class="grid_2" onclick="$('#paypalGuide').slideToggle();">
-    <?php if ($Config->get('pp_standard_image')) { ?><img src="<?php echo $Image::resizeAndSave($Config->get('pp_standard_image'),90,90); ?>" alt="PayPal" /><?php } ?>
+<div class="heading widget-heading featured-heading large-heading-dropdown" id="<?php echo $widgetName; ?>Header">
+    <div  onclick="$('#bankTransferGuide').slideToggle();" class="heading-title">
+        <h3>
+            <i class="heading-icon icon icon-star">
+                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/star-full.tpl"); ?>
+            </i>
+            <?php echo $Language->get('text_title'); ?>
+        </h3>
+    </div>
 </div>
 
-<div class="grid_6">
-    <h3 onclick="$('#paypalGuide').slideToggle();"><?php echo $Language->get('text_title'); ?></h3>
-</div>
-
-
-<div class="grid_2">
-    <a onclick="$('#paypalGuide').slideToggle();" title="<?php echo $Language->get('button_pay'); ?>" id="paypalCheckout" class="button"><?php echo $Language->get('button_pay'); ?></a>
-</div>
-
-<div class="clear"></div>
-
-<div class="guide" id="paypalGuide" style="display: none;">
+<div class="simple-form guide" id="paypalGuide" style="display: none;">
     <?php if (!empty($instructions)) { echo $instructions; } ?>
     
     <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" id="paypalCheckoutForm">
@@ -42,8 +38,6 @@
         <input type="hidden" name="custom" value="<?php echo $custom; ?>">
     </form>
 </div>
-    
-<div class="clear"></div>
 
 <script type="text/javascript">
 $(function(){

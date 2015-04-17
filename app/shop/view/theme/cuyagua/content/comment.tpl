@@ -1,26 +1,24 @@
-<div id="msgReview"></div>
-<div class="content">
+<div id="msgReview" class="msg-review"></div>
+<div class="content comment-content">
     <div>
-        <div class="detail">
+        <div class="comment-body">
             <textarea name="text" id="text" placeholder="Escribe tu pregunta o comentario aqu&iacute;"></textarea>
         </div>
     </div>
-    <div class="clear"></div>
     <div>
-        <div class="label"><b><?php echo $Language->get('entry_rating'); ?></b></div>
-        <div class="detail">
-            <span style="float: left;margin-right: 10px;"><?php echo $Language->get('entry_bad'); ?></span>
+        <div class="rating-heading"><?php echo $Language->get('entry_rating'); ?></div>
+        <div id="content" class="rating-points">
+            <!--<span><?php echo $Language->get('entry_bad'); ?></span>-->
             <a class="star_review" id="1"></a>
             <a class="star_review" id="2"></a>
             <a class="star_review" id="3"></a>
             <a class="star_review" id="4"></a>
             <a class="star_review" id="5"></a>
             <input type="hidden" name="rating" id="review_" value="0" />
-            <span style="float: left;margin-left:10px;"><?php echo $Language->get('entry_good'); ?></span>
+            <!--<span><?php echo $Language->get('entry_good'); ?></span>-->
         </div>
     </div>
-    <div class="clear"></div>
-    <a title="<?php echo $Language->get('button_continue'); ?>" onclick="review();" class="button"><?php echo $Language->get('button_continue'); ?></a>
+    <a title="<?php echo $Language->get('button_continue'); ?>" onclick="review();" class="button action-comment"><?php echo $Language->get('button_continue'); ?></a>
 </div>
 
 <script>
@@ -36,7 +34,7 @@ $(function(){
             });
         }
     });
-    $('.rating-points').hover( '.star_review'
+    $('#content').hover( '.star_review'
         function() {
             var idThis = $(this).attr('id');
             $('#content .star_review').each (function() {
@@ -47,7 +45,7 @@ $(function(){
             });
         },
         function() {
-            $('.rating-points').each ('.star_review', function() {
+            $('#content').each ('.star_review', function() {
                 $(this).css({'background-position':'right top'});
             });
         }

@@ -7,14 +7,24 @@
     </div>
     <div>
         <div class="rating-heading"><?php echo $Language->get('entry_rating'); ?></div>
-        <div class="rating-points">
+        <div id="content" class="rating-points">
             <!--<span><?php echo $Language->get('entry_bad'); ?></span>-->
-            <a class="star_review" id="1"></a>
-            <a class="star_review" id="2"></a>
-            <a class="star_review" id="3"></a>
-            <a class="star_review" id="4"></a>
-            <a class="star_review" id="5"></a>
-            <input type="hidden" name="rating" id="review_" value="0" />
+            <div class="star-item" data-hover-item="1">
+                <a class="star_review" id="1" data-review-rating-star="1"></a>
+            </div>
+            <div class="star-item" data-hover-item="2">
+                <a class="star_review" id="2" data-review-rating-star="2"></a>
+            </div>
+            <div class="star-item" data-hover-item="3">
+                <a class="star_review" id="3" data-review-rating-star="3"></a>
+            </div>
+            <div class="star-item" data-hover-item="4">
+                <a class="star_review" id="4" data-review-rating-star="4"></a>
+            </div>
+            <div class="star-item" data-hover-item="5">
+                <a class="star_review" id="5" data-review-rating-star="5"></a>
+            </div>
+            <input data-value="review" type="hidden" name="rating" id="review_" value="0" />
             <!--<span><?php echo $Language->get('entry_good'); ?></span>-->
         </div>
     </div>
@@ -22,6 +32,8 @@
 </div>
 
 <script>
+
+var ratingStars = '*[data-review-rating-star]';
 $(function(){
     $('#text').on('focus',function(e){
         $(this).animate({
@@ -34,35 +46,37 @@ $(function(){
             });
         }
     });
-    $('#content .star_review').hover(
-        function() {
-            var idThis = $(this).attr('id');
-            $('#content .star_review').each (function() {
-                var idStar = $(this).attr('id');
-                if (idStar <= idThis) {
-                    $(this).css({'background-position':'left top'});
+    $('*[data-hover-item]').hover(
+        function(e) {
+            var self = this;
+            var dataHoverItem = ~~self.dataset.hoverItem;
+
+            $(ratingStars).each (function(i, e) {
+                var dataReviewStar = ~~e.dataset.reviewRatingStar;
+                if (dataReviewStar <= dataHoverItem) {
+                    $(this).css({'background-position':'0 top'});
                 }
             });
         },
         function() {
-            $('#content .star_review').each (function() {
-                $(this).css({'background-position':'right top'});
+            $(ratingStars).each (function(i, e) {
+                $(e).css({'background-position':'14px top'});
             });
         }
     );
-    $('#content .detail a').click(function() {
-        var idThis = $(this).attr('id');
-        $('#content input[name=rating]').val(idThis);
-        $('#content .detail a').each (function() {
-            var idStar = $(this).attr('id');
-            if (idStar <= idThis) {
-                $(this).removeClass();
-                $(this).addClass('star_clicked');
-                $(this).css({'background-position':'left top'});
+    $('*[data-hover-item]').click(function(e) {
+        var self = this;
+        var dataHoverItem = ~~self.dataset.hoverItem;
+
+        $('*[data-value="review"]').val(dataHoverItem);
+        $(ratingStars).each (function(i, e) {
+            var dataReviewStar = ~~e.dataset.reviewRatingStar;
+            if (dataReviewStar <= dataHoverItem) {
+                $(e).removeClass();
+                $(e).addClass('star_clicked');
             } else {
-                $(this).removeClass();
-                $(this).addClass('star_review');
-                $(this).css({'background-position':'right top'});
+                $(e).removeClass();
+                $(e).addClass('star_review');
             }
         });
     });

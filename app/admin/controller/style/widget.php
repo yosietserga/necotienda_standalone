@@ -98,13 +98,6 @@ class ControllerStyleWidget extends Controller {
             $this->data['success'] = '';
         }
 
-        $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_ADMIN_CSS;
-        $styles[] = array(
-            'media' => 'screen',
-            'href' => $csspath . 'widgets.css'
-        );
-        $this->styles = array_merge($this->styles, $styles);
-
         $this->template = 'style/widget.tpl';
         
         $this->children[] = 'common/header';
@@ -166,5 +159,4 @@ class ControllerStyleWidget extends Controller {
         
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
-
 }

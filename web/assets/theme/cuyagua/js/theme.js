@@ -10,14 +10,54 @@ $(function(){
     attachFastClick(document.body);
 
     $('img.nt-lazyload').lazyload();
+    $("body").click(showOverHeaderAction());
+
     triggerWithClass(".heading", "reveal-dropdown");
     triggerWithClass(".filter-heading", "reveal-dropdown");
     triggerWithClass("[data-trigger='dropdown']", "reveal-dropdown");
     triggerWithClass("[data-show='main-search']", "reveal-search", "[data-component='main-search']");
-    $("body").click(showOverHeaderAction());
     clearInputAction("*[data-action='clear-input']", "*[data-input]");
+    initDropdown("*[data-widget='category']");
 
 });
+/**
+ * Initialize a list with dropdown putting the arrow icon and setting slidedown animation
+ * @param target {string} - jQuery Selector
+ * @return void
+ */
+
+ var ICONS = Object.freeze({
+    arrowDown: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" viewBox="0 0 10 16"><path d="M9.598 6.57q0 .117-.09.206l-4.16 4.16q-.09.09-.205.09t-.205-.09l-4.16-4.16q-.09-.09-.09-.205t.09-.204l.445-.446q.09-.09.205-.09t.205.09l3.51 3.51L8.65 5.92q.09-.09.206-.09t.205.09l.447.446q.09.09.09.205z" fill="#444"/></svg>',
+    loader: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.833 10.16q.27 0 .47.2l1.884 1.884q.198.198.198.474 0 .27-.198.47t-.47.197q-.275 0-.473-.198l-1.885-1.885q-.194-.193-.194-.474 0-.276.195-.47t.472-.196zm-5.66 0q.275 0 .47.196t.195.47-.198.475l-1.885 1.886q-.198.198-.47.198-.275 0-.47-.195t-.195-.472q0-.28.193-.474l1.885-1.885q.198-.2.474-.2zm-3.84-2.827H4q.276 0 .47.195t.196.47-.195.472-.47.195H1.333q-.276 0-.47-.195T.666 8t.195-.472.47-.195zm6.667 4q.276 0 .47.195t.196.47v2.668q0 .276-.195.47t-.47.196-.47-.195-.196-.47v-2.668q0-.277.195-.472t.47-.195zM3.286 2.615q.27 0 .47.198L5.64 4.698q.198.198.198.47 0 .275-.195.47t-.47.195q-.282 0-.475-.193L2.813 3.755q-.193-.193-.193-.474 0-.275.195-.47t.47-.195zM12 7.333h2.667q.276 0 .47.195t.196.47-.195.472-.47.195H12q-.276 0-.47-.195T11.333 8t.195-.472.47-.195zM8 .667q.276 0 .47.195t.196.47V4q0 .276-.195.47T8 4.667t-.47-.195T7.333 4V1.333q0-.276.195-.47T8 .666zm4.72 1.948q.27 0 .468.198t.198.47q0 .275-.198.473L11.303 5.64q-.193.194-.47.194-.285 0-.476-.19t-.19-.477q0-.276.193-.47l1.885-1.884q.198-.198.474-.198z" fill="#444"/></svg>',
+    plus: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M15.5 6H10V.5c0-.276-.224-.5-.5-.5h-3c-.276 0-.5.224-.5.5V6H.5c-.276 0-.5.224-.5.5v3c0 .276.224.5.5.5H6v5.5c0 .276.224.5.5.5h3c.276 0 .5-.224.5-.5V10h5.5c.276 0 .5-.224.5-.5v-3c0-.276-.224-.5-.5-.5z" fill="#444"/></svg>',
+    minus: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 6.5v3c0 .276.224.5.5.5h15c.276 0 .5-.224.5-.5v-3c0-.276-.224-.5-.5-.5H.5c-.276 0-.5.224-.5.5z" fill="#444"/></svg>',
+    facebook: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.5 3C9.12 3 8 4.12 8 5.5V7H6v2h2v7h2V9h2.25l.5-2H10V5.5c0-.276.224-.5.5-.5H13V3h-2.5z" fill="#444"/></svg>',
+    twitter: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M16 3.038c-.59.26-1.22.438-1.885.517.678-.406 1.198-1.05 1.443-1.816-.634.375-1.337.648-2.085.796-.6-.638-1.452-1.037-2.396-1.037-1.813 0-3.283 1.47-3.283 3.28 0 .258.03.51.085.75C5.15 5.39 2.73 4.084 1.112 2.1.83 2.583.67 3.147.67 3.75c0 1.138.578 2.143 1.46 2.73-.54-.016-1.045-.164-1.488-.41v.04c0 1.59 1.132 2.918 2.633 3.22-.275.075-.565.115-.865.115-.212 0-.417-.02-.618-.06.418 1.305 1.63 2.254 3.066 2.28-1.123.88-2.54 1.406-4.077 1.406-.264 0-.525-.015-.782-.045 1.453.93 3.178 1.475 5.032 1.475 6.038 0 9.34-5.002 9.34-9.34 0-.142-.003-.284-.01-.425.642-.463 1.198-1.04 1.638-1.7z" fill="#444"/></svg>',
+    google: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M6.828 12.784c0 1.173-.725 2.1-2.777 2.175-1.202-.685-2.21-1.672-2.92-2.858.37-.914 1.527-1.61 2.85-1.596.375.004.725.064 1.043.167.874.607 1.578.987 1.755 1.68.033.14.05.283.05.43zM8 0C5.688 0 3.606.98 2.146 2.548c.577-.32 1.258-.51 1.983-.51h4.006l-.895.94H6.19c.74.425 1.136 1.3 1.136 2.266 0 .886-.49 1.6-1.184 2.142-.676.528-.805.75-.805 1.2 0 .382.808.954 1.18 1.232 1.294.97 1.556 1.58 1.556 2.795 0 1.23-1.077 2.455-2.904 2.87.88.334 1.834.517 2.83.517 4.42 0 8-3.582 8-8s-3.58-8-8-8zm4 6v2h-1V6H9V5h2V3h1v2h2v1h-2zm-6.285-.696c.186 1.418-.435 2.33-1.515 2.3S2.094 6.58 1.907 5.16c-.186-1.42.538-2.504 1.618-2.472s2.003 1.196 2.19 2.614zM3.45 10.032c-1.166 0-2.157.403-2.856.998C.21 10.095 0 9.072 0 8c0-.887.145-1.74.41-2.537.116 1.554 1.21 2.753 3.016 2.753.133 0 .262-.007.39-.016-.125.238-.214.503-.214.78 0 .47.258.736.576 1.046-.24 0-.473.007-.727.007z" fill="#444"/></svg>',
+    close: '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" viewBox="0 0 13 16"><path d="M11.59 11.804q0 .357-.25.607l-1.215 1.215q-.25.25-.607.25t-.607-.25L6.287 11 3.66 13.625q-.25.25-.606.25t-.607-.25L1.233 12.41q-.25-.25-.25-.606t.25-.607l2.625-2.625-2.625-2.625q-.25-.25-.25-.607t.25-.607L2.447 3.52q.25-.25.607-.25t.607.25l2.626 2.624L8.91 3.52q.25-.25.608-.25t.607.25l1.214 1.213q.25.25.25.607t-.25.607L8.713 8.572l2.625 2.625q.25.25.25.607z" fill="#444"/></svg>',
+    doubleArrowUp: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" viewBox="0 0 10 16"><path d="M9.598 11.714q0 .116-.09.205l-.445.445q-.09.09-.205.09t-.205-.09l-3.51-3.51-3.508 3.51q-.09.09-.205.09t-.205-.09L.78 11.92q-.09-.09-.09-.206t.09-.205l4.16-4.162q.09-.09.205-.09t.205.09l4.16 4.16q.09.09.09.206zm0-3.428q0 .116-.09.205l-.445.447q-.09.09-.205.09t-.205-.09l-3.51-3.51-3.508 3.51q-.09.09-.205.09t-.205-.09L.78 8.49q-.09-.088-.09-.204t.09-.205l4.16-4.16q.09-.09.205-.09t.205.09l4.16 4.16q.09.09.09.206z" fill="#444"/></svg>'
+ });
+
+var initDropdown = function  (target) {
+    'use strict';
+    var element = $(target);
+    var listItem = element.find("li");
+    var withDropdown = listItem.has('ul');
+    var caret = $('<i class="list-guide-down" data-trigger="dropdown">' + ICONS.arrowDown + '</i>');
+
+    withDropdown.find('> a').append(caret);
+
+    element.on('click', function (e) {
+        var target = $(e.target);
+        var dropdown;
+        e.stopPropagation();
+        if (target.data('trigger') === 'dropdown') {
+            e.preventDefault();
+            dropdown = target.parent().parent().find(' > ul');
+            dropdown.toggleClass('reveal-down');
+        }
+    });
+};
 
 var crateShareButtonMarkup = function (type, url) {
 
@@ -25,19 +65,19 @@ var crateShareButtonMarkup = function (type, url) {
        facebook: {
            url: "https://www.facebook.com/sharer/sharer.php?u=",
            class: "rrssb-facebook",
-           icon: "fa-facebook",
+           icon: ICONS.facebook,
            text: "Facebook"
        },
        twitter:{
            url : "https://twitter.com/home?status=",
            class: "rrssb-twitter",
-           icon: "fa-twitter",
+           icon: ICONS.twitter,
            text: "Twitter"
        },
        googleplus:{
            url:  "https://plus.google.com/share?url=",
            class: "rrssb-googleplus",
-           icon: "fa-google-plus",
+           icon: ICONS.google,
            text: "Google+"
        },
     };
@@ -47,7 +87,7 @@ var crateShareButtonMarkup = function (type, url) {
        if (key === type)  {
            markUp += "<li class='" + data[key].class + "'>";
            markUp+= "<a href='javascript:;' onclick=\"popupWindow('" + data[key].url + encodeURIComponent(url) + ", " + data[key].text + ", 600 , 480');\">";
-           markUp += "<span class='rrssb-icon'><i class='fa " + data[key].icon + "'></i></span>";
+           markUp += "<i class='rrssb-icon'>" + data[key].icon + "</i>";
            markUp += "<span class='rrssb-text'>" +  data[key].text + "</span>";
        }
     });
@@ -195,6 +235,15 @@ var popupWindow = function (url, title, w, h) {
 
 var onTransitionEnd = function (target, callback) {
     target.addEventListener('transitionend', callback, false);
+    target.addEventListener('webkitTransitionEnd', callback, false);
+    target.addEventListener('msTransitionEnd', callback, false);
+    target.addEventListener('otransitionend', callback, false);
+};
+
+
+var normalizeElelement = function (element) {
+    element.style.overflow = "auto";
+    element.style.marginRight = "0";
 };
 
 /**
@@ -215,8 +264,8 @@ var quitView = function (e, view, parent)  {
         onTransitionEnd(parent, function () {
             parent.removeChild(viewToQuit);
             parent.removeChild(zoomContainer);
-            parent.style.overflow = "auto";
-            parent.style.marginRight = "0rem";
+            normalizeElelement(parent);
+            
         });
     }
 };
@@ -239,19 +288,6 @@ var triggerWithClass = function triggerWithClass (/*src, klass, dest*/) {
     return false;
 };
 
-function activateOffCanvas(side) {
-    'use strict';
-    var $offCanvasList = $("." + side + "-off-canvas-menu > ul"),
-        $offCanvasItemSubMenu = $offCanvasList.find("li:has(ul)"),
-        $offCanvasListSubMneu = $offCanvasList.find("li ul");
-
-        $offCanvasList.addClass("off-canvas-list");
-        $offCanvasItemSubMenu.addClass("has-submenu");
-        $offCanvasListSubMneu.addClass(side + "-submenu");
-        $offCanvasListSubMneu.find("li:first-child")
-            .addClass("back")
-            .prepend("<a class='back-button'>Regresar</a>");
-}
 
 var createOverlay = function (body) {
     'use strict';
@@ -263,7 +299,7 @@ var createOverlay = function (body) {
     overlay.addEventListener("click", function (e) {
         quitView(e, '[data-section="view"]', body);
     }, false);
-    overlay.innerHTML = '<i class="spinner-loader fa fa-spinner"></i>';
+    overlay.innerHTML = '<i class="spinner-loader icon">' +  ICONS.loader +'</i>';
     body.style.overflow = "hidden";
     body.style.marginRight = "1.063rem";
     body.appendChild(overlay);
@@ -301,19 +337,17 @@ function quickView(o, id) {
             var loader,
                 body = document.body;
 
-            $.ajax({
-                type: 'get',
-                url:'index.php?r=store/product/quickviewjson',
-                data: {product_id: id},
+            $.getJSON('index.php?r=store/product/quickviewjson',
+            {
+                product_id:id,
                 beforeSend: function () {
                     createOverlay(body);
-                },
-                cache: true,
-                timeout: 30000
+                }
             })
             .then(function(data){
-                    var tpl,
-                        data = $.parseJSON(data);
+                var tpl;
+                var images = Object.keys(data.images).map(function (key) { return data.images[key]; });
+
                 if (!data.error) {
                     tpl = '<div class="row content-view">';
 
@@ -321,14 +355,18 @@ function quickView(o, id) {
                     tpl += '<div class="nt-editable" id="qw_images">';
                     tpl += '<div class="nt-editable" id="product-popup">';
                     tpl += '<div class="nt-editable product-gallery" id="productImages">';
-                    tpl += '<img id="quickViewMainImage" class="view" data-zoom-image="' + data.images[0].popup  + '" src="' + data.images[0].preview + '" alt="' + data.productInfo.name + '"  />';
-                    tpl += '<div id="quickViewMainGallery">';
-                    $.each(data.images, function(i, image) {
-                        tpl += '<a class="thumb" href="#" data-image="' + image.preview + '" data-zoom-image="' + image.popup + '">';
-                        tpl += '<img id="' + i + '" src="' + image.thumb + '" />';
-                        tpl += '</a>';
-                    });
-                    tpl += '</div>';
+                    if (images.length > 0) {
+                        tpl += '<img id="quickViewMainImage" class="view" data-zoom-image="' + images[0].popup  + '" src="' + images[0].preview + '" alt="' + data.productInfo.name + '"  />';
+                        tpl += '<div id="quickViewMainGallery">';
+                            $.each(images, function(i, image) {
+                                tpl += '<a class="thumb" href="#" data-image="' + image.preview + '" data-zoom-image="' + image.popup + '">';
+                                tpl += '<img id="' + i + '" src="' + image.thumb + '" />';
+                                tpl += '</a>';
+                            });
+                        tpl += '</div>';
+                    } else {
+                        tpl += '<img id="quickViewMainImage" class="view" style="width: 100%; height:auto; display:block;" src="../web/assets/images/no_image.jpg" alt="' + data.productInfo.name + '"  />';
+                    }
                     tpl += '</div>';
                     tpl += '</div>';
                     tpl += '</div>';
@@ -396,8 +434,8 @@ function quickView(o, id) {
                     if (data.minimum > 1) {
                         tpl += '<small>Compra M&iacute;nima '+ data.minimum +'</small>';
                     }
-                    tpl += '<a class="arrow-up"><i data-action-count="inc" class="fa fa-plus"></i></a>';
-                    tpl += '<a class="arrow-down"><i data-action-count="dec" class="fa fa-minus"></i></a>';
+                    tpl += '<a class="arrow-up"><i data-action-count="inc" class="icon">' + ICONS.plus + '</i></a>';
+                    tpl += '<a class="arrow-down"><i data-action-count="dec" class="icon">' + ICONS.minus + '</i></a>';
                     tpl += '<input type="hidden" name="product_id" value="'+ data.product_id +'" />';
                     tpl += '</div>';
 
@@ -430,7 +468,7 @@ function quickView(o, id) {
                         tpl += '<a class="socialSmallButton liveButton" href="index.php?r=api/twitter&redirect=promoteproduct&product_id='+ data.productInfo.product_id +'">Promocionar en Twitter</a>';
                     }
                     tpl += '</div></div>';
-                    tpl += '<a href="javascript:;" class="action-quit"><i class="fa fa-times" data-action="quit"></i></a>';
+                    tpl += '<a href="javascript:;" class="action-quit" data-action="quit"><i class="icon">' + ICONS.close + '</i></a>';
 
                     $('[data-section="view"]').html(tpl);
                 }
@@ -462,7 +500,7 @@ function quickView(o, id) {
 function addToCart(url) {
     'use strict';
     var body = document.body,
-        quitButton = '<a class="action-quit"><i class="fa fa-times" data-action="quit"></i></a>';
+        quitButton = '<a href="javascript:;" class="action-quit" data-action="quit"><i class="icon">' + ICONS.close + '</i></a>';
     $.ajax({
         url: url,
         type: 'post',
@@ -812,7 +850,7 @@ h?"addEventListener"in window?window.addEventListener("storage",u,!1):document.a
 	$.fn.UItoTop = function(options) {
 
  		var defaults = {
-    			text: '<i class="fa fa-angle-double-up"></i>',
+    			text: '<i class="icon">' + ICONS.doubleArrowUp +'</i>',
     			min: 600,
     			inDelay:400,
     			outDelay:400,

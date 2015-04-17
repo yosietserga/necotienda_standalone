@@ -47,7 +47,7 @@
         <label><?php echo $Language->get('entry_customer_group'); ?></label>
         <input type="text" placeholder="Filtrar listado" value="" name="q" id="qCustomerGroups" />
         <div class="clear"></div>
-        <ul id="customerGroupsWrapper" class="scrollbox">
+        <ul id="customerGroupsWrapper" class="scrollbox" data-scrollbox="1">
             <li>
                 <input type="checkbox" name="customer_groups[]" value="0"<?php if (in_array(0, $customer_groups)) { ?> checked="checked"<?php } ?> showquick="off" onchange="$('.customerGroups input').attr('checked', this.checked);" />
                 <b><?php echo $Language->get('text_all_public'); ?></b>

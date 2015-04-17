@@ -53,16 +53,16 @@ class ControllerApiLive extends Controller {
                 $response = $this->handler->fetch('https://login.live.com/oauth20_token.srf', $requestData);
                 if ($response['body']) {
                     /*
-                    $resp = json_decode($response['body'], true);
-                    if ($resp['body']['error']) {
-                        $this->session->clear('ltoken');
-                        $this->session->clear('lcode');
-                        $this->session->clear('liveAccessToken');
-                        $this->session->clear('action');
-                    } else {
+                      $resp = json_decode($response['body'], true);
+                      if ($resp['body']['error']) {
+                      $this->session->clear('ltoken');
+                      $this->session->clear('lcode');
+                      $this->session->clear('liveAccessToken');
+                      $this->session->clear('action');
+                      } else {
                      * 
                      */
-                        $this->session->set('liveAccessToken', $response['body']);
+                    $this->session->set('liveAccessToken', $response['body']);
                     /* } */
                 }
             } else {
@@ -89,7 +89,7 @@ class ControllerApiLive extends Controller {
                 }
             }
         } else {
-             echo '<script>history.back()</script>';
+            echo '<script>history.back()</script>';
         }
     }
 
@@ -330,139 +330,138 @@ class ControllerApiLive extends Controller {
                     }
                 }
 
-            if ($this->config->get('marketing_email_promote_product')) {
-                $this->load->model('marketing/newsletter');
+                if ($this->config->get('marketing_email_promote_product')) {
+                    $this->load->model('marketing/newsletter');
 
-                $product = array();
-                $product_id = ($this->request->hasQuery('product_id')) ? $this->request->getQuery('product_id') : $this->session->get('promote_product_id');
-                $this->session->set('promote_product_id', $product_id);
-                if ($product_id) { $product_id;
-                    $this->load->model('store/product');
-                    $product = $this->modelProduct->getProduct($product_id);
-                    if ($product) {
+                    $product = array();
+                    $product_id = ($this->request->hasQuery('product_id')) ? $this->request->getQuery('product_id') : $this->session->get('promote_product_id');
+                    $this->session->set('promote_product_id', $product_id);
+                    if ($product_id) {
+                        $product_id;
+                        $this->load->model('store/product');
+                        $product = $this->modelProduct->getProduct($product_id);
+                        if ($product) {
 
-                    $this->load->model('store/product');
-                    $Url = new Url($this->registry);
-                        //Libs
-                        $this->load->auto('image');
-                        $this->load->auto('currency');
-                        $this->load->auto('tax');
+                            $this->load->model('store/product');
+                            $Url = new Url($this->registry);
+                            //Libs
+                            $this->load->auto('image');
+                            $this->load->auto('currency');
+                            $this->load->auto('tax');
 
-                        $product['url'] = $Url::createUrl('store/product', array('product_id' => $product['product_id']));
+                            $product['url'] = $Url::createUrl('store/product', array('product_id' => $product['product_id']));
 
-                        $image = isset($product['image']) ? $product['image'] : 'no_image.jpg';
-                        $product['image'] = NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
+                            $image = isset($product['image']) ? $product['image'] : 'no_image.jpg';
+                            $product['image'] = NTImage::resizeAndSave($image, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
 
-                        $discount = $this->modelProduct->getProductDiscount($product['product_id']);
-                        if ($discount) {
-                            $product['price'] = $this->currency->format($this->tax->calculate($discount, $product['tax_class_id'], $this->config->get('config_tax')));
-                        } else {
-                            $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
-                            $special = $this->modelProduct->getProductSpecial($product['product_id']);
-                            if ($special) {
-                                $product['special'] = $this->currency->format($this->tax->calculate($special, $product['tax_class_id'], $this->config->get('config_tax')));
+                            $discount = $this->modelProduct->getProductDiscount($product['product_id']);
+                            if ($discount) {
+                                $product['price'] = $this->currency->format($this->tax->calculate($discount, $product['tax_class_id'], $this->config->get('config_tax')));
+                            } else {
+                                $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
+                                $special = $this->modelProduct->getProductSpecial($product['product_id']);
+                                if ($special) {
+                                    $product['special'] = $this->currency->format($this->tax->calculate($special, $product['tax_class_id'], $this->config->get('config_tax')));
+                                }
                             }
-                        }
 
-                        $discounts = $this->modelProduct->getProductDiscounts($product['product_id']);
-                        foreach ($discounts as $k => $discount) {
-                            $product['discounts'][$k] = array(
-                                'quantity' => $discount['quantity'],
-                                'price' => $this->currency->format($this->tax->calculate($discount['price'], $product['tax_class_id'], $this->config->get('config_tax')))
-                            );
-                        }
-
-                        $results = $this->modelProduct->getProductImages($product['product_id']);
-                        foreach ($results as $k => $result) {
-                            $product['images'][$k] = array(
-                                'thumb' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
-                            );
-                        }
-
-                        $results = $this->modelProduct->getProductTags($product['product_id']);
-                        foreach ($results as $k => $result) {
-                            if ($result['tag']) {
-                                $product['tags'][$k] = array(
-                                    'tag' => $result['tag'],
-                                    'href' => $Url::createUrl('store/search', array('q' => $result['tag']))
+                            $discounts = $this->modelProduct->getProductDiscounts($product['product_id']);
+                            foreach ($discounts as $k => $discount) {
+                                $product['discounts'][$k] = array(
+                                    'quantity' => $discount['quantity'],
+                                    'price' => $this->currency->format($this->tax->calculate($discount['price'], $product['tax_class_id'], $this->config->get('config_tax')))
                                 );
                             }
-                        }
-                        
-                        $fullname = ($profile['name']) ? addslashes($profile['name']) : $this->config->get('config_title');
-                        $newsletter = $this->modelNewsletter->getById($this->config->get('marketing_email_promote_product'));
-                        if ($newsletter) {
-                            $data = array(
-                                'newsletter_id' => $newsletter['newsletter_id'],
-                                'name' => "Invitar Amigos de " . $this->db->escape(addslashes($profile['name'])) . " (" . $this->db->escape(addslashes($profile['emails']['preferred'])) . ") en Outlook",
-                                'subject' => 'Hola',
-                                'from_name' => $this->db->escape($fullname),
-                                'from_email' => $this->db->escape($this->config->get('config_email')),
-                                'replyto_email' => $this->db->escape($this->config->get('config_email')),
-                                'embed_image' => 0,
-                                'trace_email' => 1,
-                                'trace_click' => 0,
-                                'contacts' => $to,
-                                'repeat' => 'no_repeat',
-                                'date_start' => date('Y-m-d h:i:s'),
-                                'date_end' => date('Y-m-d h:i:s'),
-                                'date_added' => date('Y-m-d h:i:s')
-                            );
-        
-                            $this->load->model('marketing/campaign');
-                            $campaign_id = $this->modelCampaign->add($data);
-        
-                            $params = array(
-                                'job' => 'send_campaign',
-                                'product_id' => $product_id,
-                                'campaign_id' => $campaign_id
-                            );
-        
-                            $this->load->library('task');
-                            $task = new Task($this->registry);
-        
-                            $task->object_id = (int) $campaign_id;
-                            $task->object_type = 'campaign';
-                            $task->task = $campaign['name'];
-                            $task->type = 'send';
-                            $task->time_exec = date('Y-m-d H:i:s');
-                            $task->params = $params;
-                            $task->time_interval = 'no-repeat';
-                            $task->time_last_exec = date('Y-m-d H:i:s');
-                            $task->run_once = true;
-                            $task->status = 1;
-                            $task->date_start_exec = date('Y-m-d H:i:s');
-                            $task->date_end_exec = date('Y-m-d H:i:s');
-                            $task->addMinute(15);
-        
-                            $control = array();
-                            foreach ($to as $sort_order => $contact) {
-                                if (in_array($contact['email'], $control))
-                                    continue;
-                                $control[] = $contact['email'];
+
+                            $results = $this->modelProduct->getProductImages($product['product_id']);
+                            foreach ($results as $k => $result) {
+                                $product['images'][$k] = array(
+                                    'thumb' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+                                );
+                            }
+
+                            $results = $this->modelProduct->getProductTags($product['product_id']);
+                            foreach ($results as $k => $result) {
+                                if ($result['tag']) {
+                                    $product['tags'][$k] = array(
+                                        'tag' => $result['tag'],
+                                        'href' => $Url::createUrl('store/search', array('q' => $result['tag']))
+                                    );
+                                }
+                            }
+
+                            $fullname = ($profile['name']) ? addslashes($profile['name']) : $this->config->get('config_title');
+                            $newsletter = $this->modelNewsletter->getById($this->config->get('marketing_email_promote_product'));
+                            if ($newsletter) {
+                                $data = array(
+                                    'newsletter_id' => $newsletter['newsletter_id'],
+                                    'name' => "Invitar Amigos de " . $this->db->escape(addslashes($profile['name'])) . " (" . $this->db->escape(addslashes($profile['emails']['preferred'])) . ") en Outlook",
+                                    'subject' => 'Hola',
+                                    'from_name' => $this->db->escape($fullname),
+                                    'from_email' => $this->db->escape($this->config->get('config_email')),
+                                    'replyto_email' => $this->db->escape($this->config->get('config_email')),
+                                    'embed_image' => 0,
+                                    'trace_email' => 1,
+                                    'trace_click' => 0,
+                                    'contacts' => $to,
+                                    'repeat' => 'no_repeat',
+                                    'date_start' => date('Y-m-d h:i:s'),
+                                    'date_end' => date('Y-m-d h:i:s'),
+                                    'date_added' => date('Y-m-d h:i:s')
+                                );
+
+                                $this->load->model('marketing/campaign');
+                                $campaign_id = $this->modelCampaign->add($data);
+
                                 $params = array(
-                                    'contact_id' => $contact['contact_id'],
-                                    'name' => $contact['name'],
-                                    'email' => $contact['email'],
-                                    'product' => $product,
+                                    'job' => 'send_campaign',
+                                    'product_id' => $product_id,
                                     'campaign_id' => $campaign_id
                                 );
-                                $queue = array(
-                                    "params" => $params,
-                                    "status" => 1,
-                                    "time_exec" => date('Y-m-d H:i:s')
-                                );
-                                $task->addQueue($queue);
-                            }
-                            $task->createSendTask();
-                        }
 
+                                $this->load->library('task');
+                                $task = new Task($this->registry);
+
+                                $task->object_id = (int) $campaign_id;
+                                $task->object_type = 'campaign';
+                                $task->task = $campaign['name'];
+                                $task->type = 'send';
+                                $task->time_exec = date('Y-m-d H:i:s');
+                                $task->params = $params;
+                                $task->time_interval = 'no-repeat';
+                                $task->time_last_exec = date('Y-m-d H:i:s');
+                                $task->run_once = true;
+                                $task->status = 1;
+                                $task->date_start_exec = date('Y-m-d H:i:s');
+                                $task->date_end_exec = date('Y-m-d H:i:s');
+                                $task->addMinute(15);
+
+                                $control = array();
+                                foreach ($to as $sort_order => $contact) {
+                                    if (in_array($contact['email'], $control))
+                                        continue;
+                                    $control[] = $contact['email'];
+                                    $params = array(
+                                        'contact_id' => $contact['contact_id'],
+                                        'name' => $contact['name'],
+                                        'email' => $contact['email'],
+                                        'product' => $product,
+                                        'campaign_id' => $campaign_id
+                                    );
+                                    $queue = array(
+                                        "params" => $params,
+                                        "status" => 1,
+                                        "time_exec" => date('Y-m-d H:i:s')
+                                    );
+                                    $task->addQueue($queue);
+                                }
+                                $task->createSendTask();
+                            }
+                        }
                     }
+                    $this->session->set('success', $this->language->get('text_promote_product_success'));
                 }
-                $this->session->set('success', $this->language->get('text_promote_product_success'));
-                
-            }
-            $this->redirect($Url::createUrl('store/product', array('product_id' => $product['product_id'])));
+                $this->redirect($Url::createUrl('store/product', array('product_id' => $product['product_id'])));
             }
         } else {
             $this->redirect($this->oauth_url);
@@ -491,7 +490,7 @@ class ControllerApiLive extends Controller {
             $url = 'https://apis.live.net/v5.0/me?access_token=' . $token->access_token;
             $response = $this->handler->fetch($url);
             $profile = json_decode($response['body'], true);
-            
+
             if ($profile['error']) {
                 $this->session->clear('ltoken');
                 $this->session->clear('lcode');
@@ -523,7 +522,7 @@ class ControllerApiLive extends Controller {
 
             $this->load->model('account/customer');
             $result = $this->modelCustomer->getCustomerByLive($data);
-            
+
             if ($result) {
                 if ($this->customer->loginWithLive($data)) {
                     if ($this->session->has('redirect')) {

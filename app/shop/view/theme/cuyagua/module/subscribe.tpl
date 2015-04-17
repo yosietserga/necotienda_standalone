@@ -3,22 +3,39 @@
         <div class="header" id="<?php echo $widgetName; ?>Header">
             <h3><?php echo $heading_title; ?></h3>
         </div>
+        <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
+            <div class="heading-title">
+                <h3>
+                    <i class="heading-icon icon icon-envelope">
+                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/envelope.tpl"); ?>
+                    </i>
+                    <?php echo $heading_title; ?>
+                </h3>
+            </div>
+        </div>
     <?php } ?>
-    <div class="slogan">
-        <span><?php echo $Language->get('text_slogan'); ?></span>
-    </div>
+
     <div class="widget-content" id="<?php echo $widgetName; ?>Content" >
-        <div class="action-input">
-            <form name="subscribe" id="<?php echo $widgetName; ?>_subscribe_form" class="subscribe-form">
-                <div class="row collapse">
-                    <div class="input-newsletter large-11 medium-11 small-11 columns">
-                        <input type="email" name="subscribe_email" id="<?php echo $widgetName; ?>_subscribe_email" value="" placeholder="Ingresa tu email" />
+        <div class="form-container">
+            <div class="slogan">
+                <span><?php echo $Language->get('text_slogan'); ?></span>
+            </div>
+            <div class="action-input">
+                <form name="subscribe" id="<?php echo $widgetName; ?>_subscribe_form" class="subscribe-form">
+                    <div class="row collapse">
+                        <div class="input-newsletter large-11 medium-11 small-11 columns">
+                            <input type="email" name="subscribe_email" id="<?php echo $widgetName; ?>_subscribe_email" value="" placeholder="Ingresa tu email" />
+                        </div>
+                        <div class="large-1 medium-1 small-1 columns">
+                            <a id="<?php echo $widgetName; ?>_submit_subscribe">
+                                <i class="icon icon-envelope">
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/envelope.tpl"); ?>
+                                </i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="large-1 medium-1 small-1 columns">
-                        <a id="<?php echo $widgetName; ?>_submit_subscribe"><i class="fa fa-envelope"></i></a>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </li>

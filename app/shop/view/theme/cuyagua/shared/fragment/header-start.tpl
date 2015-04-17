@@ -1,52 +1,63 @@
-<style class="webfont"
-    data-cache-name="NecoTiendaBaseWeb"
-    data-cahce-file-woff="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/fonts/fonts.base.woff.json'; ?>"></style>
+<!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="only x">-->
+<link href="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/fonts/fonts.stylesheet.css'; ?>" rel='stylesheet' type='text/css' media="only x">
+<link rel="stylesheet" href="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/css/theme.css'; ?>" media="all">
+
+<noscript>
+    <link rel="stylesheet" type="text/css" href="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/css/theme.css'; ?>"/>
+</noscript>
 
 
-<style class="webfont"
-       data-cache-name="NecoTiendaAlterWeb"
-       data-cahce-file-woff="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/fonts/fonts.alter.woff.json'; ?>"></style>
+<script>
 
-<script id="neco">
-    var neco = {
-        isModernBrowser: (
-            'querySelector' in document
-            && 'addEventListener' in window
-            && 'localStorage' in window
-            && 'sessionStorage' in window
-            && 'bind' in Function
-            && (
-            ('XMLHttpRequest' in window && 'withCredentials' in new XMLHttpRequest())
-            || 'XDomainRequest' in window
-            )
-        ),
-        css: {
-            loaded: false
-        };
-    var baseFontSize;
-    var loadFontsAsynchronously;
-    var insertFont;
+    /* @@cc_on
+     @@if (@@_jscript_version <= 6)
+     (function (f) {window.setTimeout = f(window.setTimeout)})(function (f) {
+     return function (c, t) {
+     var a = [].slice.call(arguments, 2);
+     return f(function () {
+     c.apply(this, a)
+     }, t);
+     }
+     }
+     );
+     @@end
+     @@*/
 
-    if('getComputedStyle' in window) {
-        baseFontSize = window.getComputedStyle(document.documentElement).getPropertyValue("font-size");
-        if(parseInt(baseFontSize, 10) !== 16) {
-            document.documentElement.style.fontSize = baseFontSize;
+
+    /**
+     *  Chequea si el link css con el atributo media igual a "only x" ya este coleccionado en
+     *  document.window.document.styleSheets y lo pone en "all", de manera de carga el css
+     *  asincrónicamente y si bloquear la reproducción. Todo esto es para que cuando por alguna razón
+     *  el css no se cargue la página no quede en blanco y siga funcional
+     */
+
+    (function (styleSheetLinks, documentStyleSheets) {
+        'use strict';
+
+        function setMedia (styleSheet) {
+            var sheet;
+            var i;
+            var totalSheets;
+            for (i = 0, totalSheets = documentStyleSheets.length; i < totalSheets ; i++) {
+                sheet = documentStyleSheets[i];
+                if (sheet.href && sheet.href.indexOf(styleSheet.href) > -1) {
+                    styleSheet.media = "all";
+                    return true;
+                }
+            }
+            /* Garantiza que la función corra luego de procesar */
+            setTimeout(setMedia, null, styleSheet);
         }
-    }
-
-
-    insertFont = function (value) {
-        var style = document.createElement('style');
-        style.innerHTML = value;
-        document.head.appendChild(style);
-
-    }
-
-    loadFontsAsynchronously = function () {
-        var scripts = document.getElementsByTagName('script');
-        var currentScript = scripts[scripts.length - 1];
-        var fonts = document.createElement('link')
-    }
-
-    };
+        function useCss () {
+            var i;
+            var totalStyleSheetLinks;
+            for (i = 0, totalStyleSheetLinks = styleSheetLinks.length; i < totalStyleSheetLinks ; i++) {
+                if (styleSheetLinks[i].getAttribute('media') === 'only x') {
+                    setMedia(styleSheetLinks[i]);
+                }
+            }
+        }
+        useCss();
+    })(document.getElementsByTagName('link'), window.document.styleSheets)
 </script>
+

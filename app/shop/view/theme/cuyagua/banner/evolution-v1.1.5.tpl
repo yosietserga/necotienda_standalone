@@ -1,5 +1,5 @@
-<li class="nt-editable box bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-<?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div><?php } ?>
+<li class="nt-editable bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
+<?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><h1><?php echo $heading_title; ?></h1></div><?php } ?>
 <?php if (count($banner['items'])) { ?>
 <div class="content" id="<?php echo $widgetName; ?>Content">
     <div id="<?php echo $widgetName; ?>slideshow">
@@ -13,8 +13,8 @@
     <?php } ?>
     </div>
 </div>
-<div class="clear"></div><br />
 <script>
+
 if (!$.fx.slideshow) {
     $(document.createElement('link')).attr({
         'href':'<?php echo HTTP_CSS; ?>sliders/evolution-v1.1.5/slider.css',
@@ -29,7 +29,6 @@ if (!$.fx.slideshow) {
 $(function(){
     $("#<?php echo $widgetName; ?>slideshow").slideshow({
         width      : $('#<?php echo $widgetName; ?>').width(),
-        height     : 300,
         transition : 'explode'
     });
 });

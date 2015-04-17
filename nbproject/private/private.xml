@@ -20,9 +20,21 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/common/header.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/meli.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/cconfig.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/model/marketing/campaign.php</file>
             <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/marketing/campaign.php</file>
             <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/controller/marketing/newsletter.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/facebook.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/common/header.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/product.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/live.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/google.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/paypal.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/model/setting/setting.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/admin/view/template/marketing/campaign_form.tpl</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/app/shop/controller/api/twitter.php</file>
+            <file>file:/mnt/DOCS/Users/Yosiet/Documents/EasyPHP/www/git/necotienda_standalone/system/engine/controller.php</file>
         </group>
     </open-files>
 </project-private>

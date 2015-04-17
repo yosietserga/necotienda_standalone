@@ -3,12 +3,14 @@
 	<div class="heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
             <h3>
-                <i class="icon heading-icon fa fa-truck fa-2x"></i>
+                <i class="heading-icon icon icon-truck">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/truck.tpl"); ?
+                </i>
                 <?php echo $Language->get('text_my_orders');?>
             </h3>
         </div>
     </div>
-	<div class="widget-content sidebar-list">
+	<div class="widget-content sidebar-list account-list">
 		<ul>
 			<li>
 				<a href="<?php echo $Url::createUrl("account/order"); ?>" title="<?php echo $Language->get('text_history'); ?>"><?php echo $Language->get('text_history'); ?></a>
@@ -19,19 +21,21 @@
 		</ul>
 	</div>
 </div>
-<!--/MENU-ORDERS-->
+<!--/menu-orders-->
 
 <!--MENU-MESSAGES-->
 <div class="menu-messages">
     <div class="heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
             <h3>
-                <i class="icon heading-icon fa fa-envelope fa-2x"></i>
+                <i class="heading-icon icon icon-envelope">
+                   <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/envelope.tpl"); ?
+                </i>
                 <?php echo $Language->get('text_messages');?>
             </h3>
         </div>
     </div>
-	<div class="widget-content sidebar-list">
+	<div class="widget-content sidebar-list account-list">
 		<ul>
 			<li>
 				<a href="<?php echo $Url::createUrl("account/message/create"); ?>" title="<?php echo $Language->get('text_create_message'); ?>"><?php echo $Language->get('text_create_message'); ?></a>
@@ -52,13 +56,15 @@
 	<div class="heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
             <h3>
-                <i class="icon heading-icon fa fa-user fa-2x"></i>
+                <i class="heading-icon icon icon-user">
+                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/user.tpl"); ?> 
+                </i>
                 <?php echo $Language->get('text_account');?>
 
             </h3>
         </div>
     </div>
-	<div class="widget-content sidebar-list">
+	<div class="widget-content sidebar-list account-list">
 		<ul>
 			<li>
 				<a href="<?php echo $Url::createUrl("account/edit"); ?>" title="<?php echo $Language->get('text_my_account');?>"><?php echo $Language->get('text_my_account'); ?></a>

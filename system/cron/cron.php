@@ -148,9 +148,6 @@ class Cron {
             $task->date_end_exec    = $row['date_end_exec'];
             
             $limit = "";
-            if ($task->type == 'send') {
-                $limit = " LIMIT 2 ";
-            }
             
             $qry = $this->db->query("SELECT * 
             FROM ". DB_PREFIX ."task_queue t
@@ -190,7 +187,7 @@ class Cron {
     private function initMailer() {
         if ($this->config->get('config_smtp_method')=='smtp') {
             $this->mailer->IsSMTP();
-            $this->mailer->Hostname = $this->config->get('config_smtp_host');
+            $this->mailer->Host = $this->config->get('config_smtp_host');
             $this->mailer->Username = $this->config->get('config_smtp_username');
             $this->mailer->Password = base64_decode($this->config->get('config_smtp_password'));
             $this->mailer->Port     = $this->config->get('config_smtp_port');

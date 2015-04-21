@@ -23,6 +23,16 @@ class ModelSettingSetting extends Model {
         return $data;
     }
 
+    public function getProperty($group, $key, $store_id = 0) {
+        $data = array();
+        $query = $this->db->query("SELECT * 
+        FROM " . DB_PREFIX . "setting 
+        WHERE `group` = '" . $this->db->escape($group) . "' 
+        AND `key` = '" . $this->db->escape($key) . "' 
+        AND store_id = '" . (int) $store_id . "'");
+        return $query->row['value'];
+    }
+
     public function update($group, $data, $store_id = 0) {
         $this->db->query("DELETE 
         FROM " . DB_PREFIX . "setting 
@@ -39,6 +49,12 @@ class ModelSettingSetting extends Model {
     }
 
     public function updateProperty($group, $key, $data, $store_id = 0) {
+        $this->db->query("DELETE 
+        FROM " . DB_PREFIX . "setting 
+        WHERE `group` = '" . $this->db->escape($group) . "' 
+        AND `key`   = '" . $this->db->escape($key) . "' 
+        AND store_id = '" . (int) $store_id . "'");
+        
         $this->db->query("REPLACE INTO " . DB_PREFIX . "setting SET 
         `group` = '" . $this->db->escape($group) . "',
         `key`   = '" . $this->db->escape($key) . "',

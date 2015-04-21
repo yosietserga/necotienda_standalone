@@ -158,6 +158,8 @@ class ControllerMarketingCampaign extends Controller {
         $this->document->title = $this->language->get('heading_title');
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->modelCampaign->update($this->request->get['campaign_id'], $this->request->post);
+            
+            $this->modelCampaign->setProperty($this->request->get['campaign_id'],'mail_server', 'mail_server_id', $this->request->getPost('mail_server_id'));
             $this->session->set('success', $this->language->get('text_success'));
 
             if ($this->request->post['to'] == "saveAndKeep") {
@@ -619,6 +621,11 @@ class ControllerMarketingCampaign extends Controller {
         }
         $this->data['lists'] = $this->modelList->getAll();
         $this->data['newsletters'] = $this->modelNewsletter->getAll();
+        $this->load->auto('setting/setting');
+        foreach ($this->modelSetting->getSetting('mail_server') as $id => $result) {
+            $this->data['mail_servers'][$id] = unserialize($result);
+        }
+        $this->data['mail_server_id'] = $this->modelCampaign->getProperty($this->request->get['campaign_id'],'mail_server','mail_server_id');
 
         $this->setvar('name', $campaign_info, '');
         $this->setvar('subject', $campaign_info, '');
@@ -746,7 +753,7 @@ class ControllerMarketingCampaign extends Controller {
         $campaign['contacts'] = $to;
 
         $campaign_id = $this->modelCampaign->add($campaign);
-
+        $this->modelCampaign->setProperty($campaign_id,'mail_server', 'mail_server_id', $campaign['mail_server_id']);
         $params = array(
             'job' => 'send_campaign',
             'campaign_id' => $campaign_id

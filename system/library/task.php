@@ -360,17 +360,17 @@ final class Task {
      * @param integer task_queue_id 
      * @return void
      * */
-    public function setTaskDone($id=0) {
-        $id ($id) ? $id : $this->task_id;
-        if (!$id) return false;
-        $this->status = 0;
-        $this->db->query("UPDATE ". DB_PREFIX ."task SET `status` = 0 WHERE task_id = '". (int)$id ."'");
-        $this->db->query("DELETE FROM ". DB_PREFIX ."task_exec WHERE task_id = '". (int)$id ."'");
-        if ($this->task_id) {
+    public function setTaskDone($id=0) {echo __LINE__.": ". basename(__FILE__) ."\n";
+        $id = ($id) ? $id : $this->task_id;echo __LINE__.": ". basename(__FILE__) ."\n";
+        if (!$id) return false;echo __LINE__.": ". basename(__FILE__) ."\n";
+        $this->status = 0;echo __LINE__.": ". basename(__FILE__) ."\n";
+        $this->db->query("UPDATE ". DB_PREFIX ."task SET `status` = 0 WHERE task_id = '". (int)$id ."'");echo __LINE__.": ". basename(__FILE__) ."\n";
+        $this->db->query("DELETE FROM ". DB_PREFIX ."task_exec WHERE task_id = '". (int)$id ."'");echo __LINE__.": ". basename(__FILE__) ."\n";
+        if ($this->task_id) {echo __LINE__.": ". basename(__FILE__) ."\n";
             foreach ($this->queue as $key => $queue) {
-                $this->setQueueDone($queue['task_queue_id']);
-            }
-        } else {
+                $this->setQueueDone($queue['task_queue_id']);echo __LINE__.": ". basename(__FILE__) ."\n";
+            }echo __LINE__.": ". basename(__FILE__) ."\n";
+        } else {echo __LINE__.": ". basename(__FILE__) ."\n";
             $this->db->query("UPDATE ". DB_PREFIX ."task_queue SET `status` = 0 WHERE task_id = '". (int)$id ."'");
         }
         //TODO: verificar si la tarea se repite y cual es el periodo para reiniciar la tarea

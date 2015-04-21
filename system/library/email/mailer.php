@@ -792,7 +792,7 @@ class Mailer {
       }
     } catch (phpmailerException $e) {
       $this->smtp->Reset();
-      throw $e;
+      return $e->errorMessage();
     }
     return true;
   }

@@ -6,8 +6,8 @@ $adminPath      = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 $systemPath     = $defaultPath . "system" . DIRECTORY_SEPARATOR;
 $shopPath       = $adminPath . ".." . DIRECTORY_SEPARATOR . "shop" . DIRECTORY_SEPARATOR;
 
-define('HTTP_HOME', "http://www.necoshop.com/");
-define('HTTP_IMAGE', "http://www.necoshop.com/assets/images/");
+define('HTTP_HOME', "http://www.necoshop.dev/");
+define('HTTP_IMAGE', "http://www.necoshop.dev/assets/images/");
 
 // Admin system
 define('DIR_APPLICATION',   $adminPath);

@@ -958,7 +958,7 @@ class ControllerStoreProduct extends Controller {
             $subject = $this->config->get('config_owner') . " " . $this->language->get('text_new_comment');
             if ($this->config->get('config_smtp_method') == 'smtp') {
                 $mailer->IsSMTP();
-                $mailer->Hostname = $this->config->get('config_smtp_host');
+                $mailer->Host = $this->config->get('config_smtp_host');
                 $mailer->Username = $this->config->get('config_smtp_username');
                 $mailer->Password = base64_decode($this->config->get('config_smtp_password'));
                 $mailer->Port = $this->config->get('config_smtp_port');
@@ -1048,7 +1048,7 @@ class ControllerStoreProduct extends Controller {
             $subject = $this->config->get('config_owner') . " " . $this->language->get('text_new_reply');
             if ($this->config->get('config_smtp_method') == 'smtp') {
                 $mailer->IsSMTP();
-                $mailer->Hostname = $this->config->get('config_smtp_host');
+                $mailer->Host = $this->config->get('config_smtp_host');
                 $mailer->Username = $this->config->get('config_smtp_username');
                 $mailer->Password = base64_decode($this->config->get('config_smtp_password'));
                 $mailer->Port = $this->config->get('config_smtp_port');

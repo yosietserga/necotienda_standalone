@@ -196,6 +196,21 @@ class CronSend {
             
             $campign_info = $query->row;
             
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."campaign_property 
+            WHERE `group` = 'mail_server' 
+            AND `key` = 'mail_server_id' 
+            AND campaign_id = '". (int)$task->params['campaign_id'] ."'");
+            
+            $mail_server_id = unserialize($query->row['value']);
+            if ($mail_server_id) {
+                $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."setting 
+                WHERE `group` = 'mail_server' 
+                AND `key` = '". $mail_server_id ."'");
+                $mail_server = unserialize($query->row['value']);
+            } else {
+                $mail_server = 'localhost';
+            }
+            
             $htmlbody = html_entity_decode($campign_info['htmlbody']);
             
             $count = 0;
@@ -281,14 +296,26 @@ class CronSend {
                     $htmlbody = html_entity_decode(htmlentities($dom->saveHTML()));
                 }
                 
-                $this->mailer->AddAddress($params['email'],$params['name']);
-                $this->mailer->IsHTML();
-                $this->mailer->SetFrom($campign_info['from_email'],$campign_info['from_name']);
-                $this->mailer->AddReplyTo($campign_info['replyto_email'],$campign_info['from_name']);
-                $this->mailer->Subject = $campign_info['subject'];
-                $this->mailer->Body = $htmlbody;
-                $this->mailer->Send();
-                $this->mailer->ClearAllRecipients();
+                $mailer       = new Mailer();
+                if ($mail_server !== 'localhost') {
+                    $mailer->IsSMTP();
+                    $mailer->Host = $mail_server['server'];
+                    $mailer->Username = $mail_server['username'];
+                    $mailer->Password = $mail_server['password'];
+                    if ($mail_server['port']) $mailer->Port     = $mail_server['port'];
+                    if ($mail_server['security']) $mailer->SMTPSecure     = $mail_server['security'];
+                    $mailer->SMTPAuth = true;
+                 } else {
+                    $mailer->IsMail();
+                 }
+                $mailer->AddAddress($params['email'],$params['name']);
+                $mailer->IsHTML();
+                $mailer->SetFrom($campign_info['from_email'],$campign_info['from_name']);
+                $mailer->AddReplyTo($campign_info['replyto_email'],$campign_info['from_name']);
+                $mailer->Subject = $campign_info['subject'];
+                $mailer->Body = $htmlbody;
+                $mailer->Send();
+                $mailer->ClearAllRecipients();
                 
                 $task->setQueueDone($key);
                 $count++;
@@ -297,7 +324,7 @@ class CronSend {
             if (count($task->getTaskDos($task->task_id))) {
                 $task->addMinute(15);
             } else {
-                $task->setTaskDone();
+                $task->setTaskDone($task->task_id);
             }
         }
         
@@ -415,8 +442,9 @@ class CronSend {
             $newsletter = str_replace("{%product_tags%}",$product_tags,$newsletter);
         }
         
-        $newsletter .= "<p style=\"text-align:center\">Powered By Necotienda&reg; ". date('Y') ."</p>";
+        $newsletter .= "<p style=\"text-align:center;font:normal 10px Verdana;color:#333;\">Powered By Necotienda ". date('Y') ."</p>";
         
+        return $newsletter;    
         return html_entity_decode(htmlspecialchars_decode($newsletter));    
     }
     

@@ -52,6 +52,18 @@
             </div>
             
             <div class="row">
+                <label>Servidor de Email</label>
+                <select name="mail_server_id">
+                    <option<?php if (!$mail_server_id) echo ' selected="selected"'; ?>>Servidor Local</option>
+                    <?php foreach($mail_servers as $id => $server) { ?>
+                    <option value="<?php echo $id; ?>"<?php if ($mail_server_id === $id) echo ' selected="selected"'; ?>>
+                        <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                    </option>
+                    <?php } ?>
+                </select>
+            </div>
+            
+            <div class="row">
                 <label>Fecha de Env&iacute;o ( hh:mm A dd/mm/yy )</label>
                 <?php  $i = 0; ?>
                 <select name="start_hour">

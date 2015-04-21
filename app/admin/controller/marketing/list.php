@@ -411,7 +411,7 @@ class ControllerMarketingList extends Controller {
         $this->setvar('contact_list_id', $list_info, '');
         $this->setvar('name', $list_info, '');
 
-        $this->data['contacts'] = $this->modelContact->getContacts();
+        //$this->data['contacts'] = $this->modelContact->getContacts();
         /*
           if (isset($this->request->post['contact_list'])) {
           $this->data['contact_list'] = $this->request->post['contact_list'];

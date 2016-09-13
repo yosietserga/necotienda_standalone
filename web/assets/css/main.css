@@ -1,0 +1,8 @@
+html {
+  margin: 0;
+  margin: 0!important;
+}
+
+.panel-lateral {display: none; }
+
+#adminTopNav {display: none !important; }

@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ELECTRÓNICA GLOBAL S.A.S.";eglobal@une.net.co;www.globaltelecomunicaciones.com;"Telefax: (57) (4) 4442296";"Cl 6 Sur 52-128 L-27 Colombia, Medellín"
-"COMUNICACIONES ANDINA LTDA.";comuniandina@hotmail.com;www.comunicacionesandina.com;"(57) (8) 2660263";"Cl 34 4 B-31 Cádiz Colombia, Ibagué"
-"A&A RADIOCOMUNICACIONES S.A.S.";subgerencia@ayacomunicaciones.com;www.ayacomunicaciones.com;"(57) (6) 7410085";"Cl 26 16-25 L-1 Colombia, Armenia"
-"ORBIRADIO S.A.S.";ventasorbiradio@gmail.com;;"(57) (4) 2555377";"Cr65 1 Sur-11 Colombia, Medellín"

@@ -1,11 +1,10 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcumbs.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
-    <h1><?php echo $heading_title; ?></h1>
-    <p><span><?php echo $Language->get('text_published') ." ". $date_added; ?></span></p>
+
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-start.tpl");?>
+
+    <span><?php echo $Language->get('text_published') ." ". $date_added; ?></span>
 
     <div class="generic-page">
         <?php echo $description; ?>

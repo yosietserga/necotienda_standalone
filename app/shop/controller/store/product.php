@@ -6,17 +6,26 @@ class ControllerStoreProduct extends Controller {
     public $product_id;
 
     public function index() {
+        $Url = new Url($this->registry);
         $this->product_id = $product_id = isset($this->request->get['product_id']) ? (int) $this->request->get['product_id'] : $product_id = 0;
         $product_info = $this->modelProduct->getProduct($product_id);
 
         if ($product_info) {
+            //tracker
+            $this->tracker->track($product_info['product_id'], 'product');
+
+            if ($this->session->has('ref_email') && !$this->session->has('ref_cid')) {
+                $this->data['show_register_form_invitation'] = true;
+            }
+
+
             $customerGroups = $this->modelProduct->getProperty($product_id, 'customer_groups', 'customer_groups');
             if (($this->customer->isLogged() && in_array($this->customer->getCustomerGroupId(), $customerGroups)) || in_array(0, $customerGroups)) {
                 $cached = $this->cache->get('product.' .
                         $product_id .
                         $this->config->get('config_language_id') . "." .
-                        $this->request->hasQuery('hl') . "." .
-                        $this->request->hasQuery('cc') . "." .
+                        $this->request->getQuery('hl') . "." .
+                        $this->request->getQuery('cc') . "." .
                         $this->customer->getId() . "." .
                         $this->config->get('config_currency') . "." .
                         (int) $this->config->get('config_store_id')
@@ -42,7 +51,7 @@ class ControllerStoreProduct extends Controller {
 
                     $this->document->breadcrumbs = array();
                     $this->document->breadcrumbs[] = array(
-                        'href' => Url::createUrl('store/home'),
+                        'href' => $Url::createUrl('store/home'),
                         'text' => $this->language->get('text_home'),
                         'separator' => false
                     );
@@ -54,7 +63,7 @@ class ControllerStoreProduct extends Controller {
                             $path .= (!$path) ? $path_id : '_' . $path_id;
                             if ($category_info) {
                                 $this->document->breadcrumbs[] = array(
-                                    'href' => Url::createUrl('store/category', array('path' => $path)),
+                                    'href' => $Url::createUrl('store/category', array('path' => $path)),
                                     'text' => $category_info['name'],
                                     'separator' => $this->language->get('text_separator')
                                 );
@@ -66,7 +75,7 @@ class ControllerStoreProduct extends Controller {
                         $manufacturer_info = $this->modelManufacturer->getManufacturer($this->request->get['manufacturer_id']);
                         if ($manufacturer_info) {
                             $this->document->breadcrumbs[] = array(
-                                'href' => Url::createUrl('store/manufacturer', array('manufacturer_id' => $this->request->get['manufacturer_id'])),
+                                'href' => $Url::createUrl('store/manufacturer', array('manufacturer_id' => $this->request->get['manufacturer_id'])),
                                 'text' => $manufacturer_info['name'],
                                 'separator' => $this->language->get('text_separator')
                             );
@@ -82,7 +91,7 @@ class ControllerStoreProduct extends Controller {
                             $url .= '&description=' . $this->request->get['description'];
                         }
                         $this->document->breadcrumbs[] = array(
-                            'href' => Url::createUrl('store/search', '&keyword=' . $this->request->get['keyword'] . $url),
+                            'href' => $Url::createUrl('store/search', '&keyword=' . $this->request->get['keyword'] . $url),
                             'text' => $this->language->get('text_search'),
                             'separator' => $this->language->get('text_separator')
                         );
@@ -105,7 +114,7 @@ class ControllerStoreProduct extends Controller {
                         $url .= '&description=' . $this->request->get['description'];
                     }
                     $this->document->breadcrumbs[] = array(
-                        'href' => Url::createUrl('store/product', $url . '&product_id=' . $product_id),
+                        'href' => $Url::createUrl('store/product', $url . '&product_id=' . $product_id),
                         'text' => $product_info['name'],
                         'separator' => $this->language->get('text_separator')
                     );
@@ -118,7 +127,7 @@ class ControllerStoreProduct extends Controller {
                     $this->document->description = $product_info['meta_description'];
                     $this->document->links = array();
                     $this->document->links[] = array(
-                        'href' => Url::createUrl('store/product', array('product_id' => $product_id)),
+                        'href' => $Url::createUrl('store/product', array('product_id' => $product_id)),
                         'rel' => 'canonical'
                     );
 
@@ -129,8 +138,8 @@ class ControllerStoreProduct extends Controller {
 
                     $this->data['review_status'] = $this->config->get('config_review');
                     $this->data['text_stars'] = sprintf($this->language->get('text_stars'), $average);
-                    $this->data['action'] = Url::createUrl('checkout/cart');
-                    $this->data['redirect'] = Url::createUrl('store/product', $url . '&product_id=' . $product_id);
+                    $this->data['action'] = $Url::createUrl('checkout/cart');
+                    $this->data['redirect'] = $Url::createUrl('store/product', $url . '&product_id=' . $product_id);
 
                     $this->session->set('promote_product_id', $this->product_id);
                     $this->session->set('redirect', $this->data['redirect']);
@@ -191,13 +200,17 @@ class ControllerStoreProduct extends Controller {
 
                     $this->data['model'] = $product_info['model'];
                     $this->data['manufacturer'] = $product_info['manufacturer'];
-                    $this->data['manufacturers'] = Url::createUrl('store/manufacturer', array('manufacturer_id' => $product_info['manufacturer_id']));
+                    $this->data['manufacturers'] = $Url::createUrl('store/manufacturer', array('manufacturer_id' => $product_info['manufacturer_id']));
                     $this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
                     $this->data['product_id'] = $product_id;
                     $this->data['average'] = $average;
                     $this->data['options'] = array();
                     $this->data['categories'] = $this->modelProduct->getCategoriesByProduct(array('product_id' => $product_id));
-                    $this->data['related'] = $this->modelProduct->getProductRelated($product_id);
+                    $this->data['related'] = $this->getProductsArray($this->modelProduct->getProductRelated($product_id), true);
+
+                    /* product attributes */
+                    $this->data['attributes'] = $this->getAttributes($this->request->getQuery('product_id'));
+                    /* /product attributes */
 
                     $options = $this->modelProduct->getProductOptions($product_id);
 
@@ -219,18 +232,11 @@ class ControllerStoreProduct extends Controller {
                         );
                     }
 
-                    $this->data['images'] = array();
-                    $results = $this->modelProduct->getProductImages($product_id);
+                    $this->data['images'] = $this->getImages($product_id);
 
-                    foreach ($results as $k => $result) {
-                        $this->data['images'][$k] = array(
-                            'popup' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
-                            'preview' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
-                            'thumb' => NTImage::resizeAndSave($result['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
-                        );
-                    }
                     $k = count($this->data['images']) + 1;
                     $this->data['images'][$k] = $imgProduct;
+                    $this->data['images'] = array_reverse($this->data['images']);
 
                     if (!$this->config->get('config_customer_price')) {
                         $this->data['display_price'] = true;
@@ -281,7 +287,7 @@ class ControllerStoreProduct extends Controller {
                         if ($result['tag']) {
                             $this->data['tags'][] = array(
                                 'tag' => $result['tag'],
-                                'href' => Url::createUrl('store/search', array('q' => $result['tag']))
+                                'href' => $Url::createUrl('store/search', array('q' => $result['tag']))
                             );
                         }
                     }
@@ -300,8 +306,8 @@ class ControllerStoreProduct extends Controller {
                         $this->cacheId = 'product.' .
                                 $product_id .
                                 $this->config->get('config_language_id') . "." .
-                                $this->request->hasQuery('hl') . "." .
-                                $this->request->hasQuery('cc') . "." .
+                                $this->request->getQuery('hl') . "." .
+                                $this->request->getQuery('cc') . "." .
                                 $this->customer->getId() . "." .
                                 $this->config->get('config_currency') . "." .
                                 (int) $this->config->get('config_store_id');
@@ -313,7 +319,7 @@ class ControllerStoreProduct extends Controller {
                     if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
                         $this->template = $this->config->get('config_template') . '/' . $template;
                     } else {
-                        $this->template = 'choroni/' . $template;
+                        $this->template = 'cuyagua/' . $template;
                     }
 
                     $this->children[] = 'common/column_left';
@@ -332,7 +338,124 @@ class ControllerStoreProduct extends Controller {
         }
     }
 
+    protected function getProductsArray($results, $renderFull = null) {
+        $Url = new Url($this->registry);
+        $this->load->auto('store/product');
+        $this->load->auto('store/review');
+        
+        $products = array();
+
+        list($dia, $mes, $ano) = explode('-', date('d-m-Y'));
+        $l = ((int) $this->config->get('config_new_days') > 30) ? 30 : $this->config->get('config_new_days');
+        if (($dia = $dia - $l) <= 0) {
+            $dia = $dia + 30;
+            if ($dia <= 0)
+                $dia = 1;
+            $mes = $mes - 1;
+            if ($mes <= 0) {
+                $mes = $mes + 12;
+                $ano = $ano - 1;
+            }
+        }
+
+        foreach ($results as $k => $result) {
+            $image = $imageP = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
+
+            if ($this->config->get('config_review')) {
+                $rating = $this->modelReview->getAverageRating($result['product_id']);
+            } else {
+                $rating = false;
+            }
+
+            $special = false;
+            $discount = $this->modelProduct->getProductDiscount($result['product_id']);
+
+            if ($discount) {
+                $price = $this->currency->format($this->tax->calculate($discount, $result['tax_class_id'], $this->config->get('config_tax')));
+            } else {
+                $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+                $special = $this->modelProduct->getProductSpecial($result['product_id']);
+                if ($special) {
+                    $special = $this->currency->format($this->tax->calculate($special, $result['tax_class_id'], $this->config->get('config_tax')));
+                }
+            }
+
+            $options = $this->modelProduct->getProductOptions($result['product_id']);
+
+            if ($options) {
+                $add = $Url::createUrl('store/product', array('product_id' => $result['product_id']));
+            } else {
+                $add = $Url::createUrl('checkout/cart'). '?product_id='.  $result['product_id'];
+            }
+
+            list($pdia, $pmes, $pano) = explode('-', date('d-m-Y', strtotime($result['created'])));
+
+            if ($special) {
+                $sticker = '<b class="oferta"></b>';
+            } elseif ($discount) {
+                $sticker = '<b class="descuento"></b>';
+            } elseif (strtotime($dia . "-" . $mes . "-" . $ano) <= strtotime($pdia . "-" . $pmes . "-" . $pano)) {
+                $sticker = '<b class="nuevo"></b>';
+            } else {
+                $sticker = "";
+            }
+
+            $this->load->auto('image');
+            //NTImage::setWatermark($this->config->get('config_logo'));
+            $products[$k] = array(
+                'product_id' => $result['product_id'],
+                'name' => $result['name'],
+                'model' => $result['model'],
+                'overview' => $result['meta_description'],
+                'rating' => $rating,
+                'stars' => sprintf($this->language->get('text_stars'), $rating),
+                'sticker' => $sticker,
+                'options' => $options,
+                'image' => NTImage::resizeAndSave($image, 38, 38),
+                'lazyImage' => NTImage::resizeAndSave('no_image.jpg', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
+                'thumb' => NTImage::resizeAndSave($image, $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
+                'href' => $Url::createUrl('store/product', array('product_id' => $result['product_id'])),
+                'add' => $add,
+                'attributes' => isset($renderFull) ? $this->getAttributes($result['product_id']) : null,
+                'images' => $this->getImages($result['product_id'], $imageP),
+                'created' => $result['created']
+            );
+
+            if ($this->config->get('config_store_mode') === 'store') {
+                $products[$k]['price'] = $price;
+                $products[$k]['special'] = $special;
+            }
+        }
+        return $products;
+    }
+
+    private function getImages($id, $imageP = null) {
+        $this->load->auto('store/product');
+        $this->load->auto('image');
+
+        $images = $this->modelProduct->getProductImages($id);
+        $imgs = array();
+        foreach ($images as $j => $image) {
+            $imgs[$j] = array(
+                'popup' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                'preview' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                'thumb' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+            );
+        }
+        if ($imageP) {
+            $j = count($imgs) + 1;
+            $imgs[$j] = array(
+                'popup' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                'preview' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                'thumb' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+            );
+            $imgs = array_reverse($imgs);
+        }
+        return $imgs;
+    }
+
     protected function error404() {
+        $Url = new Url($this->registry);
         $url = '';
         if (isset($this->request->get['path'])) {
             $url .= '&path=' . $this->request->get['path'];
@@ -351,13 +474,13 @@ class ControllerStoreProduct extends Controller {
         }
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl('store/product', $url . '&product_id=' . $product_id),
+            'href' => $Url::createUrl('store/product', $url . '&product_id=' . $product_id),
             'text' => $this->language->get('text_error'),
             'separator' => $this->language->get('text_separator')
         );
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
         $this->document->title = $this->data['heading_title'] = $this->language->get('text_error');
-        $this->data['continue'] = Url::createUrl('store/home');
+        $this->data['continue'] = $Url::createUrl('store/home');
 
         $this->loadWidgets();
 
@@ -368,7 +491,7 @@ class ControllerStoreProduct extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->children[] = 'common/column_left';
@@ -398,12 +521,12 @@ class ControllerStoreProduct extends Controller {
             'separator' => false
         );
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
-        $data['filter_keyword'] = $this->request->hasQuery('q') ? $this->request->getQuery('q') : '';
-        $data['filter_price_start'] = $this->request->hasQuery('ps') ? $this->request->getQuery('ps') : '';
-        $data['filter_price_end'] = $this->request->hasQuery('pe') ? $this->request->getQuery('pe') : '';
-        $data['filter_color'] = $this->request->hasQuery('co') ? $this->request->getQuery('co') : '';
-        $data['filter_category'] = $this->request->hasQuery('c') ? $this->request->getQuery('c') : '';
-        $data['filter_manufacturer'] = $this->request->hasQuery('m') ? $this->request->getQuery('m') : '';
+        $data['queries'][] = $this->request->hasQuery('q') ? $this->request->getQuery('q') : '';
+        $data['price_start'] = $this->request->hasQuery('ps') ? $this->request->getQuery('ps') : '';
+        $data['price_end'] = $this->request->hasQuery('pe') ? $this->request->getQuery('pe') : '';
+        $data['color'] = $this->request->hasQuery('co') ? $this->request->getQuery('co') : '';
+        $data['category'] = $this->request->hasQuery('c') ? $this->request->getQuery('c') : '';
+        $data['manufacturer'] = $this->request->hasQuery('m') ? $this->request->getQuery('m') : '';
 
         $data['page'] = $this->request->hasQuery('page') ? $this->request->getQuery('page') : 1;
         $data['sort'] = $this->request->hasQuery('sort') ? $this->request->getQuery('sort') : 'pd.name';
@@ -522,18 +645,18 @@ class ControllerStoreProduct extends Controller {
 
             $this->data['products'] = array();
             $results = $this->modelProduct->getByKeyword($data);
-            foreach ($results as $result) {
-                $image = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
-
+            foreach ($results as $k => $result) {
+                $image = $imageP = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
+                
                 if ($this->config->get('config_review')) {
                     $rating = $this->modelReview->getAverageRating($result['product_id']);
                 } else {
                     $rating = false;
                 }
-
+                
                 $special = false;
                 $discount = $this->modelProduct->getProductDiscount($result['product_id']);
-
+                
                 if ($discount) {
                     $price = $this->currency->format($this->tax->calculate($discount, $result['tax_class_id'], $this->config->get('config_tax')));
                 } else {
@@ -551,8 +674,10 @@ class ControllerStoreProduct extends Controller {
                 } else {
                     $add = $Url::createUrl('checkout/cart') . '&product_id=' . $result['product_id'];
                 }
-
-                $this->data['products'][] = array(
+                
+                $attributes = $this->modelProduct->getAllProperties($result['product_id'], 'attribute');
+                
+                $this->data['products'][$k] = array(
                     'product_id' => $result['product_id'],
                     'name' => $result['name'],
                     'model' => $result['model'],
@@ -560,14 +685,32 @@ class ControllerStoreProduct extends Controller {
                     'rating' => $rating,
                     'stars' => sprintf($this->language->get('text_stars'), $rating),
                     'price' => $price,
+                    'attributes' => $attributes,
                     'options' => $options,
                     'special' => $special,
                     'image' => NTImage::resizeAndSave($image, 38, 38),
                     'lazyImage' => NTImage::resizeAndSave('no_image.jpg', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
                     'thumb' => NTImage::resizeAndSave($image, $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height')),
-                    'href' => Url::createUrl('store/product', array('product_id' => $result['product_id'])),
+                    'href' => $Url::createUrl('store/product', array('product_id' => $result['product_id'])),
                     'add' => $add
                 );
+                
+                $this->data['products'][$k]['images'] = array();
+                $images = $this->modelProduct->getProductImages($result['product_id']);
+                foreach ($images as $j => $image) {
+                    $this->data['products'][$k]['images'][$j] = array(
+                        'popup' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                        'preview' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                        'thumb' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+                    );
+                }
+                $j = count($this->data['products'][$k]['images']) + 1;
+                $this->data['products'][$k]['images'][$j] = array(
+                    'popup' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                    'preview' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                    'thumb' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+                );
+                $this->data['products'][$k]['images'] = array_reverse($this->data['products'][$k]['images']);
             }
 
             if (!$this->config->get('config_customer_price')) {
@@ -577,7 +720,7 @@ class ControllerStoreProduct extends Controller {
             } else {
                 $this->data['display_price'] = false;
             }
-
+            
             $this->load->library('pagination');
             $pagination = new Pagination(true);
             $pagination->total = $product_total;
@@ -585,18 +728,18 @@ class ControllerStoreProduct extends Controller {
             $pagination->limit = $data['limit'];
             $pagination->text = $this->language->get('text_pagination');
             $pagination->url = $Url::createUrl("store/product/all", $url . '&page={page}');
-
+            
             $this->session->set('redirect', $Url::createUrl("store/product/all", $url . '&page=' . $data['page']));
-
+            
             $this->data['pagination'] = $pagination->render();
-
+            
             $this->data['gridView'] = $Url::createUrl("store/product/all", $url . '&v=grid');
             $this->data['listView'] = $Url::createUrl("store/product/all", $url . '&v=list');
-
+            
             if ($this->request->hasQuery('v')) {
                 $url .= '&v=' . $this->request->getQuery('v');
             }
-
+            
             $this->data['url'] = $url;
         }
 
@@ -604,24 +747,25 @@ class ControllerStoreProduct extends Controller {
 
         if ($scripts)
             $this->scripts = array_merge($this->scripts, $scripts);
-
+        
         $this->children[] = 'common/footer';
         $this->children[] = 'common/column_left';
         $this->children[] = 'common/column_right';
         $this->children[] = 'common/nav';
         $this->children[] = 'common/header';
-
+        
         $template = ($this->config->get('default_view_product_all')) ? $this->config->get('default_view_product_all') : 'store/products_all.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
-
+        
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
     public function review() {
+        $Url = new Url($this->registry);
         //Languages
         $this->language->load('store/product');
 
@@ -674,7 +818,7 @@ class ControllerStoreProduct extends Controller {
             $pagination->page = $page;
             $pagination->limit = 5;
             $pagination->text = $this->language->get('text_pagination');
-            $pagination->url = Url::createUrl('store/product/review', array('product_id' => $this->request->get['product_id'], 'page' => '{page}'));
+            $pagination->url = $Url::createUrl('store/product/review', array('product_id' => $this->request->get['product_id'], 'page' => '{page}'));
 
             $this->data['pagination'] = $pagination->render();
         }
@@ -683,7 +827,7 @@ class ControllerStoreProduct extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -691,6 +835,7 @@ class ControllerStoreProduct extends Controller {
     
     //TODO: crear servicio para comparar productos dentro de library
     public function addProductToCompare() {
+        $Url = new Url($this->registry);
         $this->load->auto('store/product');
         $this->load->auto('json');
         $json = array();
@@ -701,7 +846,7 @@ class ControllerStoreProduct extends Controller {
             if ($compare && !in_array($product_id, $compare)) {
                 array_push($compare, $product_id);
             } else {
-                $compare = [$product_id];
+                $compare = array($product_id);
             }
             $this->session->set('products_to_compare', $compare);
         } else {
@@ -751,7 +896,7 @@ class ControllerStoreProduct extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -944,8 +1089,8 @@ class ControllerStoreProduct extends Controller {
             $message = str_replace("{%store_email%}", $this->config->get('config_email'), $message);
             $message = str_replace("{%store_telephone%}", $this->config->get('config_telephone'), $message);
             $message = str_replace("{%store_address%}", $this->config->get('config_address'), $message);
-            $message = str_replace("{%product_url%}", Url::createUrl('store/product', array('product_id' => $product_id)), $message);
-            $message = str_replace("{%url_account%}", Url::createUrl('account/review'), $message);
+            $message = str_replace("{%product_url%}", $Url::createUrl('store/product', array('product_id' => $product_id)), $message);
+            $message = str_replace("{%url_account%}", $Url::createUrl('account/review'), $message);
             $message = str_replace("{%product_name%}", $product_info['name'], $message);
             $message = str_replace("{%fullname%}", $this->customer->getFirstName() . " " . $this->customer->getFirstName(), $message);
             $message = str_replace("{%company%}", $this->customer->getCompany(), $message);
@@ -1034,8 +1179,8 @@ class ControllerStoreProduct extends Controller {
             $message = str_replace("{%store_email%}", $this->config->get('config_email'), $message);
             $message = str_replace("{%store_telephone%}", $this->config->get('config_telephone'), $message);
             $message = str_replace("{%store_address%}", $this->config->get('config_address'), $message);
-            $message = str_replace("{%product_url%}", Url::createUrl('store/product', array('product_id' => $product_id)), $message);
-            $message = str_replace("{%url_account%}", Url::createUrl('account/review'), $message);
+            $message = str_replace("{%product_url%}", $Url::createUrl('store/product', array('product_id' => $product_id)), $message);
+            $message = str_replace("{%url_account%}", $Url::createUrl('account/review'), $message);
             $message = str_replace("{%product_name%}", $product_info['name'], $message);
             $message = str_replace("{%fullname%}", $customer_info['firstname'] . " " . $customer_info['lastname'], $message);
             $message = str_replace("{%company%}", $customer_info['company'], $message);
@@ -1087,12 +1232,63 @@ class ControllerStoreProduct extends Controller {
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
             $json['results'][$k]['price'] = $this->currency->format($this->tax->calculate($v['price'], $v['tax_class_id'], $this->config->get('config_tax')));
             $json['results'][$k]['href'] = $Url::createUrl('store/product', array('product_id' => $v['product_id']));
+
+            $json['results'][$k]['images'] = array();
+            $images = $this->modelProduct->getProductImages($v['product_id']);
+            foreach ($images as $j => $image) {
+                $json['results'][$k]['images'][$j] = array(
+                    'popup' => NTImage::resizeAndSave($image['image'], $width, $height),
+                    'preview' => NTImage::resizeAndSave($image['image'], $width, $height),
+                    'thumb' => NTImage::resizeAndSave($image['image'], $width, $height)
+                );
+            }
+            $j = count($json['results'][$k]['images']) + 1;
+            $json['results'][$k]['images'][$j] = array(
+                'popup' => NTImage::resizeAndSave($v['image'], $width, $height),
+                'preview' => NTImage::resizeAndSave($v['image'], $width, $height),
+                'thumb' => NTImage::resizeAndSave($v['image'], $width, $height)
+            );
+            $json['results'][$k]['images'] = array_reverse($json['results'][$k]['images']);
+            
+            $json['results'][$k]['attributes'] = $this->getAttributes($v['product_id']);
         }
 
         if (!count($json['results']))
             $json['error'] = 1;
 
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
+    }
+    
+    private function getAttributes($id) {
+        /* product attributes */
+        foreach ($this->modelProduct->getAllProperties($id, 'attribute' ) as $attribute) {
+            list($name, $attribute_id, $attribute_group_id) = explode(':', $attribute['key']);
+            $attrValues[$attribute_group_id][$attribute_id] = $attribute['value'];
+        }
+
+        foreach ($attrValues as $k => $attr) {
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."product_attribute_group WHERE product_attribute_group_id = ". (int)$k);
+            $attribute_group = $query->row;
+
+            $attributes[$k]['product_attribute_group_id'] = ($attribute_group['product_attribute_group_id']) ? $attribute_group['product_attribute_group_id'] : null;
+            $attributes[$k]['title'] = ($attribute_group['name']) ? $attribute_group['name'] : null;
+            $attributes[$k]['categoriesAttributes'] = array_unique($this->modelProduct->getCategoriesByAttributeGroupId($k));
+
+
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."product_attribute WHERE product_attribute_group_id = ". (int)$k);
+            foreach ($query->rows as $key => $item) {
+                $attributes[$k]['items'][$key]['product_attribute_id'] = ($item['product_attribute_id']) ? $item['product_attribute_id'] : null;
+                $attributes[$k]['items'][$key]['type'] = ($item['type']) ? $item['type'] : null;
+                $attributes[$k]['items'][$key]['name'] = ($item['name']) ? $item['name'] : null;
+                $attributes[$k]['items'][$key]['value'] = ($item['value']) ? $item['value'] : null;
+                $attributes[$k]['items'][$key]['label'] = ($item['label']) ? $item['label'] : null;
+                $attributes[$k]['items'][$key]['pattern'] = ($item['pattern']) ? $item['pattern'] : null;
+                $attributes[$k]['items'][$key]['value'] = ($item['default']) ? $item['default'] : $attr[$item['product_attribute_id']];
+                $attributes[$k]['items'][$key]['required'] = ($item['required']) ? $item['required'] : null;
+            }
+        }
+        return $attributes;
+        /* /product attributes */
     }
 
     public function quickViewJson() {
@@ -1105,8 +1301,8 @@ class ControllerStoreProduct extends Controller {
             $cached = $this->cache->get('product.json.callback' .
                     $product_id .
                     $this->config->get('config_language_id') . "." .
-                    $this->request->hasQuery('hl') . "." .
-                    $this->request->hasQuery('cc') . "." .
+                    $this->request->getQuery('hl') . "." .
+                    $this->request->getQuery('cc') . "." .
                     $this->customer->getId() . "." .
                     $this->config->get('config_currency') . "." .
                     (int) $this->config->get('config_store_id')
@@ -1184,6 +1380,7 @@ class ControllerStoreProduct extends Controller {
                     $this->data['minimum'] = 1;
                 }
 
+                $this->data['attributes'] = $this->modelProduct->getAllProperties($product_info['product_id'], 'attribute');
                 $this->data['model'] = $product_info['model'];
                 $this->data['href'] = $Url::createUrl('store/product', array('product_id' => $product_info['product_id']));
                 $this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
@@ -1250,8 +1447,8 @@ class ControllerStoreProduct extends Controller {
                     $this->cacheId = 'product.json.callback' .
                             $product_id .
                             $this->config->get('config_language_id') . "." .
-                            $this->request->hasQuery('hl') . "." .
-                            $this->request->hasQuery('cc') . "." .
+                            $this->request->getQuery('hl') . "." .
+                            $this->request->getQuery('cc') . "." .
                             $this->customer->getId() . "." .
                             $this->config->get('config_currency') . "." .
                             (int) $this->config->get('config_store_id');
@@ -1285,7 +1482,7 @@ class ControllerStoreProduct extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -1341,7 +1538,7 @@ class ControllerStoreProduct extends Controller {
         foreach ($widgets->getWidgets('main') as $widget) {
             $settings = (array) unserialize($widget['settings']);
             if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $url = $Url::createUrl("{$settings['route']}", $settings['params']);
                 $scripts[$widget['name']] = array(
                     'id' => $widget['name'],
                     'method' => 'ready',
@@ -1371,7 +1568,7 @@ class ControllerStoreProduct extends Controller {
         foreach ($widgets->getWidgets('featuredContent') as $widget) {
             $settings = (array) unserialize($widget['settings']);
             if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $url = $Url::createUrl("{$settings['route']}", $settings['params']);
                 $scripts[$widget['name']] = array(
                     'id' => $widget['name'],
                     'method' => 'ready',
@@ -1401,7 +1598,7 @@ class ControllerStoreProduct extends Controller {
         foreach ($widgets->getWidgets('featuredFooter') as $widget) {
             $settings = (array) unserialize($widget['settings']);
             if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
+                $url = $Url::createUrl("{$settings['route']}", $settings['params']);
                 $scripts[$widget['name']] = array(
                     'id' => $widget['name'],
                     'method' => 'ready',

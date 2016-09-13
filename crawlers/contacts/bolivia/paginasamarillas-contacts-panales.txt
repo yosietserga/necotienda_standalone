@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"COMPANEX BOLIVIA S.A.";;;"Telefax: (591) (33) 3467272";"Parque Industrial Mza.27 No.2000 Bolivia, Santa Cruz de la Sierra"

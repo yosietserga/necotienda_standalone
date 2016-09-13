@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"QUIMICA LATINOAMERICANA S.A.";;;"Telefax: (56) (32) 2672695";"Limache Esq. Calle 5 No. 15 El Salto - Viña Del Mar Chile, Viña del Mar"
-"CHILE SIKA. S.A.";;;"(56) (2) 5106500";"Av. Presidente Salvador Allende 85, San Joaquín Chile, Santiago"
-ALGIFOL;;;"(56) (2) 200012";"Santiago de Chile Chile, Santiago"

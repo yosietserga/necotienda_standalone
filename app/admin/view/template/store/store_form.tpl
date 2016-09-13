@@ -33,7 +33,7 @@
                 <p><?php echo $Language->get('help_joyride_begin'); ?></p>
             </li>
             <?php
-            $a = [
+            $a = array(
                 1=>'necoApp',
                 'necoFolder',
                 'htabs',
@@ -122,7 +122,7 @@
                 'necoServer09',
                 'necoServer10',
                 'necoServer11'
-            ];
+            );
             foreach($a as $k=>$v) {
             ?>
             <li<?php if ($v!=='noClass') { ?> data-class="<?php echo $v; ?>"<?php } ?> data-button="<?php echo $Language->get('button_next'); ?>" data-options="tipLocation:right">

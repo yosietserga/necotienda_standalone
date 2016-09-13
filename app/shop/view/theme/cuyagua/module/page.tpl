@@ -1,5 +1,7 @@
 <li class="nt-editable box pageWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-<?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div><?php } ?>
+
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/module-heading.tpl");?> 
+
     <div class="content" id="<?php echo $widgetName; ?>Content">
         <ul>
             <?php foreach ($pages as $page) { ?>

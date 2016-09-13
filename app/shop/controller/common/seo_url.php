@@ -15,8 +15,8 @@ class ControllerCommonSeoUrl extends Controller {
                 parse_str($_SERVER['QUERY_STRING'], $params);
                 return $this->forward($this->request->getQuery('_route_'), $params);
             }
-            if (strpos($this->request->getQuery('_route_'), 'buscar/') !== false) {
-                $_GET['q'] = str_replace('buscar/', '', $this->request->getQuery('_route_'));
+            if (strpos($this->request->getQuery('_route_'), 'buscar/') !== false || strpos($this->request->getQuery('_route_'), 'search/') !== false) {
+                $_GET['q'] = str_replace(array('search/','buscar/'), '', $this->request->getQuery('_route_'));
                 return $this->forward('store/search');
             }
             $parts = explode('/', $this->request->getQuery('_route_'));

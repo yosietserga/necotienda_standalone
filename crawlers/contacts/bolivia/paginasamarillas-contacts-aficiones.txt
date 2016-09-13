@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"FABRICA DE DISCOA COMPACTOS TDV BOLIVIA";;;"(591) (22) 2424365";"20 de Octubre 2223 Edif Manantial Piso 1 Of 8 Bolivia, La Paz"
-"SARABIA CERAMICA";;;"(591) (22) 2745199";"Cl 4 No 7 Mallasa Bolivia, La Paz"
-"LA CASA DEL CERAMISTA";;;"(591) (22) 2710927";"Galeria Chuquiago Marka Local 11 Plaza San Francisco Bolivia, La Paz"

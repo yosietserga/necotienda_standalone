@@ -1,9 +1,9 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcumbs.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
+
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-start.tpl");?>
+
     <?php if ($page_info) { ?>
 
     <div id="pagePreview" class="row">
@@ -19,10 +19,7 @@
             <?php } else { echo substr(html_entity_decode($page_info['description']),0,250) . "..."; } ?>
         </div>
     </div>
-    <?php } else { ?>
-    <h1><?php echo $heading_title; ?></h1>
-    <?php } ?>
-
+    <?php }?>
 
     <?php if (!$pages) { ?>
     <div><?php echo $Language->get('text_error'); ?></div>
@@ -63,30 +60,29 @@
                         </div>
 
                         <div class="glossary-item-body large-9 medium-9 small-12 columns">
-                            <a class="name" href="<?php echo str_replace('&', '&amp;', $Url::createUrl("content/page",array('page_id'=>$page['page_id']))); ?>">
+                            <a class="name" href="<?php echo str_replace('&', '&amp;', $Url::createUrl('content/page',array('page_id'=>$page['page_id']))); ?>">
                                 <h3><?php echo $page['title']; ?></h3>
                             </a>
                             <?php if (!empty($page['meta_description'])) { ?>
                                 <p class="overview"><?php echo strip_tags($page['meta_description']) . "... "; ?>&nbsp;
-                                    <a class="read-more" href="<?php echo str_replace('&', '&amp;', $Url::createUrl("content/page",array('page_id'=>$page['page_id']))); ?>">
+                                    <a class="read-more" href="<?php echo str_replace('&', '&amp;', $Url::createUrl('content/page',array('page_id'=>$page['page_id']))); ?>">
                                         <?php echo $Language->get('text_see_more'); ?>
                                     </a>
                                 </p>
                             <?php } else { ?>
                                 <p class="overview"><?php echo substr($page['description'],0,250) . "... "; ?>&nbsp;
-                                    <a class="read-more" href="<?php echo str_replace('&', '&amp;', $Url::createUrl("content/page",array('page_id'=>$page['page_id']))); ?>">
+                                    <a class="read-more" href="<?php echo str_replace('&', '&amp;', $Url::createUrl('content/page',array('page_id'=>$page['page_id']))); ?>">
                                         <?php echo $Language->get('text_see_more'); ?>
                                     </a>
                                 </p>
                             <?php } ?>
-                            <ul class="glossary-item-footer inline-list">
+                            <ul class="glossary-item-footer">
                                 <li class="post-visits" title="<?php echo $Language->get('text_visits'); ?>"><?php echo (int)$page['visits']; ?></li>
                                 <li class="post-follow" title="<?php echo $Language->get('text_followers'); ?>"><?php echo (int)$page['followers']; ?></li>
                                 <li class="post-likes" title="<?php echo $Language->get('text_likes'); ?>"><?php echo (int)$page['likes']; ?></li>
                                 <li class="post-dislikes" title="<?php echo $Language->get('text_dislikes'); ?>"><?php echo (int)$page['dislikes']; ?></li>
                             </ul>
                         </div>
-
                     </article>
                 </li>
                 <?php } ?>
@@ -96,6 +92,6 @@
             <div class="pagination"><?php echo $pagination; ?></div>
         <?php } ?>
     <?php } ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.end"); ?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
 </section>
 <?php echo $footer; ?>

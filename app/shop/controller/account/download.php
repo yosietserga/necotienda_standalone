@@ -101,7 +101,7 @@ class ControllerAccountDownload extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/download.tpl')) {
             $this->template = $this->config->get('config_template') . '/account/.tpl';
         } else {
-            $this->template = 'choroni/account/download.tpl';
+            $this->template = 'cuyagua/account/download.tpl';
         }
 
         $this->loadWidgets();
@@ -118,7 +118,7 @@ class ControllerAccountDownload extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

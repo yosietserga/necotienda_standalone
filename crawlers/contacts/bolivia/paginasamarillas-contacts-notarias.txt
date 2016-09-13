@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"VÁSQUEZ SANTISTEVAN CLAUDIA";;;"(591) (33) 3327899";"Suárez De Figueroa # 18 Bolivia, Santa Cruz de la Sierra"

@@ -22,6 +22,93 @@ class ControllerModuleCrmStep extends Controller {
     public function index() {
         $this->load->language('module/crm');
         $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
+        
+        $this->load->language('module/crm');
+        $this->load->moduleModel('step', dirname(__FILE__));
+        $this->load->moduleLanguage('step', dirname(__FILE__));
+        $this->load->auto('setting/setting');
+
+        $filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
+        $filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
+        $filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
+        $page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
+        $sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
+        $order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
+        $limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
+
+        $url = '';
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . $this->request->get['filter_name'];
+        }
+        if (isset($this->request->get['filter_date_start'])) {
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        }
+        if (isset($this->request->get['filter_date_end'])) {
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        }
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+        if (!empty($this->request->get['limit'])) {
+            $url .= '&limit=' . $this->request->get['limit'];
+        }
+
+        $data = array(
+            'filter_name' => $filter_name,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $limit,
+            'limit' => $limit
+        );
+
+        $total = $this->modelStep->getAllTotal($data);
+        if ($total) {
+            $results = $this->modelStep->getAll($data);
+
+            foreach ($results as $result) {
+                $action = array(
+                    'edit' => array(
+                        'action' => 'edit',
+                        'text' => $this->language->get('text_edit'),
+                        'href' => Url::createAdminUrl('module/crm/step/update') . '&sale_step_id=' . $result['sale_step_id'] . $url,
+                        'img' => 'edit.png'
+                    ),
+                    'delete' => array(
+                        'action' => 'delete',
+                        'text' => $this->language->get('text_delete'),
+                        'href' => '',
+                        'img' => 'delete.png'
+                    )
+                );
+
+                $this->data['steps'][] = array(
+                    'sale_step_id' => $result['sale_step_id'],
+                    'name' => $result['name'],
+                    'sort_order' => $result['sort_order'],
+                    'selected' => isset($this->request->post['selected']) && in_array($result['sale_step_id'], $this->request->post['selected']),
+                    'action' => $action
+                );
+            }
+        }
+
+        $this->load->library('pagination');
+        $pagination = new Pagination();
+        $pagination->ajax = false;
+        $pagination->total = $total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+        $pagination->text = $this->language->get('text_pagination');
+        $pagination->url = Url::createAdminUrl('module/crm/step') . $url . '&page={page}';
+        $this->data['pagination'] = $pagination->render();
 
         $this->templatePath = dirname(__FILE__);
         $this->template = '/view/step/index.tpl';
@@ -274,94 +361,6 @@ class ControllerModuleCrmStep extends Controller {
     }
 
     public function grid() {
-        $this->load->language('module/crm');
-        $this->load->moduleModel('step', dirname(__FILE__));
-        $this->load->moduleLanguage('step', dirname(__FILE__));
-        $this->load->auto('setting/setting');
-
-        $filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
-        $filter_date_start = isset($this->request->get['filter_date_start']) ? $this->request->get['filter_date_start'] : null;
-        $filter_date_end = isset($this->request->get['filter_date_end']) ? $this->request->get['filter_date_end'] : null;
-        $page = isset($this->request->get['page']) ? $this->request->get['page'] : 1;
-        $sort = isset($this->request->get['sort']) ? $this->request->get['sort'] : 'name';
-        $order = isset($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
-        $limit = !empty($this->request->get['limit']) ? $this->request->get['limit'] : $this->config->get('config_admin_limit');
-
-        $url = '';
-
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . $this->request->get['filter_name'];
-        }
-        if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
-        }
-        if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
-        }
-        if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
-        }
-        if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
-        }
-        if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
-        }
-        if (!empty($this->request->get['limit'])) {
-            $url .= '&limit=' . $this->request->get['limit'];
-        }
-
-        $data = array(
-            'filter_name' => $filter_name,
-            'filter_date_start' => $filter_date_start,
-            'filter_date_end' => $filter_date_end,
-            'sort' => $sort,
-            'order' => $order,
-            'start' => ($page - 1) * $limit,
-            'limit' => $limit
-        );
-
-        $total = $this->modelStep->getAllTotal($data);
-        if ($total) {
-            $results = $this->modelStep->getAll($data);
-
-            foreach ($results as $result) {
-                $action = array(
-                    'edit' => array(
-                        'action' => 'edit',
-                        'text' => $this->language->get('text_edit'),
-                        'href' => Url::createAdminUrl('module/crm/step/update') . '&sale_step_id=' . $result['sale_step_id'] . $url,
-                        'img' => 'edit.png'
-                    ),
-                    'delete' => array(
-                        'action' => 'delete',
-                        'text' => $this->language->get('text_delete'),
-                        'href' => '',
-                        'img' => 'delete.png'
-                    )
-                );
-
-                $this->data['steps'][] = array(
-                    'sale_step_id' => $result['sale_step_id'],
-                    'name' => $result['name'],
-                    'sort_order' => $result['sort_order'],
-                    'selected' => isset($this->request->post['selected']) && in_array($result['sale_step_id'], $this->request->post['selected']),
-                    'action' => $action
-                );
-            }
-        }
-
-        $this->load->library('pagination');
-        $pagination = new Pagination();
-        $pagination->ajax = true;
-        $pagination->ajaxTarget = "gridWrapper";
-        $pagination->total = $total;
-        $pagination->page = $page;
-        $pagination->limit = $limit;
-        $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = Url::createAdminUrl('module/crm/step/grid') . $url . '&page={page}';
-        $this->data['pagination'] = $pagination->render();
-
         $this->templatePath = dirname(__FILE__);
         $this->template = '/view/step/grid.tpl';
         
@@ -410,6 +409,7 @@ class ControllerModuleCrmStep extends Controller {
         
         $this->setvar('sale_step_id', $info, '');
         $this->setvar('name', $info, '');
+        $this->setvar('properties', $info, '');
         
         $this->templatePath = dirname(__FILE__);
         $this->template = '/view/step/form.tpl';

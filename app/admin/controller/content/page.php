@@ -388,6 +388,12 @@ class ControllerContentPage extends Controller {
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
+    public function getPages() {
+        $this->load->auto('content/page');
+        $this->load->auto('json');
+        $this->response->setOutput(Json::encode($this->modelPage->getAll()), $this->config->get('config_compression'));
+    }
+
     /**
      * ControllerContentPage::grid()
      * 
@@ -488,6 +494,7 @@ class ControllerContentPage extends Controller {
                 'page_id' => $result['post_id'],
                 'title' => $result['title'],
                 'status' => $result['status'],
+                'publish' => ($result['publish']) ? $this->language->get('text_yes') : $this->language->get('text_no'),
                 'date_publish_start' => date('d-m-Y h:i', strtotime($result['date_publish_start'])),
                 'date_publish_end' => date('d-m-Y h:i', strtotime($result['date_publish_end'])),
                 'sort_order' => $result['sort_order'],
@@ -598,6 +605,9 @@ class ControllerContentPage extends Controller {
 
         $this->setvar('post_id', $page_info, '');
         $this->setvar('parent_id', $page_info, '');
+        $this->setvar('allow_reviews', $page_info, '');
+        $this->setvar('publish', $page_info, '');
+        $this->setvar('publish', $page_info, '');
         $this->setvar('image', $page_info, '');
 
         $this->data['languages'] = $this->modelLanguage->getAll();

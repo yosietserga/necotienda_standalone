@@ -82,71 +82,63 @@ class ModelMarketingContact extends Model {
     }	
     
 	public function getContacts($data = array()) {
-	   $cache_id = "admin.contacts". implode(".",$data);
-       $cached = $this->cache->get($cache_id);
-       if (!$cached) {
-    		$sql = "SELECT *, co.email AS mail, co.date_added AS created
-            FROM " . DB_PREFIX . "contact co 
-            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = co.customer_id) ";
-    
-    		$implode = array();
-    		
-    		if (!empty($data['filter_name'])) {
-    			$implode[] = "co.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
-    		}
-    		
-    		if (!empty($data['filter_email'])) {
-    			$implode[] = "co.email LIKE '%" . $this->db->escape($data['filter_email']) . "%'";
-    		}
-            
-    		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
-                $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
-    		} elseif (!empty($data['filter_date_start'])) {
-                $implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
-    		}
-    
-    		if ($implode) {
-    			$sql .= " WHERE " . implode(" AND ", $implode);
-    		}
-    		
-    		$sort_data = array(
-    			'co.name',
-    			'co.email',
-    			'co.date_added'
-    		);	
-    			
-    		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-    			$sql .= " ORDER BY " . $data['sort'];	
-    		} else {
-    			$sql .= " ORDER BY co.name";	
-    		}
-    			
-    		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-    			$sql .= " DESC";
-    		} else {
-    			$sql .= " ASC";
-    		}
-    		
-    		if (isset($data['start']) || isset($data['limit'])) {
-    			if ($data['start'] < 0) {
-    				$data['start'] = 0;
-    			}			
-    
-    			if ($data['limit'] < 1) {
-    				$data['limit'] = 20;
-    			}	
-    			
-    			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-    		}		
-    		
-    		$query = $this->db->query($sql);
-            
-    		$this->cache->set($cache_id,$query->rows);
-            
-    		return $query->rows;
-        } else {
-            return $cached;
-        }	
+		$sql = "SELECT *, co.email AS mail, co.date_added AS created
+		FROM " . DB_PREFIX . "contact co
+		LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = co.customer_id) ";
+
+		$implode = array();
+
+		if (!empty($data['filter_name'])) {
+			$implode[] = "co.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+		}
+
+		if (!empty($data['filter_email'])) {
+			$implode[] = "co.email LIKE '%" . $this->db->escape($data['filter_email']) . "%'";
+		}
+
+		if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+			$implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s',strtotime($data['filter_date_end'])) . "'";
+		} elseif (!empty($data['filter_date_start'])) {
+			$implode[] = " co.date_added BETWEEN '" . date('Y-m-d h:i:s',strtotime($data['filter_date_start'])) . "' AND '" . date('Y-m-d h:i:s') . "'";
+		}
+
+		if ($implode) {
+			$sql .= " WHERE " . implode(" AND ", $implode);
+		}
+
+		$sort_data = array(
+			'co.name',
+			'co.email',
+			'co.date_added'
+		);
+
+		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+			$sql .= " ORDER BY " . $data['sort'];
+		} else {
+			$sql .= " ORDER BY co.name";
+		}
+
+		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			$sql .= " DESC";
+		} else {
+			$sql .= " ASC";
+		}
+
+		if (isset($data['start']) || isset($data['limit'])) {
+			if ($data['start'] < 0) {
+				$data['start'] = 0;
+			}
+
+			if ($data['limit'] < 1) {
+				$data['limit'] = 20;
+			}
+
+			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		}
+
+		$query = $this->db->query($sql);
+
+		return $query->rows;
 	}
 	
 	public function getTotalContacts($data = array()) {
@@ -178,7 +170,7 @@ class ModelMarketingContact extends Model {
 	}
     
     public function delete($id) {
-        //TODO: verificar que no tiene tareas programadas como enviar campaña u otros, alertar si tiene alguna tarea pendiente
+        //TODO: verificar que no tiene tareas programadas como enviar campaï¿½a u otros, alertar si tiene alguna tarea pendiente
         $this->db->query("DELETE FROM ".DB_PREFIX."contact WHERE contact_id = '". (int)$id ."'");
         $this->db->query("DELETE FROM ".DB_PREFIX."contact_to_list WHERE contact_id = '". (int)$id ."'");
     }

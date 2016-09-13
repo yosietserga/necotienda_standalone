@@ -1,6 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"AMIGO Y CIA LTDA";;;"(56) (2) 26211707";"Gabriel Palma 992 Chile, Santiago"
-"ALAMBRES - CONCERTINAS";;;"(56) (2) 7740376";"Hoevel 4558 Quinta Normal Chile, Santiago"
-"TREFILAC S.A.";;;"(56) (32) 2253270";"Colón 2008 - Valparaíso Chile, Valparaiso"
-"PRODALAM S.A. DISTRIBUIDOR OFICIAL SHELL";;;"(56) (57) 3502000";"Avda. Sotomayor 2273 - Iquique Chile, Iquique"
-"CONCERTINAS FALCON";;;"(56) (2) 7243364";"José Joaquín Pérez 4976 Quinta Normal Chile, Santiago"

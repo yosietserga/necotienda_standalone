@@ -1,7 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CENTRO COMERCIAL BOLÍVAR PLAZA";comercial@ccbolivarplaza.com;www.ccbolivarplaza.com;"(57) (6) 3340922";"Cr8 19-41 Piso 5 Colombia, Pereira"
-"CV MULTISOLUCIONES & DOTACIONES INDUSTRIALES Y EMPRESARIALES S.A.S.";cvmultisolucionesd@hotmail.com;www.cvmultisolucionesydotacionesindustrialesyempresarialessas.com;"(57) (1) 3466370";"Tr26 57-26 Of 302 Galerías Colombia, Bogotá"
-"CALZADO SUYPER";;;"(57) (4) 5118450";"Cr50 48-38 Colombia, Medellín"
-"ALMACÉN COPA MUNDO";almacencopamundo@gmail.com;;"(57) (6) 3240270";"Cr7 15-22 Colombia, Pereira"
-"CALZADO SANTA SABINA";calzadosantasabina@yahoo.es;;"(57) (7) 6411650";"Cl 60 17 E-35 Piso 2 Colombia, Bucaramanga"
-"REMONTADORA MANZI 55 AÑOS";remontadoramanzi@hotmail.com;www.remontadoramanzi.jimdo.com;"(57) (1) 2358526";"Cr15 74-81 Colombia, Bogotá"

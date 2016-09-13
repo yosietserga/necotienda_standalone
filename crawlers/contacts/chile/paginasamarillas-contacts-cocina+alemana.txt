@@ -1,6 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ELKIKA ILMENAU";;;"(56) (2) 2310260";"Hernando de Aguirre 47 Tobalaba Chile, Santiago"
-"LILI MARLEEN";;;"(56) (2) 3416213";"Julio Prado 759 Providencia Chile, Santiago"
-"RESTAURANTE ALEMAN TANTE MARLENE";;;"(56) (2) 7619043";"Av. Miguel Claro 1802 Providencia Chile, Santiago"
-"LUNA LLENA";;;"(56) (2) 8711341";"Av. Doce Interior 087 San José de Maipo Chile, Santiago"
-"STARNBERG RESTAURANT";;;"(56) (2) 9535100";"Av. Alonso de Córdova 2359 Vitacura Chile, Santiago"

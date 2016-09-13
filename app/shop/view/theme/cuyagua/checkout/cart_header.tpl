@@ -4,13 +4,13 @@
     <section id="maincontent">
         <section id="content" >
 
-            <div class="large-12 small-12 medium-12 columns">
+            <div class="columns">
                 <div id="featuredContent">
                 <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
                 </div>
             </div>
 
-            <div class="neco-wizard large-12 small-12 medium-12 columns">
+            <div class="neco-wizard columns">
                 <ul class="neco-wizard-controls">
                     <li><?php echo $Language->get('text_basket'); ?>
                         <span><?php echo $Language->get('text_step_cart'); ?></span>
@@ -34,7 +34,7 @@
                 </ul>
 
 
-                <?php if (!empty($message)) { ?><br /><div class="warning"><?php echo $message; ?></div><?php } ?>
+                <?php if (!empty($message)) { ?><div class="message warning"><?php echo $message; ?></div><?php } ?>
 
 
                 <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" id="orderForm">
@@ -358,9 +358,8 @@
                             <?php } ?>
                             </table>
 
-                            <div class="clear"></div>
 
-                            <textarea name="comment" style="width: 90%;" placeholder="Ingresa tus comentarios sobre el pedido aqu&iacute;"></textarea>
+                            <textarea name="comment" placeholder="Ingresa tus comentarios sobre el pedido aqu&iacute;"></textarea>
 
                         </div>
                     </div>

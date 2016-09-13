@@ -1,8 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-PAPLASHER;palitosplasticosparahelados@hotmail.com;www.paplasher.com;"(57) (7) 6718039";"Cr19 6-45 Colombia, Bucaramanga"
-"DELICIAS DE MACAME";deliciasdemacamen@gmail.com;;"(57) (4) 5788667";"Envigado Colombia, Medellín"
-"INCOMAD S.A.S.";incomad@hotmail.com;;"(57) (1) 7210822";"Cr16 F 32 A-35 S Soacha Colombia, Bogotá"
-"A DOMICILIO ADORNOS ARCANGELES";arcangeles@yahoo.es;;"(57) (4) 3711911";"Cr48 43-23 Itagüí Colombia, Medellín"
-DISTRIPALOS;;;"(57) (5) 3561226";"Cr44 75-30 Colombia, Barranquilla"
-"PRODEMARCO LTDA.";;;"(57) (1) 2707642";"Cr29 42-52 S Colombia, Bogotá"
-"COMERCIALIZADORA SERCA";;;"(57) (6) 7456102";"Cl 11 A 22-33 Colombia, Armenia"

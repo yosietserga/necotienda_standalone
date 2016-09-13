@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PRODUCTOS FLORIDA SIFÓN SANTA CRUZ";;;"(591) (33) 3491415";"Parque Industrial P.I. 27 Bolivia, Santa Cruz de la Sierra"
-"ANDINA AGUALIGHT";;;"(591) (22) 2487115";"La Paz Bolivia, La Paz"
-"COOP DE SERVICIOS PUBLICOS SANTA CRUZ LTDA. SAGUAPAC";;;"(591) (33) 3522323";"Av.Rio Grande Perimetral No.2323 Bolivia, Santa Cruz de la Sierra"

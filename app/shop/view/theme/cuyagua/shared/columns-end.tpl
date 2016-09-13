@@ -1,9 +1,12 @@
-</div>
+    </div>
+</aside>
 <!--/COLUMN-CENTER-->
 <!--COLUMN-RIGHT-->
 <?php if ($column_right) { ?>
-    <aside id="column_right" class="aside-column column-right large-3 medium-12 small-12 columns">
-        <?php echo $column_right; ?>
+    <aside id="column_right" class="column-right large-3 column">
+        <div class="widgets aside-column">
+            <?php echo $column_right; ?>
+        </div>
     </aside>
 <?php } ?>
 </section>

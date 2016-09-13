@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ENVASES FLEXIBLES LTDA.";;;"(56) (2) 7391289";"Cordillera 442 Quilicura Chile, Santiago"

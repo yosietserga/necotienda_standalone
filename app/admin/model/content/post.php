@@ -25,8 +25,10 @@ class ModelContentPost extends Model {
         parent_id   = '0', 
         post_type   = 'post', 
         publish     = '" . (int) $this->request->post['publish'] . "', 
-        date_publish_start = '" . $this->db->escape($data['date_publish_start']) . "', 
-        date_publish_end = '" . $this->db->escape($data['date_publish_end']) . "', 
+        allow_reviews     = '" . (int) $this->request->post['allow_reviews'] . "',
+        image = '" . $this->db->escape($data['image']) . "',
+        date_publish_start = '" . $this->db->escape($data['date_publish_start']) . "',
+        date_publish_end = '" . $this->db->escape($data['date_publish_end']) . "',
         template    = '" . $this->db->escape($data['template']) . "', 
         status      = '1', 
         date_added  = NOW()");
@@ -44,7 +46,7 @@ class ModelContentPost extends Model {
             meta_keywords    = '" . $this->db->escape($value['meta_keywords']) . "'");
 
             if (!empty($value['keyword'])) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET 
+                $this->db->query("REPLACE INTO " . DB_PREFIX . "url_alias SET
                 language_id = '" . (int) $language_id . "', 
                 object_id    = '" . (int) $post_id . "', 
                 object_type = 'post', 
@@ -77,7 +79,9 @@ class ModelContentPost extends Model {
     public function update($post_id, $data) {
         $this->db->query("UPDATE " . DB_PREFIX . "post SET 
         parent_id   = '0',
-        publish     = '" . (int) $this->request->post['publish'] . "', 
+        publish     = '" . (int) $this->request->post['publish'] . "',
+        allow_reviews     = '" . (int) $this->request->post['allow_reviews'] . "',
+        image = '" . $this->db->escape($data['image']) . "',
         date_publish_start = '" . $this->db->escape($data['date_publish_start']) . "', 
         date_publish_end = '" . $this->db->escape($data['date_publish_end']) . "', 
         template    = '" . $this->db->escape($data['template']) . "', 
@@ -107,6 +111,15 @@ class ModelContentPost extends Model {
                 object_type = 'post', 
                 query       = 'post_id=" . (int) $post_id . "', 
                 keyword     = '" . $this->db->escape($value['keyword']) . "'");
+            }
+        }
+
+        $this->db->query("DELETE FROM " . DB_PREFIX . "post_to_category WHERE post_id = '" . (int) $post_id . "'");
+        if (isset($data['post_category'])) {
+            foreach ($data['post_category'] as $category_id) {
+                $this->db->query("INSERT INTO " . DB_PREFIX . "post_to_category SET
+                post_id = '" . (int) $post_id . "',
+                post_category_id = '" . (int) $category_id . "'");
             }
         }
 
@@ -202,6 +215,7 @@ class ModelContentPost extends Model {
             WHERE cd.language_id = '" . (int) $this->config->get('config_language_id') . "' 
             AND post_type = 'post' 
             AND parent_id = '" . (int) $parent_id . "'
+            GROUP BY c.post_id
              ORDER BY c.sort_order, cd.title ASC";
 
         $query = $this->db->query($sql);
@@ -230,6 +244,8 @@ class ModelContentPost extends Model {
                 'date_publish_end',
                 'pa.sort_order'
             );
+
+            $sql .= " GROUP BY pa.post_id";
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
                 $sql .= " ORDER BY " . $data['sort'];
@@ -264,7 +280,7 @@ class ModelContentPost extends Model {
             if (!$post_data) {
                 $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post pa 
                 LEFT JOIN " . DB_PREFIX . "post_description pad ON (pa.post_id = pad.post_id) 
-                WHERE pad.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY pad.title");
+                WHERE pa.post_type = 'post' AND pad.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY pad.title");
 
                 $post_data = $query->rows;
 
@@ -330,13 +346,33 @@ class ModelContentPost extends Model {
     }
 
     /**
+     * ModelContentPost::getCategories()
+     *
+     * @param int $post_id
+     * @see DB
+     * @see Cache
+     * @return array sql records
+     */
+    public function getCategories($post_id) {
+        $category_data = array();
+
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "post_to_category WHERE post_id = '" . (int) $post_id . "'");
+
+        foreach ($query->rows as $result) {
+            $category_data[] = $result['post_category_id'];
+        }
+
+        return $category_data;
+    }
+
+    /**
      * ModelContentPost::getTotalPosts()
      * 
      * @see DB
      * @return int Count sql records
      */
     public function getTotalPosts() {
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "post");
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "post WHERE post_type = 'post'");
 
         return $query->row['total'];
     }

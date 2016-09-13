@@ -1,6 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ANI COPIAS";;;"(57) (1) 6094617";"Cr9 17-84 L-3 Colombia, Bogotá"
-"ANI CENTER I.P.S.ANIMAL";hadrve1@hotmail.com;saniepsa.com;"(57) (7) 5744270";"Av 6 E 7 A-21 Colombia, Cúcuta"
-"ALQUILER DE TRAJES Y LUCES ANI";anadego@yahoo.com.co;;"(57) (2) 2718286";"Cr29 26-21 Colombia, Palmira"
-"MULTISERVICIOS ANI-HU S.A.S";;;"Nal: (57) (4) 5854862";"Cr32 46-30 Colombia, Medellín"
-"ANIS TIENDA VEGETARIANA";;;"Nal: (57) (4) 2790759";"Cl 81 S 61-73 La Estrella Colombia, Medellín"

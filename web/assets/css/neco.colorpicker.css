@@ -28,8 +28,6 @@
     width:230px;
     height:230px;
     border-radius:5px;
-    box-shadow:0px 0px 12px #333;
-    border:solid 1px #ccc;
     z-index:9999;
 }
 .neco-color-picker {
@@ -47,7 +45,7 @@
 .neco-color-picker,.neco-color-picker .wheel {
     width:195px;
     height:195px;
-    background:#f3f3f3;
+    background:#ccc;
 }
 .neco-color-picker .color,.neco-color-picker .overlay {
     top:47px;
@@ -81,15 +79,14 @@
 .neco-color-picker-buttons a {
     margin-left:5px;
     padding:5px !important;
-    height:10px !important;
-    width:auto !important;
+    height:20px !important;
+    width:20px !important;
     float:left !important;
-    color:#fff;
     display:block;
 }
 .neco-color-picker-submit {
-    background:#233BBD !important;
+    background:#233BBD;
 }
 .neco-color-picker-cancel {
-    background:#900 !important;
+    background:#900;
 }

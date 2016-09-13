@@ -1,38 +1,42 @@
+/*! jquery.cookie v1.4.1 | MIT */
+!function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?a(require("jquery")):a(jQuery)}(function(a){function b(a){return h.raw?a:encodeURIComponent(a)}function c(a){return h.raw?a:decodeURIComponent(a)}function d(a){return b(h.json?JSON.stringify(a):String(a))}function e(a){0===a.indexOf('"')&&(a=a.slice(1,-1).replace(/\\"/g,'"').replace(/\\\\/g,"\\"));try{return a=decodeURIComponent(a.replace(g," ")),h.json?JSON.parse(a):a}catch(b){}}function f(b,c){var d=h.raw?b:e(b);return a.isFunction(c)?c(d):d}var g=/\+/g,h=a.cookie=function(e,g,i){if(void 0!==g&&!a.isFunction(g)){if(i=a.extend({},h.defaults,i),"number"==typeof i.expires){var j=i.expires,k=i.expires=new Date;k.setTime(+k+864e5*j)}return document.cookie=[b(e),"=",d(g),i.expires?"; expires="+i.expires.toUTCString():"",i.path?"; path="+i.path:"",i.domain?"; domain="+i.domain:"",i.secure?"; secure":""].join("")}for(var l=e?void 0:{},m=document.cookie?document.cookie.split("; "):[],n=0,o=m.length;o>n;n++){var p=m[n].split("="),q=c(p.shift()),r=p.join("=");if(e&&e===q){l=f(r,g);break}e||void 0===(r=f(r))||(l[q]=r)}return l};h.defaults={},a.removeCookie=function(b,c){return void 0===a.cookie(b)?!1:(a.cookie(b,"",a.extend({},c,{expires:-1})),!a.cookie(b))}});
+
 if (!$.ui) {
     $(document.createElement('script')).attr({
         type: "text/javascript",
         src: "js/vendor/jquery-ui.min.js"
-    }).appendTo('head');
+    }).appendTo('body');
 }
 if (!$.fn.tree) {
     $(document.createElement('script')).attr({
         type: "text/javascript",
         src: "js/vendor/jstree/jstree.min.js"
-    }).appendTo('head');
+    }).appendTo('body');
 }
 if (!$('link[href="css/vendor/jstree/default/style.min.css"]').length) {
     $(document.createElement('link')).attr({
         rel: "stylesheet",
         href: "css/vendor/jstree/default/style.min.css"
-    }).appendTo('head');
+    }).appendTo('body');
 }
 if (!$.fn.fileupload) {
     $(document.createElement('script')).attr({
         type: "text/javascript",
         src: "js/vendor/fileUploader/jquery.iframe-transport.js"
-    }).appendTo('head');
+    }).appendTo('body');
 
     $(document.createElement('script')).attr({
         type: "text/javascript",
         src: "js/vendor/fileUploader/jquery.fileupload.js"
-    }).appendTo('head');
+    }).appendTo('body');
 }
 if (!$.fn.cookie) {
     $(document.createElement('script')).attr({
         type: "text/javascript",
         src: "http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"
-    }).appendTo('head');
+    }).appendTo('body');
 }
+
 function getUrlVars() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -54,10 +58,10 @@ function renderFiles(json) {
             for (j = 0; j < filename.length; j = j + 15) {
                 name += filename.substr(j, 15) + '<br>';
             }
-            name += json[i]['size']
-            + '<a file="' + json[i]['file'] + '">'
-            + '<img src="' + json[i]['thumb'] + '" title="' + json[i]['filename'] + '" />'
+            html += '<a file="' + json[i]['file'] + '">'
+            + '<p><img src="' + json[i]['thumb'] + '" title="' + json[i]['filename'] + '" /></p>'
             + '<p>' + name + '</p>'
+            + json[i]['size']
             + '</a>'
             + '<input type="checkbox" name="filess[]" value="' + json[i]['file'] + '" style="display:none" />'
             + '<a class="selected"></a>'
@@ -69,7 +73,6 @@ function renderFiles(json) {
         }
     }
     html += '</ul>';
-
     $('#column_right').html(html);
 
     bindEventsRenderedFiles();
@@ -134,9 +137,15 @@ function bindEventsRenderedFiles() {
     $('#column_right li').on('dblclick', function () {
         var filename = $(this).find('a:eq(0)').attr('file');
 
-
         if (window.isFckeditor) {
-            window.opener.CKEDITOR.tools.callFunction(1, $.cookie('jstree_directory') + filename);
+            var filePath = window.baseImageUrl +'data/';
+            /*
+            if ($.cookie('jstree_directory').length > 0) {
+                filePath += $.cookie('jstree_directory') +'/';
+            }
+             */
+            filePath += filename;
+            window.opener.CKEDITOR.tools.callFunction(1, filePath);
             self.close();
         } else if (theme_editor) {
             parent.setImage('data/' + filename);
@@ -310,6 +319,7 @@ function loadDirectories() {
         if (node && node.selected && node.selected.length) {
             directory = $('#' + node.selected).attr('directory');
             $("#directoryForUpload").val(directory);
+
             loadFiles(directory);
         } else {
             $('#data .content').hide();
@@ -417,7 +427,6 @@ $(function () {
                         var clase = 'error';
                     }
 
-                    console.log(file);
                     html += '<div class="grid_3">';
                     html += '<img id="fileuploaded_'+ index +'" alt="'+ file.name +'" width="200" />';
                     html += '</div>';

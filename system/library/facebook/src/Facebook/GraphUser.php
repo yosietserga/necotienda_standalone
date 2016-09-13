@@ -52,9 +52,24 @@ class GraphUser extends GraphObject
     return $this->getProperty('name');
   }
   
+  /**
+   * Returns the email for the user as a string if present.
+   *
+   * @return string|null
+   */
   public function getEmail()
   {
     return $this->getProperty('email');
+  }
+  
+  /**
+   * Returns the locale for the user as a string if present.
+   *
+   * @return string|null
+   */
+  public function getLocale()
+  {
+    return $this->getProperty('locale');
   }
 
   /**
@@ -85,6 +100,16 @@ class GraphUser extends GraphObject
   public function getLastName()
   {
     return $this->getProperty('last_name');
+  }
+  
+  /**
+   * Returns the gender for the user as a string if present.
+   *
+   * @return string|null
+   */
+  public function getGender()
+  {
+    return $this->getProperty('gender');
   }
 
   /**
@@ -122,4 +147,13 @@ class GraphUser extends GraphObject
     return $this->getProperty('location', GraphLocation::className());
   }
 
+  /**
+   * Returns the timezone for the user as a int if present.
+   *
+   * @return string|null
+   */
+  public function getTimezone()
+  {
+    return $this->getProperty('timezone');
+  }
 }

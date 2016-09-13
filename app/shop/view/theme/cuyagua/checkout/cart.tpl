@@ -2,58 +2,61 @@
 <?php echo $navigation; ?>
 <!-- cart-chekcout -->
 
-<!-- HACK for the accept and cancel button appearing in all stages of the card page
-     This will only make show the buttons oin the billing step -->
+<!-- HACK for the accept and cancel button appearing in all stages of the cart page
+     This will only make show the buttons on the billing step -->
 
 <style>
-ul:not([data-current-step="billing"]) ~ form .action-accept,
-ul:not([data-current-step="billing"]) ~ form .action-cancel {
+ul:not([data-current-step="billing"]) ~ form .necoform-actions,
+ul:not([data-current-step="billing"]) ~ form .necoform-actions,
+ul:not([data-current-step="billing"]) ~ form .necoform-actions,
+ul:not([data-current-step="billing"]) ~ form .necoform-actions
+{
+   display: none !important;
+}
+ul[data-current-step="complete"] ~ .action-step {
    display: none !important;
 }
 </style>
-    
 
 
 <section id="maincontent" class="row">
     <div class="cart-checkout">
-        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcumbs.tpl"); ?>
+        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcrumbs.tpl"); ?>
         <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl"); ?>
-        <div class="checkout-heading large-12 small-12 medium-12 columns">
+        <header class="page-heading columns">
             <h1>
                 <?php echo $heading_title; ?>
             </h1>
-            <span>
-                <?php if ($weight) { ?>
-                     <span id="weight"><?php echo $Language->get('text_cart_weight'); ?>&nbsp;<?php echo $weight; ?></span>
-                <?php } ?>
-            </span>
-        </div>
-        <div id="contentWrapper" class="large-12 small-12 medium-12 columns break">
+            <?php if ($weight) { ?>
+                 <span id="weight"><?php echo $Language->get('text_cart_weight'); ?>&nbsp;<?php echo $weight; ?></span>
+            <?php } ?>
+        </header>
+        <div id="contentWrapper" class="columns break">
             <!-- neco wizard -->
                 <ul class="neco-wizard-controls" data-wizard="controls">
-                    <li data-wizard="nav" data-wizard-step="basket">
+                    <li id="necoWizardControl_1" data-wizard="nav" data-wizard-step="basket">
                         <span><?php echo $Language->get('text_basket'); ?></span>
                     </li>
 
                     <?php if (!$isLogged) { ?>
-                    <li data-wizard="nav" data-wizard-step="billing">
+                    <li id="necoWizardControl_2" data-wizard="nav" data-wizard-step="billing">
                         <span><?php echo $Language->get('text_billing'); ?></span>
                     </li>
                     <?php } ?>
 
                     <?php if ($shipping_methods || (!$isLogged || ($isLogged && !$shipping_country_id))) { ?>
 
-                    <li data-wizard="nav" data-wizard-step="shipping">
+                    <li id="necoWizardControl_3" data-wizard="nav" data-wizard-step="shipping">
                         <span><?php echo $Language->get('text_shipping'); ?></span>
                     </li>
 
                     <?php }?>
 
-                    <li data-wizard="nav" data-wizard-step="confirm">
+                    <li id="necoWizardControl_4" data-wizard="nav" data-wizard-step="confirm">
                         <span><?php echo $Language->get('text_confirm'); ?></span>
                     </li>
 
-                    <li data-wizard="nav" data-wizard-step="complete">
+                    <li id="necoWizardControl_5" data-wizard="nav" data-wizard-step="complete">
                         <span><?php echo $Language->get('text_complete'); ?></span>
                     </li>
                 </ul>
@@ -66,7 +69,11 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                     <div class="neco-wizard-steps" data-wizard="steps">
 
                         <!-- recipe-info -->
-                        <section data-wizard="step">
+                        <?php if ($display_price && $Config->get('config_store_mode') === 'store') { ?>
+                            <section id="necoWizardStep_1" class="store" data-wizard="step">
+                        <?php } else { ?>
+                            <section id="necoWizardStep_1" class="not-store" data-wizard="step">
+                        <?php } ?>
                             <div class="cart-detail">
                                 <table class="cart-recipe">
                                     <thead>
@@ -132,16 +139,20 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                                     </table>
                                 <?php } ?>
                             </div>
+
+                            <div class="coupon-wrapper">
+                                <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/coupon.tpl"); ?>
+                            </div>
                         </section>
                         <!-- recipe info -->
 
                         <?php if (!$isLogged) { ?>
 
                         <!-- address info -->
-                        <section data-wizard="step">
+                        <section id="necoWizardStep_2" data-wizard="step">
                             <div class="recipe-info info-form">
                                 <fieldset>
-                                    <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
+                                    <div class="heading widget-heading feature-heading form-heading" id="<?php echo $widgetName; ?>Header">
                                         <div class="heading-title">
                                             <h3>
                                                 <i class="heading-icon icon icon-credit-card">
@@ -155,99 +166,20 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                                         <a href="index.php?r=account/account" title="<?php echo $Language->get('text_update'); ?>"></a>
                                     <?php } ?>
 
-                                    <div class="property form-entry email-entry">
-                                        <label for="email"><?php echo $Language->get('text_email'); ?>: </label>
-                                        <input type="email" name="email" id="email" placeholder="<?php echo $Language->get('entry_email'); ?>" value="<?php echo isset($email) ? $email : ''; ?>" required="required" title="<?php echo $Language->get('help_email'); ?>" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
-                                    </div>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/email.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/name.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/lastname.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/company.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/rif.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/telephone.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/referenceby.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/payment/location.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/payment/city.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/payment/street.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/payment/postcode.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/payment/address.tpl"); ?>
 
-                                    <div class="property form-entry name-entry">
-                                        <label for="firstname"><?php echo $Language->get('text_firstname'); ?>:</label>
-                                        <input type="firstname" placeholder="<?php echo $Language->get('entry_firstname'); ?>" id="firstname" name="firstname" required="required" value="<?php echo isset($firstname) ? $firstname : ''; ?>"  <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
-                                    </div>
-
-                                    <div class="property form-entry lastname-entry">
-                                        <label for="lastname"><?php echo $Language->get('text_lastname'); ?>:</label>
-                                        <input type="lastname" placeholder="<?php echo $Language->get('entry_lastname'); ?>" id="lastname" name="lastname" required="required" value="<?php echo isset($lastname) ? $lastname : ''; ?>"  <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
-                                    </div>
-
-                                    <div class="property form-entry company-entry company-entry">
-                                        <label for="company"><?php echo $Language->get('text_company'); ?>:</label>
-                                        <input type="text" placeholder="<?php echo $Language->get('entry_company'); ?>" id="company" name="company" required="required" value="<?php echo isset($company) ? $company : ''; ?>"  <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
-                                    </div>
-
-                                    <div class="property form-entry rif-entry">
-                                        <label for="rif"><?php echo $Language->get('text_rif'); ?>:</label>
-                                        <div class="row collapse">
-                                            <div class="large-2 medium-2 small-2 columns">
-                                                <select name="riftype" title="<?php echo $Language->get('help_riftype'); ?>">
-                                                    <option value="V" <?php if (strtolower($rif_type) == 'v') echo 'selected="selected"'; ?>>V</option>
-                                                    <option value="J" <?php if (strtolower($rif_type) == 'j') echo 'selected="selected"'; ?>>J</option>
-                                                    <option value="E" <?php if (strtolower($rif_type) == 'e') echo 'selected="selected"'; ?>>E</option>
-                                                    <option value="G" <?php if (strtolower($rif_type) == 'g') echo 'selected="selected"'; ?>>G</option>
-                                                </select>
-                                            </div>
-                                            <div class="large-10 medium-10 small-12 columns">
-                                                <input type="text" id="rif" name="rif" placeholder="<?php echo $Language->get('entry_rif'); ?>" value="<?php echo isset($rif) ? $rif : ''; ?>" required="required" maxlength="10" title="<?php echo $Language->get('help_rif'); ?>" quicktip="Ingresa tu n�mero de c�dula si eres una persona natural y no posees RIF. Ingresa solo n�meros" <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="property form-entry phone-entry">
-                                        <label for="telephone">T&eacute;lefono:</label>
-                                        <input type="phone" id="telephone" name="telephone" placeholder="<?php echo $Language->get('entry_telephone'); ?>" required="required" value="<?php echo isset($telephone) ? $telephone : ''; ?>"  <?php if ($isLogged) echo 'disabled="disabled"'; ?> />
-                                    </div>
-
-                                    <div class="property form-entry refenceby-entry"<?php if ($isLogged) echo ' style="display:hidden"'; ?>>
-                                        <label for="referencedBy"><?php echo $Language->get('entry_referencedBy'); ?></label>
-                                        <input type="text" id="referencedBy" placeholder="<?php echo $Language->get('entry_referencedBy'); ?>" name="referencedBy" value="<?php echo isset($referencedBy) ? $referencedBy : ''; ?>" />
-                                    </div>
-
-                                    <div class="property form-entry location-entry">
-                                        <div class="row">
-                                            <div class="large-6 medium-6 small-12 columns property country-entry">
-                                                <label for="payment_country_id"><?php echo $Language->get('entry_country'); ?></label>
-                                                <select name="payment_country_id" id="payment_country_id" title="<?php echo $Language->get('help_country'); ?>" onchange="$('select[name=\'payment_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $payment_zone_id; ?>');">
-                                                    <option value="false">-- Por Favor Seleccione --</option>
-                                                    <?php foreach ($countries as $country) { ?>
-                                                        <?php if ($country['country_id'] == $payment_country_id) { ?>
-                                                    <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-                                                        <?php } else { ?>
-                                                    <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-                                                        <?php } ?>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="large-6 medium-6 small-12 columns property zone-entry">
-                                                <label for="payment_zone_id"><?php echo $Language->get('entry_zone'); ?></label>
-                                                <select name="payment_zone_id" id="payment_zone_id" title="<?php echo $Language->get('help_zone'); ?>">
-                                                    <option value="false">-- Seleccione un pa&iacute;s --</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="property form-entry">
-                                        <label for="payment_city"><?php echo $Language->get('entry_city'); ?></label>
-                                        <input type="text" id="payment_city" name="payment_city" placeholder="<?php echo $Language->get('entry_city'); ?>" value="<?php echo $payment_city; ?>" required="required" title="<?php echo $Language->get('help_city'); ?>" />
-                                    </div>
-
-                                    <div class="property form-entry">
-                                        <label for="payment_street"><?php echo $Language->get('entry_street'); ?></label>
-                                        <input type="text" id="payment_street" name="payment_street" placeholder="<?php echo $Language->get('entry_street'); ?>" value="<?php echo $payment_street; ?>" required="required" title="<?php echo $Language->get('help_street'); ?>" />
-                                    </div>
-
-                                    <div class="property form-entry">
-                                        <label for="payment_postcode"><?php echo $Language->get('entry_postcode'); ?></label>
-                                        <input type="text" id="payment_postcode" placeholder="<?php echo $Language->get('entry_postcode'); ?>" name="payment_postcode" value="<?php echo $payment_postcode; ?>" required="required" title="<?php echo $Language->get('help_postcode'); ?>" />
-                                    </div>
-
-                                    <div class="property form-entry">
-                                        <label for="payment_address_1"><?php echo $Language->get('entry_address_1'); ?></label>
-                                        <input type="text" id="payment_address_1" placeholder="<?php echo $Language->get('entry_address_1'); ?>" name="payment_address_1" value="<?php echo $payment_address_1; ?>" required="required" title="<?php echo $Language->get('help_address'); ?>" />
-                                    </div>
                                 </fieldset>
-                                <!--<p>Al continuar con el proceso de compra, usted est&aacute; aceptando los <a href="<?php echo $Url::createUrl('content/page',array('page_id'=>$Config->get('config_checkout_id'))); ?>">t&eacute;rminos legales y las condiciones de uso</a> de este sitio web.</p>-->
                             </div>
                         </section>
                     <?php } ?>
@@ -255,11 +187,11 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
 
                     <!--shipping-section -->
                     <?php if ($shipping_methods || (!$isLogged || ($isLogged && !$shipping_country_id))) { ?>
-                    <section data-wizard="step">
+                    <section id="necoWizardStep_3" data-wizard="step">
                         <div class="delivery-form info-form">
                             <?php if (!$isLogged || ($isLogged && !$shipping_country_id)) { ?>
                                 <fieldset>
-                                    <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
+                                    <div class="heading widget-heading feature-heading form-heading" id="<?php echo $widgetName; ?>Header">
                                         <div class="heading-title">
                                             <h3>
                                                 <i class="heading-icon icon icon-truck">
@@ -269,74 +201,41 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                                             </h3>
                                         </div>
                                     </div>
-                                <div class="property form-entry">
-                                    <label for="shipping_country_id"><?php echo $Language->get('entry_country'); ?></label>
-                                    <select name="shipping_country_id" id="shipping_country_id" title="<?php echo $Language->get('help_country'); ?>" onchange="$('select[name=\'shipping_zone_id\']').load('index.php?r=account/register/zone&country_id=' + this.value + '&zone_id=<?php echo $zone_id; ?>');">
-                                        <option value="false">-- Por Favor Seleccione --</option>
-                                        <?php foreach ($countries as $country) { ?>
-                                            <?php if ($country['country_id'] == $shipping_country_id) { ?>
-                                        <option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-                                            <?php } else { ?>
-                                        <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    </select>
-                                </div>
 
-                                <div class="property form-entry">
-                                    <label for="shipping_zone_id"><?php echo $Language->get('entry_zone'); ?></label>
-                                    <select name="shipping_zone_id" id="shipping_zone_id" title="<?php echo $Language->get('help_zone'); ?>">
-                                        <option value="false">-- <?php echo $Language->get('select_country_text'); ?> --</option>
-                                    </select>
-                                </div>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/shipping/country.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/shipping/zone.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/shipping/city.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/shipping/street.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/shipping/code.tpl"); ?>
+                                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/fields/shipping/address.tpl"); ?>
 
-                                <div class="property form-entry">
-                                    <label for="shipping_city"><?php echo $Language->get('entry_city'); ?></label>
-                                    <input type="text" id="shipping_city" name="shipping_city" value="<?php echo $shipping_city; ?>" required="required" title="<?php echo $Language->get('help_city'); ?>" />
-                                </div>
+                                    <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
+                                    <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
+                                    <input type="hidden" name="payment_street" id="payment_street" value="<?php echo $payment_street; ?>" />
+                                    <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
+                                    <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
+                                    <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
+                                </fieldset>
+                                <?php } else { ?>
+                                    <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
+                                    <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
+                                    <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
+                                    <input type="hidden" name="payment_street" id="payment_street" value="<?php echo $payment_street; ?>" />
+                                    <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
+                                    <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
 
-                                <div class="property form-entry">
-                                    <label for="shipping_street"><?php echo $Language->get('entry_street'); ?></label>
-                                    <input type="text" id="shipping_street" name="shipping_street" value="<?php echo $shipping_street; ?>" required="required" title="<?php echo $Language->get('help_street'); ?>" />
-                                </div>
-
-                                <div class="property form-entry">
-                                    <label for="shipping_postcode"><?php echo $Language->get('entry_postcode'); ?></label>
-                                    <input type="text" id="shipping_postcode" name="shipping_postcode" value="<?php echo $shipping_postcode; ?>" required="required" title="<?php echo $Language->get('help_postcode'); ?>" />
-                                </div>
-
-                                <div class="property form-entry">
-                                    <label for="shipping_address_1"><?php echo $Language->get('entry_address_1'); ?></label>
-                                    <input type="text" id="shipping_address_1" name="shipping_address_1" value="<?php echo $shipping_address_1; ?>" required="required" title="<?php echo $Language->get('help_address'); ?>" />
-                                </div>
-
-                                <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
-                                <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
-                                <input type="hidden" name="payment_street" id="payment_street" value="<?php echo $payment_street; ?>" />
-                                <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
-                                <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
-                                <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
-                            </fieldset>
-                            <?php } else { ?>
-                                <input type="hidden" name="payment_country_id" id="payment_country_id" value="<?php echo $payment_country_id; ?>" />
-                                <input type="hidden" name="payment_zone_id" id="payment_zone_id" value="<?php echo $payment_zone_id; ?>" />
-                                <input type="hidden" name="payment_city" id="payment_city" value="<?php echo $payment_city; ?>" />
-                                <input type="hidden" name="payment_street" id="payment_street" value="<?php echo $payment_street; ?>" />
-                                <input type="hidden" name="payment_postcode" id="payment_postcode" value="<?php echo $payment_postcode; ?>" />
-                                <input type="hidden" name="payment_address_1" id="payment_address_1" value="<?php echo $payment_address_1; ?>" />
-
-                                <input type="hidden" name="shipping_country_id" id="shipping_country_id" value="<?php echo $shipping_country_id; ?>" />
-                                <input type="hidden" name="shipping_zone_id" id="shipping_zone_id" value="<?php echo $shipping_zone_id; ?>" />
-                                <input type="hidden" name="shipping_city" id="shipping_city" value="<?php echo $shipping_city; ?>" />
-                                <input type="hidden" name="shipping_street" id="shipping_street" value="<?php echo $shipping_street; ?>" />
-                                <input type="hidden" name="shipping_postcode" id="shipping_postcode" value="<?php echo $shipping_postcode; ?>" />
-                                <input type="hidden" name="shipping_address_1" id="shipping_address_1" value="<?php echo $shipping_address_1; ?>" />
-                            <?php } ?>
+                                    <input type="hidden" name="shipping_country_id" id="shipping_country_id" value="<?php echo $shipping_country_id; ?>" />
+                                    <input type="hidden" name="shipping_zone_id" id="shipping_zone_id" value="<?php echo $shipping_zone_id; ?>" />
+                                    <input type="hidden" name="shipping_city" id="shipping_city" value="<?php echo $shipping_city; ?>" />
+                                    <input type="hidden" name="shipping_street" id="shipping_street" value="<?php echo $shipping_street; ?>" />
+                                    <input type="hidden" name="shipping_postcode" id="shipping_postcode" value="<?php echo $shipping_postcode; ?>" />
+                                    <input type="hidden" name="shipping_address_1" id="shipping_address_1" value="<?php echo $shipping_address_1; ?>" />
+                                <?php } ?>
 
                             <?php if ($shipping_methods) { ?>
                             <div class="shipping-methods break">
                                 <fieldset>
-                                    <div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
+                                    <div class="heading widget-heading feature-heading form-heading" id="<?php echo $widgetName; ?>Header">
                                         <div class="heading-title">
                                             <h3>
                                                 <i class="heading-icon icon icon-envelope">
@@ -360,14 +259,14 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                                             <tr>
                                                 <td data-label="<?php echo $Language->get('table_head_shipping_select'); ?>">
                                                     <div class="check-action">
-                                                        <input data-check="order" type="checkbox" name="shipping_method" value="<?php echo $quote['id']; ?>" />
+                                                        <input data-check="order" type="radio" name="shipping_method" value="<?php echo $quote['id']; ?>" />
                                                         <span class="radio-button"></span>
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td data-shipping_title>
                                                     <?php echo $quote['title']; ?>
                                                 </td>
-                                                <td data-label="<?php echo $Language->get('table_head_shipping_price'); ?>">
+                                                <td data-shipping_price data-label="<?php echo $Language->get('table_head_shipping_price'); ?>">
                                                     <?php echo $quote['text']; ?>
                                                 </td>
                                             </tr>
@@ -384,9 +283,9 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                     <!--/shipping section-->
 
                     <!--payment section -->
-                    <section data-wizard="step" class="break">
+                    <section id="necoWizardStep_4" data-wizard="step" class="break">
                         <div class="payment-section row">
-                            <div class="recipe-data large-6 medium-6 small-12 columns data">
+                            <div class="recipe-data medium-6 column data">
                                 <h3 class="payment-heading data-heading"><?php echo $Language->get('text_order_confirm'); ?></h3>
                                 <ul class="confirmOrder">
                                     <li>
@@ -419,7 +318,7 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                                 </ul>
                             </div>
 
-                            <div class="cart-summary large-12 medium-6 small-12 columns">
+                            <div class="cart-summary large-12 medium-6 column">
                                 <table class="cart-recipe">
                                     <thead>
                                         <tr>
@@ -462,7 +361,7 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                                         <?php } ?>
                                     </tbody>
                                 </table>
-                                <?php if ($display_price && $Config->get('config_store_mode')=='store') { ?>
+                                <?php if ($display_price && $Config->get('config_store_mode') === 'store') { ?>
                                 <table id="totalsConfirm" class="cart-totals">
                                     <?php foreach ($totals as $total) { ?>
                                         <tr>
@@ -473,7 +372,7 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                                 </table>
                             <?php } ?>
                             </div>
-                            <div class="confirmation-comment large-12 medium-12 small-12 columns">
+                            <div class="confirmation-comment column">
                                 <textarea name="comment" placeholder="Ingresa tus comentarios sobre el pedido aqu&iacute;"></textarea>
                             </div>
                         </div>
@@ -481,11 +380,25 @@ ul:not([data-current-step="billing"]) ~ form .action-cancel {
                     <!-- payment-section-->
 
                     <!--  request-section -->
-                    <section data-wizard="step">
-                        <div style="width:300px;margin: 2.75rem auto;text-align: center;"><img src="<?php echo HTTP_IMAGE; ?>load.gif" alt="Cargando..." /></div>
+                    <section id="necoWizardStep_5" class="wizard-step processing-step" data-wizard="step">
+                        <div class="loader">
+                            <i>
+                                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/loader.tpl'); ?>
+                            </i>
+                        </div>
+                        <div class="text-block" style="text-align:center">
+                            <p>
+                                <?php echo $Language->get('help_processing'); ?>
+                            </p>
+                        </div>
+
                     </section>
                     <!--  request-section -->
                 </div>
+                   <div class="necoform-actions" data-actions="necoform">
+
+                                <p>Al continuar con el proceso de compra, usted est&aacute; aceptando los <a href="<?php echo $Url::createUrl('content/page',array('page_id'=>$Config->get('config_checkout_id'))); ?>">t&eacute;rminos legales y las condiciones de uso</a> de este sitio web.</p>
+                   </div>
             </form>
             <!-- /neco-wizard -->
 

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"DELTA PUBLICIDAD INFLABLES INTERNACIONAL LTDA.";ricardoinflables@gmail.com;www.eventosdelta.com;;"Visite Nuestra Página Web Chile, Santiago"

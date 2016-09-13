@@ -87,8 +87,15 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 
             <div class="row">
-                <label><?php echo $Language->get('entry_name'); ?></label>
-                <input class="necoName" id="name" name="name" value="<?php echo $name; ?>" required="true" style="width:40%" />
+                <label><?php echo $Language->get('Step Name'); ?></label>
+                <input class="necoName" id="name" name="name" value="<?php echo $name; ?>" required="true" style="width:40%" placeholder="First Contact" />
+            </div>
+                
+            <div class="clear"></div>
+            
+            <div class="row">
+                <label><?php echo $Language->get('Sort Order'); ?></label>
+                <input class="number" name="properties[sort_order]" value="<?php echo $properties[sort_order]; ?>" required="true" style="width:40%" placeholder="1" />
             </div>
                 
             <div class="clear"></div>

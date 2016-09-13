@@ -83,4 +83,27 @@ final class MySQL {
         return $obj;
     }
 
+    public function getTables($pattern=null) {
+        $sql = "SHOW TABLES FROM `". DB_DATABASE ."`";
+        if (!empty($pattern)) {
+            $sql .= " LIKE '%$pattern%'";
+        }
+
+        $query = $this->query($sql);
+
+        foreach ($query->rows as $result) {
+            $table_data[] = $result['Tables_in_' . DB_DATABASE];
+        }
+
+        return $table_data;
+    }
+
+    public function getTableFields($table, $pattern=null) {
+        if (empty($table)) return false;
+        $sql = "SHOW COLUMNS FROM `". $table ."` FROM `". DB_DATABASE ."`";
+        if (!empty($pattern)) {
+            $sql .= " LIKE '%$table%'";
+        }
+        return $this->query($sql);
+    }
 }

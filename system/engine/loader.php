@@ -38,7 +38,7 @@ final class Loader {
         }
     }
 
-    public function model($model) {
+    public function model($model, $return = false) {
         $file = DIR_APPLICATION . 'model/' . $model . '.php';
         $class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
 
@@ -47,6 +47,9 @@ final class Loader {
             $m = array_reverse(explode("/", $model));
             $this->registry->set('model' . ucfirst($m[0]), new $class($this->registry));
             $this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
+            if ($return) {
+                return $this->registry->get('model' . ucfirst($m[0]));
+            }
         } else {
             exit('Error: Could not load model ' . $model . '!');
         }

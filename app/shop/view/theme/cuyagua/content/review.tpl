@@ -1,50 +1,58 @@
 <ul>
 <?php if (!empty($reviews)) { ?>
     <?php foreach ($reviews as $review) { ?>
-    <li id="review_<?php echo $review['review_id']; ?>" class="review_item">
-        <div class="grid_2">
-            <b><?php echo $review['author']; ?></b><br />
-            <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $review['rating'] . '.png'; ?>" alt="<?php echo $review['stars']; ?>" /><br /><br />
-            <small><?php echo $review['date_added']; ?></small><br /><br />
+    <li id="review_<?php echo $review['review_id']; ?>" class="review-item">
+        <div class="row">
+            <div class="column">
+                <strong><?php echo $review['author']; ?></strong>
+                <time style="font-size: 0.835rem;font-style:italic;margin-left: 0.375rem"><?php echo $review['date_added']; ?></time>
+            </div>
+            <div class="column" style="margin-top: 0.835rem">
+                <img src="<?php echo HTTP_IMAGE; ?>stars_<?php echo $review['rating'] . '.png'; ?>" alt="<?php echo $review['stars']; ?>" />
+            </div>
+            <div class="column" style="margin-top: 0.835rem; font-size: 0.835rem;">
+                <?php echo $review['text']; ?>
+            </div>
         </div>
-        <div class="grid_10">
-            <?php echo $review['text']; ?>
-        </div>
-        <div class="clear"></div>
         <ul class="replies">
-        <?php if ($review['replies']) { ?>
+            <?php if ($review['replies']) { ?>
             <?php foreach ($review['replies'] as $reply) { ?>
             <li id="reply_<?php echo $review['review_id']; ?>_<?php echo $reply['review_id']; ?>" class="reply_<?php echo $review['review_id']; ?>">
-                <div class="grid_3">
-                    <b><?php echo $reply['author']; ?></b><br />
-                    <small><?php echo date('d-m-Y h:i A',strtotime($reply['date_added'])); ?></small>
+                <div class="row">
+                    <div class="column">
+                        <strong><?php echo $reply['author']; ?></strong>
+                        <time style="font-size: 0.835rem;font-style:italic;margin-left: 0.5rem">
+                            <?php echo date('d-m-Y h:i A',strtotime($reply['date_added'])); ?>
+                        </time>
+                    </div>
+                    <div class="column" style="margin-top: 0.835rem; font-size: 0.835rem;">
+                        <?php echo $reply['text']; ?>
+                    </div>
                 </div>
-                <div class="grid_9">
-                    <?php echo $reply['text']; ?>
-                </div>
-                <div class="clear"></div>
             </li>
             <?php } ?>
-        <?php } ?>
+            <?php } ?>
         </ul>
         <?php if ($isLogged) { ?>
-        <div class="grid_12 review-buttons">
-            <a class="review-reply" onclick="addReply(this,'<?php echo $review['object_id']; ?>','<?php echo $review['review_id']; ?>')">Replicar</a>
-            <!-- <a class="review-follow" onclick="followComment()">Seguir</a> -->
-            <?php if ($review['isOwner']) { ?><a class="review-delete" onclick="deleteReview(this,'<?php echo $review['object_id']; ?>','<?php echo $review['review_id']; ?>')">Eliminar</a><?php } ?>
-            <a class="dislikes"><?php echo (int)$review['dislikes']; ?></a>
-            <a class="review-dislike" onclick="dislikeReview(this,'<?php echo $review['object_id']; ?>','<?php echo $review['review_id']; ?>')" title="<?php echo $Language->get('text_dislike'); ?>"></a>
-            <a class="likes"><?php echo (int)$review['likes']; ?></a>
-            <a class="review-like" onclick="likeReview(this,'<?php echo $review['object_id']; ?>','<?php echo $review['review_id']; ?>')" title="<?php echo $Language->get('text_like'); ?>"></a>
+        <div class="review-buttons">
+            <div class="btn btn--primary button button--primary">
+                <a class="review-reply" onclick="addReply(this, '<?php echo $review['product_id']; ?>', '<?php echo $review['review_id']; ?>')">Replicar</a>
+            </div> 
+            <footer style="margin-top: 0.835rem; width: 100%;">
+                <?php if ($review['isOwner']) { ?>
+                <strong><a style="margin-right: 0.835rem" class="review-delete" onclick="deleteReview(this, '<?php echo $review['product_id']; ?>', '<?php echo $review['review_id']; ?>')">Eliminar</a><?php } ?></strong>
+                <a class="dislikes"><?php echo (int)$review['dislikes']; ?></a>
+                <a style="margin-right: 0.835rem" class="review-dislike" onclick="dislikeReview(this, '<?php echo $review['product_id']; ?>', '<?php echo $review['review_id']; ?>')" title="<?php echo $Language->get('text_dislike'); ?>"><?php echo $Language->get('text_dislike'); ?></a>
+                <a class="likes"><?php echo (int)$review['likes']; ?></a>
+                <a class="review-like" onclick="likeReview(this, '<?php echo $review['product_id']; ?>', '<?php echo $review['review_id']; ?>')" title="<?php echo $Language->get('text_like'); ?>"><?php echo $Language->get('text_like'); ?></a>
+            </footer>
         </div>
-        <div class="clear"></div>
         <?php } ?>
-    </li>
+    </li> 
     <?php } ?>
-<?php } else { ?>
-    <li id="noComments" class="review_item" style="text-align: center;"><?php echo $Language->get('text_no_reviews'); ?></li>
-<?php } ?>
-    <li class="review_item"></li>
+    <?php } else { ?> 
+    <span id="noComments" class="no-info"><?php echo $Language->get('text_no_reviews'); ?></span> 
+    <?php } ?>
 </ul>
 <?php if (!empty($reviews)) { ?><div class="pagination"><?php echo $pagination; ?></div><?php } ?>
 <script type="text/javascript">

@@ -122,6 +122,7 @@ class ControllerSettingSetting extends Controller {
         $this->setvar('config_checkout_id',$model);
         $this->setvar('config_stock_display',$model);
         $this->setvar('config_stock_checkout',$model);
+        $this->setvar('config_text_powered_by',$model);
 
         $this->setvar('config_order_status_id',$model);
         $this->setvar('config_order_status_paid',$model);
@@ -164,6 +165,9 @@ class ControllerSettingSetting extends Controller {
         $this->setvar('config_image_related_height',$model);
         $this->setvar('config_image_cart_width',$model);
         $this->setvar('config_image_cart_height',$model);
+        $this->setvar('config_image_bg_color_r',$model,255);
+        $this->setvar('config_image_bg_color_g',$model,255);
+        $this->setvar('config_image_bg_color_b',$model,255);
         $this->setvar('config_mail_protocol',$model);
         $this->setvar('config_smtp_host',$model);
         $this->setvar('config_pop3_host',$model);
@@ -209,6 +213,9 @@ class ControllerSettingSetting extends Controller {
         $this->setvar('config_error_log',$model);
         $this->setvar('config_error_filename',$model);
         $this->setvar('config_dir_export',$model);
+        $this->setvar('config_render_js_in_file',$model);
+        $this->setvar('config_render_css_in_file',$model);
+        $this->setvar('config_minified_html',$model);
 
         $directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
         $this->data['templates'] = array();
@@ -376,11 +383,6 @@ class ControllerSettingSetting extends Controller {
 
         if (!$this->request->post['config_name']) {
             $this->error['name'] = $this->language->get('error_name');
-        }
-
-
-        if (!$this->validate_form->esRif($this->request->post['config_rif'])) {
-            $this->error['rif'] = $this->language->get('error_rif');
         }
 
 

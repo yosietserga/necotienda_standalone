@@ -28,7 +28,61 @@
         <div class="clear"></div>
                                 
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-        
+
+            <div id="languages" class="htabs">
+                <?php foreach ($languages as $language) { ?>
+                <a tab="#language<?php echo $language['language_id']; ?>" class="htab"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+                <?php } ?>
+                <?php foreach ($languages as $language) { ?>
+                <div id="language<?php echo $language['language_id']; ?>">
+
+                    <div class="row">
+                        <label><?php echo $Language->get('entry_title'); ?></label>
+                        <input class="post" id="description_<?php echo $language['language_id']; ?>_title" name="post_description[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($post_description[$language['language_id']]) ? $post_description[$language['language_id']]['title'] : ''; ?>" required="true" style="width:40%" />
+                    </div>
+
+                    <div class="clear"></div>
+
+                    <div class="row">
+                        <label><?php echo $Language->get('entry_meta_description'); ?></label>
+                        <textarea title="<?php echo $Language->get('help_meta_description'); ?>" name="post_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5" style="width:40%"><?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'meta_description'] : ''; ?></textarea>
+                    </div>
+
+                    <div class="row">
+                        <label><?php echo $Language->get('entry_meta_keywords'); ?></label>
+                        <textarea title="<?php echo $Language->get('help_meta_keywords'); ?>" name="post_description[<?php echo $language['language_id']; ?>][meta_keywords]" cols="40" rows="5" style="width:40%"><?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'meta_keywords'] : ''; ?></textarea>
+                    </div>
+
+                    <div class="clear"></div>
+
+                    <div class="row">
+                        <label>SEO Url <b style="font:normal 10px verdana;color:#999;"><?php echo HTTP_CATALOG; ?></b></label>
+                        <input type="text" id="description_<?php echo $language['language_id']; ?>_keyword" name="post_description[<?php echo $language['language_id']; ?>][keyword]" value="<?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'keyword'] : ''; ?>" style="width:40%" />
+                    </div>
+
+                    <div class="clear"></div>
+
+                    <div class="row">
+                        <label><?php echo $Language->get('entry_description'); ?></label>
+                        <div class="clear"></div>
+                        <textarea title="<?php echo $Language->get('help_description'); ?>" name="post_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'description'] : ''; ?></textarea>
+                    </div>
+
+                    <div class="clear"></div>
+
+                </div>
+                <?php } ?>
+            </div>
+
+            <div class="clear"></div><br />
+
+            <div class="row">
+                <label><?php echo $Language->get('Allow Comments'); ?></label>
+                <input name="allow_reviews" value="1" type="checkbox"<?php if (!empty($allow_reviews) || !isset($allow_reviews)) { echo ' checked="checked"'; } ?> />
+            </div>
+
+            <div class="clear"></div>
+
             <div class="row">
                 <label><?php echo $Language->get('entry_view'); ?></label>
                 <select name="view">
@@ -42,9 +96,10 @@
                     <?php } ?>
                 </select>
             </div>
-            
+
             <div class="clear"></div>
-            
+
+            <?php if ($customerGroups) { ?>
             <div class="row">
                 <label><?php echo $Language->get('entry_customer_group'); ?></label>
                 <input type="text" placeholder="Filtrar listado" value="" name="q" id="qCustomerGroups" />
@@ -53,17 +108,20 @@
                 
                 <ul id="customerGroupsWrapper" class="scrollbox" data-scrollbox="1">
                     <li>
-                        <input type="checkbox" name="customer_groups[]" value="0"<?php if (in_array(0, $customer_groups)) { ?> checked="checked"<?php } ?> showquick="off" onchange="$('.customerGroups input').attr('checked', this.checked);" />
-                        <b><?php echo $Language->get('text_all_public'); ?></b>
+                        <input id="scrollboxCustomerGroups0" type="checkbox" name="customer_groups[]" value="0"<?php if (in_array(0, $customer_groups) || !$post_id) { ?> checked="checked"<?php } ?> showquick="off" onchange="$('.customerGroups input').prop('checked', this.checked);" />
+                        <label for="scrollboxCustomerGroups0"><?php echo $Language->get('text_all_public'); ?></label>
                     </li>
                     <?php foreach ($customerGroups as $group) { ?>
                     <li class="customerGroups">
-                        <input type="checkbox" name="customer_groups[]" value="<?php echo $group['customer_group_id']; ?>"<?php if (in_array($group['customer_group_id'], $customer_groups) || in_array(0, $customer_groups)) { ?> checked="checked"<?php } ?> showquick="off" />
-                        <b><?php echo $group['name']; ?></b>
+                        <input id="scrollboxCustomerGroups<?php echo (int)$group['customer_group_id']; ?>" type="checkbox" name="customer_groups[]" value="<?php echo $group['customer_group_id']; ?>"<?php if (in_array($group['customer_group_id'], $customer_groups) || in_array(0, $customer_groups) || !$post_id) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <label for="scrollboxCustomerGroups<?php echo (int)$group['customer_group_id']; ?>"><?php echo $group['name']; ?></label>
                     </li>
                     <?php } ?>
                 </ul>
             </div>
+            <?php } else { ?>
+            <input type="hidden" name="customer_groups[]" value="0" />
+            <?php } ?>
     
             <div class="clear"></div>
             
@@ -79,54 +137,14 @@
             </div>
 
             <div class="clear"></div><br />
-            
-            <div id="languages" class="htabs">
-                <?php foreach ($languages as $language) { ?>
-                    <a tab="#language<?php echo $language['language_id']; ?>" class="htab"><img src="image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
-                <?php } ?>
-                <?php foreach ($languages as $language) { ?>
-                    <div id="language<?php echo $language['language_id']; ?>">
-                    
-                        <div class="row">
-                            <label><?php echo $Language->get('entry_title'); ?></label>
-                            <input class="post" id="description_<?php echo $language['language_id']; ?>_title" name="post_description[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($post_description[$language['language_id']]) ? $post_description[$language['language_id']]['title'] : ''; ?>" required="true" style="width:40%" />
-                        </div>
-                        
-                        <div class="clear"></div>
-                        
-                        <div class="row">
-                            <label><?php echo $Language->get('entry_meta_description'); ?></label>
-                            <textarea title="<?php echo $Language->get('help_meta_description'); ?>" name="post_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5" style="width:40%"><?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'meta_description'] : ''; ?></textarea>
-                        </div>
-                        
-                        <div class="row">
-                            <label><?php echo $Language->get('entry_meta_keywords'); ?></label>
-                            <textarea title="<?php echo $Language->get('help_meta_keywords'); ?>" name="post_description[<?php echo $language['language_id']; ?>][meta_keywords]" cols="40" rows="5" style="width:40%"><?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'meta_keywords'] : ''; ?></textarea>
-                        </div>
-                        
-                        <div class="clear"></div>
-                        
-                        <div class="row">
-                            <label>SEO Url <b style="font:normal 10px verdana;color:#999;"><?php echo HTTP_CATALOG; ?></b></label>
-                            <input type="text" id="description_<?php echo $language['language_id']; ?>_keyword" name="post_description[<?php echo $language['language_id']; ?>][keyword]" value="<?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'keyword'] : ''; ?>" style="width:40%" />
-                        </div>
-            
-                        <div class="clear"></div>
-                                    
-                        <div class="row">
-                            <label><?php echo $Language->get('entry_description'); ?></label>
-                            <div class="clear"></div>
-                            <textarea title="<?php echo $Language->get('help_description'); ?>" name="post_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($post_description[$language[ 'language_id']]) ? $post_description[$language[ 'language_id']][ 'description'] : ''; ?></textarea>
-                        </div>
-                        
-                        <div class="clear"></div>
-                                    
-                    </div>
-            <?php } ?>
+
+            <div class="row">
+                <label><?php echo $Language->get('Publicado'); ?></label>
+                <input name="publish" value="1" type="checkbox"<?php if (!empty($publish) || !isset($publish)) { echo ' checked="checked"'; } ?> />
             </div>
-            
-            <div class="clear"></div><br />
-            
+
+            <div class="clear"></div>
+
             <div class="row">
                 <label><?php echo $Language->get('entry_date_start'); ?></label>
                 <input type="necoDate" name="date_publish_start" id="date_publish_start" value="<?php echo isset($date_publish_start) ? $date_publish_start : ''; ?>" style="width:40%" />
@@ -138,7 +156,23 @@
                 <label><?php echo $Language->get('entry_date_end'); ?></label>
                 <input type="necoDate" name="date_publish_end" id="date_publish_end" value="<?php echo isset($date_publish_end) ? $date_publish_end : ''; ?>" style="width:40%" />
             </div>
-            
+
+            <div class="clear"></div>
+
+            <div class="row">
+                <label><?php echo $Language->get('entry_category'); ?></label>
+                <input type="text" placeholder="Filtrar listado" value="" name="q" id="q" />
+                <div class="clear"></div>
+                <ul id="categoriesWrapper" class="scrollbox necoCategory">
+                    <?php foreach ($categories as $category) { ?>
+                    <li class="categories">
+                        <input id="scrollboxCategories<?php echo (int)$category['post_category_id']; ?>" title="<?php echo $Language->get('help_category'); ?>" type="checkbox" name="post_category[]" value="<?php echo $category['post_category_id']; ?>"<?php if (in_array($category['post_category_id'], $post_category)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <label for="scrollboxCategories<?php echo (int)$category['post_category_id']; ?>"><?php echo $category['name']; ?></label>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+
             <?php if ($stores) { ?>
             <div class="clear"></div>
             <div class="row">
@@ -150,14 +184,14 @@
                 <div class="clear"></div>
                 <ul id="storesWrapper" class="scrollbox" data-scrollbox="1">
                     <li class="stores">
-                        <input type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
-                        <b><?php echo $Language->get('text_default'); ?></b>
+                        <input id="scrollboxStores0" type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <label for="scrollboxStores0"><?php echo $Language->get('text_default'); ?></label>
                         <div class="clear"></div>
                     </li>
                 <?php foreach ($stores as $store) { ?>
                     <li class="stores">
-                        <input type="checkbox" name="stores[]" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
-                        <b><?php echo $store['name']; ?></b>
+                        <input id="scrollboxStores<?php echo (int)$store['store_id']; ?>" type="checkbox" name="stores[]" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <label for="scrollboxStores<?php echo (int)$store['store_id']; ?>"><?php echo $store['name']; ?></label>
                         <div class="clear"></div>
                     </li>
                 <?php } ?>
@@ -180,7 +214,7 @@
         <form id="feedbackForm">
             <textarea name="feedback" id="feedback" cols="60" rows="10"></textarea>
             <input type="hidden" name="account_id" id="account_id" value="<?php echo C_CODE; ?>" />
-            <input type="hidden" name="domain" id="domain" value="<?php echo HTTP_DOMAIN; ?>" />
+            <input type="hidden" name="domain" id="domain" value="<?php echo HTTP_CATALOG; ?>" />
             <input type="hidden" name="server_ip" id="server_ip" value="<?php echo $_SERVER['SERVER_ADDR']; ?>" />
             <input type="hidden" name="remote_ip" id="remote_ip" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" />
             <input type="hidden" name="server" id="server" value="<?php echo serialize($_SERVER); ?>" />

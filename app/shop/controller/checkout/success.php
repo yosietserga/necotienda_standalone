@@ -9,6 +9,8 @@ class ControllerCheckoutSuccess extends Controller {
         }
         $this->language->load('checkout/success');
 
+        $this->data['heading_title'] = $this->document->title = $this->language->get('heading_title');
+
         $this->load->auto('account/address');
         $address = $this->modelAddress->getAddress($this->customer->getAddressId());
         $method_data = array();
@@ -100,9 +102,16 @@ class ControllerCheckoutSuccess extends Controller {
                     foreach ($options as $option) {
                         $option_data .= "&nbsp;&nbsp;&nbsp;&nbsp;- " . $option['name'] . "<br />";
                     }
+
+                    $attributes = $this->modelOrder->getAllProperties($order_id, 'product_attribute');
+                    $attributes_data = "<p>". $this->language->get("Especificaciones") ."</p>";
+                    foreach ($attributes as $option) {
+                        $attributes_data .= "&nbsp;&nbsp;&nbsp;&nbsp;- " . $option['key'] .': '. $option['value'] . "<br />";
+                    }
+
                     $product_html .= "<tr>";
                     $product_html .= "<td style=\"width:5%\">" . (int) ($key + 1) . "</td>";
-                    $product_html .= "<td style=\"width:45%\">" . $product['name'] . "<br />" . $option_data . "</td>";
+                    $product_html .= "<td style=\"width:45%\">" . $product['name'] . "<br />" . $option_data . "<br />" . $attributes_data . "</td>";
                     $product_html .= "<td style=\"width:20%\">" . $product['model'] . "</td>";
                     $product_html .= "<td style=\"width:10%\">" . $product['quantity'] . "</td>";
                     $product_html .= "<td style=\"width:10%\">" . $this->currency->format($product['price'], $order['currency'], $order['value']) . "</td>";
@@ -214,7 +223,7 @@ class ControllerCheckoutSuccess extends Controller {
                     $pdf->SetTitle($this->config->get('config_name'));
                     $pdf->SetAuthor($this->config->get('config_name'));
                     $pdf->SetSubject($this->config->get('config_owner') . " " . $this->language->get('text_order') . " #" . $order_id);
-                    $pdf->SetKeywords($this->config->get('config_name') . ', ' . $product_tags . ',pdf');
+                    //$pdf->SetKeywords($this->config->get('config_name') . ', ' . $product_tags . ',pdf');
 
                     // set default header data
                     $pdf->SetHeaderData($this->config->get('config_logo'), PDF_HEADER_LOGO_WIDTH, $this->config->get('config_owner'), $this->config->get('config_name'));
@@ -294,7 +303,6 @@ class ControllerCheckoutSuccess extends Controller {
             $this->session->clear('coupon');
         }
 
-        $this->document->title = $this->language->get('heading_title');
         $this->document->breadcrumbs = array();
         $this->document->breadcrumbs[] = array(
             'href' => Url::createUrl("common/home"),
@@ -313,7 +321,6 @@ class ControllerCheckoutSuccess extends Controller {
         );
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
 
-        $this->data['heading_title'] = $this->language->get('heading_title');
         if ($this->config->get('page_order_success')) {
             $this->load->model('content/page');
             $page = $this->modelPage->getById($this->config->get('page_order_success'));
@@ -321,6 +328,8 @@ class ControllerCheckoutSuccess extends Controller {
         } else {
             $this->data['text_message'] = sprintf($this->language->get('text_message'), Url::createUrl("account/account"), Url::createUrl("account/order"), Url::createUrl("page/contact"));
         }
+
+        $this->data['Currency'] = $this->currency;
 
         // style files
         $csspath = defined("CDN") ? CDN . CSS : HTTP_CSS;
@@ -331,7 +340,7 @@ class ControllerCheckoutSuccess extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/checkout/success.tpl')) {
             $this->template = $this->config->get('config_template') . '/checkout/success.tpl';
         } else {
-            $this->template = 'choroni/checkout/success.tpl';
+            $this->template = 'cuyagua/checkout/success.tpl';
         }
 
         $this->children[] = 'common/nav';

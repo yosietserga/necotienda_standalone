@@ -55,15 +55,15 @@
                     <a onclick="$('#storesWrapper input[type=checkbox]').removeAttr('checked');">Seleccionar Ninguno</a>
                     <div class="clear"></div>
                     <ul id="storesWrapper" class="scrollbox" data-scrollbox="1">
-                        <li class="stores">
-                            <input type="checkbox" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> onclick="$('#store0').attr('checked', this.checked);" showquick="off" />
-                            <b><?php echo $Language->get('text_default'); ?></b>
+                        <li class="stores" onclick="$('#store0').attr('checked', !$('#_store0').attr('checked'));">
+                            <input id="scrollboxStores0" type="checkbox" id="_store0" value="null"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                            <label for="scrollboxStores0"><?php echo $Language->get('text_default'); ?></label>
                             <div class="clear"></div>
                         </li>
                     <?php foreach ($stores as $store) { ?>
-                        <li class="stores">
-                            <input type="checkbox" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> onclick="$('#store<?php echo $store['store_id']; ?>').attr('checked', this.checked);" showquick="off" />
-                            <b><?php echo $store['name']; ?></b>
+                        <li class="stores" onclick="$('#store<?php echo (int)$store['store_id']; ?>').attr('checked', !$('#_store<?php echo (int)$store['store_id']; ?>').attr('checked'));">
+                            <input id="scrollboxStores<?php echo (int)$store['store_id']; ?>" type="checkbox" id="_store<?php echo (int)$store['store_id']; ?>" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                            <label for="scrollboxStores<?php echo (int)$store['store_id']; ?>"><?php echo $store['name']; ?></label>
                             <div class="clear"></div>
                         </li>
                     <?php } ?>

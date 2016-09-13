@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"INVERSIONES FAGAR S.A.S.";gerencia@fagar.com.co;www.fagar.com.co;"(57) (8) 5126134";"School House Sector Aeropuerto Contiguo Aerorepública Carga Colombia, San Andrés"

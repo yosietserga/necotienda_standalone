@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ANILINAS SKORPIO LTDA";;;"(56) (2) 22227365";"Av. Santa Rosa 1086 Chile, Santiago"
-"ANILINAS Y COLORANTES GATTI";;;"(56) (2) 26972066";"San Pablo 1748 Chile, Santiago"

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"COLEGIO DE QUÍMICOS FARMACEÚTICOS DE CHILE A.G.";;;"(56) (2) 6392505";"Merced 50 Chile, Santiago"

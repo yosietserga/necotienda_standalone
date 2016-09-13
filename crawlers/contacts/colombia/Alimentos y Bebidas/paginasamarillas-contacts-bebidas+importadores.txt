@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"AFILIACIONES - VENTAS GANO CAFE";marinilla52@yahoo.es;www.marinilla52.wix.com/ganocafe-;"(57) (1) 6882419";"Cr104 D 128 C-53 Colombia, Bogotá"

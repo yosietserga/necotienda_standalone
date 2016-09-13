@@ -238,4 +238,59 @@ class ModelAccountOrder extends Model {
 		
 		return $query->row['total'];
 	}
+
+	/**
+	 * ModelContentPage::getProperty()
+	 *
+	 * Obtener una propiedad del producto
+	 *
+	 * @param int $id product_id
+	 * @param varchar $group
+	 * @param varchar $key
+	 * @return mixed value of property
+	 * */
+	public function getProperty($id, $group, $key, $serialize = false) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_property
+        WHERE `order_id` = '" . (int) $id . "'
+        AND `group` = '" . $this->db->escape($group) . "'
+        AND `key` = '" . $this->db->escape($key) . "'");
+
+		if ($serialize) {
+			return unserialize(str_replace("\'", "'", $query->row['value']));
+		} else {
+			return $query->row['value'];
+		}
+	}
+
+	/**
+	 * ModelContentPage::getAllProperties()
+	 *
+	 * Obtiene todas las propiedades del producto
+	 *
+	 * Si quiere obtener todos los grupos de propiedades
+	 * utilice * como nombre del grupo, ejemplo:
+	 *
+	 * $properties = getAllProperties($product_id, '*');
+	 *
+	 * Sino coloque el nombre del grupo de las propiedades
+	 *
+	 * $properties = getAllProperties($product_id, 'NombreDelGrupo');
+	 *
+	 * @param int $id product_id
+	 * @param varchar $group
+	 * @return array all properties
+	 * */
+	public function getAllProperties($id, $group = '*') {
+		if ($group == '*') {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_property
+            WHERE `order_id` = '" . (int) $id . "'");
+		} else {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_property
+            WHERE `order_id` = '" . (int) $id . "'
+            AND `group` = '" . $this->db->escape($group) . "'");
+		}
+
+		return $query->rows;
+	}
+
 }

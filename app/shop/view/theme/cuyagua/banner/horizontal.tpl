@@ -1,21 +1,50 @@
-<li class="nt-editable bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-<?php if ($heading_title) { ?>
-    <div class="header" id="<?php echo $widgetName; ?>Header">
-        <h3><?php echo $heading_title; ?></h3>
-    </div>
-<?php } ?>
+<li id="<?php echo $widgetName; ?>" class="banner horizontal<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?> nt-editable" data-banner="horizontal">
+
+<?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/module-heading.tpl");?>
+
 <?php if (count($banner['items'])) { ?>
-<div class="widget-content" id="<?php echo $widgetName; ?>Content">
-    <ul class="widget-horizontal-banner inline-list">
+<div class="widget-content" id="<?php echo $widgetName; ?>Content" data-banner="horizontal">
+    <ul class="container">
         <?php foreach ($banner['items'] as $item) { ?>
-        <li>
-            <?php if (empty($item['image'])) continue; ?>
-            <?php if (!empty($item['link'])) { ?><a href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>"><?php } ?>
-            <img src="<?php echo HTTP_IMAGE . $item['image']; ?>" data-thumb="<?php echo $item['thumb']; ?>" alt="<?php echo $item['title']; ?>" title="<?php echo $item['title']; ?>" />
-            <?php if (!empty($item['link'])) { ?></a><?php } ?>
-        </li>
+            <li class="item">
+                <!--picture-->
+                <?php if (!empty($item['image'])) { ?>
+                    <?php if (!empty($item['link'])) { ?><a href="<?php echo $item['link']; ?>"><?php } ?>
+                        <figure class="thumb" style="background-image: url('<?php echo HTTP_IMAGE . $item['image']; ?>'); background-repeat: no-repeat;">
+                            <img src="<?php echo HTTP_IMAGE . $item['image']; ?>" alt="<?php $item['image']; ?>"/>
+                        </figure>
+                    <?php if (!empty($item['link'])) { ?></a><?php } ?>
+                <?php } ?>
+                <!--/picture-->
+
+                <!--header-->
+                    <section class="details">
+                        <!--title-->
+                        <?php if (!empty($item['title'])){ ?>
+                            <a class="title" href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>" data-apply="parseHTML"><?php echo $item['title']; ?></a>
+                        <?php } ?>
+                        <!--/title-->
+
+                        <!--description-->
+                        <?php if (!empty($item['description'])){ ?>
+                            <p class="body" data-apply="parseHTML"><?php echo $item['description']; ?></p>
+                        <?php } ?>
+                        <!--/description-->
+
+                        <!--read-more-->
+                        <?php if (!empty($item['link'] && (!empty($item['title'] || !empty($item['description']))){ ?>
+                            <div class="link">
+                                <a href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>">
+                                    M&aacute;s detalles
+                                </a>
+                            </div>
+                        <?php } ?>
+                        <!--/read-more-->
+                    </section>
+                <!--/header-->
+            </li>
         <?php } ?>
-    </ul> 
+    </ul>
 </div>
 <?php } ?>
 </li>

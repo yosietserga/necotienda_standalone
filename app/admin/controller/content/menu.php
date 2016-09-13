@@ -444,11 +444,11 @@ class ControllerContentMenu extends Controller {
                             principal = $(parent).parents('li');
                             if (principal.index() >= 0) {
                                 parent = $(this).parents('li:eq(0)');
-                                parentIndex = '['+ $(principal).index() +'.'+ $(parent).index() +'.'+ $(this).index() +']';
-                                idIndex = $(principal).index() +'.'+ $(parent).index() +'.'+ $(this).index();
+                                parentIndex = '['+ $(principal).index() +'_'+ $(parent).index() +'_'+ $(this).index() +']';
+                                idIndex = $(principal).index() +'_'+ $(parent).index() +'_'+ $(this).index();
                             } else {
-                                parentIndex = '['+ $(parent).index() +'.'+ $(this).index() +']';
-                                idIndex = $(parent).index() +'.'+ $(this).index();
+                                parentIndex = '['+ $(parent).index() +'_'+ $(this).index() +']';
+                                idIndex = $(parent).index() +'_'+ $(this).index();
                             } 
                         } else {
                             parentIndex = '['+ $(this).index() +']';
@@ -622,8 +622,8 @@ class ControllerContentMenu extends Controller {
         if ($pages) {
             foreach ($pages as $key => $value) {
                 $return .= '<li style="padding-left:' . $marginLeft . 'px">';
-                $return .= '<input type="checkbox" name="pages[]" value="' . $value['post_id'] . '" />';
-                $return .= '<b>' . $value['title'] . '</b>';
+                $return .= '<input id="scrollboxPages'. $value['post_id'] .'" type="checkbox" name="pages[]" value="' . $value['post_id'] . '" />';
+                $return .= '<label for="scrollboxPages'. $value['post_id'] .'">' . $value['title'] . '</label>';
                 $return .= '</li>';
 
                 $childrens = $this->modelPage->getAll($value['post_id']);
@@ -641,8 +641,8 @@ class ControllerContentMenu extends Controller {
         if ($categories) {
             foreach ($categories as $key => $value) {
                 $return .= '<li style="padding-left:' . $marginLeft . 'px">';
-                $return .= '<input type="checkbox" name="post_categories[]" value="' . $value['post_category_id'] . '" />';
-                $return .= '<b>' . $value['name'] . '</b>';
+                $return .= '<input id="scrollboxPostCategories'. $value['post_category_id'] .'" type="checkbox" name="post_categories[]" value="' . $value['post_category_id'] . '" />';
+                $return .= '<label for="scrollboxPostCategories'. $value['post_category_id'] .'">' . $value['name'] . '</label>';
                 $return .= '</li>';
 
                 $childrens = $this->modelPost_category->getAllForMenu($value['post_category_id']);
@@ -660,8 +660,8 @@ class ControllerContentMenu extends Controller {
         if ($categories) {
             foreach ($categories as $key => $value) {
                 $return .= '<li style="padding-left:' . $marginLeft . 'px">';
-                $return .= '<input type="checkbox" name="categories[]" value="' . $value['category_id'] . '" />';
-                $return .= '<b>' . $value['name'] . '</b>';
+                $return .= '<input id="scrollboxCategories'. $value['category_id'] .'" type="checkbox" name="categories[]" value="' . $value['category_id'] . '" />';
+                $return .= '<label for="scrollboxCategories'. $value['category_id'] .'">' . $value['name'] . '</label>';
                 $return .= '</li>';
 
                 $childrens = $this->modelCategory->getAllForMenu($value['category_id']);
@@ -675,30 +675,59 @@ class ControllerContentMenu extends Controller {
 
     public function getLinks($parent_id = 0) {
         $output = '';
+        $this->load->model('content/page');
         $links = $this->modelMenu->getLinks($this->request->get['menu_id'], $parent_id);
         if ($links) {
             foreach ($links as $key => $result) {
-                $index = ($parent_id) ? $parent_id . "." . $result['menu_link_id'] : $result['menu_link_id'];
+                $index = ($parent_id) ? $parent_id . "_" . $result['menu_link_id'] : $result['menu_link_id'];
                 $output .= '<li id="li_' . $index . '">';
                 $output .= '<div class="item">';
                 $output .= '<b>' . $result['tag'] . '</b>';
                 $output .= '<a class="showOptions" onclick="$(\'#linkOptions' . $index . '\').slideToggle(\'fast\')">&darr;</a>';
                 $output .= '</div>';
+                $output .= '<input type="hidden" id="link_' . $index . '_menu_link_id" name="link[' . $index . '][menu_link_id]" value="' . $result['menu_link_id'] . '" />';
                 $output .= '<div id="linkOptions' . $index . '" class="itemOptions">';
 
                 $output .= '<div class="row">';
-                $output .= '<label class="neco-label" for="link.' . $index . '.link">Url:</label>';
-                $output .= '<input type="url" id="link.' . $index . '.link" name="link[' . $index . '][link]" value="' . $result['link'] . '" style="width: 60%;" class="menu_link" />';
+                $output .= '<label class="neco-label" for="link_' . $index . '_link">Url:</label>';
+                $output .= '<input type="url" id="link_' . $index . '_link" name="link[' . $index . '][link]" value="' . $result['link'] . '" style="width: 60%;" class="menu_link" />';
                 $output .= '</div>';
 
                 $output .= '<div class="clear"></div>';
 
                 $output .= '<div class="row">';
-                $output .= '<label class="neco-label" for="link.' . $index . '.tag">Etiqueta:</label>';
-                $output .= '<input type="text" id="link.' . $index . '.tag" name="link[' . $index . '][tag]" value="' . $result['tag'] . '" style="width: 60%;" class="menu_tag" />';
+                $output .= '<label class="neco-label" for="link_' . $index . '_tag">Etiqueta:</label>';
+                $output .= '<input type="text" id="link_' . $index . '_tag" name="link[' . $index . '][tag]" value="' . $result['tag'] . '" style="width: 60%;" class="menu_tag" />';
                 $output .= '</div>';
 
                 $output .= '<div class="clear"></div>';
+
+                $output .= '<div class="row">';
+                $output .= '<label class="neco-label" for="link_' . $index . '_class_css">Clases CSS:</label>';
+                $output .= '<input type="text" id="link_' . $index . '_class_css" name="link[' . $index . '][class_css]" value="' . $result['class_css'] . '" style="width: 60%;" class="menu_class_css" />';
+                $output .= '</div>';
+
+                $output .= '<div class="clear"></div>';
+
+                $output .= '<div class="row">';
+                $output .= '<label class="neco-label" for="link_' . $index . '_html">Contenido HTML:</label>';
+                $output .= '<select id="link_' . $index . '_page_id" name="link[' . $index . '][page_id]" style="width:40%">';
+
+                $output .= '<option value="0">'. $this->language->get('text_none') .'</option>';
+
+                foreach ($this->modelPage->getAll() as $page) {
+                    if ($page['post_id']==$result['page_id']) {
+                        $output .= '<option value="'. $page['post_id'] .'" selected="selected">'. $page['title'] .'</option>';
+                    } else {
+                        $output .= '<option value="'. $page['post_id'] .'">'. $page['title'] .'</option>';
+                    }
+                }
+
+                $output .= '</select>';
+                $output .= '</div>';
+
+                $output .= '<div class="clear"></div>';
+
 
                 $output .= '<a style="float:right;font-size:10px;" onclick="$(\'#li_' . $index . '\').remove()">[ Eliminar ]</a>';
                 $output .= '</div>';

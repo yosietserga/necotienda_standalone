@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-ARFIER;;;"(56) (2) 8552532";"Lonquén Norte S/N Paradero 7 1/2 Chile, Santiago"

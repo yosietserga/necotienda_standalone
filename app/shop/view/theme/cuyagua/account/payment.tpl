@@ -1,11 +1,10 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/message.tpl"); ?>
-    <h1>Pagos</h1>
 
-    <div class="filter-form simple-form">
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-start.tpl");?>
+
+    <div class="filter-form simple-form break">
         <input type="text" name="filter_list" id="filter_list" value="" placeholder="Buscar por ID de Pago" />
         <input type="text" name="filter_order" id="filter_order" value="" placeholder="Buscar por ID de Pedido" />
         <select name="filter_status" id="filter_status">
@@ -20,8 +19,8 @@
             <option value="20">20 por p&aacute;gina</option>
             <option value="50">50 por p&aacute;gina</option>
         </select>
-        <div class="action-button">
-            <a onclick="filter()" id="filter" class="filter-action">Filtrar</a>
+        <div class="btn btn-filter btn--primary" data-action="filter" role="button" aria-label="Sort">
+            <a onclick="filter()" id="filter"><?php echo $Language->get('text_filter');?></a>
         </div>
     </div>
     <div class="tabulated-form">
@@ -59,41 +58,51 @@
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
 </section>
 <script>
-function filter() {
-     var url = '';
-    
-    if ($('#filter_order').val()){
-        url += '&order_id=' + $('#filter_order').val();
-    }
-    
-    if ($('#filter_list').val()){
-        url += '&payment_id=' + $('#filter_list').val();
-    }
-    
-    if ($('#filter_sort').val()){
-        url += '&sort=' + $('#filter_sort').val();
-    }
-    
-    if ($('#filter_status').val()){
-        url += '&status=' + $('#filter_status').val();
-    }
-    
-    if ($('#filter_limit').val()){
-        url += '&limit=' + $('#filter_limit').val();
-    }
-    
-    window.location.href = '<?php echo $Url::createUrl("account/payment"); ?>' + url;
-    
-    return false;
-}
-$('#filter').on('click',function(e){
-    filter();
-    return false;
-});
-$('#filter_list').on('keydown',function(e) {
-    if (e.keyCode == 13) {
-        filter();
-    }
-});
+    (function () {
+        window.deferjQuery(function () {
+            function filterProducts() {
+                var url = '';
+                var subjectFilter = $('#filter_subject').val();
+                var sortFilter = $('#filter_sort').val();
+                var statusFilter = $('#filter_status').val();
+                var limitFilter = $('#filter_limit').val();
+                var listFilter = $('#filter_list').val();
+
+                if (subjectFilter) {
+                    url += '&keyword=' + subjectFilter;
+                }
+
+                if (listFilter) {
+                    url += '&payment_id=' + listFilter;
+                }
+
+                if (sortFilter) {
+                    url += '&sort=' + sortFilter;
+                }
+
+                if (statusFilter) {
+                    url += '&status=' + statusFilter;
+                }
+
+                if (limitFilter) {
+                    url += '&limit=' + limitFilter;
+                }
+                window.location.href = '<?php echo $Url::createUrl("account/order"); ?>' + url;
+                return false;
+            }
+
+            $('#filter').on('click', function (e) {
+                filterProducts();
+                return false;
+            });
+            $('#filter_customer_product').on('keydown', function (e) {
+                if (e.keyCode == 13) {
+                    filterProducts();
+                }
+                return false;
+            });
+        });
+    })();
+
 </script>
 <?php echo $footer; ?>

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"EL MUELLE";;;"(56) (32) 3145813";"Viña del Mar Chile, Viña del Mar"

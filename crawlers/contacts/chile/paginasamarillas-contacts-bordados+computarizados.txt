@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"BORDADOS BORDA TRES LTDA.";;;"(56) (2) 7356811";"Dominica 265, Recoleta Chile, Santiago"
-"BORDADOS INDUSTRIALES CECILIA VILLAGRS BESA LTDA.";;;"(56) (2) 5554767";"Ventura Lavalle 349-A Chile, Santiago"
-"BORDADOS SUIZOS";;;"Telefax: (56) (2) 6216979";"Av Einstein 647, Recoleta Chile, Santiago"
-"DONNEBAUM S.A.";;;"(56) (2) 4894800";"José Ananias 561, Macul Chile, Santiago"

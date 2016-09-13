@@ -13,7 +13,7 @@
     $.fn.ntColorPicker = function(method) {
         var defaults = {
             target:     null,
-            tpl:        '<div class="neco-color-picker-launch">Picker</div><div class="neco-color-picker-sample"></div><div class="neco-color-picker-wrapper"><div class="neco-color-picker"><div class="color"></div><div class="wheel"></div><div class="overlay"></div><div class="h-marker marker"></div><div class="sl-marker marker"></div></div><div class="neco-color-picker-buttons"><a class="neco-color-picker-submit"></a><a class="neco-color-picker-cancel"></a></div></div>',
+            tpl:        '<div class="neco-color-picker-launch"></div><div class="neco-color-picker-sample"></div><div class="neco-color-picker-wrapper"><div class="neco-color-picker"><div class="color"></div><div class="wheel"></div><div class="overlay"></div><div class="h-marker marker"></div><div class="sl-marker marker"></div></div><div class="neco-color-picker-buttons"><a class="neco-color-picker-submit"></a><a class="neco-color-picker-cancel"></a></div></div>',
             type:       'rgb',
             textSubmit: 'OK',
             textCancel:  'Cancelar',

@@ -60,21 +60,55 @@ class CronPromoter {
 		return $this->registry->has($key);
 	}
 
+    private function getProducts($email) {
+        $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."stat s
+        LEFT JOIN ". DB_PREFIX ."product p ON (s.object_id=p.product_id)
+        LEFT JOIN ". DB_PREFIX ."product_description pd ON (p.product_id=pd.product_id)
+        WHERE DAY(s.date_added) = '". $this->db->escape(date('d')) ."'
+            AND MONTH(s.date_added) = '". $this->db->escape(date('m')) ."'
+            AND YEAR(s.date_added) = '". $this->db->escape(date('Y')) ."'
+            AND s.object_type = 'product'
+            AND s.status = 1
+            AND s.email = '". $this->db->escape($email) ."'
+            AND pd.language_id = 1
+        GROUP BY s.object_id
+        LIMIT 40");
+
+        $products = array();
+
+        $this->load->library('tax');
+        $this->load->library('currency');
+        $this->load->library('image');
+        $this->load->library('url');
+        $this->tax = new Tax($this->registry);
+        $this->currency = new Currency($this->registry);
+
+        foreach ($query->rows as $product) {
+            $image = !empty($product['image']) ? $product['image'] : 'no_image.jpg';
+            $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')),'','',false);
+            $products[] = array(
+                'product_id'=>$product['product_id'],
+                'name'      =>$product['name'],
+                'image'     =>NTImage::resizeAndSave($image, 150, 150),
+                'model'     =>$product['model'],
+                'href'      =>Url::createUrl('store/product',array('product_id'=>$product['product_id']))
+            );
+        }
+
+        return $products;
+    }
+
     public function run() {
-        $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."stat s 
-        LEFT JOIN ". DB_PREFIX ."customer c ON (s.customer_id=c.customer_id) 
-        LEFT JOIN ". DB_PREFIX ."product p ON (s.object_id=p.product_id) 
-        LEFT JOIN ". DB_PREFIX ."product_description pd ON (p.product_id=pd.product_id) 
+        $query = $this->db->query("SELECT *, s.email AS c_email FROM ". DB_PREFIX ."stat s
+        LEFT JOIN ". DB_PREFIX ."customer c ON (s.customer_id=c.customer_id)
         WHERE DAY(s.date_added) = '". $this->db->escape(date('d')) ."' 
             AND MONTH(s.date_added) = '". $this->db->escape(date('m')) ."'
             AND YEAR(s.date_added) = '". $this->db->escape(date('Y')) ."'
             AND s.object_type = 'product'
             AND s.status = 1
-            AND s.customer_id <> 0
-            AND pd.language_id = 1
-        GROUP BY s.customer_id
-        LIMIT 40");
-        
+        GROUP BY s.email
+        LIMIT 200");
+
         if ($query->num_rows && (int)$this->config->get('marketing_email_recommended_products')) {
             $this->load->library('tax');        
             $this->load->library('currency');
@@ -82,20 +116,7 @@ class CronPromoter {
             $this->load->library('url');
             $this->tax = new Tax($this->registry);
             $this->currency = new Currency($this->registry);
-            $products = array();
-            
-            foreach ($query->rows as $product) {
-                $image = !empty($product['image']) ? $product['image'] : 'no_image.jpg';
-                $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')),'','',false);
-                $products[] = array(
-                    'product_id'=>$product['product_id'],
-                    'name'      =>$product['name'],
-                    'image'     =>NTImage::resizeAndSave($image, 150, 150),
-                    'model'     =>$product['model'],
-                    'href'      =>Url::createUrl('store/product',array('product_id'=>$product['product_id']))
-                );
-            }
-            
+
             $params = array(
                 'job'=>'send_recommended_products',
                 'newsletter_id'=>(int)$this->config->get('marketing_email_recommended_products')
@@ -124,8 +145,8 @@ class CronPromoter {
                     'company'   =>$customer['company'],
                     'rif'       =>$customer['rif'],
                     'telephone' =>$customer['telephone'],
-                    'email'     =>$customer['email'],
-                    'products'  =>$products
+                    'email'     =>$customer['c_email'],
+                    'products'  =>$this->getProducts($customer['c_email'])
                 );
                 $queue = array(
                     "params"    =>$params,
@@ -136,8 +157,8 @@ class CronPromoter {
                 $task->addQueue($queue);
                 
                 $this->db->query("UPDATE ". DB_PREFIX ."stat SET status = 0 
-                WHERE customer_id = '". (int)$product['customer_id'] ."'
-                    AND DAY(date_added) = '". $this->db->escape(date('d')) ."' 
+                WHERE email = '". $customer['c_email'] ."'
+                    AND DAY(date_added) = '". $this->db->escape(date('d')) ."'
                     AND MONTH(date_added) = '". $this->db->escape(date('m')) ."'
                     AND YEAR(date_added) = '". $this->db->escape(date('Y')) ."'");
             }

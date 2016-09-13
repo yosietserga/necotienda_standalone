@@ -67,7 +67,7 @@ class Backup
                     $files = glob($folder . '/*.' . $extension,GLOB_BRACE);
                     if ($files) {
                         foreach ($files as $file) {
-                            $filepath = str_replace(DIR_ROOT, "", $directory);
+                            $filepath = str_replace(DIR_ROOT, "", $file);
                             if (file_exists($file)) {
                                 $fileContents = file_get_contents($file);
                                 $this->addFile($fileContents,$basepath ."/". basename($file));
@@ -105,7 +105,7 @@ class Backup
         //$this->getFiles($this->getPaths(DIR_ROOT . 'web/assets/css/'),'{jpg,png,gif}');
         
         
-        $query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
+        $query = $this->db->getTables();
 		
 		foreach ($query->rows as $result) {
 			$tables[] = $result['Tables_in_' . DB_DATABASE];
@@ -114,7 +114,7 @@ class Backup
 		$output = '';
         
 		foreach ($tables as $table) {
-			if (DB_PREFIX) {
+			if (defined('DB_PREFIX')) {
 				if (strpos($table, DB_PREFIX) === false) {
 					$status = false;
 				} else {
@@ -147,7 +147,7 @@ class Backup
 						
 						$values .= '\'' . $value . '\', ';
 					}
-					$output .= 'INSERT INTO `' . $table . '` (' . preg_replace('/, $/', '', $fields) . ') VALUES (' . preg_replace('/, $/', '', $values) . ');' . "\n";
+					$output .= 'INSERT IGNORE INTO `' . $table . '` (' . preg_replace('/, $/', '', $fields) . ') VALUES (' . preg_replace('/, $/', '', $values) . ');' . "\n";
 				}
 				$output .= "\n\n";
                 $this->db->query('UNLOCK TABLES');

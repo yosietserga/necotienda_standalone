@@ -84,6 +84,32 @@ class ModelStoreProduct extends Model {
                 product_id = '" . intval($product_id) . "'");
         }
 
+        if (isset($data['Attributes'])) {
+            $attribute_group_ids = array();
+            foreach ($data['Attributes'] as $attribute_group_id => $attributes) {
+                $attribute_group_ids[] = $attribute_group_id;
+                foreach ($attributes as $key => $value) {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_property SET ".
+                        "product_id = '" . (int) $product_id . "',".
+                        "`group` = 'attribute',".
+                        "`key` = '" . $this->db->escape($key) .":". (int)$attribute_group_id ."',".
+                        "`value` = '" . $this->db->escape($value) . "'");
+                }
+            }
+
+            $this->db->query("INSERT INTO " . DB_PREFIX . "product_property SET ".
+                "product_id = '" . (int) $product_id . "',".
+                "`group` = 'attributes',".
+                "`key` = 'admin_attributes',".
+                "`value` = '" . $this->db->escape( serialize($data['Attributes']) ) . "'");
+
+            $this->db->query("INSERT INTO " . DB_PREFIX . "product_property SET ".
+                "product_id = '" . (int) $product_id . "',".
+                "`group` = 'attribute_group',".
+                "`key` = 'attribute_group_id',".
+                "`value` = '" . $this->db->escape( serialize($attribute_group_ids) ) . "'");
+        }
+
         if (isset($data['product_option'])) {
             foreach ($data['product_option'] as $product_option) {
                 $this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET 
@@ -273,6 +299,18 @@ class ModelStoreProduct extends Model {
                 product_id = '" . intval($product_id) . "'");
         }
 
+        $this->db->query("DELETE FROM " . DB_PREFIX . "product_property WHERE `group` = 'attribute' AND product_id = '" . (int) $product_id . "'");
+        if (isset($data['Attributes'])) {
+            foreach ($data['Attributes'] as $attribute_group_id => $attributes) {
+                foreach ($attributes as $key => $value) {
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_property SET ".
+                        "product_id = '" . (int) $product_id . "',".
+                        "`group` = 'attribute',".
+                        "`key` = '" . $this->db->escape($key) .":". (int)$attribute_group_id ."',".
+                        "`value` = '" . $this->db->escape($value) . "'");
+                }
+            }
+        }
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int) $product_id . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_option_description WHERE product_id = '" . (int) $product_id . "'");
@@ -1248,6 +1286,38 @@ class ModelStoreProduct extends Model {
         $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product` WHERE product_id NOT IN (SELECT `object_id` FROM `" . DB_PREFIX . "url_alias` WHERE `object_type` = 'product')");
         $query2 = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product`");
         return $query->row['total'] * 100 / $query2->row['total'];
+    }
+
+    public function getCategoriesByAttributeGroupId($id) {
+        if (is_array($id)) {
+            $query = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "product_attribute_to_category ".
+                "WHERE product_attribute_group_id IN ('" . implode("','", $id) . "') ");
+        } else {
+            $query = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "product_attribute_to_category ".
+                "WHERE product_attribute_group_id = '" . (int)$id . "' ");
+        }
+
+        foreach ($query->rows as $row) {
+            $return[] = $row['category_id'];
+        }
+
+        return $return;
+    }
+
+    public function getAttributeGroupsByCategoriesId($id) {
+        if (is_array($id)) {
+            $query = $this->db->query("SELECT product_attribute_group_id FROM " . DB_PREFIX . "product_attribute_to_category ".
+                "WHERE product_attribute_group_id IN ('" . implode("','", $id) . "') ");
+        } else {
+            $query = $this->db->query("SELECT product_attribute_group_id FROM " . DB_PREFIX . "product_attribute_to_category ".
+                "WHERE category_id = '" . (int)$id . "' ");
+        }
+
+        foreach ($query->rows as $row) {
+            $return[] = $row['product_attribute_group_id'];
+        }
+
+        return $return;
     }
 
 }

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CONOMETAL BOLIVIA";;;"(591) (33) 3394396";"Av Cristobal de Mendoza No 288 Bolivia, Santa Cruz de la Sierra"

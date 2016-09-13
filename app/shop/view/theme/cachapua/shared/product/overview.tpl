@@ -1,1 +1,0 @@
-<p class="overview"><?php echo substr($product['overview'],0,150)."... "; ?><a href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>">Leer M&aacute;s</a></p>

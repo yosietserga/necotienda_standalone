@@ -1,29 +1,5 @@
-<li class="nt-editable login-widget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-
-    <!-- /login-widget-title -->
-    <?php if (!$this->customer->islogged()) { ?>
-        <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
-            <div class="heading-title">
-                <h3>
-                    <i class="heading-icon icon icon-unlocked">
-                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/unlocked.tpl"); ?>
-                    </i>
-                    <?php echo $heading_title; ?>
-                </h3>
-            </div>
-        </div>
-    <?php } else { ?>
-    <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
-            <div class="heading-title">
-                <h3>
-                    <i class="icon heading-icon fa fa-user fa-2x"></i>
-                    <?php echo $this->customer->getFirstName();?>
-                </h3>
-            </div>
-        </div>
-    <?php } ?>
-    <!-- /login-widget-title -->
-
+<li class="nt-editable login-widget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>"> 
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/module-heading.tpl");?> 
     <!-- login-widget-content -->
     <div class="widget-content" id="<?php echo $widgetName; ?>Content">
     <?php if (!$this->customer->islogged()) { ?>
@@ -41,7 +17,7 @@
                         </li>
 
                         <li>
-                            <div class="action-button action-login">
+                            <div class="btn btn-login btn--primary" role="button" aria-label="Login">
                                 <a id="<?php echo $widgetName; ?>_submit_login"><?php echo $Language->get('text_login'); ?></a>
                             </div>
                         </li>
@@ -80,32 +56,34 @@
 </li>
 <?php if (!$this->customer->islogged()) { ?>
 <script>
-$(function(){
-    $('#<?php echo $widgetName; ?>_submit_login').on('click',function(event){
-        $.post('<?php echo $Url::createUrl("module/login/login"); ?>',{
-            email:$('#<?php echo $widgetName; ?>_login_email').val(),
-            password:$('#<?php echo $widgetName; ?>_login_password').crypt({method:'md5'}), 
-            token:$('#<?php echo $widgetName; ?>_login_token').val()
-        },
-        function(response){
-            $('#temp').remove();
-            $('#<?php echo $widgetName; ?>_login_email').removeClass('neco-input-error');
-            
-            try {
-               data = $.parseJSON(response);
-            } catch(error) {
-                data = response;
-            }
-            
-            if (typeof data.success != 'undefined') {
-                window.location.reload();
-            }
-            
-            if (typeof data.error != 'undefined') {
-                $('#<?php echo $widgetName; ?>_login_email').addClass('neco-input-error').after('<div class="message warning" id="temp">'+ data.msg +'</div>');
-            }
-        })
+(function () {
+    window.deferjQuery(function () {
+        $('#<?php echo $widgetName; ?>_submit_login').on('click',function(event){
+            $.post('<?php echo $Url::createUrl("module/login/login"); ?>',{
+                email:$('#<?php echo $widgetName; ?>_login_email').val(),
+                password:$('#<?php echo $widgetName; ?>_login_password').crypt({method:'md5'}),
+                token:$('#<?php echo $widgetName; ?>_login_token').val()
+            },
+            function(response){
+                $('#temp').remove();
+                $('#<?php echo $widgetName; ?>_login_email').removeClass('neco-input-error');
+
+                try {
+                   data = $.parseJSON(response);
+                } catch(error) {
+                    data = response;
+                }
+
+                if (typeof data.success !== 'undefined') {
+                    window.location.reload();
+                }
+
+                if (typeof data.error !== 'undefined') {
+                    $('#<?php echo $widgetName; ?>_login_email').addClass('neco-input-error').after('<div class="message warning" id="temp">'+ data.msg +'</div>');
+                }
+            })
+        });
     });
-});
+})();
 </script>
 <?php } ?>

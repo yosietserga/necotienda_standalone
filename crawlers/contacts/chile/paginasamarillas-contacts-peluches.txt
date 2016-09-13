@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"AVALTOYS FÁBRICA DE PELUCHES LTDA.";;;"(56) (2) 6217752";"Santiago de Chile Chile, Santiago"
-"COMERCIAL LEVACI";;;"(56) (2) 6896835";"Bascuñan Guerrero 57 Local 90 Santiago Chile, Santiago"

@@ -22,7 +22,10 @@ class ModelContentPage extends Model {
      */
     public function add($data) {
         $this->db->query("INSERT INTO " . DB_PREFIX . "post SET 
-        parent_id   = '" . (int) $this->request->post['parent_id'] . "', 
+        parent_id   = '" . (int) $this->request->post['parent_id'] . "',
+        image = '" . $this->db->escape($data['image']) . "',
+        publish     = '" . (int) $this->request->post['publish'] . "',
+        allow_reviews     = '" . (int) $this->request->post['allow_reviews'] . "',
         date_publish_start = '" . $this->db->escape($data['date_publish_start']) . "', 
         date_publish_end = '" . $this->db->escape($data['date_publish_end']) . "', 
         template    = '" . $this->db->escape($data['template']) . "', 
@@ -75,7 +78,9 @@ class ModelContentPage extends Model {
     public function update($post_id, $data) {
         $this->db->query("UPDATE " . DB_PREFIX . "post SET 
         parent_id   = '" . (int) $this->request->post['parent_id'] . "',
-        publish     = '" . (int) $this->request->post['publish'] . "', 
+        publish     = '" . (int) $this->request->post['publish'] . "',
+        allow_reviews     = '" . (int) $this->request->post['allow_reviews'] . "',
+        image = '" . $this->db->escape($data['image']) . "',
         date_publish_start = '" . $this->db->escape($data['date_publish_start']) . "', 
         date_publish_end = '" . $this->db->escape($data['date_publish_end']) . "', 
         template    = '" . $this->db->escape($data['template']) . "', 
@@ -233,7 +238,8 @@ class ModelContentPage extends Model {
                 LEFT JOIN " . DB_PREFIX . "post_description cd ON (c.post_id = cd.post_id) 
             WHERE c.parent_id = '" . (int) $parent_id . "' 
                 AND cd.language_id = '" . (int) $this->config->get('config_language_id') . "' 
-                AND post_type = 'page' 
+                AND post_type = 'page'
+                GROUP BY c.post_id
             ORDER BY c.sort_order, cd.title ASC");
 
             foreach ($query->rows as $result) {
@@ -343,6 +349,8 @@ class ModelContentPage extends Model {
             'date_publish_end',
             'pa.sort_order'
         );
+
+        $sql .= " GROUP BY pa.post_id";
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= " ORDER BY " . $data['sort'];

@@ -1,7 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PA LA FINCA";palafincaquindio@gmail.com;;"(57) (6) 7443684";"Cr18 23-48 Colombia, Armenia"
-"ENFOQUE ASESORIAS & SEGUROS LTDA.";info@enfoqueltda.com.co;enfoqueltda.com.co;"(57) (4) 7811301";"Cl 30 5-23 Centro Colombia, Montería"
-"BIOTROPICAL S.A.";gerencia@biotropical.com.co;www.biotropical.com.co;"(57) (4) 2359008";"Cr65 C 32 B-13 Colombia, Medellín"
-"ALMACEN EL GRAJERO-MIS TEJAS";mistejas@hotmail.com;;"(57) (6) 7413199";"Cr19 24-03 L 1 Colombia, Armenia"
-FUMIMOTOR;fumimotor@hotmail.com;www.fumimotor.com;"(57) (6) 3261575";"Cr9 Bis Calle 43 Esq Colombia, Pereira"
-BIOFINES;info@biogines.com;biofines.com;"(57) (1) 6694128";"Cl 183 11-55 B-59 Ap 202 Colombia, Bogotá"

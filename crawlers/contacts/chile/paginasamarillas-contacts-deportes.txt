@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-CORRAICO;;;"(56) (2) 2029326";"Badajoz 86 Las Condes Chile, Santiago"
-"WARLIKE PAINTBALL";;;"(56) 88217089";"Santiago De Chile Chile, Santiago"
-"SKI CECILIA WILSON PROPIEDADES";;;"(56) (2) 2015583";"Av. Apoquindo 5555 Of. 905 - C Las Condes Chile, Santiago"
-"SKI TOTAL";;;"(56) (2) 2460156";"Av. Apoquindo 4900 Loc. 42 - 46 Las Condes Chile, Santiago"

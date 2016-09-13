@@ -1,16 +1,15 @@
 <?php
 
+require_once( DIR_SYSTEM . 'library/google/autoload.php' );
+
 class ControllerApiGoogle extends Controller {
 
     protected $google;
     protected $plus;
     protected $gtoken;
 
-    public function index() {
+    private function initialize() {
         if ($this->config->get('social_google_client_id') && $this->config->get('social_google_client_secret')) {
-            $this->load->library('google_sdk/Google_Client');
-            $this->load->library('google_sdk/contrib/Google_PlusService');
-
             $this->google = new Google_Client();
             $this->google->setApplicationName($this->config->get('config_name'));
             $this->google->setScopes(array(
@@ -19,9 +18,18 @@ class ControllerApiGoogle extends Controller {
                 'https://www.googleapis.com/auth/plus.me',
                 'https://www.googleapis.com/auth/userinfo.profile',
                 'https://www.googleapis.com/auth/userinfo.email'));
+            
+            $this->google->setClientId($this->config->get('social_google_client_id'));
+            $this->google->setClientSecret($this->config->get('social_google_client_secret'));
+        } else {
+            return false;
+        }
+    }
 
+    public function index() {
+        if (!$this->initialize()) {
             if ($this->request->hasQuery('redirect')) {
-                $this->session->set('action', $this->request->getQuery('redirect'));
+                $_SESSION[gaction] = $this->request->getQuery('redirect');
             }
 
             $redirect_uri = HTTP_HOME . 'api/google';
@@ -37,37 +45,36 @@ class ControllerApiGoogle extends Controller {
             }
             $redirect_uri = str_replace('/web', '', $redirect_uri);
 
-            $this->google->setClientId($this->config->get('social_google_client_id'));
-            $this->google->setClientSecret($this->config->get('social_google_client_secret'));
             $this->google->setRedirectUri($redirect_uri);
 
-            if ($this->request->hasQuery('code') && !$this->session->has('gtoken')) {
-                $this->google->authenticate();
-                $this->session->set('gtoken', $this->google->getAccessToken());
-                $this->session->set('gcode', $this->request->getQuery('code'));
+            if ($this->request->hasQuery('code') && !isset($_SESSION['gtoken'])) {
+                var_dump($this->google);
+                $this->google->authenticate($this->request->getQuery('code'));
+                $_SESSION[gtoken] = $this->google->getAccessToken();
+                $_SESSION[gcode] = $this->request->getQuery('code');
                 $this->redirect(Url::createUrl("api/google"));
             }
 
-            if ($this->session->has('gtoken')) {
-                $this->google->setAccessToken($this->session->get('gtoken'));
+            if (isset($_SESSION['gtoken'])) {
+                $this->google->setAccessToken($_SESSION['gtoken']);
             } else {
                 $this->redirect($this->google->createAuthUrl());
             }
 
             if (isset($_REQUEST['logout'])) {
-                $this->session->clear('gtoken');
+                unset($_SESSION['gtoken']);
                 $this->google->revokeToken();
             }
 
-            $this->plus = new Google_PlusService($this->google);
+            $this->plus = new Google_Service_Plus($this->google);
 
-            $actions = array('invitefriends', 'login', 'promote');
+            $gactions = array('invitefriends', 'login', 'promote');
 
-            if ($this->session->has('action') && in_array($this->session->get('action'), $actions)) {
-                $this->{$this->session->get('action')}();
+            if (isset($_SESSION['gaction']) && in_array($_SESSION['gaction'], $gactions)) {
+                $this->{$_SESSION['gaction']}();
             } else {
-                $this->session->clear('gtoken');
-                $this->session->clear('gcode');
+                unset($_SESSION['gtoken']);
+                unset($_SESSION['gcode']);
                 if ($this->session->has('redirect')) {
                     $this->redirect($this->session->get('redirect'));
                 } else {
@@ -82,21 +89,21 @@ class ControllerApiGoogle extends Controller {
     public function invitefriends() {
         if ($this->google->getAccessToken()) {
             if ($this->google->isAccessTokenExpired()) {
-                $this->google->revokeToken($this->session->get('gtoken'));
-                $this->session->clear('gtoken');
-                $this->session->clear('gcode');
-                $this->session->clear('action');
+                $this->google->revokeToken($_SESSION['gtoken']);
+                unset($_SESSION['gtoken']);
+                unset($_SESSION['gcode']);
+                unset($_SESSION['gaction']);
             }
 
             $reqUrl = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=1000';
             $req = new Google_HttpRequest($reqUrl);
-            $googleAuth = $this->google->getIo()->authenticatedRequest($req);
+            $googleAuth = $this->google->getAuth()->authenticatedRequest($req);
             $xml = simplexml_load_string($googleAuth->getResponseBody());
             $response = json_encode($xml);
 
             $reqUrl = 'https://www.googleapis.com/oauth2/v2/userinfo';
             $req = new Google_HttpRequest($reqUrl);
-            $userInfo = json_decode($this->google->getIo()->authenticatedRequest($req)->getResponseBody());
+            $userInfo = json_decode($this->google->getAuth()->authenticatedRequest($req)->getResponseBody());
 
             $xml->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
 
@@ -170,7 +177,7 @@ class ControllerApiGoogle extends Controller {
                     $fullname = ($userInfo->name) ? addslashes($userInfo->name) : $this->config->get('config_title');
                     $data = array(
                         'newsletter_id' => $newsletter['newsletter_id'],
-                        'name' => "Invitar Amigos de " . $this->db->escape(addslashes($profile['name'])) . " en Google",
+                        'name' => "Invitar Amigos de " . $this->db->escape(addslashes($fullname)) . " ({$userInfo->email}) en Google",
                         'subject' => 'Hola',
                         'from_name' => $this->db->escape($fullname),
                         'from_email' => $this->db->escape($this->config->get('config_email')),
@@ -198,7 +205,7 @@ class ControllerApiGoogle extends Controller {
 
                     $task->object_id = (int) $campaign_id;
                     $task->object_type = 'campaign';
-                    $task->task = $campaign['name'];
+                    $task->task = $data['name'];
                     $task->type = 'send';
                     $task->time_exec = date('Y-m-d H:i:s');
                     $task->params = $params;
@@ -248,19 +255,19 @@ class ControllerApiGoogle extends Controller {
         if ($this->google->getAccessToken()) {
             $reqUrl = 'https://www.google.com/m8/feeds/contacts/default/full?max-results=1000';
             $req = new Google_HttpRequest($reqUrl);
-            $googleAuth = $this->google->getIo()->authenticatedRequest($req);
+            $googleAuth = $this->google->getAuth()->authenticatedRequest($req);
             $xml = simplexml_load_string($googleAuth->getResponseBody());
             $response = json_encode($xml);
 
             $reqUrl = 'https://www.googleapis.com/oauth2/v2/userinfo';
             $req = new Google_HttpRequest($reqUrl);
-            $userInfo = json_decode($this->google->getIo()->authenticatedRequest($req)->getResponseBody());
+            $userInfo = json_decode($this->google->getAuth()->authenticatedRequest($req)->getResponseBody());
 
             $xml->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
-
+            $fullname = ($userInfo->name) ? addslashes($userInfo->name) : $this->config->get('config_title');
             $list = $this->db->query("SELECT * 
             FROM " . DB_PREFIX . "contact_list 
-            WHERE name = \"Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google\"");
+            WHERE name = \"Amigos de " . $this->db->escape(addslashes($fullname)) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google\"");
 
             if ($list->num_rows) {
                 $list_id = $list->row['contact_list_id'];
@@ -316,8 +323,7 @@ class ControllerApiGoogle extends Controller {
                 $this->load->model('marketing/newsletter');
 
                 $product = array();
-                $product_id = ($this->request->hasQuery('product_id')) ? $this->request->getQuery('product_id') : $this->session->get('promote_product_id');
-                $this->session->set('promote_product_id', $product_id);
+                $_SESSION['promote_product_id'] = $product_id = ($this->request->hasQuery('product_id')) ? $this->request->getQuery('product_id') : $_SESSION['promote_product_id'];
                 if ($product_id) {
                     $this->load->model('store/product');
                     $product = $this->modelProduct->getProduct($product_id);
@@ -376,7 +382,7 @@ class ControllerApiGoogle extends Controller {
                         if ($newsletter) {
                             $data = array(
                                 'newsletter_id' => $newsletter['newsletter_id'],
-                                'name' => "Invitar Amigos de " . $this->db->escape(addslashes($userInfo->name)) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google",
+                                'name' => "Invitar Amigos de " . $this->db->escape($fullname) . " (" . $this->db->escape(addslashes($userInfo->email)) . ") en Google",
                                 'subject' => 'Hola',
                                 'from_name' => $this->db->escape($fullname),
                                 'from_email' => $this->db->escape($this->config->get('config_email')),
@@ -405,7 +411,7 @@ class ControllerApiGoogle extends Controller {
 
                             $task->object_id = (int) $campaign_id;
                             $task->object_type = 'campaign';
-                            $task->task = $campaign['name'];
+                            $task->task = $data['name'];
                             $task->type = 'send';
                             $task->time_exec = date('Y-m-d H:i:s');
                             $task->params = $params;
@@ -466,15 +472,15 @@ class ControllerApiGoogle extends Controller {
              */
 
             if ($this->google->isAccessTokenExpired()) {
-                $this->google->revokeToken($this->session->get('gtoken'));
-                $this->session->clear('gtoken');
-                $this->session->clear('gcode');
-                $this->session->clear('action');
+                $this->google->revokeToken($_SESSION['gtoken']);
+                unset($_SESSION['gtoken']);
+                unset($_SESSION['gcode']);
+                unset($_SESSION['gaction']);
             }
 
             $reqUrl = 'https://www.googleapis.com/oauth2/v2/userinfo';
-            $req = new Google_HttpRequest($reqUrl);
-            $userInfo = json_decode($this->google->getIo()->authenticatedRequest($req)->getResponseBody());
+            $req = new Google_Http_Request($reqUrl);
+            $userInfo = json_decode($this->google->getAuth()->authenticatedRequest($req)->getResponseBody());
             $token = json_decode($this->google->getAccessToken());
 
             $photo = str_replace(' ', '_', strtolower($userInfo->name)) . '_' . md5(uniqid() . time()) . '.jpg';
@@ -491,7 +497,7 @@ class ControllerApiGoogle extends Controller {
                 'google_oauth_id' => $userInfo->id,
                 'google_oauth_token' => $token->access_token,
                 'google_oauth_refresh' => $token->refresh_token,
-                'google_code' => $this->session->get('gcode')
+                'google_code' => $_SESSION['gcode']
             );
 
             $this->load->model('account/customer');

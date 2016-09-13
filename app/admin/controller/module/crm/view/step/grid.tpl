@@ -14,9 +14,9 @@
         <thead>
             <tr>
                 <th><input title="Seleccionar Todos" type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" showquick="off" /></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_name; ?>')"<?php if ($sort == 'name') { ?> class="<?php echo strtolower($order); ?>" <?php } ?>><?php echo $Language->get('column_name'); ?></a></th>
-                <th><a onclick="$('#gridWrapper').load('<?php echo $sort_order; ?>')"<?php if ($sort == 'p.sort_order') { ?> class="<?php echo strtolower($order); ?>"<?php } ?>><?php echo $Language->get('column_sort_order'); ?></a></th>
-                <th><?php echo $Language->get('column_action'); ?></th>
+                <th><?php echo $Language->get('Step Name'); ?></th>
+                <th><?php echo $Language->get('Sort Order'); ?></th>
+                <th><?php echo $Language->get('Actions'); ?></th>
             </tr>
         </thead>
         <tbody>

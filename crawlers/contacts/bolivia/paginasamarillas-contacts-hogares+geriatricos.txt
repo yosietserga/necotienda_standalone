@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"HOGAR GERIATRICO EL REMANSO";;;"(591) (22) 2723456";"La Paz Bolivia, La Paz"
-"CASA GERIATRICA Y DE REPOSO EL BUEN SAMARITANO";;;"(591) (22) 2720383";"Zona Irpavi Cl. Villegas No 6700 Esq. No 5 Bolivia, La Paz"
-"HOGAR SAN JOSE";;;"(591) (33) 3426666";"Km 6 Carretera al Norte, Diganal Sede de Blooming Bolivia, Santa Cruz de la Sierra"

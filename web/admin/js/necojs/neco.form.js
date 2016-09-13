@@ -56,95 +56,99 @@
         };
 
         var helpers = {
-            _create: function() {                
+            _create: function() {
                 var formCounter = 0;
                 if (data.element.length == 0) {
                     data.element = $('body');
-                    $(data.element).find('form').each(function() {
-                        $(this).attr('id','neco-form-' + formCounter).addClass('neco-form');
+                    $(data.element).find('form').each(function () {
+                        $(this).attr('id', 'neco-form-' + formCounter).addClass('neco-form');
                         formCounter = formCounter + 1 * 1;
-                        
-                        $(data.element).find('input').each(function() {
+
+                        $(data.element).find('input').each(function () {
                             $(this).ntInput($(this).attr('type'));
                         });
-                        
-                        $(data.element).find('select').each(function() {
+
+                        $(data.element).find('select').each(function () {
                             $(this).ntSelect();
                         });
-                        
-                        $(data.element).find('textarea').each(function() {
+
+                        $(data.element).find('textarea').each(function () {
                             $(this).ntTextArea();
                         });
                     });
-                } 
+                }
                 if (data.element.length > 0 && $(data.element).get(0).tagName != 'FORM') {
                     if ($(data.element).find('form')) {
-                        $(data.element).find('form').each(function() {
-                            $(this).attr('id','neco-form-' + formCounter).addClass('neco-form');
+                        $(data.element).find('form').each(function () {
+                            $(this).attr('id', 'neco-form-' + formCounter).addClass('neco-form');
                             formCounter = formCounter + 1 * 1;
-                            
-                            $(data.element).find('input').each(function() {
+
+                            $(data.element).find('input').each(function () {
                                 $(this).ntInput($(this).attr('type'));
                             });
-                            
-                            $(data.element).find('select').each(function() {
+
+                            $(data.element).find('select').each(function () {
                                 $(this).ntSelect();
                             });
-                            
-                            $(data.element).find('textarea').each(function() {
+
+                            $(data.element).find('textarea').each(function () {
                                 $(this).ntTextArea();
                             });
                         });
                     }
-                } 
+                }
                 if ($(data.element).get(0).tagName == 'FORM') {
                     $(data.element).addClass('neco-form').attr({
-                        action:settings.url,
-                        method:settings.type,
-                        enctype:settings.enctype,
-                        name:'neco-form-' + formCounter
+                        action: settings.url,
+                        method: settings.type,
+                        enctype: settings.enctype,
+                        name: 'neco-form-' + formCounter
                     });
-                    $(data.element).find('input').each(function() {
+                    $(data.element).find('input').each(function () {
                         if (settings.map) {
-                            
+
                         } else {
-                            
+
                         }
                         $(this).ntInput();
                     });
                 }
-                
-                $(data.element).find('label').each(function() {
+
+                $(data.element).find('label').each(function () {
                     $(this).addClass('neco-label');
                 });
 
-                data.submitButton = $(document.createElement('a'))
-                    .addClass('button')
-                    .addClass('submit')
-                    .text('Aceptar')
-                    .attr({
-                        title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
-                    })
-                    .css({'display':'none'})
-                    .appendTo(data.element);
-                
-                cancelButton = $(document.createElement('a'))
-                    .addClass('button')
-                    .addClass('cancel')
-                    .text('Cancelar')
-                    .attr({
-                        title:'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
-                    })
-                    .css({'display':'none'})
-                    .appendTo(data.element);
-                
-                $(cancelButton).on('click',function(e){
-                   $(data.element).find('input').each(function(){
-                        $(this).val('').removeClass('neco-input-error').removeClass('neco-input-success');
-                        $("#tempError").remove();
-                   }); 
-                }).after('<div class="clear"></div>');
-                
+                if (settings.submitButton) {
+                    data.submitButton = $(document.createElement('a'))
+                        .addClass('button')
+                        .addClass('submit')
+                        .text('Aceptar')
+                        .attr({
+                            title: 'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
+                        })
+                        .css({'display': 'none'})
+                        .appendTo(data.element);
+                }
+
+                if (settings.cancelButton) {
+                    cancelButton = $(document.createElement('a'))
+                        .addClass('button')
+                        .addClass('cancel')
+                        .text('Cancelar')
+                        .attr({
+                            title: 'Al hacer click en este bot\u00F3n, usted est\u00E1 aceptando todas las condiciones y t\u00E9rminos de uso de este sitio web'
+                        })
+                        .css({'display': 'none'})
+                        .appendTo(data.element);
+
+                    $(cancelButton).on('click', function (e) {
+                        $(data.element).find('input').each(function () {
+                            $(this).val('').removeClass('neco-input-error').removeClass('neco-input-success');
+                            $("#tempError").remove();
+                        });
+                    }).after('<div class="clear"></div>');
+                }
+
                 if (settings.lockButton) {
                     unlockButton = $(document.createElement('div')).attr({
                        id:'neco-unlock-form' 
@@ -173,99 +177,113 @@
                     if (settings.submitButton) $(data.submitButton).fadeIn();
                     if (settings.cancelButton) $(cancelButton).fadeIn();
                 }
-                $(data.submitButton).on('click',function(e){
-                    var msg;
-                    var error = false;
-                    var top, input;
-                    $(data.element).find('input').each(function(){
-                        var value = !!$(this).val();
-                        var required = $(this).attr('required');
-                        var type = $(this).attr('type');
-                        var top = $(this).offset().top;
-                        
-                        if (type=='email' && $(this).val()=='@' && $(this).attr('required')) {
-                            error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar una direcci\u00F3n de email v\u00E1lida');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar una direcci\u00F3n de email v\u00E1lida'});
-                        }
-                        
-                        if (type=='fullname' && $(this).val()=='Ingresa tu nombre completo') {
-                            error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar tu nombre completo');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar tu nombre completo'});
-                        }
-                        
-                        if (type=='firstname' && $(this).val()=='Ingrese sus nombres') {
-                            error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar tus nombres');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar tus nombres'});
-                        }
-                        
-                        if (type=='lastname' && $(this).val()=='Ingrese sus apellidos') {
-                            error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes ingresar tus apellidos');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success') }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes ingresar tus apellidos'});
-                        }
-                        
-                        if (!value && required && !error) {
-                            error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Debes rellenar todos los campos obligatorios identificados con asterisco (*)');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success'); }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'Debes rellenar este campo con la informaci\u00F3n correspondiente'});
-                        }
-                        
-                        var pattern = new RegExp(/.["\\\/\{\}\[\]\+']/i);
-                        if (pattern.test($(this).val()) && 
-                        !error && $(this).attr('type') != 'password' && 
-                        $(this).attr('type') != 'hidden' && 
-                        $(this).attr('type') != 'necoDate' && 
-                        $(this).attr('type') != 'date') {
-                            error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('No se permiten ninguno de estos caracteres especiales ["#$/\'+}{\u003C\u003E] en este formulario');
-                            if ($(this).hasClass('neco-input-success')) { $(this).removeClass('neco-input-success'); }
-                            $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title':'No se permiten ninguno de estos caracteres especiales ["#$&/?\'+}{\u003C\u003E] en este campo'});
-                            top = $(this).offset().top;
-                        }
-                        
-                        if ($(this).hasClass('neco-input-error') && !error) {
-                            error = true;
-                            $("#tempError").remove();
-                            msg = $(document.createElement('p')).attr('id','tempError').addClass('neco-submit-error').text('Hay errores en el formulario, por favor revise y corr\u00EDjalos todos para poder continuar');
-                        }
-                        if (error) return false;
-                    });
-                    
-                    if (error) {
-                        $(this).before(msg);
-                        $('html, body').animate({scrollTop:top}, 'slow');
-                    } else {
-                        error = false;
-                        if (settings.ajax) {
-                            $.ajax({
-                               type:settings.type,
-                               dataType:settings.dataType,
-                               data:$(data.element).serialize(),
-                               url:settings.url,
-                               beforeSend:helpers._beforeSend(),
-                               complete:helpers._complete(),
-                               success:function(data) {helpers._success(data)}
-                            });
+                if (settings.submitButton) {
+                    $(data.submitButton).on('click', function (e) {
+                        var msg;
+                        var error = false;
+                        var top, input;
+                        $(data.element).find('input').each(function () {
+                            var value = !!$(this).val();
+                            var required = $(this).attr('required');
+                            var type = $(this).attr('type');
+                            var top = $(this).offset().top;
+
+                            if (type == 'email' && $(this).val() == '@' && $(this).attr('required')) {
+                                error = true;
+                                $("#tempError").remove();
+                                msg = $(document.createElement('p')).attr('id', 'tempError').addClass('neco-submit-error').text('Debes ingresar una direcci\u00F3n de email v\u00E1lida');
+                                if ($(this).hasClass('neco-input-success')) {
+                                    $(this).removeClass('neco-input-success')
+                                }
+                                $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title': 'Debes ingresar una direcci\u00F3n de email v\u00E1lida'});
+                            }
+
+                            if (type == 'fullname' && $(this).val() == 'Ingresa tu nombre completo') {
+                                error = true;
+                                $("#tempError").remove();
+                                msg = $(document.createElement('p')).attr('id', 'tempError').addClass('neco-submit-error').text('Debes ingresar tu nombre completo');
+                                if ($(this).hasClass('neco-input-success')) {
+                                    $(this).removeClass('neco-input-success')
+                                }
+                                $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title': 'Debes ingresar tu nombre completo'});
+                            }
+
+                            if (type == 'firstname' && $(this).val() == 'Ingrese sus nombres') {
+                                error = true;
+                                $("#tempError").remove();
+                                msg = $(document.createElement('p')).attr('id', 'tempError').addClass('neco-submit-error').text('Debes ingresar tus nombres');
+                                if ($(this).hasClass('neco-input-success')) {
+                                    $(this).removeClass('neco-input-success')
+                                }
+                                $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title': 'Debes ingresar tus nombres'});
+                            }
+
+                            if (type == 'lastname' && $(this).val() == 'Ingrese sus apellidos') {
+                                error = true;
+                                $("#tempError").remove();
+                                msg = $(document.createElement('p')).attr('id', 'tempError').addClass('neco-submit-error').text('Debes ingresar tus apellidos');
+                                if ($(this).hasClass('neco-input-success')) {
+                                    $(this).removeClass('neco-input-success')
+                                }
+                                $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title': 'Debes ingresar tus apellidos'});
+                            }
+
+                            if (!value && required && !error) {
+                                error = true;
+                                $("#tempError").remove();
+                                msg = $(document.createElement('p')).attr('id', 'tempError').addClass('neco-submit-error').text('Debes rellenar todos los campos obligatorios identificados con asterisco (*)');
+                                if ($(this).hasClass('neco-input-success')) {
+                                    $(this).removeClass('neco-input-success');
+                                }
+                                $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title': 'Debes rellenar este campo con la informaci\u00F3n correspondiente'});
+                            }
+
+                            var pattern = new RegExp(/.["\\\/\{\}\[\]\+']/i);
+                            if (pattern.test($(this).val()) && !error && $(this).attr('type') != 'password' &&
+                                $(this).attr('type') != 'hidden' &&
+                                $(this).attr('type') != 'necoDate' &&
+                                $(this).attr('type') != 'date') {
+                                error = true;
+                                $("#tempError").remove();
+                                msg = $(document.createElement('p')).attr('id', 'tempError').addClass('neco-submit-error').text('No se permiten ninguno de estos caracteres especiales ["#$/\'+}{\u003C\u003E] en este formulario');
+                                if ($(this).hasClass('neco-input-success')) {
+                                    $(this).removeClass('neco-input-success');
+                                }
+                                $(this).addClass('neco-input-error').parent().find('.neco-form-error').attr({'title': 'No se permiten ninguno de estos caracteres especiales ["#$&/?\'+}{\u003C\u003E] en este campo'});
+                                top = $(this).offset().top;
+                            }
+
+                            if ($(this).hasClass('neco-input-error') && !error) {
+                                error = true;
+                                $("#tempError").remove();
+                                msg = $(document.createElement('p')).attr('id', 'tempError').addClass('neco-submit-error').text('Hay errores en el formulario, por favor revise y corr\u00EDjalos todos para poder continuar');
+                            }
+                            if (error) return false;
+                        });
+
+                        if (error) {
+                            $(this).before(msg);
+                            $('html, body').animate({scrollTop: top}, 'slow');
                         } else {
-                            $(data.element).submit();
+                            error = false;
+                            if (settings.ajax) {
+                                $.ajax({
+                                    type: settings.type,
+                                    dataType: settings.dataType,
+                                    data: $(data.element).serialize(),
+                                    url: settings.url,
+                                    beforeSend: helpers._beforeSend(),
+                                    complete: helpers._complete(),
+                                    success: function (data) {
+                                        helpers._success(data)
+                                    }
+                                });
+                            } else {
+                                $(data.element).submit();
+                            }
                         }
-                    }
-                });
-                
+                    });
+                }
                 if (typeof settings.create == 'function') {
                     settings.create();
                 }

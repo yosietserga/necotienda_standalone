@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"DELTA PUBLICIDAD INFLABLES INTERNACIONAL LTDA.";ricardoinflables@gmail.com;www.inflablesdelta.com;;"Visite Nuestra Página Web Chile, Santiago"
-"DELTA PUBLICIDAD INFLABLES INTERNACIONAL LTDA.";ricardoinflables@gmail.com;www.eventosdelta.com;;"Visite Nuestra Página Web Chile, Santiago"
-"INFLABLES & BANDERAS";ricardoinflables@gmail.com;www.inflablesdelta.com;;"Visite Nuestra Página Web Chile, Santiago"
-"SKY DANCER & INFLABLES";ricardoinflables@gmail.com;www.inflablesdelta.com;;"Visite Nuestra Página Web Chile, Santiago"

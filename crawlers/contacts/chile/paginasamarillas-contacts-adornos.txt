@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"METALURGICA MEDITARRANEO LTDA";;;"(56) (2) 25541726";"Aldunate 1487 Chile, Santiago"

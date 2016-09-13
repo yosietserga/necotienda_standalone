@@ -1,7 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"COORDINADORA JURÍDICA S.A.S.";juliangiraldo@coordinadorajuridica.com;www.coordinadorajuridica.com;"(57) (4) 4449045";"Cr67 B 48 B-39 Colombia, Medellín"
-OFIENLACE;gerencia@ofienlace.com.co;www.ofienlace.com.co;"(57) (4) 4031770";"Cl 29 41-105 Of 1206 Colombia, Medellín"
-E-VOCS.COM;gerencia@e-vocs.com;www.e-vocs.com;"(57) (1) 7430851";"Cr10 97 A-13 Trr B Of 202 Edif Bogotá Trade Center Colombia, Bogotá"
-"MULTI OFICINAS DE COLOMBIA S.A.S.";auxiliarcontable@yoffice.com.co;yoffice.com.co;"(57) (2) 4897900";"Av4   N 7   N-46 L 335 Colombia, Cali"
-"SOCIEDAD DE MEJORAS PÚBLICAS DE CARTAGENA";smpcartagena@hotmail.com;www.fortificacionesdecartagena.com;"(57) (5) 6604791";"Centro Cl Don Sancho 36-70 Colombia, Cartagena"
-"OFICINAS VIRTUALES DE COLOMBIA";comercial@oficinas-virtuales.com;www.oficinas-virtuales.com;"(57) (4) 4444844";"Cr43 A 15   S-15 Of 802 Colombia, Medellín"

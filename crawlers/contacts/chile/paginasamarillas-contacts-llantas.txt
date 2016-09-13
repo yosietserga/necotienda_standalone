@@ -1,8 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"GMC GUILLERMO MORALES CARREÑO";;;"(56) (55) 377707";"Av.Rendic 3906 Chile, Antofagasta"
-COMBAHL;;;"(56) (2) 3758480";"Uruguay 9098 Chile, Santiago"
-"ALITEC ALINEACION Y BALANCEO";;;"Telefax: (56) (2) 5562922";"San Ignacio 1815 Chile, Santiago"
-"ALTO-RUEDAS REPARACIONES";;;"(56) (2) 7352758";"Av. Fermin Vivaceta 628 Chile, Santiago"
-"MOMO CHILE";;;"Telefax: (56) (2) 9553070";"Av. Padre Hurtado Norte 1602 Chile, Santiago"
-"RUEDAS JUAN VALDENEGRO";;;"(56) (2) 2226882";"Copiapo 390 Chile, Santiago"
-ZENITRAM;;;"(56) (2) 6238825";"Av. El Trabajo 2720 Chile, Santiago"

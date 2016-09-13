@@ -37,20 +37,20 @@ class ModelStyleTheme extends Model {
         WHERE t.theme_id = '" . (int)$theme_id . "'");
 		return $query->row;
 	}
-	
+
 	/**
 	 * ModelStyleTheme::getAll()
-	 * 
-     * @see DB
-     * @see Cache
-	 * @return array sql records 
+	 *
+	 * @see DB
+	 * @see Cache
+	 * @return array sql records
 	 */
 	public function getAll() {
-        $data_cached = $this->cache->get('theme.all.active.for.store.'. STORE_ID);
+		$data_cached = $this->cache->get('theme.all.active.for.store.'. STORE_ID);
 		if ($data_cached) {
-            return $data_cached;
-        } else {
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "theme 
+			return $data_cached;
+		} else {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "theme
             WHERE store_id = '". (int)STORE_ID ."'
             AND status = 1
             AND date_publish_start <= NOW()
@@ -58,6 +58,28 @@ class ModelStyleTheme extends Model {
             ORDER BY `default` DESC, sort_order ASC");
 			$this->cache->set('theme.all.active.for.store.'. STORE_ID, $query->rows);
 			return $query->rows;
+		}
+	}
+
+	/**
+	 * ModelStyleTheme::getById()
+	 *
+	 * @see DB
+	 * @see Cache
+	 * @return array sql records
+	 */
+	public function getById($id) {
+		$data_cached = $this->cache->get("theme.$id.active.for.store.". STORE_ID);
+		if ($data_cached) {
+			return $data_cached;
+		} else {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "theme
+            WHERE theme_id = ". (int)$id ."
+            AND status = 1
+            AND date_publish_start <= NOW()
+            AND (date_publish_end >= NOW() OR date_publish_end = '0000-00-00 00:00:00')");
+			$this->cache->set("theme.$id.active.for.store.". STORE_ID, $query->row);
+			return $query->row;
 		}
 	}
 }

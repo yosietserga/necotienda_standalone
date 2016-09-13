@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"TELE SHOPPING";;;"(591) (33) 3363690";"Cl Bolívar No. 27 Local No. 114 (Shopping Bolívar) Bolivia, Santa Cruz de la Sierra"
-"VALENCIA AVILA JOHANN IVAN - ASEDIO REPRESENTACIONES";;;"(591) (33) 3525393";"Cl.Madrejon No.161 Santa Rosita Bolivia, Santa Cruz de la Sierra"

@@ -1,1 +1,1 @@
-<p class="overview"><?php echo substr($product['overview'],0,150)."... "; ?><a href="<?php echo str_replace('&', '&amp;', $product['href']); ?>" title="<?php echo $product['name']; ?>">Leer M&aacute;s</a></p>
+<p class="overview"><?php echo substr($product['overview'],0,140)."... "; ?>&nbsp;<a href="<?php echo $Url::createUrl('store/product',array('product_id'=>$product['product_id'])); ?>" title="<?php echo $product['name']; ?>">Más detalles</a></p>

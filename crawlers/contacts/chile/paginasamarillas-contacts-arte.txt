@@ -1,8 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PROJEKT DESIGN AND PRODUCTION";;;"(56) (2) 6581421";"Arquitectura Chile, Santiago"
-ARTEMARCO;;;"Telefax: (56) (32) 2687465";"4 Norte 449 Local 8 Chile, Viña del Mar"
-"CASA DEL ARTE";;;"(56) (58) 230926";"Baquedano 281 Esq. Sotomayor Chile, Arica"
-"DECORACIÓN GALLERY";;;"(56) (2) 2510293";"Av. Seminario 287 Chile, Santiago"
-"ENMARCACIONES NUEVO ESTILO";;;"(56) (2) 2314510";"Av. 11 De Septiembre 2249 Local 58, Los Leones, Plaza Lyon Providencia Chile, Santiago"
-"MAR PAU GALERÍA DE ARTE";;;"(56) (32) 2688075";"Av. Valparaíso 595 Loc. 18 Chile, Viña del Mar"
-"CUADROS MÁGICOS CECILIA FLATEN";;;"(56) (2) 2262940";"Pasaje Príncipe De Gales 6958 Casa C Chile, Santiago"

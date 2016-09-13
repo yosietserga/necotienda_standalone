@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-INFRAPLAST;;;"(56) (2) 7471584";"San Ignacio 010 Quilicura Santiago Chile, Santiago"

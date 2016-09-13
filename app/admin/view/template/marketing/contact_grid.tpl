@@ -32,7 +32,10 @@
         <?php if ($contacts) { ?>
             <?php foreach ($contacts as $contact) { ?>
             <tr id="tr_<?php echo $contact['contact_id']; ?>">
-                <td><?php echo $contact['name']; ?></td>
+                <td>
+                    <?php echo $contact['name']; ?>&nbsp;
+                    <?php echo $contact['email']; ?>
+                </td>
                 <!--
                 <td>
                 <?php foreach ($contact['action'] as $action) { ?>

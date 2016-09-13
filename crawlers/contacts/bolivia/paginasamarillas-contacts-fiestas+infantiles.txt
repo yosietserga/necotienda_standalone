@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"GLOBO LOCO";;;"(591) (33) 3496196";"Ñuflo De Chávez No. 808 Bolivia, Santa Cruz de la Sierra"

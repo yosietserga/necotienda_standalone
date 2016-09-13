@@ -1,14 +1,8 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
-    <div class="actions">
-        <div class="print-action">
-            <a onclick="window.print();" class="button">Imprimir</a>
-            <?php //TODO: <a onclick="window.print();" class="button">PDF</a> ?>
-        </div>
-
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-start.tpl");?>
+    <div class="group group--btn"> 
         <div class="payment-address">
             <span><?php echo $text_payment_address; ?></span>
             <p><?php echo $payment_address; ?></p>

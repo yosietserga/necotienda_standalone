@@ -120,6 +120,7 @@ class ControllerCheckoutCart extends Controller {
                     'model' => $result['model'],
                     'thumb' => NTImage::resizeAndSave($image, $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height')),
                     'option' => $option_data,
+                    'attributes' => $result['attributes'],
                     'quantity' => $result['quantity'],
                     'stock' => $result['stock'],
                     'price' => $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'))),
@@ -245,7 +246,6 @@ class ControllerCheckoutCart extends Controller {
             $this->session->set('shipping_methods', $quote_data);
             $this->data['shipping_methods'] = $quote_data;
 
-
             $script = "";
             // SCRIPTS
             if (!$this->customer->isLogged()) {
@@ -283,9 +283,9 @@ class ControllerCheckoutCart extends Controller {
                         postcode: $('#payment_postcode').val(),
                         address_1: $('#payment_address_1').val(),
                         session_address_var: 'shipping_address_id'
-                    },
-                    function(data) {
-                        $.post('" . Url::createUrl("checkout/cart/islogged") . "',function(data){
+                    }).done(function(data) {
+                        $.post('" . Url::createUrl("checkout/cart/islogged") . "')
+                        .done(function(data){
                             if (data) { 
                                 $('#email').attr('disabled','disabled');
                                 $('#firstname').attr('disabled','disabled');
@@ -319,8 +319,8 @@ class ControllerCheckoutCart extends Controller {
                         postcode: $('#shipping_postcode').val(),
                         address_1: $('#shipping_address_1').val(),
                         session_address_var: 'shipping_address_id'
-                    },
-                    function(data) {
+                    })
+                    .done(function(data) {
                         hasAddress = 1;
                         var confirmShippingAddress = $('#shipping_address_1').val()  +' '+ $('#payment_street').val() +', '+ $('#shipping_city').val() +'.';
                         $('#confirmShippingAddress').text(confirmShippingAddress);
@@ -334,8 +334,8 @@ class ControllerCheckoutCart extends Controller {
                         postcode: $('#shipping_postcode').val(),
                         address_1: $('#shipping_address_1').val(),
                         session_address_var: 'shipping_address_id'
-                    },
-                    function(data) {
+                    })
+                    .done(function(data) {
                         hasAddress = 1;
                         $('#payment_country_id').val($('#shipping_country_id').val());
                         $('#payment_zone_id').val($('#shipping_zone_id').val());
@@ -504,19 +504,18 @@ class ControllerCheckoutCart extends Controller {
                             
                             if (!error) { " . $script . " }
                                 
-                        } else if(isLogged && hasAddress && !shippingMethods) {
+                        } else if(isLogged && hasAddress && !shippingMethods && !error) {
                             $.post('" . Url::createUrl("checkout/confirm") . "&resp=json',
                                 $('#orderForm').serialize(),
                                 function(data) {
                                     data = $.parseJSON(data);
-                                    location.href = '" . Url::createUrl("checkout/success") . "&order_id='+ order_id;
+                                    location.href = '" . Url::createUrl("checkout/success") . "&order_id='+ data.order_id;
                                 }
                             );
                         }
                         return error;
                     } 
-                            
-                    
+
                     if (stepId == 'necoWizardStep_3') {
                         var error = false;
                         
@@ -567,7 +566,7 @@ class ControllerCheckoutCart extends Controller {
                             });
                             
                             if (!error) { " . $scriptShippingAddress . " }
-                        } else {
+                        } else if (!error) {
                             $.post('" . Url::createUrl("checkout/confirm") . "&resp=json',
                                 $('#orderForm').serialize(),
                                 function(data) {
@@ -578,19 +577,18 @@ class ControllerCheckoutCart extends Controller {
                         }
                         return error;
                     }
-                    
-                    if (stepId == 'necoWizardStep_4') {
+
+                    console.log('iLogged', isLogged);
+                    console.log('stepId', stepId);
+                    console.log('error', error);
+                    if (!error && (stepId == 'necoWizardStep_4')) {
                         var error = false;
-                        var isLogged = " . (int) $this->customer->isLogged() . ";
-                        if (isLogged > 0) {
-                            $.post('" . Url::createUrl("checkout/confirm") . "&resp=json',
-                                $('#orderForm').serialize(),
-                                function(data) {
-                                    data = $.parseJSON(data);
-                                    location.href = '" . Url::createUrl("checkout/success") . "&order_id='+ data.order_id;
-                                }
-                            );
-                        }
+                        $.post('" . Url::createUrl("checkout/confirm") . "&resp=json',
+                            $('#orderForm').serialize())
+                        .done(function(data) {
+                            data = $.parseJSON(data);
+                            location.href = '" . Url::createUrl("checkout/success") . "&order_id='+ data.order_id;
+                        });
                         return error;
                     }
                 },
@@ -615,8 +613,8 @@ class ControllerCheckoutCart extends Controller {
                     
             $('input[name=shipping_method]').on('change',function(e){
                 var tr = $('input[name=shipping_method]:checked').closest('tr');
-                var title = tr.find('b:eq(0)').text();
-                var price = tr.find('b:eq(1)').text();
+                var title = tr.find('[data-shipping_title]').text();
+                var price = tr.find('[data-shipping_price]').text();
                 $('#shipping_method').html(title + ' ' + price);
             });
             ");
@@ -703,7 +701,7 @@ class ControllerCheckoutCart extends Controller {
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/checkout/cart.tpl')) {
                 $this->template = $this->config->get('config_template') . '/checkout/cart.tpl';
             } else {
-                $this->template = 'choroni/checkout/cart.tpl';
+                $this->template = 'cuyagua/checkout/cart.tpl';
             }
         } else {
             $this->data['heading_title'] = $this->language->get('heading_title');
@@ -716,7 +714,7 @@ class ControllerCheckoutCart extends Controller {
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
                 $this->template = $this->config->get('config_template') . '/error/not_found.tpl';
             } else {
-                $this->template = 'choroni/error/not_found.tpl';
+                $this->template = 'cuyagua/error/not_found.tpl';
             }
         }
         
@@ -730,6 +728,7 @@ class ControllerCheckoutCart extends Controller {
     }
 
     public function json() {
+        $Url = new Url($this->registry);
         if ($this->config->get('config_store_mode') != 'store') {
             $this->redirect(Url::createUrl('common/home'));
         }
@@ -774,71 +773,124 @@ class ControllerCheckoutCart extends Controller {
             $json['success'] = 1;
             $json['urlToCart'] = Url::createUrl('checkout/cart');
 
-            if ($this->config->get('marketing_page_new_customer')) {
-                $this->load->model("marketing/newsletter");
+            $products_html = '';
+            $products_array = array();
+            foreach ($this->cart->getProducts() as $product) {
+                $products_html .= '<tr>';
+                //$products_html .= '<td class="cartRemove" id="remove_ ' . $product['key'] . '">&nbsp;</td>';
+                $products_html .= '<td>' . $product['quantity'] . '&nbsp;x&nbsp;' . $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))) . '</td>';
+                $products_html .= '<td>';
+                $products_html .= '<a href="' . Url::createUrl("store/product", array("product_id" => $product['product_id'])) . '">' . $product['name'] . '</a>';
 
-                if ($this->config->get('config_cart_ajax')) {
-                    $result = $this->modelNewsletter->getById($this->config->get('marketing_page_new_customer'));
-                } else {
-                    $result = $this->modelNewsletter->getById($this->config->get('marketing_page_activate_customer'));
+                $products_array['quantity'] = $product['quantity'];
+                $products_array['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
+                $products_array['product_link'] = Url::createUrl("store/product", array("product_id" => $product['product_id']));
+
+                if ($product['option']) {
+                    $products_html .= '<div>';
+                    foreach ($product['option'] as $l => $option) {
+                        $products_html .= ' - <small>' . $option['name'] . ' ' . $option['value'] . '</small><br />';
+                        $products_array['options'][$l]['options'] = $option['name'];
+                        $products_array['options'][$l]['options'] = $option['value'];
+                    }
+                    $products_html .= '</div>';
                 }
-                $json['html'] .= $result['htmlbody'];
+                $products_html .= '</td>';
+                $products_html .= '</tr>';
+            }
+
+            $total = 0;
+            $taxes = $this->cart->getTaxes();
+
+            $this->load->model('checkout/extension');
+            $sort_order = array();
+            $results = $this->modelExtension->getExtensions('total');
+            foreach ($results as $key => $value) {
+                $sort_order[$key] = $this->config->get($value['key'] . '_sort_order');
+            }
+            array_multisort($sort_order, SORT_ASC, $results);
+            foreach ($results as $result) {
+                $this->load->model('total/' . $result['key']);
+                $this->{'model_total_' . $result['key']}->getTotal($total_data, $total, $taxes);
+            }
+            $sort_order = array();
+            foreach ($total_data as $key => $value) {
+                $sort_order[$key] = $value['sort_order'];
+            }
+            array_multisort($sort_order, SORT_ASC, $total_data);
+
+            $total_html = '';
+            foreach ($total_data as $total) {
+                $total_html .= '<tr>';
+                $total_html .= '<td>' . $total['title'] . '</td>';
+                $total_html .= '<td>' . $total['text'] . '</td>';
+                $total_html .= '</tr>';
+            }
+
+            $url_go_to_cart = $Url::createUrl("checkout/cart");
+            $url_go_to_checkout = $Url::createUrl('checkout/confirm');
+
+            $button_go_to_cart = '<a class="button%s" href="' . $url_go_to_cart . '">' . $this->language->get('text_go_to_cart') . '</a>';
+            $button_go_to_checkout = '<a class="button%s" href="' . $url_go_to_checkout . '">' . $this->language->get('text_buy') . '</a>';
+
+            $this->load->library('BarcodeQR');
+            $this->load->library('Barcode39');
+
+            $qr = new BarcodeQR;
+            $barcode = new Barcode39(C_CODE);
+
+            $qrStore = "cache/" . str_replace(array("."," "), "_", $this->config->get('config_owner')) . '.jpg';
+            $eanStore = "cache/" . str_replace(array("."," "), "_", $this->config->get('config_owner')) . '.gif';
+
+            $qr->url(HTTP_HOME);
+            $qr->draw(150, DIR_IMAGE . $qrStore);
+            $barcode->draw(DIR_IMAGE . $eanStore);
+
+            $json['data'] = array(
+                'qrtore' => $qrStore,
+                'eanstore' => $eanStore,
+                'products' => $products_array,
+                'totals' => $total_data,
+                'url_go_to_checkout' => $url_go_to_checkout,
+                'url_go_to_cart' => $url_go_to_cart
+            );
+
+            if ($this->config->get('marketing_page_add_to_cart')) {
+                $this->load->model("marketing/newsletter");
+                $result = $this->modelNewsletter->getById($this->config->get('marketing_page_add_to_cart'));
+                $json['html'] = html_entity_decode($result['htmlbody']);
+
+                $json['html'] = str_replace("{%store_logo%}", '<img src="' . HTTP_IMAGE . $this->config->get('config_logo') . '" alt="' . $this->config->get('config_name') . '" />', $json['html']);
+                $json['html'] = str_replace("{%store_url%}", HTTP_HOME, $json['html']);
+                $json['html'] = str_replace("{%store_owner%}", $this->config->get('config_owner'), $json['html']);
+                $json['html'] = str_replace("{%store_name%}", $this->config->get('config_name'), $json['html']);
+                $json['html'] = str_replace("{%store_rif%}", $this->config->get('config_rif'), $json['html']);
+                $json['html'] = str_replace("{%store_email%}", $this->config->get('config_email'), $json['html']);
+                $json['html'] = str_replace("{%store_telephone%}", $this->config->get('config_telephone'), $json['html']);
+                $json['html'] = str_replace("{%store_address%}", $this->config->get('config_address'), $json['html']);
+                $json['html'] = str_replace("{%products%}", $products_html, $json['html']);
+                $json['html'] = str_replace("{%url_go_to_cart%}", $url_go_to_cart, $json['html']);
+                $json['html'] = str_replace("{%url_go_to_checkout%}", $url_go_to_checkout, $json['html']);
+                $json['html'] = str_replace("{%button_go_to_cart%}", $button_go_to_cart, $json['html']);
+                $json['html'] = str_replace("{%button_go_to_cart%}", $button_go_to_cart, $json['html']);
+                $json['html'] = str_replace("{%totals%}", $total_html, $json['html']);
+                $json['html'] = str_replace("{%qr_code_store%}", '<img src="' . HTTP_IMAGE . $qrStore . '" alt="QR Code" />', $json['html']);
+                $json['html'] = str_replace("{%barcode_store%}", '<img src="' . HTTP_IMAGE . $eanStore . '" alt="EAN Code" />', $json['html']);
             } else {
                 $json['html'] = '<table>';
-                foreach ($this->cart->getProducts() as $product) {
-                    $json['html'] .= '<tr>';
-                    //$json['html'] .= '<td class="cartRemove" id="remove_ ' . $product['key'] . '">&nbsp;</td>';
-                    $json['html'] .= '<td>' . $product['quantity'] . '&nbsp;x&nbsp;' . $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))) . '</td>';
-                    $json['html'] .= '<td>';
-                    $json['html'] .= '<a href="' . Url::createUrl("store/product", array("product_id" => $product['product_id'])) . '">' . $product['name'] . '</a>';
-
-                    if ($product['option']) {
-                        $json['html'] .= '<div>';
-                        foreach ($product['option'] as $option) {
-                            $json['html'] .= ' - <small>' . $option['name'] . ' ' . $option['value'] . '</small><br />';
-                        }
-                        $json['html'] .= '</div>';
-                    }
-                    $json['html'] .= '</td>';
-                    $json['html'] .= '</tr>';
-                }
+                $json['html'] .= $products_html;
                 $json['html'] .= '</table>';
                 $json['html'] .= '<br />';
 
-                $total = 0;
-                $taxes = $this->cart->getTaxes();
-
-                $this->load->model('checkout/extension');
-                $sort_order = array();
-                $results = $this->modelExtension->getExtensions('total');
-                foreach ($results as $key => $value) {
-                    $sort_order[$key] = $this->config->get($value['key'] . '_sort_order');
-                }
-                array_multisort($sort_order, SORT_ASC, $results);
-                foreach ($results as $result) {
-                    $this->load->model('total/' . $result['key']);
-
-                    $this->{'model_total_' . $result['key']}->getTotal($total_data, $total, $taxes);
-                }
-                $sort_order = array();
-                foreach ($total_data as $key => $value) {
-                    $sort_order[$key] = $value['sort_order'];
-                }
-                array_multisort($sort_order, SORT_ASC, $total_data);
-
                 $json['html'] .= '<hr /><table>';
-                foreach ($total_data as $total) {
-                    $json['html'] .= '<tr>';
-                    $json['html'] .= '<td><strong>' . $total['title'] . '</strong></td>';
-                    $json['html'] .= '<td>' . $total['text'] . '</td>';
-                    $json['html'] .= '</tr>';
-                }
+                $json['html'] .= $total_html;
                 $json['html'] .= '</table>';
                 $json['html'] .= '<div class="message success">Se ha agregado el producto al carrito satisfactoriamente.</div>';
+                $json['html'] .= '<div class="clear"></div><br />';
+
+                $json['html'] .= $button_go_to_cart;
+                $json['html'] .= $button_go_to_checkout;
             }
-            $json['html'] .= '<div class="clear"></div><br />';
-            $json['html'] .= '<a style="width:99%" class="button" href="' . Url::createUrl("checkout/cart") . '">' . $this->language->get('text_go_to_cart') . '</a>';
-            $json['html'] .= '<a style="width:99%" class="button" href="' . Url::createUrl('checkout/confirm') . '">' . $this->language->get('text_buy') . '</a>';
 
             $this->session->set('redirect', Url::createUrl('checkout/confirm'));
 

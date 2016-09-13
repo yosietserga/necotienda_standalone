@@ -1,4 +1,4 @@
-<li class="nt-editable box bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
+<li id="<?php echo $widgetName; ?>" class="banner nivo<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?> nt-editable" data-banner="nivoSlider">
 <?php if ($heading_title) { ?>
     <div class="header" id="<?php echo $widgetName; ?>Header">
         <h3><?php echo $heading_title; ?></h3>
@@ -16,38 +16,39 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="<?php echo HTTP_JS; ?>sliders/nivo-slider-v3.1/slider.js"></script>
     <script>
+        (function () {
+            var config = {
+                effect:'random',
+                slices:12,
+                animSpeed:300,
+                pauseTime:6000,
+                startSlide:0,
+                directionNav:false,
+                directionNavHide:true,
+                controlNav: false,
+                controlNavThumbs:true,
+                controlNavThumbsFromRel:false,
+                controlNavThumbsSearch: '.jpg',
+                controlNavThumbsReplace: '_thumb.jpg',
+                keyboardNav:true,
+                pauseOnHover:true,
+                manualAdvance:false,
+                captionOpacity: 0.8,
+                beforeChange: function(){},
+                afterChange: function(){},
+                slideshowEnd: function(){}
+            };
 
-    $(document.createElement('link')).attr({
-        'href':'<?php echo HTTP_CSS; ?>sliders/nivo-slider-v3.1/slider.css',
-        'rel':'stylesheet',
-        'media':'screen'
-    }).appendTo('head');
+            window.fetchStyle('<?php echo HTTP_CSS; ?>sliders/nivo-slider-v3.1/slider.css');
+            window.deferjQuery(function () {
+                window.appendScriptSource('<?php echo HTTP_JS; ?>sliders/nivo-slider-v3.1/slider.js');
+            });
 
-    $(window).load(function() {
-        $("#slider").nivoSlider({
-            effect:'random',
-            slices:12,
-            animSpeed:300,
-            pauseTime:6000,
-            startSlide:0,
-            directionNav:false,
-            directionNavHide:true,
-            controlNav: false,
-            controlNavThumbs:true,
-            controlNavThumbsFromRel:false,
-            controlNavThumbsSearch: '.jpg',
-            controlNavThumbsReplace: '_thumb.jpg',
-            keyboardNav:true,
-            pauseOnHover:true,
-            manualAdvance:false,
-            captionOpacity: 0.8,
-            beforeChange: function(){},
-            afterChange: function(){},
-            slideshowEnd: function(){}
-        });
-    });
+            window.deferPlugin('nivoSlider', function () {
+                $('<?php echo $widgetname; ?> .nivoSlider').nivoSlider(config);
+            };
+        })();
     </script>
 <?php } ?>
 </li>

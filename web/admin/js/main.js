@@ -1,3 +1,6 @@
+/* App.Utils.Connection.PingCheck();
+App.Utils.Task.Run();
+*/
 $(function () {
     addScrollboxBehavior();
 
@@ -91,31 +94,36 @@ $(function () {
             $(this).removeClass('hidded').addClass('show').text('[ Ocultar ]');
         }
     });
+    
+    var currentData = {};
+    $("td[contenteditable=true]").blur(function(e){
+        if (currentData.value !== $(this).text()) {
+            $.post(createAdminUrl($(this).attr('data-route')),
+            {
+                value: $(this).text(),
+                field: $(this).attr('data-field'),
+                id: $(this).attr('data-id')
+            },
+            function(resp){
+                data = $.parseJSON(resp);
+                if(data.error || !data) {
+                    /* show error message and get back the original value */
+                } else {
+                    /* show success message */
+                }
+            });
+        }
+    }).focus(function(e){
+        currentData.value = $(this).text();
+        currentData.field = $(this).attr('data-field');
+        currentData.id = $(this).attr('data-id');
+    });
+    
 });
 
 function addScrollboxBehavior() {
-    $('ul[data-scrollbox] li').each(function () {
-        var that = this,
-                ul = $(this).closest('ul'),
-                input = {};
 
-        $(this).on('click', function (e) {
-            input = $(that).find('input');
-            if ($(that).index() === 0 && (input.val() === 'all' || input.val() == 0)) {
-                /* input.trigger('click'); */
-                input.prop({
-                    'checked': !input.prop('checked')
-                });
-                ul.find('input').prop({
-                    'checked': input.prop('checked')
-                });
-            } else {
-                input.prop({
-                    'checked': !input.prop('checked')
-                });
-            }
-        });
-    });
+
 }
 
 function getUrlVars() {
@@ -129,7 +137,7 @@ function getUrlVars() {
 function createAdminUrl(route, params) {
     var url = window.nt.http_home + 'index.php?r=' + route + '&token=' + getUrlVars()["token"];
     if (typeof params !== 'undefined') {
-        if ($.isArray(params)) {
+        if (typeof params === 'object') {
             $.each(params, function (k, v) {
                 url += '&' + k + '=' + encodeURIComponent(v);
             });

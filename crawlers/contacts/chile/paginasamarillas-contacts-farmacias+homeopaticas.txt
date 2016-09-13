@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"FARMACIA HOMEOPÁTICA MBH";;;"(56) (2) 2776326";"Las Carretas 2375, La Reina Chile, Santiago"
-"FARMACIA HOMEOPATICA EROS";;;"(56) (72) 246225";"Bueras 283 Local 2 Chile, Rancagua"

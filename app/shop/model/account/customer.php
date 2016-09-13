@@ -91,6 +91,73 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+    public function addCustomerFromMeli($data) {
+        if (!$this->getTotalCustomersByEmail($data['email'])) {
+            $suffix = base_convert(rand(10e16, 10e20), 10, 36); //TODO: agregar sufijo a las contrasenas
+            $password = substr(md5(mt_rand()), 0, 6);
+            $result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET 
+              `store_id`    = '" . (int) STORE_ID . "', 
+              `firstname`   = '" . $this->db->escape($data['firstname']) . "', 
+              `lastname`    = '" . $this->db->escape($data['lastname']) . "', 
+              `telephone`   = '" . $this->db->escape($data['telephone']) . "', 
+              `email`       = '" . $this->db->escape($data['email']) . "',
+              `birthday`    = '" . $this->db->escape($data['birthday']) . "', 
+              `company`     = '" . $this->db->escape($data['company']) . "', 
+              `sex`         = '" . $this->db->escape($data['sex']) . "', 
+              `password`    = '" . $this->db->escape(md5(md5($password) . $suffix) . ':' . $suffix) . "',
+              `activation_code` = '" . $this->db->escape(md5($data['email'])) . "',
+              `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "', 
+              `status`      = '1', 
+              `approved`    = '1',
+              `date_added`  = NOW()");
+
+            $customer_id = $this->db->getLastId();
+
+                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_property SET "
+                        . "`customer_id`    = '" . (int)$customer_id . "', "
+                        . "`group` = 'meli', "
+                        . "`key` = 'meli_oauth_id', "
+                        . "`value` = '" . serialize($this->db->escape($data['meli_oauth_id'])) . "'");
+                        
+                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_property SET "
+                        . "`customer_id`    = '" . (int)$customer_id . "', "
+                        . "`group` = 'meli', "
+                        . "`key` = 'meli_oauth_token', "
+                        . "`value` = '" . serialize($this->db->escape($data['meli_oauth_token'])) . "'");
+                        
+                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_property SET "
+                        . "`customer_id`    = '" . (int)$customer_id . "', "
+                        . "`group` = 'meli', "
+                        . "`key` = 'meli_oauth_refresh', "
+                        . "`value` = '" . serialize($this->db->escape($data['meli_oauth_refresh'])) . "'");
+                        
+                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_property SET "
+                        . "`customer_id`    = '" . (int)$customer_id . "', "
+                        . "`group` = 'meli', "
+                        . "`key` = 'meli_oauth_expire', "
+                        . "`value` = '" . serialize($this->db->escape($data['meli_oauth_expire'])) . "'");
+                        
+                $this->db->query("INSERT INTO " . DB_PREFIX . "customer_property SET "
+                        . "`customer_id`    = '" . (int)$customer_id . "', "
+                        . "`group` = 'meli', "
+                        . "`key` = 'meli_code', "
+                        . "`value` = '" . serialize($this->db->escape($data['meli_code'])) . "'");
+            if ((int) STORE_ID == 0) {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int) STORE_ID . "', 
+                  customer_id   = '" . (int) $customer_id . "'");
+            } else {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int) STORE_ID . "', 
+                  customer_id   = '" . (int) $customer_id . "'");
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '0', 
+                  customer_id   = '" . (int) $customer_id . "'");
+            }
+            return array('customer_id' => $customer_id, 'password' => $password);
+        }
+    }
+
     public function addCustomerFromLive($data) {
         if (!$this->getTotalCustomersByEmail($data['email'])) {
             $suffix = base_convert(rand(10e16, 10e20), 10, 36); //TODO: agregar sufijo a las contrasenas
@@ -113,6 +180,48 @@ class ModelAccountCustomer extends Model {
               `live_oauth_id`    = '" . $this->db->escape($data['live_oauth_id']) . "', 
               `live_oauth_token` = '" . $this->db->escape($data['live_oauth_token']) . "',
               `live_code` = '" . $this->db->escape($data['live_code']) . "', 
+              `date_added`  = NOW()");
+
+            $customer_id = $this->db->getLastId();
+
+            if ((int) STORE_ID == 0) {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int) STORE_ID . "', 
+                  customer_id   = '" . (int) $customer_id . "'");
+            } else {
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '" . (int) STORE_ID . "', 
+                  customer_id   = '" . (int) $customer_id . "'");
+                $result = $this->db->query("REPLACE INTO `" . DB_PREFIX . "customer_to_store` SET 
+                  `store_id`    = '0', 
+                  customer_id   = '" . (int) $customer_id . "'");
+            }
+            return array('customer_id' => $customer_id, 'password' => $password);
+        }
+    }
+
+    public function addCustomerFromFacebook($data) {
+        if (!$this->getTotalCustomersByEmail($data['email'])) {
+            $suffix = base_convert(rand(10e16, 10e20), 10, 36); //TODO: agregar sufijo a las contrasenas
+            $password = substr(md5(mt_rand()), 0, 6);
+            $result = $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET 
+              `store_id`    = '" . (int) STORE_ID . "', 
+              `firstname`   = '" . $this->db->escape($data['firstname']) . "', 
+              `lastname`    = '" . $this->db->escape($data['lastname']) . "', 
+              `telephone`   = '" . $this->db->escape($data['telephone']) . "', 
+              `email`       = '" . $this->db->escape($data['email']) . "',
+              `birthday`    = '" . $this->db->escape($data['birthday']) . "', 
+              `company`     = '" . $this->db->escape($data['company']) . "', 
+              `sex`         = '" . $this->db->escape($data['sex']) . "', 
+              `password`    = '" . $this->db->escape(md5(md5($password) . $suffix) . ':' . $suffix) . "',
+              `activation_code` = '" . $this->db->escape(md5($data['email'])) . "',
+              `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "', 
+              `status`      = '1', 
+              `approved`    = '1', 
+              `photo`       = '" . $this->db->escape($data['photo']) . "', 
+              `facebook_oauth_id`    = '" . $this->db->escape($data['facebook_oauth_id']) . "', 
+              `facebook_oauth_token` = '" . $this->db->escape($data['facebook_oauth_token']) . "',
+              `facebook_code` = '" . $this->db->escape($data['facebook_code']) . "', 
               `date_added`  = NOW()");
 
             $customer_id = $this->db->getLastId();
@@ -304,6 +413,24 @@ class ModelAccountCustomer extends Model {
         return $query->row['total'];
     }
 
+    public function getCustomerByMeli($data) {
+
+        if (!empty($data['email'])) {
+        $sql = "SELECT COUNT(*) AS total "
+        ."FROM " . DB_PREFIX . "customer "
+        ." WHERE email = '" . $this->db->escape($data['email']) . "'";
+        } else {
+        $sql = "SELECT COUNT(*) AS total "
+        ."FROM " . DB_PREFIX . "customer_property "
+        ." WHERE `group` = 'meli' "
+        ." AND `key` = 'meli_oauth_id' " 
+        ." AND `value` = '". $this->db->escape($data['meli_oauth_id']) . "'";
+        }
+
+        $query = $this->db->query($sql);
+        return $query->row['total'];
+    }
+
     public function addTransferencia($data) {
         $strError = '';
         if (!$this->checkOrderStatus($data['order_id'])) {
@@ -415,6 +542,25 @@ class ModelAccountCustomer extends Model {
         } else {
             return false;
         }
+    }
+
+    /**
+     * ModelAccountCustomer::getProperty()
+     * 
+     * Obtener una propiedad del producto
+     * 
+     * @param int $id customer_id
+     * @param varchar $group
+     * @param varchar $key
+     * @return mixed value of property
+     * */
+    public function getProperty($id, $group, $key) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_property 
+        WHERE `customer_id` = '" . (int) $id . "' 
+        AND `group` = '" . $this->db->escape($group) . "'
+        AND `key` = '" . $this->db->escape($key) . "'");
+
+        return unserialize(str_replace("\'", "'", $query->row['value']));
     }
 
 }

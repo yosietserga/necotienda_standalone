@@ -1,26 +1,25 @@
-<div id="msgReview" class="msg-review"></div>
-<div class="content comment-content">
+<div id="msgReview"></div>
+<div class="content clearfix">
     <div>
-        <div class="comment-body">
+        <div class="detail">
             <textarea name="text" id="text" placeholder="Escribe tu pregunta o comentario aqu&iacute;"></textarea>
         </div>
     </div>
-    <div>
-        <div class="rating-heading"><?php echo $Language->get('entry_rating'); ?></div>
-        <div id="content" class="rating-points">
-            <!--<span><?php echo $Language->get('entry_bad'); ?></span>-->
-            <a class="star_review" id="1"></a>
-            <a class="star_review" id="2"></a>
-            <a class="star_review" id="3"></a>
-            <a class="star_review" id="4"></a>
-            <a class="star_review" id="5"></a>
-            <input type="hidden" name="rating" id="review_" value="0" />
-            <!--<span><?php echo $Language->get('entry_good'); ?></span>-->
-        </div>
+        <div class="label" style="margin-top: 0.875rem;">
+            <strong><?php echo $Language->get('entry_rating'); ?><strong>
+            <div style="display:inline; margin-left: 0.5rem;" class="detail">
+                <a class="star_review" id="1"></a>
+                <a class="star_review" id="2"></a>
+                <a class="star_review" id="3"></a>
+                <a class="star_review" id="4"></a>
+                <a class="star_review" id="5"></a>
+                <input type="hidden" name="rating" id="review_" value="0"/>
+            </div>
+        </div> 
+    <div class="btn btn--primary" style="margin-top: 1.25rem;">
+        <a title="<?php echo $Language->get('button_continue'); ?>" onclick="review();"><?php echo $Language->get('button_continue'); ?></a>
     </div>
-    <a title="<?php echo $Language->get('button_continue'); ?>" onclick="review();" class="button action-comment"><?php echo $Language->get('button_continue'); ?></a>
-</div>
-
+</div> 
 <script>
 $(function(){
     $('#text').on('focus',function(e){
@@ -34,7 +33,7 @@ $(function(){
             });
         }
     });
-    $('#content').hover( '.star_review'
+    $('#content .star_review').hover(
         function() {
             var idThis = $(this).attr('id');
             $('#content .star_review').each (function() {
@@ -45,7 +44,7 @@ $(function(){
             });
         },
         function() {
-            $('#content').each ('.star_review', function() {
+            $('#content .star_review').each (function() {
                 $(this).css({'background-position':'right top'});
             });
         }
@@ -58,11 +57,11 @@ $(function(){
             if (idStar <= idThis) {
                 $(this).removeClass();
                 $(this).addClass('star_clicked');
-                $(this).css({'background-position':'left center'});
+                $(this).css({'background-position':'left top'});
             } else {
                 $(this).removeClass();
                 $(this).addClass('star_review');
-                $(this).css({'background-position':'right center'});
+                $(this).css({'background-position':'right top'});
             }
         });
     });
@@ -101,7 +100,7 @@ function review() {
                             html = '<li id="review_'+ data.review_id +'" class="review_item">';
                             html += '<div class="grid_2">';
                             html += '<b>'+ data.author +'</b><br />';
-                            html += '<img src="<?php echo HTTP_IMAGE; ?>stars_'+ data.rating +'.png" />';
+                            html += '<img src="<?php echo HTTP_IMAGE; ?>stars_'+ data.rating +'.png" /><br /><br />';
                             html += '<small>'+ data.date_added +'</small>';
                             html += '</div>';
                             html += '<div class="grid_10">'+ data.text +'</div>';

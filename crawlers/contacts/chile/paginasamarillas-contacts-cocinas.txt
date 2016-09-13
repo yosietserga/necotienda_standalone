@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-AHORROGAS;;;"(56) (2) 2943686";"Santiago de Chile Chile, Santiago"
-"ROJO Y NEGRO";;;"(56) (2) 3611148";"José Miguel Carrera 9 Colina Chile, Santiago"

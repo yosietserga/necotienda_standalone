@@ -1,7 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ANTRACITAS Y CARBÓNES DE OCCIDENTE";alejandro.es.p@hotmail.com;www.antracitasycarbones.com;"(57) (1) 2380081";"Cl 49 B 33-27 Sur Colombia, Bogotá"
-"INSATECNICA S.A.S";infocolo@insatecnica.com;www.insatecnica.com;"(57) (1) 5417139";"Cl 64 C 68 G-72 Colombia, Bogotá"
-"FILTRA H2O LTDA";info@filtrah2oltda.com;www.filtrah2oltda.com;"(57) (1) 2516639";"Cr18 93-25 Of 103 Colombia, Bogotá"
-"CARBYFILCO LTDA.";info@carbyfilco.com;www.carbyfilco.com;"(57) (1) 4118586";"Fca La Ventica Km 15 Vía Zipaquira Colombia, Bogotá"
-"ANTRACITAS DE CUNDINAMARCA";antracitasdecundinamarca@yahoo.es;;"(57) (1) 2409940";"Cr27 B 53 A-37 Of 301 Colombia, Bogotá"
-"INVERSIONES MARTÍNEZ LEROY LTDA.";;;"(57) (1) 6091100";"Cr15 98-42 Of 603 /604 Colombia, Bogotá"

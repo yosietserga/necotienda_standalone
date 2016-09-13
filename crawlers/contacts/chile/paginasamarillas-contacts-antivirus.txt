@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"KASPERSKY ANTIVIRUS";;;"(56) (2) 2314858";"Callao 2975 Of.702 Las Condes Chile, Santiago"

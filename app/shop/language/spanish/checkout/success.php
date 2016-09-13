@@ -17,3 +17,14 @@ $_['column_model']  = 'Modelo';
 $_['column_price']  = 'PVP';
 $_['column_quantity']  = 'Cantidad';
 $_['column_total']  = 'Total';
+
+$_['table_head_payment_description']  = 'Descripci&oacute;n';
+$_['table_head_payment_payment']  = 'Pagos Aprobados';
+$_['table_head_payment_total']  = 'Pagos Pendientes';
+$_['form_payment_title']  = 'M&eacute;todos de Pago';
+$_['text_payment_title']  = 'Pagar Pedido';
+
+$_['table_detail_payment_order_total']  = 'Total del Pedido';
+$_['table_detail_payment_approved_total']  = 'Total Pagos Aprobados';
+$_['table_detail_payment_returned_total']  = 'Total Pagos Devueltos';
+$_['table_detail_payment_topay_total']  = 'Total A Pagar';

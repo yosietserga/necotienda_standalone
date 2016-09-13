@@ -350,11 +350,11 @@ class ControllerMarketingContact extends Controller {
                 $this->data['contacts'][] = array(
                     'contact_id' => $result['contact_id'],
                     'customer_id' => $result['customer_id'],
-                    'name' => $result['name'],
+                    'name' => !empty($result['name']) ? $result['name'] : $result['firstname'] .' '. $result['lastname'],
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],
                     'telephone' => ($result['telephone']) ? $result['telephone'] : 'N/A',
-                    'email' => is_numeric($result['mail']) ? '<a href="http://www.facebook.com/' . $result['mail'] . '" tagret="_blank">Perfil Facebook</a>' : '<a href="mailto:' . $result['mail'] . '">' . $result['mail'] . '</a>',
+                    'email' => is_numeric($result['mail']) ? '<a href="http://www.facebook.com/' . $result['mail'] . '" tagret="_blank">[Perfil Facebook]</a>' : '<a href="mailto:' . $result['mail'] . '">[' . $result['mail'] . ']</a>',
                     'date_added' => date('d-m-Y h:i:s', strtotime($result['created'])),
                     'selected' => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']),
                     'action' => $action

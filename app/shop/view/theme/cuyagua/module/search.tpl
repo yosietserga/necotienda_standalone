@@ -1,41 +1,29 @@
 <li class="nt-editable box searchWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-<?php if ($heading_title) { ?>
-    <div class="header" id="<?php echo $widgetName; ?>Header">
-        <h3><?php echo $heading_title; ?></h3>
-    </div>
-    <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
-        <div class="heading-title">
-            <h3>
-                <i class="heading-icon icon icon-search">
-                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/search.tpl"); ?>
-                </i>
-                <?php echo $heading_title; ?>
-            </h3>
-        </div>
-    </div>
-<?php } ?>
 
-    <div class="content" id="<?php echo $widgetName; ?>Content">
-        <input id="<?php echo $widgetName; ?>Keyword" type="text" value="" autocomplete="off" placeholder="Buscar" />
-        <select id="<?php echo $widgetName; ?>Category">
-            <option value="">Todas Las Categor&iacute;as</option>
-            <?php echo $categories; ?>
-        </select>
-        <select id="<?php echo $widgetName; ?>Zone">
-            <option value="">Todas Los Estados</option>
-            <?php echo $zones; ?>
-        </select>
-        <a title="Buscar" class="button" onclick="moduleSearch($('#<?php echo $widgetName; ?>Keyword'));"><?php echo $Language->get('text_search'); ?></a>
-    </div>
-    <div class="clear"></div><br />
+  <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/module-heading.tpl");?> 
+
+
+  <div class="content" id="<?php echo $widgetName; ?>Content">
+    <input id="<?php echo $widgetName; ?>Keyword" type="text" value="" autocomplete="off" placeholder="Buscar" />
+    <select id="<?php echo $widgetName; ?>Category">
+      <option value="">Todas Las Categor&iacute;as</option>
+      <?php echo $categories; ?>
+    </select>
+    <select id="<?php echo $widgetName; ?>Zone">
+      <option value="">Todas Los Estados</option>
+      <?php echo $zones; ?>
+    </select>
+    <a title="Buscar" class="button" onclick="moduleSearch($('#<?php echo $widgetName; ?>Keyword'));"><?php echo $Language->get('text_search'); ?></a>
+  </div>
+  <div class="clear"></div><br />
 </li>
 <script>
-$(function(){
-    $('#<?php echo $widgetName; ?>Keyword').on('keyup',function(e){
-        var code = e.keyCode || e.which;
-        if ($(this).val().length > 0 && code == 13){
-            moduleSearch(this, $('#<?php echo $widgetName; ?>Category').val());
-        }
+  $(function () {
+    $('#<?php echo $widgetName; ?>Keyword').on('keyup', function (e) {
+      var code = e.keyCode || e.which;
+      if ($(this).val().length > 0 && code == 13) {
+        moduleSearch(this, $('#<?php echo $widgetName; ?>Category').val());
+      }
     });
-});
+  });
 </script>

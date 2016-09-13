@@ -8,21 +8,26 @@ class ControllerModuleProductList extends Controller {
             $this->data['widget_hook'] = $this->data['widgetName'] = $widget['name'];
         }
 
-        if (!$this->data['settings']['module'])
-            $this->data['settings']['module'] = 'random';
+        $data['limit'] = ((int) $this->data['settings']['limit']) ? (int) $this->data['settings']['limit'] : 24;
+        $data['category_id'] = (!empty($settings['categories'])) ? $settings['categories'] : null;
+        $this->data['products'] = array();
 
-        if (isset($this->data['settings']['title'])) {
-            $this->data['heading_title'] = $this->data['settings']['title'];
-        } else {
-            $this->data['heading_title'] = $this->language->get('heading_title');
+        $func = $this->data['settings']['module'];
+        if (!$func || !in_array($func, array('random', 'latest', 'featured', 'bestseller', 'recommended', 'related', 'popular', 'special'))) $func = 'random';
+        $this->prefetch($data, $func);
+
+        $view = $this->data['settings']['view'];
+        if (!$view || !in_array($view, array('list', 'grid', 'carousel', 'slider'))) $view = 'list';
+
+        if ($this->data['settings']['show_pagination']) {
+
         }
 
-        $limit = ((int) $this->data['settings']['limit']) ? (int) $this->data['settings']['limit'] : 24;
-        $this->data['products'] = array();
-        $this->prefetch($limit, $this->data['settings']['module']);
-        if (!$func || !in_array($func, array('random', 'bestseller', 'latest', 'featured', 'recommended', 'special'))) $func = 'random';
+        if ($this->data['settings']['endless_scroll']) {
 
-        $this->loadAssets($func);
+        }
+
+        $this->loadAssets($func, $view);
 
         if ($scripts)
             $this->scripts = array_merge($this->scripts, $scripts);
@@ -30,16 +35,18 @@ class ControllerModuleProductList extends Controller {
         $this->id = 'product_list';
 
         if ($widget['position'] == 'main' || $widget['position'] == 'featuredContent') {
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/'. $func .'_home.tpl')) {
-                $this->template = $this->config->get('config_template') . '/module/'. $func .'_home.tpl';
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/product_list_home_'. $view .'.tpl')) {
+                //$this->template = $this->config->get('config_template') . '/module/'. $func .'_home.tpl';
+                $this->template = $this->config->get('config_template') . '/module/product_list_home_'. $view .'.tpl';
             } else {
-                $this->template = 'choroni/module/'. $func .'_home.tpl';
+                $this->template = 'cuyagua/module/product_list_home_'. $view .'.tpl';
             }
         } else {
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/'. $func .'.tpl')) {
-                $this->template = $this->config->get('config_template') . '/module/'. $func .'.tpl';
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/product_list_'. $view .'.tpl')) {
+                //$this->template = $this->config->get('config_template') . '/module/'. $func .'.tpl';
+                $this->template = $this->config->get('config_template') . '/module/product_list_'. $view .'.tpl';
             } else {
-                $this->template = 'choroni/module/'. $func .'.tpl';
+                $this->template = 'cuyagua/module/product_list_'. $view .'.tpl';
             }
         }
         $this->render();
@@ -50,42 +57,55 @@ class ControllerModuleProductList extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/store/products.tpl')) {
             $this->template = $this->config->get('config_template') . '/store/products.tpl';
         } else {
-            $this->template = 'choroni/store/products.tpl';
+            $this->template = 'cuyagua/store/products.tpl';
         }
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
-    protected function prefetch($limit, $func = 'random') {
-        if (!$func || !in_array($func, array('random', 'bestseller', 'latest', 'featured', 'recommended', 'special'))) $func = 'random';
+    protected function prefetch($data, $func = 'random') {
         $Url = new Url($this->registry);
         $this->language->load('module/'. $func);
-        $this->data['heading_title'] = $this->language->get('heading_title');
+
+        if (isset($this->data['settings']['title'])) {
+            $this->data['heading_title'] = $this->data['settings']['title'];
+        } else {
+            $this->data['heading_title'] = $this->language->get('heading_title');
+        }
+
         $this->load->model('store/product');
 
         switch ($func) {
             case 'random':
             default:
-                $results = $this->modelProduct->getRandomProducts($limit);
+                $results = $this->modelProduct->getRandomProducts($data);
                 break;
             case 'latest':
-                $results = $this->modelProduct->getLatestProducts($limit);
+                $results = $this->modelProduct->getLatestProducts($data);
                 break;
             case 'featured':
-                $results = $this->modelProduct->getFeaturedProducts($limit);
+                $results = $this->modelProduct->getFeaturedProducts($data);
                 break;
             case 'bestseller':
-                $results = $this->modelProduct->getBestSellerProducts($limit);
+                $results = $this->modelProduct->getBestSellerProducts($data);
                 break;
             case 'recommended':
-                $results = $this->modelProduct->getRecommendedProducts($limit);
+                $results = $this->modelProduct->getRecommendedProducts($data);
+                break;
+            case 'related':
+                $results = $this->modelProduct->getProductRelated($this->request->getQuery('product_id'), $data);
+                break;
+            case 'popular':
+                $results = $this->modelProduct->getPopularProducts($data);
                 break;
             case 'special':
-                $results = $this->modelProduct->getProductSpecials('pd.name', 'ASC', 0, $limit);
+                $data['sort'] = 'pd.name';
+                $data['order'] = 'ASC';
+                $results = $this->modelProduct->getProductSpecials($data);
                 break;
         }
 
         $this->load->auto('store/review');
-        $this->data['heading_title'] = $this->language->get('heading_title');
+
         $this->data['button_see_product'] = $this->language->get('button_see_product');
         $this->data['button_add_to_cart'] = $this->language->get('button_add_to_cart');
         $this->data['products'] = array();
@@ -102,8 +122,8 @@ class ControllerModuleProductList extends Controller {
                 $ano = $ano - 1;
             }
         }
-        foreach ($results as $key => $result) {
-            $image = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
+        foreach ($results as $k => $result) {
+            $image = $imageP = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
 
             if ($this->config->get('config_review')) {
                 $rating = $this->modelReview->getAverageRating($result['product_id']);
@@ -145,7 +165,7 @@ class ControllerModuleProductList extends Controller {
             }
 
             $this->load->auto('image');
-            $this->data['products'][] = array(
+            $this->data['products'][$k] = array(
                 'product_id' => $result['product_id'],
                 'name' => $result['name'],
                 'model' => $result['model'],
@@ -163,6 +183,23 @@ class ControllerModuleProductList extends Controller {
                 'add' => $add,
                 'created' => $result['created']
             );
+
+            $this->data['products'][$k]['images'] = array();
+            $images = $this->modelProduct->getProductImages($result['product_id']);
+            foreach ($images as $j => $image) {
+                $this->data['products'][$k]['images'][$j] = array(
+                    'popup' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                    'preview' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                    'thumb' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+                );
+            }
+            $j = count($this->data['products'][$k]['images']) + 1;
+            $this->data['products'][$k]['images'][$j] = array(
+                'popup' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+                'preview' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                'thumb' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+            );
+            $this->data['products'][$k]['images'] = array_reverse($this->data['products'][$k]['images']);
         }
 
         if (!$this->config->get('config_customer_price') || $this->customer->isLogged()) {
@@ -173,17 +210,15 @@ class ControllerModuleProductList extends Controller {
     }
 
     public function carousel() {
-        if ($this->request->hasQuery('func') && in_array($this->request->getQuery('func'), array('random', 'bestseller', 'latest', 'featured', 'recommended', 'special'))) {
-            $func = $this->request->getQuery('func');
-        } else {
-            $func = 'random';
-        }
+        $func = $this->request->getQuery('func');
+        if (!$func || !in_array($func, array('random', 'latest', 'featured', 'bestseller', 'recommended', 'related', 'popular', 'special'))) $func = 'random';
+
         if ($this->request->hasQuery('limit') && is_numeric($this->request->getQuery('limit'))) {
-            $limit = $this->request->getQuery('limit');
+            $data['limit'] = $this->request->getQuery('limit');
         } else {
-            $limit = 24;
+            $data['limit'] = 24;
         }
-        
+
         $json = array();
         $Url = new Url($this->registry);
         $this->load->auto("store/product");
@@ -193,22 +228,30 @@ class ControllerModuleProductList extends Controller {
         switch ($func) {
             case 'random':
             default:
-                $json['results'] = $this->modelProduct->getRandomProducts($limit);
+                $json['results'] = $this->modelProduct->getRandomProducts($data);
                 break;
             case 'latest':
-                $json['results'] = $this->modelProduct->getLatestProducts($limit);
+                $json['results'] = $this->modelProduct->getLatestProducts($data);
                 break;
             case 'featured':
-                $json['results'] = $this->modelProduct->getFeaturedProducts($limit);
+                $json['results'] = $this->modelProduct->getFeaturedProducts($data);
                 break;
             case 'bestseller':
-                $json['results'] = $this->modelProduct->getBestSellerProducts($limit);
+                $json['results'] = $this->modelProduct->getBestSellerProducts($data);
                 break;
             case 'recommended':
-                $json['results'] = $this->modelProduct->getRecommendedProducts($limit);
+                $json['results'] = $this->modelProduct->getRecommendedProducts($data);
+                break;
+            case 'related':
+                $json['results'] = $this->modelProduct->getProductRelated($this->request->getQuery('product_id'), $data);
+                break;
+            case 'popular':
+                $json['results'] = $this->modelProduct->getPopularProducts($data);
                 break;
             case 'special':
-                $json['results'] = $this->modelProduct->getProductSpecials('pd.name', 'ASC', 0, $limit);
+                $data['sort'] = 'pd.name';
+                $data['order'] = 'ASC';
+                $json['results'] = $this->modelProduct->getProductSpecials($data);
                 break;
         }
 
@@ -226,6 +269,23 @@ class ControllerModuleProductList extends Controller {
             $json['results'][$k]['config_store_mode'] = $this->config->get('config_store_mode');
             $json['results'][$k]['seeProduct_url'] = $Url::createUrl('store/product', array('product_id' => $v['product_id']));
             $json['results'][$k]['addToCart_url'] = $Url::createUrl('checkout/cart') . '?product_id=' . $v['product_id'];
+
+            $json['results'][$k]['images'] = array();
+            $images = $this->modelProduct->getProductImages($v['product_id']);
+            foreach ($images as $j => $image) {
+                $json['results'][$k]['images'][$j] = array(
+                    'popup' => NTImage::resizeAndSave($image['image'], $width, $height),
+                    'preview' => NTImage::resizeAndSave($image['image'], $width, $height),
+                    'thumb' => NTImage::resizeAndSave($image['image'], $width, $height)
+                );
+            }
+            $j = count($json['results'][$k]['images']) + 1;
+            $json['results'][$k]['images'][$j] = array(
+                'popup' => NTImage::resizeAndSave($v['image'], $width, $height),
+                'preview' => NTImage::resizeAndSave($v['image'], $width, $height),
+                'thumb' => NTImage::resizeAndSave($v['image'], $width, $height)
+            );
+            $json['results'][$k]['images'] = array_reverse($json['results'][$k]['images']);
         }
 
         if (!count($json['results']))
@@ -234,7 +294,7 @@ class ControllerModuleProductList extends Controller {
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
 
-    protected function loadAssets($func) {
+    protected function loadAssets($func, $view) {
         $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
         $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
 
@@ -252,16 +312,40 @@ class ControllerModuleProductList extends Controller {
             $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
         }
 
-        if (file_exists($cssFolder .'module'. $func . '.css')) {
-            $styles[] = array('media' => 'all', 'href' => $csspath .'module'. $func .'.css');
+        if (file_exists($cssFolder .str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
+            } else {
+                $styles[str_replace('controller', '', strtolower(__CLASS__) . '.css')] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
+            }
+        }
+
+        if (file_exists($cssFolder .'module'. $func .  $view .'.css')) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . 'module'. $func . $view .'.css');
+            } else {
+                $styles['module'. $func . $view .'.css'] = array('media' => 'all', 'href' => $csspath . 'module'. $func . $view .'.css');
+            }
+        }
+
+        if (file_exists($jsFolder . 'module'. $func . $view . '.js')) {
+            if ($this->config->get('config_render_js_in_file')) {
+                $javascripts[] = $jsFolder . 'module'. $func . $view . '.js';
+            } else {
+                $javascripts[] = $jspath . 'module'. $func . $view . '.js';
+            }
+        }
+
+        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+            if ($this->config->get('config_render_js_in_file')) {
+                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            } else {
+                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            }
         }
 
         if (count($styles)) {
             $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
         }
 
         if (count($javascripts)) {

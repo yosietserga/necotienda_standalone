@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"KADELL DE COLOMBIA S.A.S.";kadell@kadell.com;www.kadell.com;"(57) (4) 2628911";"Oficinas en Bogotá ( 57 )( 1 ) 2628911 Colombia, Medellín"
-"INVEPAR S.A.S (METALSOUZA)";info@inveparsas.com;www.inveparsas.com;"(57) (1) 6301894";"Tr69 B BIS 73-49 Colombia, Bogotá"
-"BASCULAS Y ROMANAS LA MEJOR LTDA.";ventas@basculaslamejor.com;www.basculasybalanzasencolombia.com;"(57) (1) 7025100";"Cr84 78-52 Colombia, Bogotá"

@@ -2,94 +2,123 @@
 
 class ControllerApiMeli extends Controller {
 
-    protected $live;
+    protected $meli;
     protected $handler;
     protected $oauth_url;
 
-    public function index() {
-        if ($this->config->get('social_meli_app_id') && $this->config->get('social_meli_app_secret')) {
+    private function initialize() {
+        if (!$this->config->get('social_meli_app_id') || !$this->config->get('social_meli_app_secret')) {
+            return false;
+        } else {
+            $this->load->auto('meli/meli');
+            $this->meli = new Meli($this->config->get('social_meli_app_id'), $this->config->get('social_meli_app_secret'));
+        }
+    }
+
+    public function index() {echo __LINE__.'<br />';
+        $Url = new Url($this->registry);
+        if (!$this->initialize()) {
             $this->load->library('xhttp/xhttp');
             $this->handler = new xhttp;
 
             if ($this->request->hasQuery('redirect')) {
-                $this->session->set('action', $this->request->getQuery('redirect'));
+                $_SESSION['mlaction'] = $this->request->getQuery('redirect');
             }
-
-            $redirect_uri = HTTP_HOME . 'api/meli';
-            if (strpos($redirect_uri, 'http') === false) {
+echo __LINE__.'<br />';
+            $redirect_uri = HTTP_HOME . 'api/meli';echo __LINE__.'<br />';
+            if (strpos($redirect_uri, 'http') === false) {echo __LINE__.'<br />';
                 if (strpos($redirect_uri, 'www.') === false) {
                     $redirect_uri = 'www.' . $redirect_uri;
-                }
-                $redirect_uri = 'http://' . $redirect_uri;
+                }echo __LINE__.'<br />';
+                $redirect_uri = 'http://' . $redirect_uri;echo __LINE__.'<br />';
             } elseif (strpos($redirect_uri, 'www.') === false) {
                 $protocol = substr($redirect_uri, 0, 7);
                 $url = substr($redirect_uri, 7);
-                $redirect_uri = $protocol . 'www.' . $url;
+                $redirect_uri = $protocol . 'www.' . $url;echo __LINE__.'<br />';
             }
             $redirect_uri = str_replace('/web', '', $redirect_uri);
-
+echo __LINE__.'<br />';
             $this->oauth_url = 'http://auth.mercadolivre.com.br/authorization?client_id=' .
                     $this->config->get('social_meli_app_id') .
-                    '&scope=&response_type=code&redirect_uri=' . urlencode($redirect_uri);
-
-            if ($this->request->hasQuery('code')) {
-                $this->session->set('mltoken', md5($this->request->getQuery('code')));
-                $this->session->set('mlcode', $this->request->getQuery('code'));
-                unset($_GET['code']);
-                $this->redirect(Url::createUrl("api/meli"));
+                    '&scope=&response_type=code&redirect_uri=' . urlencode($redirect_uri);echo __LINE__.'<br />';
+            $this->oauth_url = $this->meli->getAuthUrl($redirect_uri);echo __LINE__.'<br />';
+echo __LINE__.'<br />';var_dump($_SESSION['mlcode']);echo __LINE__.'<br />';
+            if ($this->request->hasQuery('code') && !isset($_SESSION['mlcode'])) {echo __LINE__.'<br />';
+                $response = $this->meli->authorize($this->request->getQuery('code'), $redirect_uri);echo __LINE__.'<br />';
+                $_SESSION['mlcode'] = $this->request->getQuery('code');echo __LINE__.'<br />';
+        		$_SESSION['mltoken'] = $response['body']->access_token;echo __LINE__.'<br />';
+        		$_SESSION['mlexpire'] = time() + $response['body']->expires_in;echo __LINE__.'<br />';
+        		$_SESSION['mlrefresh_token'] = $response['body']->refresh_token;echo __LINE__.'<br />';
+                unset($_GET['code']);var_dump($_SESSION['mlcode']);
+                //$this->redirect($Url::createUrl("api/meli"));
             }
-
-            if ($this->session->has('mltoken')) {
+            
+            if (!isset($_SESSION['mlcode'])) {echo __LINE__.'<br />';
+                unset($_SESSION['mltoken']);echo __LINE__.'<br />';
+                unset($_SESSION['mlexpire']);echo __LINE__.'<br />';
+                unset($_SESSION['mlrefresh_token']);echo __LINE__.'<br />';
+                unset($_SESSION['mlcode']);
+                $this->redirect($this->oauth_url);
+            }
+            
+            if(isset($_SESSION['mlexpire']) && $_SESSION['mlexpire'] < time()) {echo __LINE__.'<br />';
+    			try {echo __LINE__.'<br />';
+    				// Make the refresh proccess
+    				$refresh = $this->meli->refreshAccessToken();
+    echo __LINE__.'<br />';
+    				// Now we create the sessions with the new parameters
+            		$_SESSION['mltoken'] = $refresh['body']->access_token;
+            		$_SESSION['mlexpire'] = time() + $refresh['body']->expires_in;
+            		$_SESSION['mlrefresh_token'] = $refresh['body']->refresh_token;
+    			} catch (Exception $e) {echo __LINE__.'<br />';
+    			  	echo "Exception: ".  $e->getMessage() ."\n";
+    			}
+    		}echo __LINE__.'<br />';
+            
+            if (isset($_SESSION['mltoken'])) {echo __LINE__.'<br />';
                 echo __LINE__ . '<br>';
+                /*
                 $requestData['method'] = 'post';
-                $requestData['post'] = 'code=' . $this->session->get('mlcode')
+                $requestData['post'] = 'code=' . $_SESSION['mlcode']
                         . '&client_id=' . $this->config->get('social_meli_app_id')
                         . '&client_secret=' . $this->config->get('social_meli_app_secret')
                         . '&redirect_uri=' . urlencode($redirect_uri)
                         . '&grant_type=authorization_code';
 
                 $response = $this->handler->fetch('https://api.mercadolibre.com/oauth/token', $requestData);
-                var_dump($response);
-                if ($response['body']) {
-                    $this->session->set('meliAccessToken', $response['body']);
-                } else {
-                    $this->session->clear('mltoken');
-                    $this->session->clear('mlcode');
-                    //$this->redirect($this->oauth_url);
+                */
+                $mlactions = array(
+                    'invitefriends', 
+                    'import_products', 
+                    'login'
+                );echo __LINE__.'<br />';
+    
+                if (isset($_SESSION['mlaction']) && in_array($_SESSION['mlaction'], $mlactions)) {echo __LINE__.'<br />';
+                    $this->{$_SESSION['mlaction']}();
+                } else {echo __LINE__.'<br />';
+                    unset($_SESSION['mltoken']);
+                    unset($_SESSION['mlcode']);
+                    unset($_SESSION['mlexpire']);
+                    unset($_SESSION['mlrefresh_token']);
                 }
-            } else {
+            } else {echo __LINE__.'<br />';
+                unset($_SESSION['mltoken']);
+                unset($_SESSION['mlcode']);
                 //$this->redirect($this->oauth_url);
             }
             echo __LINE__ . '<br>';
             if (isset($_REQUEST['logout'])) {
-                $this->session->clear('mltoken');
-                $this->session->clear('mlcode');
-            }
-
-            $actions = array('invitefriends', 'login');
-
-            if ($this->session->has('action') && in_array($this->session->get('action'), $actions)) {
-                $this->{$this->session->get('action')}();
-            } else {
-                $this->session->clear('mltoken');
-                $this->session->clear('mlcode');
-                $this->session->clear('meliAccessToken');
-                /*
-                  if ($this->session->has('redirect')) {
-                  $this->redirect($this->session->get('rediret'));
-                  } else {
-                  $this->redirect(HTTP_HOME);
-                  }
-                 */
-            }
+                unset($_SESSION['mltoken']);
+                unset($_SESSION['mlcode']);
+            }echo __LINE__.'<br />';
         } else {
             echo '<script>history.back()</script>';
         }
     }
 
     public function invitefriends() {
-        if ($this->session->has('meliAccessToken')) {
-            $token = json_decode($this->session->get('meliAccessToken'));
+        if (isset($_SESSION['meliAccessToken'])) {
+            $token = json_decode($_SESSION['meliAccessToken']);
 
             $url = 'https://api.mercadolibre.com/users/me?access_token=' . $token->access_token;
             $response = $this->handler->fetch($url);
@@ -236,7 +265,7 @@ class ControllerApiMeli extends Controller {
                     $this->session->set('success', $this->language->get('text_friends_invited_success'));
 
                     if ($this->session->has('redirect')) {
-                        $this->redirect($this->session->get('rediret'));
+                        $this->redirect($this->session->get('redirect'));
                     } else {
                         $this->redirect(HTTP_HOME);
                     }
@@ -248,66 +277,57 @@ class ControllerApiMeli extends Controller {
     }
 
     public function login() {
-        /*
-          if (!$this->customer->isLogged() && (!$this->config->get('social_meli_app_id') || !$this->config->get('social_meli_app_secret'))) {
-          $this->redirect(Url::createUrl("account/login",array("error"=>"No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
-          }
+echo __LINE__.'<br />';
+        if (!$this->customer->isLogged() && (!$this->config->get('social_meli_app_id') || !$this->config->get('social_meli_app_secret'))) {
+            $this->redirect(Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
+        }
+echo __LINE__.'<br />';
+        if ($this->customer->isLogged()) {
+            $this->redirect(Url::createUrl("account/account"));
+        }
 
-          if ($this->customer->isLogged()) {
-          $this->redirect(Url::createUrl("account/account"));
-          }
-         */
-
-        if ($this->session->has('meliAccessToken')) {
+        if (isset($_SESSION['mltoken'])) {echo __LINE__.'<br />';
             /*
               //TODO: pasar un token temporal para evitar csrf
-              if (!$this->session->has('state') && $this->session->get('state') != $this->request->getQuery('state')) {
+              if (!isset($_SESSION['state') && $_SESSION['state') != $this->request->getQuery('state')) {
               $this->redirect(Url::createUrl("account/login",array("error"=>"No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
               }
              */
-            $token = json_decode($this->session->get('meliAccessToken'));
-
-            $url = 'https://api.mercadolibre.com/users/me?access_token=' . $token->access_token;
-            $response = $this->handler->fetch($url);
-            $profile = json_decode($response['body'], true);
-
-            $url = 'https://api.mercadolibre.com/users/me/items?access_token=' . $token->access_token;
-            $response = $this->handler->fetch($url);
-            $picture = json_decode($response['body'], true);
-            var_dump($picture);
-            /*
-              $photo = str_replace(' ','_',strtolower($profile['name'])).'_'.md5(uniqid().time()).'.jpg';
-              file_put_contents(DIR_IMAGE . $photo, file_get_contents($photo['picture']));
-
+            $response = $this->meli->get('/users/me/orders', array(
+            'access_token' => $_SESSION['mltoken']
+            ));echo __LINE__.'<br />';
+var_dump($response['body']);
+echo __LINE__.'<br />';
+            $response = $this->meli->get('/users/me', array('access_token' => $_SESSION['mltoken']));echo __LINE__.'<br />';
+var_dump($response['body']->nickname);var_dump($response['body']);
               $data = array(
               'oauth_provider'=> 'meli',
-              'company'       => $profile['name'],
-              'firstname'     => $profile['first_name'],
-              'lastname'      => $profile['last_name'],
-              'sex'           => substr($profile['gender'],0,1),
-              'email'         => $profile['emails']['preferred'],
-              'photo'         => $photo,
-              'meli_oauth_id'     => $profile['id'],
-              'meli_oauth_token'  => $token->access_token,
-              'meli_oauth_refresh'=> $token->refresh_token,
-              'meli_code'         => $this->session->get('gcode')
+              'company'       => $response['body']->nickname,
+              'firstname'     => $response['body']->first_name,
+              'lastname'      => $response['body']->last_name,
+              'email'         => $response['body']->email,
+              'meli_oauth_id'     => $response['body']->id,
+              'meli_oauth_token'  => $_SESSION['mltoken'],
+              'meli_oauth_refresh'=> $_SESSION['mlrefresh_token'],
+              'meli_oauth_expire'=> $_SESSION['mlexpire'],
+              'meli_code'         => $_SESSION['mlcode']
               );
-
-              $this->load->model('account/customer');
+echo __LINE__.'<br />';var_dump($data);
+              $this->load->model('account/customer');echo __LINE__.'<br />';
               $result = $this->modelCustomer->getCustomerByMeli($data);
-              if ($result) {
-              if ($this->customer->loginWithMeli($data)) {
-              if ($this->session->has('redirect')) {
-              $this->redirect(str_replace('&amp;', '&', $this->session->get('redirect')));
-              } else {
-              $this->redirect(Url::createUrl("common/home"));
-              }
-              } else {
-              $this->redirect(Url::createUrl("account/login",array("error"=>"No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
-              }
-              } elseif ($customer = $this->modelCustomer->addCustomerFromMeli($data)) {
-              if ($this->config->get('marketing_email_send_password_and_welcome')) {
-              $this->load->model('marketing/newsletter');
+              if ($result) {echo __LINE__.'<br />';
+                if ($this->customer->loginWithMeli($data)) {echo __LINE__.'<br />';
+                    if ($this->session->has('redirect')) {echo __LINE__.'<br />';
+                        $this->redirect(str_replace('&amp;', '&', $this->session->get('redirect')));
+                    } else {echo __LINE__.'<br />';
+                        $this->redirect(Url::createUrl("common/home"));
+                    }echo __LINE__.'<br />';
+                } else {echo __LINE__.'<br />';
+                    $this->redirect(Url::createUrl("account/login",array("error"=>"No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
+                }echo __LINE__.'<br />';
+              } elseif ($customer = $this->modelCustomer->addCustomerFromMeli($data)) {echo __LINE__.'<br />';
+              if ($this->config->get('marketing_email_send_password_and_welcome')) {echo __LINE__.'<br />';
+              $this->load->model('marketing/newsletter');echo __LINE__.'<br />';
               $newsletter = $this->modelNewsletter->getById($this->config->get('marketing_email_send_password_and_welcome'));
               if ($newsletter) {
               $message = $this->prepareTemplate(html_entity_decode($newsletter['htmlbody']));
@@ -321,7 +341,7 @@ class ControllerApiMeli extends Controller {
               $this->mailer = new Mailer;
               if ($this->config->get('config_smtp_method')=='smtp') {
               $this->mailer->IsSMTP();
-              $this->mailer->Hostname = $this->config->get('config_smtp_host');
+              $this->mailer->Host = $this->config->get('config_smtp_host');
               $this->mailer->Username = $this->config->get('config_smtp_username');
               $this->mailer->Password = base64_decode($this->config->get('config_smtp_password'));
               $this->mailer->Port     = $this->config->get('config_smtp_port');
@@ -333,7 +353,7 @@ class ControllerApiMeli extends Controller {
               } else {
               $this->mailer->IsMail();
               }
-
+echo __LINE__.'<br />';
               $this->mailer->AddAddress($profile['emails']['preferred'],$profile['name']);
               $this->mailer->IsHTML();
               $this->mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
@@ -342,14 +362,40 @@ class ControllerApiMeli extends Controller {
               $this->mailer->Send();
               }
               }
-
-              if ($this->customer->loginWithMeli($data)) {
-              $this->redirect(Url::createUrl("account/complete_profile"));
-              } else {
+echo __LINE__.'<br />';
+              if ($this->customer->loginWithMeli($data)) {echo __LINE__.'<br />';
+              $this->redirect(Url::createUrl("account/account"));
+              } else {echo __LINE__.'<br />';
               $this->redirect(Url::createUrl("account/login",array("error"=>"No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
               }
               }
+             
+        } else {
+            //$this->redirect($this->oauth_url);
+        }
+    }
+
+    public function import_products() {
+echo __LINE__.'<br />';
+        if (!$this->customer->isLogged() && (!$this->config->get('social_meli_app_id') || !$this->config->get('social_meli_app_secret'))) {
+            $this->redirect(Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
+        }
+        if (isset($_SESSION['mltoken'])) {echo __LINE__.'<br />';
+            /*
+              //TODO: pasar un token temporal para evitar csrf
+              if (!isset($_SESSION['state') && $_SESSION['state') != $this->request->getQuery('state')) {
+              $this->redirect(Url::createUrl("account/login",array("error"=>"No se pudo iniciar sesion utilizando Meli, por favor intente con otro servicio")));
+              }
              */
+echo __LINE__.'<br />';
+            $seller_id = $this->modelCustomer->getProperty($this->customer->getId(), 'meli', 'meli_oauth_id');
+            $response = $this->meli->get('/orders/search', array(
+            'access_token' => $_SESSION['mltoken'],
+            'seller' => $seller_id
+            ));echo __LINE__.'<br />';
+var_dump($response['body']);
+
+             
         } else {
             //$this->redirect($this->oauth_url);
         }

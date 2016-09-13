@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"SOLTEX-TEXTIL EL SOL";;;"(591) (22) 2230377";"Av 31 de Octubre No 1818 Bolivia, La Paz"

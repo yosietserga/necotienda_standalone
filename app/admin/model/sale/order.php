@@ -11,56 +11,57 @@
 class ModelSaleOrder extends Model {
 	
 	public function add($data) {
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET 
-        store_name = '" . $this->db->escape($data['store_name']) . "', 
-        store_url = '" . $this->db->escape($data['store_url']) . "', 
-        firstname = '" . $this->db->escape($data['firstname']) . "', 
-        lastname = '" . $this->db->escape($data['lastname']) . "', 
-        telephone = '" . $this->db->escape($data['telephone']) . "', 
-        email = '" . $this->db->escape($data['email']) . "', 
-        shipping_firstname = '" . $this->db->escape($data['shipping_firstname']) . "', 
-        shipping_lastname = '" . $this->db->escape($data['shipping_lastname']) . "', 
-        shipping_company = '" . $this->db->escape($data['shipping_company']) . "', 
-        shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', 
-        shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "', 
-        shipping_city = '" . $this->db->escape($data['shipping_city']) . "', 
-        shipping_zone = '" . $this->db->escape($data['shipping_zone']) . "', 
-        shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', 
-        shipping_country = '" . $this->db->escape($data['shipping_country']) . "', 
-        shipping_country_id = '" . (int)$data['shipping_country_id'] . "', 
-        payment_firstname = '" . $this->db->escape($data['payment_firstname']) . "', 
-        payment_lastname = '" . $this->db->escape($data['payment_lastname']) . "', 
-        payment_company = '" . $this->db->escape($data['payment_company']) . "', 
-        payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', 
-        payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', 
-        payment_city = '" . $this->db->escape($data['payment_city']) . "', 
-        payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', 
-        payment_zone = '" . $this->db->escape($data['payment_zone']) . "', 
-        payment_zone_id = '" . (int)$data['payment_zone_id'] . "', 
-        payment_country = '" . $this->db->escape($data['payment_country']) . "', 
-        payment_country_id = '" . (int)$data['payment_country_id'] . "', 
-        ip = '" . $this->db->escape('0.0.0.0') . "', 
-        total = '" . $this->db->escape(preg_replace("/[^0-9.]/",'', $data['total'])) . "', 
-        date_modified = NOW()");
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET ".
+        "customer_id = '" . $this->db->escape($data['customer_id']) . "',".
+        "store_name = '" . $this->db->escape($data['store_name']) . "',".
+        "store_url = '" . $this->db->escape($data['store_url']) . "', ".
+		"firstname = '" . $this->db->escape($data['firstname']) . "', ".
+		"lastname = '" . $this->db->escape($data['lastname']) . "', ".
+		"telephone = '" . $this->db->escape($data['telephone']) . "', ".
+		"email = '" . $this->db->escape($data['email']) . "', ".
+		"shipping_firstname = '" . $this->db->escape($data['shipping_firstname']) . "',".
+		"shipping_lastname = '" . $this->db->escape($data['shipping_lastname']) . "', ".
+		"shipping_company = '" . $this->db->escape($data['shipping_company']) . "', ".
+		"shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "',".
+		"shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "',".
+		"shipping_city = '" . $this->db->escape($data['shipping_city']) . "', ".
+		"shipping_zone = '" . $this->db->escape($data['shipping_zone']) . "', ".
+		"shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', ".
+		"shipping_country = '" . $this->db->escape($data['shipping_country']) . "',".
+		"shipping_country_id = '" . (int)$data['shipping_country_id'] . "', ".
+		"payment_firstname = '" . $this->db->escape($data['payment_firstname']) . "',".
+		"payment_lastname = '" . $this->db->escape($data['payment_lastname']) . "', ".
+		"payment_company = '" . $this->db->escape($data['payment_company']) . "', ".
+		"payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "',".
+		"payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', ".
+		"payment_city = '" . $this->db->escape($data['payment_city']) . "', ".
+		"payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "',".
+		"payment_zone = '" . $this->db->escape($data['payment_zone']) . "', ".
+		"payment_zone_id = '" . (int)$data['payment_zone_id'] . "', ".
+		"payment_country = '" . $this->db->escape($data['payment_country']) . "',".
+		"payment_country_id = '" . (int)$data['payment_country_id'] . "', ".
+		"ip = '" . $this->db->escape('0.0.0.0') . "', ".
+		"total = '" . $this->db->escape(preg_replace("/[^0-9.]/",'', $data['total'])) . "',".
+		"date_modified = NOW()");
 		
 		$order_id = $this->db->getLastId();
 		
 		if (isset($data['product'])) {
 			foreach ($data['product'] as $product) {
 				if ($product['product_id']) {
-					$product_query = $this->db->query("SELECT * 
-                    FROM " . DB_PREFIX . "product p 
-                    LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
-                    WHERE p.product_id='" . (int)$product['product_id'] . "'");
+					$product_query = $this->db->query("SELECT * ".
+                    "FROM " . DB_PREFIX . "product p ".
+                    "LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)".
+                    "WHERE p.product_id='" . (int)$product['product_id'] . "'");
 										
-					$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET 
-                    order_id = '" . (int)$order_id . "', 
-                    product_id = '" . (int)$product['product_id'] . "', 
-                    name = '" . $this->db->escape($product_query->row['name']) . "', 
-                    model = '" . $this->db->escape($product_query->row['model']) . "', 
-                    price = '" . $this->db->escape(preg_replace("/[^0-9.]/",'', $product['price'])) . "', 
-                    total = '" . $this->db->escape(preg_replace("/[^0-9.]/",'', $product['total'])) . "', 
-                    quantity = '" . $this->db->escape($product['quantity']) . "'");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET ".
+					"order_id = '" . (int)$order_id . "', ".
+					"product_id = '" . (int)$product['product_id'] . "', ".
+					"name = '" . $this->db->escape($product_query->row['name']) . "', ".
+					"model = '" . $this->db->escape($product_query->row['model']) . "', ".
+					"price = '" . $this->db->escape(preg_replace("/[^0-9.]/",'', $product['price'])) . "', ".
+                    "total = '" . $this->db->escape(preg_replace("/[^0-9.]/",'', $product['total'])) . "', ".
+                    "quantity = '" . $this->db->escape($product['quantity']) . "'");
 				}
 			}
 		}

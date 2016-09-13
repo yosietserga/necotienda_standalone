@@ -151,10 +151,6 @@
                         data.output+="<br /><a href='" + settings.baseUrl + "index.php?r=store/product&amp;product_id=" + item.product_id + "' title='" + item.name + "'>";
                         data.output+="<b>" + name + "</b>";
                         data.output+="</a>";
-                        if (item.config_store_mode==='store') {
-                            data.output+="<a class=\"button_add_small\" href=\"" + item.addToCart_url + "\">Agregar Al Carrito</b>";
-                        }
-                       data.output+="<a class=\"button_see_small\" href=\"" + item.seeProduct_url + "\">Ver Descripci&oacute;n</b>";
                         data.output+="</article>";
                         data.output+="</li>";
                     });

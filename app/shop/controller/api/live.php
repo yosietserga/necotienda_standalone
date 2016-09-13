@@ -1,22 +1,29 @@
 <?php
 
+//TODO: optimize code and wrap it in methods
 class ControllerApiLive extends Controller {
 
     protected $live;
     protected $handler;
     protected $oauth_url;
 
+    private function initialize() {
+        if (!$this->config->get('social_live_client_id') || !$this->config->get('social_live_client_secret')) {
+            return false;
+        }
+    }
+
     public function index() {
-        if ($this->config->get('social_live_client_id') && $this->config->get('social_live_client_secret')) {
+        if (!$this->initialize()) {
             $this->load->library('xhttp/xhttp');
             $this->handler = new xhttp;
 
             if ($this->request->hasQuery('redirect')) {
-                $this->session->set('action', $this->request->getQuery('redirect'));
+                $_SESSION['laction'] = $this->request->getQuery('redirect');
             }
 
             if ($this->request->hasQuery('product_id')) {
-                $this->session->set('promote_product_id', $this->request->getQuery('product_id'));
+                $_SESSION['promote_product_id'] = $this->request->getQuery('product_id');
             }
 
             $redirect_uri = HTTP_HOME . 'api/live';
@@ -36,15 +43,15 @@ class ControllerApiLive extends Controller {
                     $this->config->get('social_live_client_id') .
                     '&scope=wl.signin%20wl.basic%20wl.emails%20wl.contacts_emails&response_type=code&redirect_uri=' . urlencode($redirect_uri);
 
-            if ($this->request->hasQuery('code')) {
-                $this->session->set('ltoken', md5($this->request->getQuery('code')));
-                $this->session->set('lcode', $this->request->getQuery('code'));
+            if ($this->request->hasQuery('code') && !isset($_SESSION['lcode'])) {
+                $_SESSION['ltoken'] = md5($this->request->getQuery('code'));
+                $_SESSION['lcode'] = $this->request->getQuery('code');
                 $this->redirect(Url::createUrl("api/live"));
             }
 
-            if ($this->session->has('ltoken')) {
+            if (isset($_SESSION['lcode'])) {
                 $requestData['method'] = 'post';
-                $requestData['post'] = 'code=' . $this->session->get('lcode')
+                $requestData['post'] = 'code=' . $_SESSION['lcode']
                         . '&client_id=' . $this->config->get('social_live_client_id')
                         . '&client_secret=' . $this->config->get('social_live_client_secret')
                         . '&redirect_uri=' . urlencode($redirect_uri)
@@ -55,14 +62,14 @@ class ControllerApiLive extends Controller {
                     /*
                       $resp = json_decode($response['body'], true);
                       if ($resp['body']['error']) {
-                      $this->session->clear('ltoken');
-                      $this->session->clear('lcode');
-                      $this->session->clear('liveAccessToken');
-                      $this->session->clear('action');
+                      unset($_SESSION['ltoken']);
+                      unset($_SESSION['lcode']);
+                      unset($_SESSION['liveAccessToken']);
+                      unset($_SESSION['laction']);
                       } else {
                      * 
                      */
-                    $this->session->set('liveAccessToken', $response['body']);
+                    $_SESSION['liveAccessToken'] = $response['body'];
                     /* } */
                 }
             } else {
@@ -70,18 +77,18 @@ class ControllerApiLive extends Controller {
             }
 
             if (isset($_REQUEST['logout'])) {
-                $this->session->clear('ltoken');
-                $this->session->clear('lcode');
+                unset($_SESSION['ltoken']);
+                unset($_SESSION['lcode']);
             }
 
             $actions = array('invitefriends', 'login', 'promote');
 
-            if ($this->session->has('action') && in_array($this->session->get('action'), $actions)) {
-                $this->{$this->session->get('action')}();
+            if (isset($_SESSION['laction']) && in_array($_SESSION['laction'], $actions)) {
+                $this->{$_SESSION['laction']}();
             } else {
-                $this->session->clear('ltoken');
-                $this->session->clear('lcode');
-                $this->session->clear('liveAccessToken');
+                unset($_SESSION['ltoken']);
+                unset($_SESSION['lcode']);
+                unset($_SESSION['liveAccessToken']);
                 if ($this->session->has('redirect')) {
                     $this->redirect($this->session->get('redirect'));
                 } else {
@@ -94,8 +101,8 @@ class ControllerApiLive extends Controller {
     }
 
     public function invitefriends() {
-        if ($this->session->has('liveAccessToken')) {
-            $token = json_decode($this->session->get('liveAccessToken'));
+        if (isset($_SESSION['liveAccessToken'])) {
+            $token = json_decode($_SESSION['liveAccessToken']);
 
             $url = 'https://apis.live.net/v5.0/me?access_token=' . $token->access_token;
             $response = $this->handler->fetch($url);
@@ -207,7 +214,7 @@ class ControllerApiLive extends Controller {
 
                         $task->object_id = (int) $campaign_id;
                         $task->object_type = 'campaign';
-                        $task->task = $campaign['name'];
+                        $task->task = $data['name'];
                         $task->type = 'send';
                         $task->time_exec = date('Y-m-d H:i:s');
                         $task->params = $params;
@@ -240,7 +247,7 @@ class ControllerApiLive extends Controller {
                         $task->createSendTask();
                     }
 
-                    $this->session->set('success', $this->language->get('text_friends_invited_success'));
+                    $this->session->get('success', $this->language->get('text_friends_invited_success'));
 
                     if ($this->session->has('redirect')) {
                         $this->redirect($this->session->get('redirect'));
@@ -255,17 +262,17 @@ class ControllerApiLive extends Controller {
     }
 
     public function promote() {
-        if ($this->session->has('liveAccessToken')) {
-            $token = json_decode($this->session->get('liveAccessToken'));
+        if (isset($_SESSION['liveAccessToken'])) {
+            $token = json_decode($_SESSION['liveAccessToken']);
 
             $url = 'https://apis.live.net/v5.0/me?access_token=' . $token->access_token;
             $response = $this->handler->fetch($url);
             $profile = json_decode($response['body'], true);
             if ($profile['error']) {
-                $this->session->clear('ltoken');
-                $this->session->clear('lcode');
-                $this->session->clear('liveAccessToken');
-                $this->session->clear('action');
+                unset($_SESSION['ltoken']);
+                unset($_SESSION['lcode']);
+                unset($_SESSION['liveAccessToken']);
+                unset($_SESSION['laction']);
                 $this->redirect($this->oauth_url);
             }
 
@@ -334,8 +341,8 @@ class ControllerApiLive extends Controller {
                     $this->load->model('marketing/newsletter');
 
                     $product = array();
-                    $product_id = ($this->request->hasQuery('product_id')) ? $this->request->getQuery('product_id') : $this->session->get('promote_product_id');
-                    $this->session->set('promote_product_id', $product_id);
+                    $_SESSION['promote_product_id'] = $product_id = ($this->request->hasQuery('product_id')) ? $this->request->getQuery('product_id') : $_SESSION['promote_product_id'];
+
                     if ($product_id) {
                         $product_id;
                         $this->load->model('store/product');
@@ -424,7 +431,7 @@ class ControllerApiLive extends Controller {
 
                                 $task->object_id = (int) $campaign_id;
                                 $task->object_type = 'campaign';
-                                $task->task = $campaign['name'];
+                                $task->task = $data['name'];
                                 $task->type = 'send';
                                 $task->time_exec = date('Y-m-d H:i:s');
                                 $task->params = $params;
@@ -459,7 +466,7 @@ class ControllerApiLive extends Controller {
                             }
                         }
                     }
-                    $this->session->set('success', $this->language->get('text_promote_product_success'));
+                    $this->session->get('success', $this->language->get('text_promote_product_success'));
                 }
                 $this->redirect($Url::createUrl('store/product', array('product_id' => $product['product_id'])));
             }
@@ -477,25 +484,24 @@ class ControllerApiLive extends Controller {
             $this->redirect(Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Live, por favor intente con otro servicio")));
         }
 
-
-        if ($this->session->has('liveAccessToken')) {
+        if (isset($_SESSION['liveAccessToken'])) {
             /*
               //TODO: pasar un token temporal para evitar csrf
               if (!$this->session->has('state') && $this->session->get('state') != $this->request->getQuery('state')) {
               $this->redirect(Url::createUrl("account/login",array("error"=>"No se pudo iniciar sesion utilizando Live, por favor intente con otro servicio")));
               }
              */
-            $token = json_decode($this->session->get('liveAccessToken'));
+            $token = json_decode($_SESSION['liveAccessToken']);
 
             $url = 'https://apis.live.net/v5.0/me?access_token=' . $token->access_token;
             $response = $this->handler->fetch($url);
             $profile = json_decode($response['body'], true);
 
             if ($profile['error']) {
-                $this->session->clear('ltoken');
-                $this->session->clear('lcode');
-                $this->session->clear('liveAccessToken');
-                $this->session->clear('action');
+                unset($_SESSION['ltoken']);
+                unset($_SESSION['lcode']);
+                unset($_SESSION['liveAccessToken']);
+                unset($_SESSION['laction']);
                 $this->redirect(Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Live, por favor intente con otro servicio")));
             }
 
@@ -517,7 +523,7 @@ class ControllerApiLive extends Controller {
                 'live_oauth_id' => $profile['id'],
                 'live_oauth_token' => $token->access_token,
                 'live_oauth_refresh' => $token->refresh_token,
-                'live_code' => $this->session->get('gcode')
+                'live_code' => $_SESSION['lcode']
             );
 
             $this->load->model('account/customer');
@@ -549,7 +555,7 @@ class ControllerApiLive extends Controller {
                         $this->mailer = new Mailer;
                         if ($this->config->get('config_smtp_method') == 'smtp') {
                             $this->mailer->IsSMTP();
-                            $this->mailer->Hostname = $this->config->get('config_smtp_host');
+                            $this->mailer->Host = $this->config->get('config_smtp_host');
                             $this->mailer->Username = $this->config->get('config_smtp_username');
                             $this->mailer->Password = base64_decode($this->config->get('config_smtp_password'));
                             $this->mailer->Port = $this->config->get('config_smtp_port');

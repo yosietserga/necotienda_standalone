@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"REPARADORA DE CALZADO Y ARTICULOS DE CUERO NINO";;;"(56) (32) 2901031";"Pasaje Cousiño 14 Loc.1 Chile, Viña del Mar"

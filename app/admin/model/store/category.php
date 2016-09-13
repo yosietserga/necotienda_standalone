@@ -200,6 +200,22 @@ class ModelStoreCategory extends Model {
         $this->cache->delete('category_admin');
     }
 
+    public function getAttributes($category_id) {
+        $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."product_attribute_group pag ".
+        "LEFT JOIN " . DB_PREFIX . "product_attribute_to_category pa2c ON (pag.product_attribute_group_id = pa2c.product_attribute_group_id) ".
+        "WHERE pa2c.category_id = '" . (int) $category_id . "'
+        AND pag.status = '1'");
+
+        foreach ($query->rows as $row) {
+            $query2 = $this->db->query("SELECT *, pa.name AS attribute FROM " . DB_PREFIX . "product_attribute pa ".
+        "WHERE product_attribute_group_id = '" . (int)$row['product_attribute_group_id'] . "'");
+            $attributes[$row['product_attribute_group_id']] = $row;
+            $attributes[$row['product_attribute_group_id']]['items'] = $query2->rows;
+        }
+
+        return $attributes;
+    }
+
     public function getStores($id) {
         $data = array();
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_to_store WHERE category_id = '" . (int) $id . "'");

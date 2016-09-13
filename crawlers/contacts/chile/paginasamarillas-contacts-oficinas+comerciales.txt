@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"OFICINA DE REPRESENTACIÓN COMERCIAL DE PUERTO RICO EN CHILE";;;"(56) (2) 2344250";"Augusto Leguia Nrote 100 Of.303 Las Condes Chile, Santiago"

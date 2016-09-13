@@ -42,6 +42,13 @@ class ControllerContentPage extends Controller {
         $page_info = $this->modelPage->getById($page_id);
 
         if ($page_info) {
+            //tracker
+            $this->tracker->track($page_info['page_id'], 'page');
+
+            if ($this->session->has('ref_email') && !$this->session->has('ref_cid')) {
+                $this->data['show_register_form_invitation'] = true;
+            }
+
             $this->session->set('redirect', Url::createUrl('content/page', array('page_id' => $page_id)));
 
             $customerGroups = $this->modelPage->getProperty($page_id, 'customer_groups', 'customer_groups');
@@ -49,8 +56,8 @@ class ControllerContentPage extends Controller {
                 $cached = $this->cache->get('page.' .
                         $this->request->get['page_id'] .
                         $this->config->get('config_language_id') . "." .
-                        $this->request->hasQuery('hl') . "." .
-                        $this->request->hasQuery('cc') . "." .
+                        $this->request->getQuery('hl') . "." .
+                        $this->request->getQuery('cc') . "." .
                         $this->customer->getId() . "." .
                         $this->config->get('config_currency') . "." .
                         (int) $this->config->get('config_store_id')
@@ -66,6 +73,18 @@ class ControllerContentPage extends Controller {
                         'text' => $page_info['title'],
                         'separator' => $this->language->get('text_separator')
                     );
+
+                    $this->load->auto('image');
+                    if (!empty($page_info['image']))
+                        $this->data['image'] = $page_info['image'];
+
+                    if (!empty($page_info['image']))
+                        $this->data['thumb'] = NTImage::resizeAndSave($page_info['image'], $this->config->get('config_image_post_width'), $this->config->get('config_image_post_height'));
+
+                    !empty($page_info['image']) ?
+                        $this->data['lazyImage'] = NTImage::resizeAndSave($page_info['image'], 38, 38) :
+                        $this->data['lazyImage'] = NTImage::resizeAndSave('no_image.jpg', 38, 38);
+
                     $this->data['breadcrumbs'] = $this->document->breadcrumbs;
                     $this->data['heading_title'] = $page_info['title'];
                     $this->data['description'] = html_entity_decode($page_info['description']);
@@ -87,7 +106,7 @@ class ControllerContentPage extends Controller {
                     if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
                         $this->template = $this->config->get('config_template') . '/' . $template;
                     } else {
-                        $this->template = 'choroni/' . $template;
+                        $this->template = 'cuyagua/' . $template;
                     }
 
                     $this->children[] = 'common/nav';
@@ -99,8 +118,8 @@ class ControllerContentPage extends Controller {
                         $this->cacheId = 'page.' .
                                 $this->request->get['page_id'] .
                                 $this->config->get('config_language_id') . "." .
-                                $this->request->hasQuery('hl') . "." .
-                                $this->request->hasQuery('cc') . "." .
+                                $this->request->getQuery('hl') . "." .
+                                $this->request->getQuery('cc') . "." .
                                 $this->customer->getId() . "." .
                                 $this->config->get('config_currency') . "." .
                                 (int) $this->config->get('config_store_id');
@@ -138,7 +157,7 @@ class ControllerContentPage extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->children[] = 'common/column_left';
@@ -271,7 +290,7 @@ class ControllerContentPage extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->children[] = 'common/nav';
@@ -341,7 +360,7 @@ class ControllerContentPage extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -361,7 +380,7 @@ class ControllerContentPage extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

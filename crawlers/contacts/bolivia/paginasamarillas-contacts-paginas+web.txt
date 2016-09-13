@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"DISEÑO DE PAGINAS WEB BOLIVIA";;;"(591) (33) 72595422";"lomas de Alto Irpavi C3 #092 Bolivia, Santa Cruz de la Sierra"

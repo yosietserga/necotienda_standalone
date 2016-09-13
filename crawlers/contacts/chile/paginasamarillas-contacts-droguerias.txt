@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"DROGUERÍA LABONORT";;;"(56) (55) 777000";"Edmundo Pérez Zujovic 9646 - Antofagasta Chile, Antofagasta"
-"DROGUERÍA ÑUÑOA";;;"(56) (2) 4702400";"Av. Pedro De Valdivia 5971 Chile, Santiago"
-"DROGUERÍA DF";;;"(56) (2) 6217657";"Colombia 0310 Recoleta Chile, Santiago"
-"DROGUERIA MICHELSON S.A.";;;"(56) (2) 5566098";"Antonio Secchi 037 - Ñuñoa Chile, Santiago"

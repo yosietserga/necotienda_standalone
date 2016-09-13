@@ -1,6 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-PORTICO;;;"(56) (2) 7391565";"Los Hechebers 901 Quilicura Chile, Santiago"
-"TONINO METÁLICOS Y PLASTIFICADOS";;;"(56) (2) 5186916";"Benozzo Gozzoli 5143, San Joaquin Chile, Santiago"
-"CASA Y JARDIN";;;"(56) (2) 7322489";"Coronel Alvarado 2259, Independencia Chile, Santiago"
-"DIPLAS S.A";;;"(56) (2) 6897739";"Salvador San Fuentes 2896 Chile, Santiago"
-"METALGAS LTDA";;;"(56) (2) 7749052";"Radal 1360 Quinta Normal Chile, Santiago"

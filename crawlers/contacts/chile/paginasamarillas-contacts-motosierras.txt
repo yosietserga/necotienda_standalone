@@ -1,9 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"COMERCIAL FAMARI";;;"(56) (2) 4417455";"Santa Isabel 247 Santiago Chile, Santiago"
-"VENTA REPUESTOS Y SERV.TECNICO MOTOSIERRAS Y DESMALEZADORAS FORESTA LTDA";;;"(56) (61) 280308";"Yungay 0351 Chile, Punta Arenas"
-"COMERCIAL DE LA PATAGONIA";;;"(56) (61) 214111";"Zona Franca - Av Principal Chile, Punta Arenas"
-"HUSQVARNA POULAN";;;"(56) (2) 9415400";"Huechuraba Santiago Chile, Santiago"
-"FERRETERIA ESPAÑA";;;"(56) (32) 2258903";"Av. Argentina 802 Valparaíso Chile, Valparaiso"
-"CANEO MUÑOZ JAVIER";;;"(56) (32) 2598006";"Av. Colón 2639 Chile, Valparaiso"
-"SOFAL LTDA.";;;"(56) (71) 462387";"Anibal Pinto 236 Parral Chile, Talca"
-"AGRIFOR STIHL";;;"(56) (71) 714457";"1 Norte 2110 Chile, Talca"

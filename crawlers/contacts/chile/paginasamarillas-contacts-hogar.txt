@@ -1,8 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"APART HOTEL UNIVERSITARIO";;;"(56) (2) 2695958";"Av. José Manuel Infante 1912, Ñuñoa Chile, Santiago"
-"RESIDENCIA MARÍA INMACULADA";;;"(56) (2) 6725089";"Olivares 1370 Chile, Santiago"
-"CASA DE ACOGIDA GRADA";;;"(56) (2) 2641232";"Doctor La Sierra 1437 - Providencia Chile, Santiago"
-"HOUSING M.R. RESIDENCIA UNIVERSITARIA";;;"(56) (2) 6657817";"Pje. Doctor Ernesto Prado Tagle 80, Providencia Chile, Santiago"
-"FUNDACIÓN ALBORADA";;;"(56) (2) 2047534";"Av. Pedro de Valdivia 1150, Providencia Chile, Santiago"
-"HOGAR DIFERENCIAL GABRIELA MISTRAL";;;"(56) (2) 7935720";"Campo de Deporte 535 Ñuñoa Chile, Santiago"
-"HOGAR PARA DEFICIENTES MENTALES MI OTRA CASA";;;"(56) (2) 2264653";"Av. Simón Bolívar 6865, La Reina Chile, Santiago"

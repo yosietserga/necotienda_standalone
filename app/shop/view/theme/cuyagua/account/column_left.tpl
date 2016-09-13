@@ -2,10 +2,7 @@
 <div class="menu-orders">
 	<div class="heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
-            <h3>
-                <i class="heading-icon icon icon-truck">
-                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/truck.tpl"); ?
-                </i>
+            <h3> 
                 <?php echo $Language->get('text_my_orders');?>
             </h3>
         </div>
@@ -27,10 +24,7 @@
 <div class="menu-messages">
     <div class="heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
-            <h3>
-                <i class="heading-icon icon icon-envelope">
-                   <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/envelope.tpl"); ?
-                </i>
+            <h3> 
                 <?php echo $Language->get('text_messages');?>
             </h3>
         </div>
@@ -55,10 +49,7 @@
 <div class="actions-account">
 	<div class="heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
         <div class="heading-title">
-            <h3>
-                <i class="heading-icon icon icon-user">
-                    <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/user.tpl"); ?> 
-                </i>
+            <h3> 
                 <?php echo $Language->get('text_account');?>
 
             </h3>

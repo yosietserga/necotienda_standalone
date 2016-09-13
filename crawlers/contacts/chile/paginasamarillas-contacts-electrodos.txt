@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-BIOELECTRONIC;;;"(56) (2) 4220742";"José Manuel Infante 514 - Providencia Chile, Santiago"
-"MERSUD COMERCIAL INDUSTRIAL LTDA.";;;"(56) (2) 6894269";"Gay 2535 Chile, Santiago"

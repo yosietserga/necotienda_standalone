@@ -7,6 +7,13 @@ class ControllerPageContact extends Controller {
     public function index() {
         $this->language->load('page/contact');
 
+        //tracker
+        $this->tracker->track(0, 'contact_page');
+
+        if ($this->session->has('ref_email') && !$this->session->has('ref_cid')) {
+            $this->data['show_register_form_invitation'] = true;
+        }
+
         $this->document->title = $this->language->get('heading_title');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -108,7 +115,7 @@ class ControllerPageContact extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -132,6 +139,52 @@ class ControllerPageContact extends Controller {
         } else {
             return false;
         }
+    }
+
+    public function asyncContact() {
+        $this->load->library('json');
+        $this->language->load('page/contact');
+        $json = array();
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            $this->load->library('email/mailer');
+            $mailer = new Mailer;
+            if ($this->config->get('config_smtp_method') == 'smtp') {
+                $mailer->IsSMTP();
+                $mailer->Host = $this->config->get('config_smtp_host');
+                $mailer->Username = $this->config->get('config_smtp_username');
+                $mailer->Password = base64_decode($this->config->get('config_smtp_password'));
+                $mailer->Port = $this->config->get('config_smtp_port');
+                $mailer->Timeout = $this->config->get('config_smtp_timeout');
+                $mailer->SMTPSecure = $this->config->get('config_smtp_ssl');
+                $mailer->SMTPAuth = ($this->config->get('config_smtp_auth')) ? true : false;
+            } elseif ($this->config->get('config_smtp_method') == 'sendmail') {
+                $mailer->IsSendmail();
+            } else {
+                $mailer->IsMail();
+            }
+
+            $mailer->IsHTML(false);
+            $mailer->AddAddress($this->config->get('config_email'), $this->config->get('config_name'));
+            $mailer->SetFrom($this->request->post['email'], $this->request->post['name']);
+            $mailer->Subject = $this->config->get('config_name') . " - Contacto";
+            $mailer->Body = strip_tags(html_entity_decode($this->request->post['enquiry'], ENT_QUOTES, 'UTF-8'));
+            $json['result'] = $mailer->Send();
+
+            if ($this->request->hasPost('newsletter')) {
+                $this->load->model('marketing/contact');
+                $this->modelContact->add($this->request->post);
+            }
+            if ($json['result'])
+                $json['msg'] = $this->language->get('text_success');
+            $this->request->post = array();
+            unset($this->request->server['REQUEST_METHOD']);
+        } else {
+            $json['error'] = 1;
+            $json['msg'] = isset($this->error['name']) ? $this->error['name'] : '';
+            $json['msg'] = isset($this->error['email']) ? $this->error['email'] : $json['msg'];
+            $json['msg'] = isset($this->error['enquiry']) ? $this->error['enquiry'] : $json['msg'];
+        }
+        $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
 
     protected function loadWidgets() {

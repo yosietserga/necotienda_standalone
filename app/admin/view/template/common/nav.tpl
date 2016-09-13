@@ -7,12 +7,12 @@
     <div class="clear"></div>
     
     <div class="center">
-        <img class="avatar" src="<?php echo HTTP_IMAGE; ?>data/profiles/avatar.png" alt="Me" />
+        <img class="avatar" src="<?php echo $avatar; ?>" alt="<?php echo $this->user->getUserName(); ?>" />
         <p><?php echo $this->user->getUserName(); ?></p>
     </div>
        
     <div class="clear"></div>
-    
+    <!--
     <div class="center">
         <div class="grid_1" style="margin:0px;margin-left:15px;">
             <i class="fa fa-envelope fa-3x"></i>
@@ -29,7 +29,7 @@
     </div>
         
     <div class="clear"></div>
-    
+    -->
     <h2><?php echo $Language->get('tab_menu'); ?></h2>
     <ul class="menu">
         <li>
@@ -44,6 +44,8 @@
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('store/product'); ?>"><?php echo $Language->get('text_product'); ?></a>
                 </li>
+                <li>
+                    <a href="<?php echo $Url::createAdminUrl('store/attribute'); ?>"><?php echo $Language->get('Product Attributes'); ?></a>
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('store/manufacturer'); ?>"><?php echo $Language->get('text_manufacturer'); ?></a>
                 </li>
@@ -182,13 +184,16 @@
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('marketing/message'); ?>"><?php echo $Language->get('text_email_associations'); ?></a>
                 </li>
+                <li>
+                    <a href="<?php echo $Url::createAdminUrl('marketing/mailserver'); ?>"><?php echo $Language->get('SMTP Mail Servers'); ?></a>
+                </li>
             </ul>
         </li>
         <li>
             <a><i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;CPanel<i class="fa fa-arrow-circle-right" style=float:right;margin-top:13px;margin-right:5px;"></i></a>
             <ul>
                 <li>
-                    <a href="<?php echo $Url::createAdminUrl('cpanel/email'); ?>"><?php echo $Language->get('text_email_accounts'); ?></a>
+                    <a href="<?php echo $Url::createAdminUrl('cpanel/email'); ?>"><?php echo $Language->get('Email Accounts'); ?></a>
                 </li>
             </ul>
         </li>
@@ -248,6 +253,9 @@
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('localisation/length_class'); ?>"><?php echo $Language->get('text_length_class'); ?></a>
                 </li>
+                <li>
+                    <a href="<?php echo $Url::createAdminUrl('tool/update'); ?>"><?php echo $Language->get('Updates'); ?></a>
+                </li>
             </ul>
         </li>
     </ul>
@@ -284,7 +292,7 @@
     </div>
         
     <div class="clear"></div>
-    
+
     <h2><?php echo $Language->get('tab_menu'); ?></h2>
     <ul class="menu">
         <li>
@@ -298,6 +306,9 @@
                 </li>
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('store/product'); ?>"><?php echo $Language->get('text_product'); ?></a>
+                </li>
+                <li>
+                    <a href="<?php echo $Url::createAdminUrl('store/attribute'); ?>"><?php echo $Language->get('Product Attributes'); ?></a>
                 </li>
                 <li>
                     <a href="<?php echo $Url::createAdminUrl('store/manufacturer'); ?>"><?php echo $Language->get('text_manufacturer'); ?></a>

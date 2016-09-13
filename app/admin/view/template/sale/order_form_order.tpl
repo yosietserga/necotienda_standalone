@@ -1,5 +1,7 @@
 <h2>Datos del Pedido</h2>
 <table class="form">
+
+	<?php if ($order_id) { ?>
 	<tr>
 		<td><?php echo $Language->get('entry_order_id'); ?></td>
 		<td>#<?php echo $order_id; ?></td>
@@ -16,18 +18,41 @@
 	</tr>
 	<tr>
 		<td><?php echo $Language->get('entry_name'); ?></td>
-		<td><?php if ($customer) { ?><a href="<?php echo $customer; ?>"><?php } ?><?php echo $firstname ." ". $lastname; ?><?php if ($customer) { ?></a><?php } ?></td>
+		<td>
+			<?php if ($customer) { ?><a href="<?php echo $customer; ?>"><?php } ?>
+				<?php echo $firstname ." ". $lastname; ?>
+			<?php if ($customer) { ?></a><?php } ?>
+		</td>
 	</tr>
 	<tr>
 		<td><?php echo $Language->get('entry_customer'); ?></td>
 		<td><?php if ($customer) { ?><a href="<?php echo $customer; ?>"><?php } ?><?php echo $company; ?><?php if ($customer) { ?></a><?php } ?></td>
 	</tr>
+	<?php } else { ?>
+	<tr>
+		<td><?php echo $Language->get('entry_customer'); ?></td>
+		<td>
+			<a class="lightbox customerName" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("sale/order/searchcustomer"); ?>&amp;field=image&amp;preview=preview">
+			<?php echo $Language->get('Search Customer'); ?>
+			</a>
+
+			<div class="clear"></div>
+
+			<input type="hidden" name="firstname" value="<?php echo $firstname; ?>" />
+			<input type="hidden" name="lastname" value="<?php echo $lastname; ?>" />
+			<input type="hidden" name="customer_id" value="<?php echo $customer_id; ?>" />
+			<input type="hidden" name="company" value="<?php echo $company; ?>" />
+		</td>
+	</tr>
+	<?php } ?>
+
     <?php if ($customer_group) { ?>
 	<tr>
 		<td><?php echo $Language->get('entry_customer_group'); ?></td>
 		<td><?php echo $customer_group; ?></td>
 	</tr>
     <?php } ?>
+
 	<tr>
 		<td><?php echo $Language->get('entry_email'); ?></td>
 		<td><input type="email" name="email" value="<?php echo $email; ?>" /></td>
@@ -48,10 +73,14 @@
 		<td><?php echo $Language->get('entry_store_url'); ?></td>
 		<td><a onclick="window.open('<?php echo $store_url; ?>');" style="font-style: italic;"><?php echo $store_url; ?></a></td>
 	</tr>
+
+	<?php if ($order_id) { ?>
 	<tr>
 		<td><?php echo $Language->get('entry_date_added'); ?></td>
 		<td><?php echo $date_added; ?></td>
 	</tr>
+	<?php } ?>
+
 	<tr>
 		<td><?php echo $Language->get('entry_shipping_method'); ?></td>
 		<td><input type="text" name="shipping_method" value="<?php echo $shipping_method; ?>" /></td>
@@ -90,4 +119,15 @@ $('#generate_button').on('click', function(e) {
 			}
         });
 });
+
+function setCustomerOrder(data) {
+	$('input[name=firstname]').val(data.firstname);
+	$('input[name=lastname]').val(data.lastname);
+	$('input[name=email]').val(data.email);
+	$('input[name=company]').val(data.company);
+	$('input[name=telephone]').val(data.telephone);
+	$('input[name=customer_id]').val(data.customer_id);
+
+	$('.customerName').html(data.firstname +' '+ data.lastname);
+}
 </script>

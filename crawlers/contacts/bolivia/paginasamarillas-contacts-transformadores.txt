@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-TRANSFORMATEC;;;"Telefax: (591) (33) 3581467";"Radial 16 Frente Del Club Hipico, Villa Warnes Bolivia, Santa Cruz de la Sierra"
-"MERCANTIL LEÓN";;;"(591) (33) 3364244";"Av Viedma No. 51, Santa Cruz Bolivia, Santa Cruz de la Sierra"
-"LIBERTAD AGENTES DE NEGOCIOS";;;"Telefax: (591) (33) 3530628";"Cl. Angel Sandoal No. 275 Barrio El Pari Bolivia, Santa Cruz de la Sierra"
-"TRANSFORMADORES ""KVA""";;;"Telefax: (591) (33) 3488423";"4to Anillo 1 Cdra Antes Del Canal Cotoca, Entrando 1/2 Cdra. A La Derecha Bolivia, Santa Cruz de la Sierra"

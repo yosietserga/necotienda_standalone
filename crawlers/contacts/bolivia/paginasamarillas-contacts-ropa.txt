@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CASA ROXANA";;;"(591) (33) 3327115";"Cl.21 De Mayo No.234 Bolivia, Santa Cruz de la Sierra"

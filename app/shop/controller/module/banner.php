@@ -21,8 +21,6 @@ class ControllerModuleBanner extends Controller {
             $this->data['heading_title'] = $this->language->get('heading_title');
         }
 
-        $this->loadAssets();
-
         if ($scripts)
             $this->scripts = array_merge($this->scripts, $scripts);
 
@@ -32,13 +30,17 @@ class ControllerModuleBanner extends Controller {
             $this->data['banner'] = $this->modelBanner->getById($settings['banner_id']);
 
             if (!empty($this->data['banner']['jquery_plugin'])) {
+                $this->loadAssets($this->data['banner']['jquery_plugin']);
+
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/banner/' . $this->data['banner']['jquery_plugin'] . '.tpl')) {
                     $this->template = $this->config->get('config_template') . '/banner/' . $this->data['banner']['jquery_plugin'] . '.tpl';
                 } else {
-                    $this->template = 'choroni/banner/nivo-slider.tpl';
+                    $this->template = 'cuyagua/banner/nivo-slider.tpl';
                 }
             } else {
-                $this->template = 'choroni/banner/nivo-slider.tpl';
+                $this->loadAssets('nivo-slider');
+
+                $this->template = 'cuyagua/banner/nivo-slider.tpl';
             }
 
             $this->id = 'banner';
@@ -70,7 +72,9 @@ class ControllerModuleBanner extends Controller {
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
 
-    protected function loadAssets() {
+    protected function loadAssets($jquery_plugin) {
+        //$jquery_plugin = str_replace(array('-','_'),'',strtolower($jquery_plugin));
+
         $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
         $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
@@ -87,16 +91,44 @@ class ControllerModuleBanner extends Controller {
             $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
         }
 
-        if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
+        if ($this->config->get('config_render_css_in_file')) {
+            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
+                $styles[] = array('media' => 'all', 'href' => $cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
+            }
+
+            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.css'))) {
+                $styles[] = array('media' => 'all', 'href' => $cssFolder . str_replace('controller', '', strtolower(__CLASS__. $jquery_plugin) . '.css'));
+            }
+
+            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            }
+
+            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js'))) {
+                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js');
+            }
+
+        } else {
+            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
+                $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
+            }
+
+            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.css'))) {
+                $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__. $jquery_plugin) . '.css'));
+            }
+
+            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            }
+
+            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js'))) {
+                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js');
+            }
+
         }
 
         if (count($styles)) {
             $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
         }
 
         if (count($javascripts)) {

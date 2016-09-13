@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"W. REICHMANN Y COMPAÑÍA LTDA.";;;"(56) (2) 2359686";"Av. Miguel Claro 997 Chile, Santiago"
-"CATHA'S LTDA.";;;"(56) (2) 6967620";"Moneda 1137 Of.85 Chile, Santiago"
-"AMBIMET LTDA.";;;"(56) (2) 2940329";"Av. Vicuña Mackenna 7255 Of,901, La Florida Chile, Santiago"

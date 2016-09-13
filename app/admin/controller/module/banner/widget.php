@@ -74,6 +74,8 @@ class ControllerModuleBannerWidget extends Controller {
                 $settings = new stdClass;
                 $settings->route = 'module/banner';
                 $settings->autoload = 1;
+                $settings->showonmobile = 1;
+                $settings->showondesktop = 1;
                 $data['settings'] = $settings;
                 $widget->save($data);
                 $this->setvar('name');

@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"SHOPPING PELUQUERIA";;;"(591) (33) 3644662";"Nueva Feria Barrio Lindo Comercial El Tiluchi Pasillo G. Bolivia, Santa Cruz de la Sierra"
-"HOTEL Y PELUQUERIA LUCY (LA CHILENA)";;;"(591) (33) 3551232";"Cl. Arroyo 3er. Anillo Interno (Frente Escuela Militar De Ingeniería) Bolivia, Santa Cruz de la Sierra"
-"PELUQUERIA UNISEX L'EQUIPE";;;"(591) (33) 3401389";"Calle 7 Este N³48 Barrio Equipetrol Bolivia, Santa Cruz de la Sierra"

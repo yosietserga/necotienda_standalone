@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-COCOA;;;"(56) (2) 2164833";"El Rodeo 12850 Loc. 59 Lo Barnechea Chile, Santiago"

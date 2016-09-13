@@ -29,7 +29,7 @@ if (!$this->config->get('config_customer_price') || $this->customer->isLogged() 
     $this->data['display_price'] = false;
 }
 foreach ($results as $k => $result) {
-    $image = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
+    $image = $imageP = !empty($result['image']) ? $result['image'] : 'no_image.jpg';
 
     if ($this->config->get('config_review')) {
         $rating = $this->modelReview->getAverageRating($result['product_id']);
@@ -71,6 +71,7 @@ foreach ($results as $k => $result) {
     }
 
     $this->load->auto('image');
+    //NTImage::setWatermark($this->config->get('config_logo'));
     $this->data['products'][$k] = array(
         'product_id' => $result['product_id'],
         'name' => $result['name'],
@@ -87,6 +88,24 @@ foreach ($results as $k => $result) {
         'add' => $add,
         'created' => $result['created']
     );
+
+    $this->data['products'][$k]['images'] = array();
+    $images = $this->modelProduct->getProductImages($product_id);
+    foreach ($images as $j => $image) {
+        $this->data['products'][$k]['images'][$j] = array(
+            'popup' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+            'preview' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+            'thumb' => NTImage::resizeAndSave($image['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+        );
+    }
+    $j = count($this->data['products'][$k]['images']) + 1;
+    $this->data['products'][$k]['images'][$j] = array(
+        'popup' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+        'preview' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+        'thumb' => NTImage::resizeAndSave($imageP, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+    );
+    $this->data['products'][$k]['images'] = array_reverse($this->data['products'][$k]['images']);
+
     if ($this->config->get('config_store_mode') === 'store') {
         $this->data['products'][$k]['price'] = $price;
         $this->data['products'][$k]['special'] = $special;

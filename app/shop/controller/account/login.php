@@ -20,7 +20,7 @@ class ControllerAccountLogin extends Controller {
             } elseif ($this->session->has('redirect')) {
                 $this->redirect($this->session->get('redirect'));
             } else {
-                $this->redirect(Url::createUrl("common/home"));
+                $this->redirect(Url::createUrl("account/account"));
             }
         }
 
@@ -49,7 +49,7 @@ class ControllerAccountLogin extends Controller {
 
         if (isset($this->request->post['redirect'])) {
             $this->data['redirect'] = $this->request->post['redirect'];
-        } elseif ($this->session->has('redirect')) {
+        } elseif ($this->session->has('redirect') && strpos($this->session->get('redirect'), 'login') == -1) {
             $this->data['redirect'] = $this->session->get('redirect');
         } else {
             $this->data['redirect'] = '';
@@ -100,7 +100,7 @@ class ControllerAccountLogin extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

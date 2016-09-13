@@ -29,6 +29,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_page_new_payment'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_new_payment">
+                            <option<?php if (!$marketing_mailserver_new_payment) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_new_payment === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_new_payment" title="<?php echo $Language->get('help_page_new_payment'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -39,6 +49,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_page_new_order'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_new_order">
+                            <option<?php if (!$marketing_mailserver_new_order) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_new_order === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_new_order" title="<?php echo $Language->get('help_page_new_order'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -51,6 +71,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_page_order_pdf'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_order_pdf">
+                            <option<?php if (!$marketing_mailserver_order_pdf) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_order_pdf === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_order_pdf" title="<?php echo $Language->get('help_page_order_pdf'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -62,6 +92,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_page_update_order'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_update_order">
+                            <option<?php if (!$marketing_mailserver_update_order) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_update_order === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_update_order" title="<?php echo $Language->get('help_page_update_order'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -72,6 +112,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_page_old_order'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_old_order">
+                            <option<?php if (!$marketing_mailserver_old_order) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_old_order === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_old_order" title="<?php echo $Language->get('help_page_old_order'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -87,7 +137,7 @@
             <table class="form">
                 <tr>
                     <td><?php echo $Language->get('entry_page_new_customer'); ?></td>
-                    <td>
+                    <td colspan="2">
                         <select name="marketing_page_new_customer" title="<?php echo $Language->get('help_page_new_customer'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -98,7 +148,7 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_page_activate_customer'); ?></td>
-                    <td>
+                    <td colspan="2">
                         <select name="marketing_page_activate_customer" title="<?php echo $Language->get('help_page_activate_customer'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -109,6 +159,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_email_new_customer'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_new_customer">
+                            <option<?php if (!$marketing_mailserver_new_customer) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_new_customer === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_new_customer" title="<?php echo $Language->get('help_email_new_customer'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -121,6 +181,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_email_activate_customer'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_activate_customer">
+                            <option<?php if (!$marketing_mailserver_activate_customer) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_activate_customer === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_activate_customer" title="<?php echo $Language->get('help_email_activate_customer'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -131,6 +201,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_page_happy_birthday'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_happy_birthday">
+                            <option<?php if (!$marketing_mailserver_happy_birthday) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_happy_birthday === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_happy_birthday" title="<?php echo $Language->get('help_page_happy_birthday'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -143,6 +223,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_page_add_balance'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_add_balance">
+                            <option<?php if (!$marketing_mailserver_add_balance) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_add_balance === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_add_balance" title="<?php echo $Language->get('help_page_add_balance'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -154,6 +244,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_page_subtract_balance'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_subtract_balance">
+                            <option<?php if (!$marketing_mailserver_subtract_balance) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_subtract_balance === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_subtract_balance" title="<?php echo $Language->get('help_page_subtract_balance'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -164,6 +264,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_page_new_payment'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_new_payment">
+                            <option<?php if (!$marketing_mailserver_new_payment) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_new_payment === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_new_payment" title="<?php echo $Language->get('help_page_new_payment'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -178,18 +288,17 @@
             <h2>Mensajes de Promociones y Marketing</h2>
             <table class="form">
                 <tr>
-                    <td><?php echo $Language->get('entry_page_new_contact'); ?></td>
-                    <td>
-                        <select name="marketing_email_new_contact" title="<?php echo $Language->get('help_page_new_contact'); ?>">
-                            <option value="0"><?php echo $Language->get('text_none'); ?></option>
-                            <?php foreach ($newsletters as $newsletter) { ?>
-                            <option value="<?php echo $newsletter['newsletter_id']; ?>"<?php if ($newsletter['newsletter_id'] == $marketing_email_new_contact) { ?> selected="selected"<?php } ?>><?php echo $newsletter['name']; ?></option>
-                            <?php } ?>
-                      </select>
-                    </td>
-                </tr>
-                <tr>
                     <td><?php echo $Language->get('entry_page_recommended_products'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_recommended_products">
+                            <option<?php if (!$marketing_mailserver_recommended_products) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_recommended_products === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_recommended_products" title="<?php echo $Language->get('help_page_recommended_products'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -202,6 +311,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_email_promote_product'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_promote_product">
+                            <option<?php if (!$marketing_mailserver_promote_product) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_promote_product === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_promote_product" title="<?php echo $Language->get('help_email_promote_product'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -212,6 +331,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_email_invite_friends'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_invite_friends">
+                            <option<?php if (!$marketing_mailserver_invite_friends) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_invite_friends === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_invite_friends" title="<?php echo $Language->get('help_email_invite_friends'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -227,7 +356,7 @@
             <table class="form">
                 <tr>
                     <td><?php echo $Language->get('entry_page_add_to_cart'); ?></td>
-                    <td>
+                    <td colspan="2">
                         <select name="marketing_page_add_to_cart" title="<?php echo $Language->get('help_page_add_to_cart'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -238,6 +367,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_page_new_comment'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_new_comment">
+                            <option<?php if (!$marketing_mailserver_new_comment) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_new_comment === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_new_comment" title="<?php echo $Language->get('help_page_new_comment'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
@@ -250,6 +389,16 @@
                 <tr>
                     <td><?php echo $Language->get('entry_page_new_reply'); ?></td>
                     <td>
+                        <select name="marketing_mailserver_new_reply">
+                            <option<?php if (!$marketing_mailserver_new_reply) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_new_reply === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
+                    <td>
                         <select name="marketing_email_new_reply" title="<?php echo $Language->get('help_page_new_reply'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>
                             <?php foreach ($newsletters as $newsletter) { ?>
@@ -260,6 +409,16 @@
                 </tr>
                 <tr>
                     <td><?php echo $Language->get('entry_page_new_contact'); ?></td>
+                    <td>
+                        <select name="marketing_mailserver_new_contact">
+                            <option<?php if (!$marketing_mailserver_new_contact) echo ' selected="selected"'; ?>>Servidor Local</option>
+                            <?php foreach($mail_servers as $id => $server) { ?>
+                            <option value="<?php echo $id; ?>"<?php if ($marketing_mailserver_new_contact === $id) echo ' selected="selected"'; ?>>
+                            <?php echo $server['server'] .' &lt;'. $server['username'] .'&gt;'; ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </td>
                     <td>
                         <select name="marketing_email_new_contact" title="<?php echo $Language->get('help_page_new_contact'); ?>">
                             <option value="0"><?php echo $Language->get('text_none'); ?></option>

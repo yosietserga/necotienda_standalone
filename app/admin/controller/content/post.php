@@ -467,6 +467,7 @@ class ControllerContentPost extends Controller {
                 'post_id' => $result['post_id'],
                 'title' => $result['title'],
                 'publish' => ($result['publish']) ? $this->language->get('text_yes') : $this->language->get('text_no'),
+                'status' => ($result['status']) ? $this->language->get('text_yes') : $this->language->get('text_no'),
                 'date_publish_start' => date('d-m-Y h:i A', strtotime($result['date_publish_start'])),
                 'date_publish_end' => date('d-m-Y h:i A', strtotime($result['date_publish_end'])),
                 'sort_order' => $result['sort_order'],
@@ -577,9 +578,12 @@ class ControllerContentPost extends Controller {
 
         $this->setvar('post_id', $post_info, '');
         $this->setvar('parent_id', $post_info, '');
+        $this->setvar('allow_reviews', $post_info, '');
+        $this->setvar('publish', $post_info, '');
         $this->setvar('image', $post_info);
 
         $this->data['languages'] = $this->modelLanguage->getAll();
+        $this->data['categories'] = $this->modelPost_category->getAll();
         $this->data['stores'] = $this->modelStore->getAll();
         $this->data['_stores'] = $this->modelPost->getStores($this->request->getQuery('post_id'));
         $this->data['customerGroups'] = $this->modelCustomergroup->getAll();
@@ -606,6 +610,14 @@ class ControllerContentPost extends Controller {
             foreach ($files as $k => $file) {
                 $this->data['views'][$key]['files'][$k] = str_replace("\\", "/", $file);
             }
+        }
+
+        if (isset($this->request->post['post_category'])) {
+            $this->data['post_category'] = $this->request->post['post_category'];
+        } elseif (isset($post_info)) {
+            $this->data['post_category'] = $this->modelPost->getCategories($this->request->get['post_id']);
+        } else {
+            $this->data['post_category'] = array();
         }
 
         if (isset($this->request->post['post_description'])) {

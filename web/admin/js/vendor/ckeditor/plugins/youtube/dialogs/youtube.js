@@ -20,7 +20,7 @@
                 if (width <= 0 || !isNaN(width)) { width = 500; }
                 if (height <= 0 || !isNaN(height)) { height = 300; }
                 
-				var text = '<iframe title="YouTube video player" class="youtube-player" type="text/html" width="'+ width +'" height="'+ height +'" src="http://www.youtube.com/embed/'+ url +'?rel=0" frameborder="0"></iframe>';
+				var text = '<div><iframe title="YouTube video player" class="youtube-player" type="text/html" width="'+ width +'" height="'+ height +'" src="http://www.youtube.com/embed/'+ url +'?rel=0" frameborder="0"></iframe></div>';
                 
 				this.getParentEditor().insertHtml(text);
 			},

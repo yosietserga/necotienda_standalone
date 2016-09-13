@@ -47,6 +47,10 @@ define('DIR_ADMIN_CSS',     $defaultPath . "web/". ADMIN_PATH ."/css" . DIRECTOR
 define('DIR_ADMIN_JS',      $defaultPath . "web/". ADMIN_PATH ."/js" . DIRECTORY_SEPARATOR);
 define('DIR_ADMIN_IMAGE',   $defaultPath . "web/". ADMIN_PATH ."/images" . DIRECTORY_SEPARATOR);
 define('DIR_EMAIL_TEMPLATE',$defaultPath . "web/". ADMIN_PATH ."/email_templates" . DIRECTORY_SEPARATOR);
+define('DIR_ADMIN_THEME_CSS', $defaultPath . "web/". ADMIN_PATH . "/templates/%theme%/css/");
+define('DIR_ADMIN_THEME_JS', $defaultPath . "web/". ADMIN_PATH . "/templates/%theme%/js/");
+define('DIR_ADMIN_THEME_IMAGE', $defaultPath . "web/". ADMIN_PATH . "/templates/%theme%/images/");
+define('DIR_ADMIN_THEME_FONT', $defaultPath . "web/". ADMIN_PATH . "/templates/%theme%/fonts/");
 
 // Core System
 define('DIR_BACKUP',    $defaultPath . "backups/");

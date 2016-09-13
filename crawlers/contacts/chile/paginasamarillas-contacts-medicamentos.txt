@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CENTRO DE TRATAMIENTOS EN ADICCIONES AMBULATORIO Y RESIDENCIAL DIANOVA";;;"(56) (2) 4307170";"Malaga 89 Of.22 Chile, Santiago"
-"EDUARDO RODRIGO GONZALEZ LABBE";;;"(56) (2) 6213108";"San Antonio 50 Of.403 Chile, Santiago"

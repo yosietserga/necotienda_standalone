@@ -1,21 +1,21 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/message.tpl"); ?>
+
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-start.tpl");?>
         <!--<div class="print-action">
             <a onclick="window.print();" class="button">Imprimir</a>
             <?php //TODO: <a onclick="window.print();" class="button">PDF</a> ?>
         </div>-->
 
         <div class="order-info row">
-            <div class="large-8 medium-12 small-12 columns">
+            <div class="large-8 columns">
                 <img src="<?php echo HTTP_IMAGE . $Config->get('config_logo'); ?>" alt="<?php echo $Config->get('config_name'); ?>" />
                 <?php echo $Config->get('config_owner'); ?>
                 <?php echo $Config->get('config_rif'); ?>
                 <?php echo $Config->get('config_address'); ?>
             </div>
-            <div class="large-8 medium-12 small-12 columns">
+            <div class="large-8 columns">
                 Control N&deg; <?php echo $order_payment_id; ?><br />
                 Pedido N&deg; <?php echo $order_id; ?><br />
                 Fecha de Emisi&oacute;n <?php echo date('d-m-Y h:i A',strtotime($date_added)); ?>

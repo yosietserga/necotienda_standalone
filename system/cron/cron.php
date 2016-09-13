@@ -1,7 +1,7 @@
 <?php
 /**
  * 1. cargar la configuracion
- * 2. cargar las librerías necesarias
+ * 2. cargar las librerï¿½as necesarias
  * 3. inicializar las clases necesarias
  * 4. crear cron files para cada tipo de tarea
 */
@@ -16,7 +16,7 @@ require_once dirname(__FILE__) . '/api/promoter.php';   //Detecta las visitas de
 require_once dirname(__FILE__) . '/api/seller.php';       //Gestiona las preventas para convertirlas en ventas seguras, basado en fases o pasos predefinidos
 require_once dirname(__FILE__) . '/api/bounce.php';     //Gestiona y elimina los correos basura de las cuentas configuradas
 require_once dirname(__FILE__) . '/api/maintenance.php';//Gestiona y ejecuta los mantenimientos a la bd
-require_once dirname(__FILE__) . '/api/seo.php';        //Evalua y corrige los alias de url y demás campos para el SEO
+require_once dirname(__FILE__) . '/api/seo.php';        //Evalua y corrige los alias de url y demï¿½s campos para el SEO
 require_once dirname(__FILE__) . '/api/update.php';     //Gestiona y ejecuta las actualizaciones del core, los modulos y plantillas
 require_once dirname(__FILE__) . '/api/order.php';      //Gestiona los pedidos y pagos pendientes u olvidados
 require_once dirname(__FILE__) . '/api/task.php';       //Gestiona las tareas programadas de los modulos
@@ -104,12 +104,12 @@ class Cron {
         $this->mailer       = new Mailer();
         $this->smtp         = new SMTP();
         $this->utf8         = new utf8();
-        
-        $this->registry->set('mailer', $this->mailer);
-        
+
         $this->initConfig();
         $this->initMailer();
-        
+
+        $this->registry->set('mailer', $this->mailer);
+
         $this->cronSend     = new CronSend($this->registry);
         $this->cronBirthday = new CronBirthday($this->registry);
         $this->cronPromoter  = new CronPromoter($this->registry);
@@ -124,43 +124,47 @@ class Cron {
         $this->dt = new DateTime;
         $this->dt->setTimezone(new DateTimeZone($this->timeZone));
         
-        $query = $this->db->query("SELECT * 
-        FROM ". DB_PREFIX ."task 
-        WHERE date_start_exec <= NOW()
-        AND status = 1
-        ORDER BY sort_order ASC, time_exec ASC");
-        
+        $query = $this->db->query("SELECT * ".
+        " FROM ". DB_PREFIX ."task ".
+            " WHERE date_start_exec <= NOW() ".
+            " AND time_exec <= NOW() ".
+            " AND status = 1 ".
+            " ORDER BY sort_order ASC, time_exec ASC");
+
         foreach ($query->rows as $key => $row) {
-            $task = new Task($this->registry);
-            $task->task_id          = $row['task_id'];
-            $task->object_id        = $row['object_id'];
-            $task->object_type      = $row['object_type'];
-            $task->task             = $row['task'];
-            $task->type             = $row['type'];
-            $task->time_exec        = $row['time_exec'];
-            $task->params           = unserialize($row['params']);
-            $task->time_interval    = $row['time_interval'];
-            $task->time_last_exec   = $row['time_last_exec'];
-            $task->run_once         = $row['run_once'];
-            $task->status           = $row['status'];
-            $task->sort_order       = $row['sort_order'];
-            $task->date_start_exec  = $row['date_start_exec'];
-            $task->date_end_exec    = $row['date_end_exec'];
-            
             $limit = "";
-            
-            $qry = $this->db->query("SELECT * 
+
+            $qry = $this->db->query("SELECT *
             FROM ". DB_PREFIX ."task_queue t
-            WHERE task_id = '". (int)$row['task_id'] ."' 
+            WHERE task_id = '". (int)$row['task_id'] ."'
             AND status = 1
             ORDER BY sort_order ASC, time_exec ASC
             $limit");
-            
-            foreach ($qry->rows as $queue) {
-                $task->addQueue($queue);
+
+            $task = new Task($this->registry);
+            if ($qry->num_rows) {
+                $task->task_id          = $row['task_id'];
+                $task->object_id        = $row['object_id'];
+                $task->object_type      = $row['object_type'];
+                $task->task             = $row['task'];
+                $task->type             = $row['type'];
+                $task->time_exec        = $row['time_exec'];
+                $task->params           = unserialize($row['params']);
+                $task->time_interval    = $row['time_interval'];
+                $task->time_last_exec   = $row['time_last_exec'];
+                $task->run_once         = $row['run_once'];
+                $task->status           = $row['status'];
+                $task->sort_order       = $row['sort_order'];
+                $task->date_start_exec  = $row['date_start_exec'];
+                $task->date_end_exec    = $row['date_end_exec'];
+
+                foreach ($qry->rows as $queue) {
+                    $task->addQueue($queue);
+                }
+                $this->tasks[$task->task_id] = $task;
+            } else {
+                $task->setTaskDone($row['task_id']);
             }
-            
-            $this->tasks[$task->task_id] = $task;
         }
     }
     
@@ -223,6 +227,8 @@ class Cron {
             }
             
         }
+
+        $this->cronPromoter->run();
         
         if ($sendTasks) $this->cronSend->run($sendTasks);
 

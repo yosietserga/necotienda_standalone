@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"BORDADOS COMPUTARIZADOS FLORES";;;"(591) (22) 2455464";"Cl Santa Cruz No 230 Bolivia, La Paz"

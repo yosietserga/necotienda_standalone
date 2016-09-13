@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"JING - JAAN";;;"(56) (2) 22321155";"Av. Providencia 2077 Chile, Santiago"

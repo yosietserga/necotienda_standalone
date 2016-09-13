@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ABARROTES Y ALCOHOL NAVARRO E HIJOS LTDA";;;"(591) (2) 75374";"Sgto. Tejerina 1538 Bolivia, Oruro"

@@ -1,6 +1,6 @@
 <!--BREADCRUMBS-->
 <?php if  (!empty($breadcrumbs) && $breadcrumbs !== null) { ?>
-    <nav class="large-12 small-12 medium-12 columns">
+    <nav class="columns" style="height: 0;">
         <ul id="breadcrumbs" class="breadcrumbs nt-editable">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
             <li>

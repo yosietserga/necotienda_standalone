@@ -41,13 +41,28 @@
                 <?php foreach ($stores as $store) { ?>
                     <li class="stores">
                         <input type="checkbox" name="stores[]" value="<?php echo $store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
-                        <b><?php echo $store['name']; ?></b>
+                        <label for="scrollboxStores<?php echo (int)$store['store_id']; ?>"><?php echo $store['name']; ?></label>
                     </li>
                 <?php } ?>
                 </ul>
             </div> 
             <?php } ?>
-            
+
+            <div class="clear"></div>
+
+            <div class="row">
+                <label><?php echo $Language->get('Image'); ?></label>
+                <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image&amp;preview=preview">
+                <img src="<?php echo $preview; ?>" id="preview" class="image necoImage" width="100" />
+                </a>
+                <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" onchange="$('#preview').attr('src', this.value);" />
+                <br />
+                <a class="filemanager" data-fancybox-type="iframe" href="<?php echo $Url::createAdminUrl("common/filemanager"); ?>&amp;field=image&amp;preview=preview" style="margin-left: 220px;color:#FFA500;font-size:10px">[ Cambiar ]</a>
+                <a onclick="image_delete('image', 'preview');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
+            </div>
+
+            <div class="clear"></div>
+
             <div class="row">
                 <label><?php echo $Language->get('entry_username'); ?></label>
                 <input type="text" name="username" id="username" value="<?php echo $username; ?>" required="required" style="width:40%" />
@@ -163,4 +178,36 @@
         </ul>
     </div>
 </div>
+<div id="jsWrapper"></div>
+<script>
+    $(function() {
+        if (!$.fn.fancybox) {
+            $(document.createElement('script')).attr({
+                src:'js/vendor/jquery.fancybox.pack.js',
+                type:'text/javascript'
+            }).appendTo('#jsWrapper');
+        }
+        if ($('link[href="<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css"]')) {
+            $(document.createElement('link')).attr({
+                href:'<?php echo HTTP_HOME; ?>css/vendor/fancybox/jquery.fancybox.css',
+                rel:'stylesheet'
+            }).appendTo('head');
+        }
+
+        var height = $(window).height() * 0.8;
+        var width = $(window).width() * 0.8;
+
+        $(".filemanager").fancybox({
+            maxWidth	: width,
+            maxHeight	: height,
+            fitToView	: false,
+            width	: '90%',
+            height	: '90%',
+            autoSize	: false,
+            closeClick	: false,
+            openEffect	: 'none',
+            closeEffect	: 'none'
+        });
+    });
+</script>
 <?php echo $footer; ?>

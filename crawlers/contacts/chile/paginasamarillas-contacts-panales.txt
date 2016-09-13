@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"LA CASA DEL PAÑAL";;;"(56) (32) 2882573";"3 Poniente 391 Chile, Viña del Mar"
-PADULT;;;"(56) (2) 6225548";"Av. México 633-B Recoleta Chile, Santiago"
-"COMERCIAL MÁS POR MENOS";;;"(56) (2) 6995443";"San Diego 289 Santiago Chile, Santiago"
-"LIQUIDADORA Y DISTRIBUIDORA DE PAÑALES OKIS";;;"(56) (2) 3159212";"Eyzaguirre 026 Pte. Alto Chile, Santiago"

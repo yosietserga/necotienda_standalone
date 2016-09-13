@@ -24,10 +24,17 @@ class ControllerStoreSearch extends Controller {
             $this->data['urlSearch'] = HTTP_HOME . 'index.php?r=store/search&q=' . $_GET['q'] . '&' . implode('', $this->data['urlQuery']);
         }
 
+        //tracker
+        $this->tracker->track(0, 'search_page');
+
+        if ($this->session->has('ref_email') && !$this->session->has('ref_cid')) {
+            $this->data['show_register_form_invitation'] = true;
+        }
+
         $this->cacheId = 'search_page_' . md5($this->data['urlSearch']) .
                 $this->config->get('config_language_id') . "." .
-                $this->request->hasQuery('hl') . "." .
-                $this->request->hasQuery('cc') . "." .
+                $this->request->getQuery('hl') . "." .
+                $this->request->getQuery('cc') . "." .
                 $this->customer->getId() . "." .
                 $this->config->get('config_currency') . "." .
                 (int) $this->config->get('config_store_id');
@@ -53,7 +60,7 @@ class ControllerStoreSearch extends Controller {
             $params = explode('_', strtolower($_GET['q']));
             $queries[1] = $queries[2] = trim(trim($params[0], '-'));
 
-            $this->data['urlCriterias']['forCategories'] = $this->data['urlCriterias']['forZones'] = $this->data['urlCriterias']['forSellers'] = $this->data['urlCriterias']['forManufacturers'] = $this->data['urlCriterias']['forStores'] = $this->data['urlCriterias']['forPrices'] = $this->data['urlCriterias']['forShipping'] = $this->data['urlCriterias']['forPayments'] = $this->data['urlCriterias']['forStatus'] = $this->data['urlCriterias']['forStockStatus'] = $this->data['urlCriterias']['forDates'] = $queries[1];
+            $this->data['urlCriterias']['forCategories'] = $this->data['urlCriterias']['forZones'] = $this->data['urlCriterias']['forSellers'] = $this->data['urlCriterias']['forManufacturers'] = $this->data['urlCriterias']['forStores'] = $this->data['urlCriterias']['forPrices'] = $this->data['urlCriterias']['forShipping'] = $this->data['urlCriterias']['forPayments'] = $this->data['urlCriterias']['forStatus'] = $this->data['urlCriterias']['forStockStatus'] = $this->data['urlCriterias']['forDates'] = $this->data['urlCriterias']['forAttributes'] = $queries[1];
 
             $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title') . ' ' . str_replace('-', ' ', $keyword);
 
@@ -77,6 +84,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Cat_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Cat_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Cat_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Cat_' . $name;
             }
 
             if (in_array('estado', $params)) {
@@ -100,6 +108,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Estado_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Estado_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Estado_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Estado_' . $name;
             }
 
             if (in_array('vendedor', $params)) {
@@ -122,6 +131,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Vendedor_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Vendedor_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Vendedor_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Vendedor_' . $name;
             }
 
             if (in_array('marca', $params)) {
@@ -144,6 +154,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Marca_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Marca_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Marca_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Marca_' . $name;
             }
 
             if (in_array('tienda', $params)) {
@@ -166,6 +177,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Tienda_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Tienda_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Tienda_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Tienda_' . $name;
             }
 
             if (in_array('precio', $params)) {
@@ -188,6 +200,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Precio_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Precio_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Precio_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Precio_' . $name;
             }
 
             if (in_array('envio', $params)) {
@@ -210,6 +223,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Envio_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Envio_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Envio_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Envio_' . $name;
             }
 
             if (in_array('pago', $params)) {
@@ -232,6 +246,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forStatus'] .= '_Pago_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Pago_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Pago_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Pago_' . $name;
             }
 
             if (in_array('disp', $params)) {
@@ -254,6 +269,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forPayments'] .= '_Disp_' . $name;
                 $this->data['urlCriterias']['forStatus'] .= '_Disp_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Disp_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Disp_' . $name;
             }
 
             if (in_array('status', $params)) {
@@ -276,6 +292,7 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forPayments'] .= '_Status_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Status_' . $name;
                 $this->data['urlCriterias']['forDates'] .= '_Status_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Status_' . $name;
             }
 
             if (in_array('fecha', $params)) {
@@ -299,76 +316,36 @@ class ControllerStoreSearch extends Controller {
                 $this->data['urlCriterias']['forPayments'] .= '_Fecha_' . $name;
                 $this->data['urlCriterias']['forStatus'] .= '_Fecha_' . $name;
                 $this->data['urlCriterias']['forStockStatus'] .= '_Fecha_' . $name;
+                $this->data['urlCriterias']['forAttributes'] .= '_Fecha_' . $name;
             }
 
-            $queries[2] = str_replace('-', ' ', $queries[2]);
-            if ($queries[2] !== mb_convert_encoding(mb_convert_encoding($queries[2], 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32'))
-                $queries[2] = mb_convert_encoding($queries[2], 'UTF-8', mb_detect_encoding($queries[2]));
-            $queries[2] = htmlentities($queries[2], ENT_NOQUOTES, 'UTF-8');
-            $queries[2] = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $queries[2]);
-            $queries[2] = html_entity_decode($queries[2], ENT_NOQUOTES, 'UTF-8');
-            $queries[2] = preg_replace(array('`[^a-z0-9]`i', '`[-]+`'), ' ', $queries[2]);
-            if (str_word_count($queries[2], 0) > 1)
-                $queries[4] = str_replace(' ', '', $queries[2]);
-
-            if ($queries[1] == $queries[2]) {
-                unset($queries[2]);
-            }
-
-            if (str_word_count($queries[1], 0) > 1)
-                $a1 = explode(' ', $queries[1]);
-            if ($queries[2])
-                $a2 = explode(' ', $queries[2]);
-
-            if ($a1)
-                $queries = array_merge($queries, $a1);
-            if ($a2)
-                $queries = array_merge($queries, $a2);
-
-            $deleteFromArray = array(
-                'a',
-                'e',
-                'i',
-                'o',
-                'u',
-                'y',
-                'con',
-                'de',
-                'desde',
-                'en',
-                'entre',
-                'hacia',
-                'hasta',
-                'mediante',
-                'para',
-                'por',
-                'sin',
-                'sobre',
-                'tras',
-                'versus',
-                'seg�n',
-                'segun',
-                'un',
-                'uno',
-                'una',
-                'el',
-                'la',
-                'los',
-                'las',
-                'ellos',
-                'es'
-            );
-
-            $queries = array_unique($queries);
-            foreach ($queries as $key => $value) {
-                foreach ($deleteFromArray as $toDelete) {
-                    if (in_array(trim($value), $toDelete) || strlen(trim($value)) <= 2) {
-                        unset($queries[$key]);
+            if (in_array('filtro', $params)) {
+                foreach ($params as $key => $value) {
+                    if ($value == 'filtro') {
+                        $name = str_replace(' ', '+', trim($params[$key + 1]));
+                        list($property_key, $property_value) = explode('+', $name);
+                        if (!empty($property_value)) {
+                            $criteria['properties'][$key]['key'] = $property_key;
+                            $criteria['properties'][$key]['value'] = $property_value;
+                            unset($params[$key], $params[$key + 1]);
+                            $this->data['urlCriterias']['forCategories'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forZones'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forSellers'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forManufacturers'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forStores'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forPrices'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forShipping'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forPayments'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forStatus'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forStockStatus'] .= '_Filtro_' . $name;
+                            $this->data['urlCriterias']['forDates'] .= '_Filtro_' . $name;
+                        }
                     }
                 }
+                //TODO: clean the query
             }
 
-            $criteria['queries'] = $queries;
+            $criteria['queries'] = array_unique($queries);
 
             if (isset($criteria['category'])) {
                 $this->data['filters']['category'] = array(
@@ -423,6 +400,14 @@ class ControllerStoreSearch extends Controller {
                     'name' => $criteria['status'],
                     'href' => rtrim($this->data['urlCriterias']['forStatus'] . '?' . implode('', $this->data['urlQuery']), '?')
                 );
+            }
+            if (isset($criteria['properties'])) {
+                foreach ($criteria['properties'] as $key => $value) {
+                    $this->data['filters']['properties'][$key] = array(
+                        'name' => $value['value'],
+                        'href' => rtrim($this->data['urlCriterias']['forAttributes'] . '?' . implode('', $this->data['urlQuery']), '?')
+                    );
+                }
             }
             if (isset($criteria['price_start']) && isset($criteria['price_end'])) {
                 $this->data['filters']['price'] = array(
@@ -608,14 +593,6 @@ class ControllerStoreSearch extends Controller {
                 if (window.location.hash.length > 0) {
                     $('#products').load('" . Url::createUrl("store/search") . "&q='+ window.location.hash.replace('#', ''));
                 }");
-            $scripts[] = array('id' => 'search-2', 'method' => 'window', 'script' =>
-                "$('.filter').mCustomScrollbar({
-                    scrollButtons:{
-                        enable:true
-                    },
-                    theme:'dark'
-                });");
-
             $this->loadWidgets();
 
             if ($scripts)
@@ -625,7 +602,7 @@ class ControllerStoreSearch extends Controller {
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
                 $this->template = $this->config->get('config_template') . '/' . $template;
             } else {
-                $this->template = 'choroni/' . $template;
+                $this->template = 'cuyagua/' . $template;
             }
 
             $this->children[] = 'common/footer';

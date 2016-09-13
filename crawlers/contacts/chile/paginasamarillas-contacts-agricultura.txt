@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"GANADO DE ENGORDA Y CRIANZA JAIME URETA GREENE";;;"(56) (72) 656137";"Fundo el Chaval s/n Coinco Chile, Rancagua"
-"FORESTAL COMINCO S.A";;;"(56) (2) 24216000";"Teatinos 220 Piso 8 Chile, Santiago"
-"SOCIEDAD AGRICOLA RINCONADA DE CHENA";;;"(56) (2) 5283583";"Camino La Vara S/N San Bernardo Chile, Santiago"

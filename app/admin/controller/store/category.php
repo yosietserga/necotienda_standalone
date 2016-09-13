@@ -742,6 +742,39 @@ class ControllerStoreCategory extends Controller {
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
+    public function attributes() {
+        $this->load->model('store/category');
+        $this->load->model('store/product');
+        $category_id = ($this->request->get['category_id']) ? $this->request->get['category_id'] : 0;
+        $results = $this->modelCategory->getAttributes($category_id);
+        $data = $ids = array();
+        //var_dump($results);
+        if ($results) {
+            $data['success'] = 1;
+            foreach ($results as $k => $result) {
+                $data['results'][$k]['product_attribute_group_id'] = ($result['product_attribute_group_id']) ? $result['product_attribute_group_id'] : null;
+                $data['results'][$k]['title'] = ($result['name']) ? $result['name'] : null;
+                $data['results'][$k]['categoriesAttributes'] = array_unique($this->modelProduct->getCategoriesByAttributeGroupId($result['product_attribute_group_id']));
+
+                foreach ($result['items'] as $key => $item) {
+                    $data['results'][$k]['items'][$key]['product_attribute_id'] = ($item['product_attribute_id']) ? $item['product_attribute_id'] : null;
+                    $data['results'][$k]['items'][$key]['type'] = ($item['type']) ? $item['type'] : null;
+                    $data['results'][$k]['items'][$key]['name'] = ($item['attribute']) ? $item['attribute'] : null;
+                    $data['results'][$k]['items'][$key]['value'] = ($item['value']) ? $item['value'] : null;
+                    $data['results'][$k]['items'][$key]['label'] = ($item['label']) ? $item['label'] : null;
+                    $data['results'][$k]['items'][$key]['pattern'] = ($item['pattern']) ? $item['pattern'] : null;
+                    $data['results'][$k]['items'][$key]['value'] = ($item['default']) ? $item['default'] : null;
+                    $data['results'][$k]['items'][$key]['required'] = ($item['required']) ? $item['required'] : null;
+                }
+            }
+        } else {
+            $data['error'] = 1;
+        }
+
+        $this->load->library('json');
+        $this->response->setOutput(Json::encode($data), $this->config->get('config_compression'));
+    }
+
     /**
      * ControllerStoreCategory::validateForm()
      * 

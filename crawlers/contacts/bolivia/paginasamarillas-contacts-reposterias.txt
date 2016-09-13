@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PASTELERÍA REPOSTERÍA MICHELLINE";;;"(591) (22) 2203041";"C. Yungas No 613 Esq. Uchumayo Bolivia, La Paz"

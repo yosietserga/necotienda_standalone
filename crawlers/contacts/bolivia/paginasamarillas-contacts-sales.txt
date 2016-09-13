@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ISHIMA S.R.L";;;"(591) (33) 3442060";"Av Cristo Redentor Km 7B Cataluña Bolivia, Santa Cruz de la Sierra"

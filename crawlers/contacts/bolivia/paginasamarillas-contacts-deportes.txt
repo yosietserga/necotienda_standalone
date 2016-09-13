@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ALMACEN DEPORTE TOTAL";;;"(591) (22) 2451263";"Cl Santa Cruz No 299 Bolivia, La Paz"

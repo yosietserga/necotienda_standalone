@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"TALLER IMECO";;;"(591) (4) 4270332";"Av Villazon No 4043 Carretera a Sacaba Km 3.5 Bolivia, Cochabamba"
-"CARROCERIAS METAL CAR";;;"(591) (22) 2852892";"El Alto Zona Rosas Pampa Industrial Cl Belisario Suarez No 6025 Bolivia, La Paz"

@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"LCG VIRTUAL";;;"(56) (2) 4813190";"Las Condes-Providencia Chile, Santiago"
-"PRO OFFICE";;;"(56) (2) 2320600";"Av. Providencia 1930 Of.32 Providencia Chile, Santiago"

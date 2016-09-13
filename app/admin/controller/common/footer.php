@@ -31,7 +31,6 @@ class ControllerCommonFooter extends Controller {
         }
         
         $this->loadJs();
-                
         foreach ($this->javascripts as $key => $js) {
             $f_output .= file_get_contents($js);
             unset($this->javascripts[$key]);

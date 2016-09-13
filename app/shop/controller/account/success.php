@@ -11,19 +11,19 @@ class ControllerAccountSuccess extends Controller {
         $this->document->breadcrumbs = array();
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("common/home"),
+            'href' => $Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/account"),
+            'href' => $Url::createUrl("account/account"),
             'text' => $this->language->get('text_account'),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/success"),
+            'href' => $Url::createUrl("account/success"),
             'text' => $this->language->get('text_success'),
             'separator' => $this->language->get('text_separator')
         );
@@ -69,7 +69,7 @@ class ControllerAccountSuccess extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

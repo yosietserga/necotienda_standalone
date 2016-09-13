@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ENTRENAMIENTOS ACUARIO";;;"(56) (71) 237695";"Santander 543 Poblacion Independencia Chile, Talca"

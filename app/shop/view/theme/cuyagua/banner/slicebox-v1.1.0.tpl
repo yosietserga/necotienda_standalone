@@ -1,4 +1,5 @@
-<li style="position: relative;" data-banner="slice-box" class="nt-editable slice-box-banner bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
+<li id="<?php echo $widgetName; ?>" class="banner slicebox<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?> nt-editable" data-banner="sliceBox">
+
 <?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><hgroup><h1><?php echo $heading_title; ?></h1></hgroup></div><?php } ?>
 <?php if (count($banner['items'])) { ?>
 <div class="content" id="<?php echo $widgetName; ?>Content">
@@ -38,74 +39,68 @@
 </div>
 <div class="clear"></div><br />
 <script>
-if (!$.fx.Slicebox) {
-    $(document.createElement('link')).attr({
-        'href':'<?php echo HTTP_CSS; ?>sliders/slicebox-v1.1.0/slider.css',
-        'rel':'stylesheet',
-        'media':'screen'
-    }).appendTo('head');
-    $(document.createElement('script')).attr({
-        'src':'<?php echo HTTP_JS; ?>sliders/slicebox-v1.1.0/slider.js',
-        'type':'text/javascript',
-    }).appendTo('head');
-}
-$(function(){
-    var Page = (function() {
-        var $navArrows = $( '#<?php echo $widgetName; ?>nav-arrows' ).hide(),
-        $navDots = $( '#<?php echo $widgetName; ?>nav-dots' ).hide(),
-        $navOptions = $( '#<?php echo $widgetName; ?>nav-options' ).hide(),
-        $nav = $navDots.children( 'span' ),
-    	slicebox = $( '#<?php echo $widgetName; ?>slicebox' ).slicebox({
-            onReady : function() {
-                $navArrows.show();
-				$navDots.show();
-				$navOptions.show();
-            },
-            onBeforeChange : function( pos ) {
-                $nav.removeClass( 'nav-dot-current' );
-				$nav.eq( pos ).addClass( 'nav-dot-current' );
-            },
-    		orientation : 'r',
-    		cuboidsRandom : true
-    	}),
-        init = function() {
-            initEvents();
-    	},
-    	initEvents = function() {
-            $navArrows.children( ':first' ).on( 'click', function() {
-                slicebox.next();
-    			return false;
-            });
-    		$navArrows.children( ':last' ).on( 'click', function() {
-                slicebox.previous();
-    			return false;
-            });
-            $nav.each( function( i ) {
-                $( this ).on( 'click', function( event ) {
-                    var $dot = $( this );
-					if( !slicebox.isActive() ) {
-                        $nav.removeClass( 'nav-dot-current' );
-						$dot.addClass( 'nav-dot-current' );
-					}
-					slicebox.jump( i + 1 );
-					return false;
-				});			
-            });
-            $( '#<?php echo $widgetName; ?>navPlay' ).on( 'click', function() {
+    (function () {
+        window.fetchStyle('<?php echo HTTP_CSS; ?>sliders/slicebox-v1.1.0/slider.css');
+        window.deferjQuery(function () {
+            window.appendScriptSource('<?php echo HTTP_JS; ?>sliders/slicebox-v1.1.0/slider.js');
+        });
+        window.deferPlugin('slicebox', function () {
+            var Page = (function() {
+                var $navArrows = $('#<?php echo $widgetName; ?>nav-arrows').hide(),
+                $navDots = $('#<?php echo $widgetName; ?>nav-dots').hide(),
+                $navOptions = $('#<?php echo $widgetName; ?>nav-options').hide(),
+                $nav = $navDots.children('span'),
+                slicebox = $('#<?php echo $widgetName; ?>slicebox').slicebox({
+                    onReady: function () {
+                        $navArrows.show();
+                        $navDots.show();
+                        $navOptions.show();
+                    },
+                    onBeforeChange: function (pos) {
+                        $nav.removeClass('nav-dot-current');
+                        $nav.eq(pos).addClass('nav-dot-current');
+                    },
+                    orientation: 'r',
+                    cuboidsRandom: true
+                }),
+                init = function () {
+                    initEvents();
+                },
+                initEvents = function () {
+                    $navArrows.children(':first').on('click', function () {
+                        slicebox.next();
+                        return false;
+                    });
+                    $navArrows.children(':last').on('click', function () {
+                        slicebox.previous();
+                        return false;
+                    });
+                    $nav.each(function (i) {
+                        $(this).on('click', function (event) {
+                            var $dot = $(this);
+                            if (!slicebox.isActive()) {
+                                $nav.removeClass('nav-dot-current');
+                                $dot.addClass('nav-dot-current');
+                            }
+                            slicebox.jump(i + 1);
+                            return false;
+                        });
+                    });
+                    $('#<?php echo $widgetName; ?>navPlay').on('click', function () {
+                        slicebox.play();
+                        return false;
+                    });
+                    $('#<?php echo $widgetName; ?>navPause').on('click', function () {
+                        slicebox.pause();
+                        return false;
+                    });
+                };
                 slicebox.play();
-				return false;
-            });
-            $( '#<?php echo $widgetName; ?>navPause' ).on( 'click', function() {
-                slicebox.pause();
-                return false;
-            });
-        };
-        slicebox.play();
-        return { init : init };
+                return { init : init };
+            };
+            Page.init();
+        });
     })();
-    
-    Page.init();
-});
 </script>
 <?php } ?>
 </li>

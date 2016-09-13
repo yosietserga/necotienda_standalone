@@ -28,6 +28,13 @@ class ControllerContentCategory extends Controller {
         }
 
         if ($category_info) {
+            //tracker
+            $this->tracker->track($category_info['post_category_id'], 'post_category');
+
+            if ($this->session->has('ref_email') && !$this->session->has('ref_cid')) {
+                $this->data['show_register_form_invitation'] = true;
+            }
+
             $this->document->title = $category_info['seo_title'];
             $this->document->description = $category_info['meta_description'];
             $this->document->keywords = $category_info['meta_keywords'];
@@ -146,7 +153,7 @@ class ControllerContentCategory extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->children[] = 'common/column_left';

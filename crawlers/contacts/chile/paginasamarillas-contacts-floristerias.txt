@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"HOGAR DE CRISTO";;;"(56) (2) 5707070";"Moneda 920 Chile, Santiago"

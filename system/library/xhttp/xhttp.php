@@ -81,6 +81,10 @@ class xhttp {
 		# Default Settings
 		if(!isset($requestData['curl'][CURLOPT_SSL_VERIFYPEER]))
 			$requestData['curl'][CURLOPT_SSL_VERIFYPEER] = false;
+		if(!isset($requestData['curl'][CURLOPT_SSL_VERIFYHOST]))
+			$requestData['curl'][CURLOPT_SSL_VERIFYHOST] = false;
+		if(!isset($requestData['curl'][CURLOPT_SSLVERSION]))
+			$requestData['curl'][CURLOPT_SSLVERSION] = 3;
 		if(!isset($requestData['headers']['Expect']))
 			$requestData['headers']['Expect'] = '';
 		if(!isset($requestData['curl'][CURLOPT_CONNECTTIMEOUT]))
@@ -120,7 +124,7 @@ class xhttp {
 		if($output !== null) return $output;
 
 		if(!isset($requestData['headers']['User-Agent']))
-			$requestData['headers']['User-Agent'] = "necotienda-update";
+			$requestData['headers']['User-Agent'] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
 
 		# Create cURL instance
 		$ch = curl_init();
@@ -463,5 +467,3 @@ class xhttp {
 		}
 	}
 }
-
-?>

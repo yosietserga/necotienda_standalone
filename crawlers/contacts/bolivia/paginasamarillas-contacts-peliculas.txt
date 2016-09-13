@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CINE TEATRO RENÉ MORENO";;;"(591) (33) 3347448";"Calle René Moreno Nú 440 Bolivia, Santa Cruz de la Sierra"
-"CINE Y VIDEO INFOCUS";;;"(591) (22) 2793319";"Achumani Cl 10 No 8 Bolivia, La Paz"

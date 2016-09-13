@@ -43,15 +43,15 @@ class CronBirthday {
 	}
 
     public function run() {
-        $this->db->query("UPDATE ". DB_PREFIX ."customer c 
-        SET congrats = 1 
-        WHERE DAY(birthday) <> '". $this->db->escape(date('d')) ."' 
-        AND MONTH(birthday) <> '". $this->db->escape(date('m')) ."'");
+        $this->db->query("UPDATE ". DB_PREFIX ."customer c ".
+            " SET congrats = 1 ".
+            " WHERE DAY(birthday) <> '". $this->db->escape(date('d')) ."' ".
+            " AND MONTH(birthday) <> '". $this->db->escape(date('m')) ."'");
         
-        $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."customer c 
-        WHERE DAY(birthday) = '". $this->db->escape(date('d')) ."' 
-        AND MONTH(birthday) = '". $this->db->escape(date('m')) ."'
-        AND congrats = 1");
+        $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."customer c ".
+            " WHERE DAY(birthday) = '". $this->db->escape(date('d')) ."' ".
+            " AND MONTH(birthday) = '". $this->db->escape(date('m')) ."' ".
+            " AND congrats = 1");
         
         if ($query->num_rows && (int)$this->config->get('marketing_email_happy_birthday')) {
             $params = array(

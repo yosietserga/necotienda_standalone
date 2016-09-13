@@ -1,37 +1,53 @@
 <!--VERTICAL BANNER-->
-<li class="nt-editable widget__vertical bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-    <?php if ($heading_title) { ?>
-        <!--VERTICAL BANNER TITLE-->
-        <div class="widget__header heading" id="<?php echo $widgetName; ?>Header">
-            <div class="widget__header-icon heading__icon">
-                <i class="fa fa-bookmark fa-2x"></i>
-            </div>
-            <div class="widget__header-title heading__title">
-                <h3>
-                    <?php echo $heading_title; ?>
-                </h3>   
-            </div>
-        </div>
-        <!--/VERTICAL BANNER TITLE-->
-    <?php } ?>
-
+<li id="<?php echo $widgetName; ?>" class="banner vertical<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?> nt-editable" data-banner="vertical">
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/module-heading.tpl");?> 
     <?php if (count($banner['items'])) { ?>
 
     <!--VERTICAL BANNER CONTENT-->
-    <div class="content widget__vertical__content" id="<?php echo $widgetName; ?>Content">
-        <ul class="widget__vertical__list small-block-grid-1 medium-block-grid-3 large-block-grid-1 ">
-            <?php foreach ($banner['items'] as $item) { ?>
+    <div class="content widget-content" id="<?php echo $widgetName; ?>Content">
+        <ul class="b-vertical-banner">
+        <?php foreach ($banner['items'] as $item) { ?>
             <li>
-                <?php if (empty($item['image'])) continue; ?>
-                <?php if (!empty($item['link'])) { ?>
-                    <a href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>"><?php } ?>
-                        <img src="<?php echo HTTP_IMAGE . $item['image']; ?>" data-thumb="<?php echo $item['thumb']; ?>" alt="<?php echo $item['title']; ?>" title="<?php echo $item['title']; ?>" />
-                        <?php if (!empty($item['link'])) { ?>
-                    </a>
+                <!--title-->
+
+                <?php if (!empty($item['title'])){ ?>
+                    <a data-apply="parseHTML" class="b-vertical-title v-vertical-item"href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>"><?php echo $item['title']; ?></a>
                 <?php } ?>
+
+                <!--/title-->
+
+                <!--image with link-->
+
+                <?php if (!empty($item['image'])) { ?>
+                    <?php if (!empty($item['link'])) { ?> <a class="b-vertical-picture b-vertical-item" href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>"><?php } ?>
+
+                    <img src="<?php echo HTTP_IMAGE . $item['image']; ?>" data-thumb="<?php echo $item['thumb']; ?>" alt="<?php echo $item['title']; ?>" title="<?php echo $item['title']; ?>" />
+
+                    <?php if (!empty($item['link'])) { ?> </a> <?php } ?>
+                <?php } ?>
+
+                <!--/image with link-->
+
+                <!--description-->
+
+                <?php if (!empty($item['description'])){ ?>
+                    <p data-apply="parseHTML" class="b-vertical-description b-vertical-item"><?php echo $item['description']; ?></p>
+                <?php } ?>
+
+                <!--description-->
+
+                <!--link-->
+
+                <?php if (!empty($item['link'])){ ?>
+                    <div class="b-vertical-link b-vertical-item btn" role="link">
+                        <a href="<?php echo $item['link']; ?>">Leer más</a>
+                    </div>
+                <?php } ?>
+
+                <!--/link-->
             </li>
-            <?php } ?>
-        </ul> 
+        <?php } ?>
+    </ul>
     </div>
     <!--/VERTICAL BANNER CONTENT-->
     <?php } ?>

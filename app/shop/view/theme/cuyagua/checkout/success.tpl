@@ -1,14 +1,16 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
     <section id="maincontent" class="row">
-        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcumbs.tpl"); ?>
+        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcrumbs.tpl"); ?>
         <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl"); ?>
         <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
 
 
-        <h1><?php echo $heading_title; ?></h1>
+        <header class="page-heading">
+            <h1><?php echo $heading_title; ?></h1>
+        </header>
         <div class="text-message"><?php echo $text_message; ?></div>
-
+    
         <div class="payment-data tabulated-data break">
             <h3><?php echo $Language->get('text_payment_title'); ?> #<?php echo $order_id; ?></h3>
             <table>
@@ -83,10 +85,13 @@
             <h2><?php echo $Language->get('form_payment_title'); ?></h2>
             <ul id="paymentMethods" class="nt-editable">
                 <?php foreach ($payment_methods as $payment_method) { ?>
-                    <li>{%<?php echo $payment_method['id']; ?>%}</li>
+                    <li data-action="payment">{%<?php echo $payment_method['id']; ?>%}</li>
                 <?php } ?>
             </ul>
         </div>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
 </section>
+
+<?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/scripts/payment-methods.tpl"); ?>
+
 <?php echo $footer; ?>

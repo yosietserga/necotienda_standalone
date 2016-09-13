@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"FRANKLIN'S MULTITIENDA";;;"(591) (33) 3372000";"Libertad N³151 Bolivia, Santa Cruz de la Sierra"
-"AVON BOLIVIA";;;"(591) (33) 3422900";"Av. 3er Anillo Int. (Entre Av. Beni Y Av. Banzer) Bolivia, Santa Cruz de la Sierra"
-"NEW YORK MALL";;;"(591) (33) 3413667";"Mall Plaza - Av.Banzer y 4to. Anillo Bolivia, Santa Cruz de la Sierra"
-"SAN JUAN HOGAR";;;"Telefax: (591) (33) 3323790";"Ayacucho Nú 289 Bolivia, Santa Cruz de la Sierra"

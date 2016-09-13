@@ -2,62 +2,69 @@
 <?php echo $navigation; ?>
 <!-- main-section -->
 <main class="main-section">
-    <div class="row">
-        <section id="featuredContent">
-            <ul class="main-widgets widgets large-12 medium-12 small-12 columns">
-                <?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?>
-            </ul>
-        </section>
-    </div>
+   <?php if($featuredWidgets && count($featuredWidgets) !== 0) { ?>
+      <section class="row">
+         <div class="columns">
+            <div id="featuredContent" class="widgets featured home-grid-full">
+               <ul>
+                  <?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>
+                        {%<?php echo $widget; ?>%}<?php
+                  }} ?>
+               </ul>
+            </div>
+         </div>
+    </section>
+   <?php } ?>
 
-    <div class="row main-columns">
-            <?php if ($column_left && $column_right) { ?>
-            <section id="content" class="home-grid-small">
-            <?php } else if ($column_left || $column_right) { ?>
-                <section id="content" class="home-grid-medium">
-            <?php } else { ?>
-                <section id="content" class="home-grid-full">
-            <?php } ?>
-
-             <!-- left-column -->
-            <?php if ($column_left) { ?>
-                <aside id="column_left" class="aside-column large-3 medium-12 small-12 columns">
-                        <?php echo $column_left; ?>
-                </aside>
-            <?php } ?>
-             <!--/left-column -->
-
-            <!-- center-column -->
-
-            <?php if ($column_left && $column_right) { ?>
-
-                <div id="column_center" class="center-column large-6 medium-12 small-12 columns">
-
-            <?php } else if ($column_left || $column_right) { ?>
-
-                <div id="column_center" class="center-column large-9 medium-12 small-12 columns">
-
-            <?php } else { ?>
-
-                <div id="column_center" class="center-column large-12 medium-12 small-12 columns">
-
-            <?php } ?>
-
-                <?php if($widgets) { ?>
-                    <ul class="columns-widgets widgets">
-                    <?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?>
-                    </ul>
+   <?php if (count($widgets) !== 0) { ?>
+        <div class="row main-columns">
+            <section id="content">
+                 <!-- left-column -->
+                <?php if ($column_left) { ?>
+                    <aside id="columnLeft" class="large-3 columns">
+                        <div class="widgets aside-column">
+                            <?php echo $column_left; ?>
+                        </div>
+                    </aside>
                 <?php } ?>
+                <!--/left-column -->
 
-                </div>
-            <!--/center-column -->
+                <!-- center-column -->
 
-            <!-- right-column -->
+                <?php if ($column_left && $column_right) { ?>
 
-            <?php if ($column_right) { ?><aside id="column_right" class="aside-column large-3 medium-12 small-12 columns"><?php echo $column_right; ?></aside><?php } ?>
-            <!--/right-column -->
-        </section>
-    </div>
+                    <aside id="columnCenter" class="large-6 columns">
+                        <div class="widgets center-column home-grid-small">
+                <?php } else if ($column_left || $column_right) { ?>
+
+                    <aside id="columnCenter" class="large-9 columns">
+                        <div class="widgets center-column home-grid-medium">
+                <?php } else { ?>
+                    <aside id="columnCenter" class="columns">
+                        <div class="widgets center-column home-grid-medium">
+                <?php } ?>
+                        <?php if($widgets) { ?>
+                            <ul class="columns-widgets widgets">
+                            <?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?>
+                            </ul>
+                        <?php } ?>
+                    </div>
+                </aside>
+                <!--/center-column -->
+
+                <!-- right-column -->
+
+                <?php if ($column_right) { ?>
+                    <aside id="columnRight" class="large-3 columns">
+                        <div class="widgets aside-column">
+                            <?php echo $column_right; ?>
+                        </div>
+                    </aside>
+                <?php } ?>
+                <!--/right-column -->
+            </section>
+        </div>
+   <?php } ?>
 </main>
 <!-- /main-section -->
 <?php echo $footer; ?>

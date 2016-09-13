@@ -1,93 +1,170 @@
+var pages = [];
+
+$(function(){
+    $.getJSON(window.nt.http_home +'?r=content/page/getpages&token=' + window.nt.token)
+        .done(function (data) {
+            pages = data;
+    });
+});
+
 function addLink(token) {
     var k = $('.items li:last-child').index() + 1 * 1;
     var link = $('#external_link').val();
     var tag = $('#external_tag').val();
 
     var labelLink = $(document.createElement('label'))
-            .attr({
-                'for': 'link_' + k + '_link'
-            })
-            .addClass('neco-label')
-            .text('Url:');
+        .attr({
+            'for': 'link_' + k + '_link'
+        })
+        .addClass('neco-label')
+        .text('Url:');
 
     var inputLink = $(document.createElement('input'))
-            .addClass('menu_link')
-            .css({
-                width: '60%'
-            })
-            .attr({
-                value: link,
-                type: 'url',
-                name: 'link[' + k + '][link]',
-                id: 'link_' + k + '_link'
-            });
+        .addClass('menu_link')
+        .css({
+            width: '60%'
+        })
+        .attr({
+            value: link,
+            type: 'url',
+            name: 'link[' + k + '][link]',
+            id: 'link_' + k + '_link'
+        });
 
     var labelTag = $(document.createElement('label'))
-            .attr({
-                'for': 'link_' + k + '_tag'
-            })
-            .addClass('neco-label')
-            .text('Etiqueta:');
+        .attr({
+            'for': 'link_' + k + '_tag'
+        })
+        .addClass('neco-label')
+        .text('Etiqueta:');
 
     var inputTag = $(document.createElement('input'))
-            .addClass('menu_tag')
-            .css({
-                width: '60%'
-            })
-            .attr({
-                value: tag,
-                type: 'text',
-                name: 'link[' + k + '][tag]',
-                id: 'link_' + k + '_tag'
-            });
+        .addClass('menu_tag')
+        .css({
+            width: '60%'
+        })
+        .attr({
+            value: tag,
+            type: 'text',
+            name: 'link[' + k + '][tag]',
+            id: 'link_' + k + '_tag'
+        });
 
     var labelKeyword = $(document.createElement('label'))
-            .attr({
-                'for': 'link_' + k + '_keyword'
-            })
-            .addClass('neco-label')
-            .text('Slug:');
+    .attr({
+        'for': 'link_' + k + '_keyword'
+    })
+    .addClass('neco-label')
+    .text('Slug:');
 
     var inputKeyword = $(document.createElement('input'))
-            .addClass('menu_keyword')
-            .css({
-                width: '60%'
-            })
-            .attr({
-                value: tag,
-                type: 'text',
-                name: 'link[' + k + '][keyword]',
-                id: 'link_' + k + '_keyword'
-            });
+    .addClass('menu_keyword')
+    .css({
+        width: '60%'
+    })
+    .attr({
+        value: tag,
+        type: 'text',
+        name: 'link[' + k + '][keyword]',
+        id: 'link_' + k + '_keyword'
+    });
+
+    var labelClassCss = $(document.createElement('label'))
+    .attr({
+        'for': 'link_' + k + '_class_css'
+    })
+    .addClass('neco-label')
+    .text('Clases CSS:');
+
+    var inputClassCss = $(document.createElement('input'))
+    .addClass('menu_class_css')
+    .css({
+        width: '60%'
+    })
+    .attr({
+        value: '',
+        type: 'text',
+        name: 'link[' + k + '][class_css]',
+        id: 'link_' + k + '_class_css'
+    });
+
+    var labelHtml = $(document.createElement('label'))
+    .attr({
+        'for': 'link_' + k + '_html'
+    })
+    .addClass('neco-label')
+    .text('Contenido HTML:');
+
+    inputHtmlOptions = function() {
+        html = '<option value="">Seleccione Contenido</option>';
+        $.each(pages, function(i, item){
+            html += '<option value="'+ item.post_id +'">'+ item.title +'</option>';
+        });
+        return html;
+    };
+
+    inputHtmlOptions = function() {
+        html = '<option value="">Seleccione Contenido</option>';
+        $.each(pages, function(i, item){
+            html += '<option value="'+ item.post_id +'">'+ item.title +'</option>';
+        });
+        return html;
+    };
+
+    var inputHtml = $(document.createElement('select'))
+        .addClass('menu_html')
+        .css({
+            width: '60%'
+        })
+        .attr({
+            value: '',
+            type: 'text',
+            name: 'link[' + k + '][page_id]',
+            id: 'link_' + k + '_html'
+        }).append(inputHtmlOptions());
 
     var itemForm1 = $(document.createElement('div'))
-            .addClass('row')
-            .append(labelLink)
-            .append(inputLink);
+        .addClass('row')
+        .append(labelLink)
+        .append(inputLink);
 
     var itemForm2 = $(document.createElement('div'))
-            .addClass('row')
-            .append(labelTag)
-            .append(inputTag);
+        .addClass('row')
+        .append(labelTag)
+        .append(inputTag);
 
     var itemForm3 = $(document.createElement('div'))
-            .addClass('row')
-            .append(labelKeyword)
-            .append(inputKeyword);
+        .addClass('row')
+        .append(labelKeyword)
+        .append(inputKeyword);
+
+    var itemForm4 = $(document.createElement('div'))
+        .addClass('row')
+        .append(labelClassCss)
+        .append(inputClassCss);
+
+    var itemForm5 = $(document.createElement('div'))
+        .addClass('row')
+        .append(labelHtml)
+        .append(inputHtml);
 
     /* creamos el div con los campos y las opciones del enlace */
     var itemOptions = $(document.createElement('div'))
-            .addClass('itemOptions')
-            .attr({
-                id: 'linkOptions' + k,
-            })
-            .append(itemForm1)
-            .append('<div class="clear"></div>')
-            .append(itemForm2)
-            .append('<div class="clear"></div>')
-            .append(itemForm3)
-            .append('<div class="clear"></div>')
-            .append('<a style="float:right;font-size:10px;" onclick="$(\'#li_' + k + '\').remove()">[ Eliminar ]</a>');
+        .addClass('itemOptions')
+        .attr({
+            id: 'linkOptions' + k,
+        })
+        .append(itemForm1)
+        .append('<div class="clear"></div>')
+        .append(itemForm2)
+        .append('<div class="clear"></div>')
+        .append(itemForm3)
+        .append('<div class="clear"></div>')
+        .append(itemForm4)
+        .append('<div class="clear"></div>')
+        .append(itemForm5)
+        .append('<div class="clear"></div>')
+        .append('<a style="float:right;font-size:10px;" onclick="$(\'#li_' + k + '\').remove()">[ Eliminar ]</a>');
 
     /* creamos el div.item que va a contener todo */
     var div = $(document.createElement('div'))
@@ -181,32 +258,93 @@ function addPage(token) {
                         id: 'link_' + k + '_keyword'
                     });
 
+            var labelClassCss = $(document.createElement('label'))
+                .attr({
+                    'for': 'link_' + k + '_class_css'
+                })
+                .addClass('neco-label')
+                .text('Clases CSS:');
+
+            var inputClassCss = $(document.createElement('input'))
+                .addClass('menu_class_css')
+                .css({
+                    width: '60%'
+                })
+                .attr({
+                    value: '',
+                    type: 'text',
+                    name: 'link[' + k + '][class_css]',
+                    id: 'link_' + k + '_class_css'
+                });
+
+            var labelHtml = $(document.createElement('label'))
+                .attr({
+                    'for': 'link_' + k + '_html'
+                })
+                .addClass('neco-label')
+                .text('Contenido HTML:');
+
+            inputHtmlOptions = function() {
+                html = '<option value="">Seleccione Contenido</option>';
+                $.each(pages, function(i, item){
+                    html += '<option value="'+ item.post_id +'">'+ item.title +'</option>';
+                });
+                return html;
+            };
+
+            var inputHtml = $(document.createElement('select'))
+                .addClass('menu_html')
+                .css({
+                    width: '60%'
+                })
+                .attr({
+                    value: '',
+                    type: 'text',
+                    name: 'link[' + k + '][page_id]',
+                    id: 'link_' + k + '_html'
+                }).append(inputHtmlOptions());
+
             var itemForm1 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelLink)
-                    .append(inputLink);
+                .addClass('row')
+                .append(labelLink)
+                .append(inputLink);
 
             var itemForm2 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelTag)
-                    .append(inputTag);
+                .addClass('row')
+                .append(labelTag)
+                .append(inputTag);
 
             var itemForm3 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelKeyword)
-                    .append(inputKeyword);
+                .addClass('row')
+                .append(labelKeyword)
+                .append(inputKeyword);
 
+            var itemForm4 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelClassCss)
+                .append(inputClassCss);
+
+            var itemForm5 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelHtml)
+                .append(inputHtml);
+
+            /* creamos el div con los campos y las opciones del enlace */
             var itemOptions = $(document.createElement('div'))
-                    .addClass('itemOptions')
-                    .attr({
-                        id: 'linkOptions' + k,
-                    })
-                    .append(itemForm1)
-                    .append('<div class="clear"></div>')
-                    .append(itemForm2)
-                    .append('<div class="clear"></div>')
-                    .append(itemForm3)
-                    .append('<div class="clear"></div>')
+                .addClass('itemOptions')
+                .attr({
+                    id: 'linkOptions' + k,
+                })
+                .append(itemForm1)
+                .append('<div class="clear"></div>')
+                .append(itemForm2)
+                .append('<div class="clear"></div>')
+                .append(itemForm3)
+                .append('<div class="clear"></div>')
+                .append(itemForm4)
+                .append('<div class="clear"></div>')
+                .append(itemForm5)
+                .append('<div class="clear"></div>')
                     .append('<a style="float:right;font-size:10px;" onclick="$(\'#li_' + k + '\').remove()">[ Eliminar ]</a>');
 
             var div = $(document.createElement('div'))
@@ -294,32 +432,93 @@ function addCategory(token) {
                         id: 'link_' + k + '_keyword'
                     });
 
+            var labelClassCss = $(document.createElement('label'))
+                .attr({
+                    'for': 'link_' + k + '_class_css'
+                })
+                .addClass('neco-label')
+                .text('Clases CSS:');
+
+            var inputClassCss = $(document.createElement('input'))
+                .addClass('menu_class_css')
+                .css({
+                    width: '60%'
+                })
+                .attr({
+                    value: '',
+                    type: 'text',
+                    name: 'link[' + k + '][class_css]',
+                    id: 'link_' + k + '_class_css'
+                });
+
+            var labelHtml = $(document.createElement('label'))
+                .attr({
+                    'for': 'link_' + k + '_html'
+                })
+                .addClass('neco-label')
+                .text('Contenido HTML:');
+
+            inputHtmlOptions = function() {
+                html = '<option value="">Seleccione Contenido</option>';
+                $.each(pages, function(i, item){
+                    html += '<option value="'+ item.post_id +'">'+ item.title +'</option>';
+                });
+                return html;
+            };
+
+            var inputHtml = $(document.createElement('select'))
+                .addClass('menu_html')
+                .css({
+                    width: '60%'
+                })
+                .attr({
+                    value: '',
+                    type: 'text',
+                    name: 'link[' + k + '][page_id]',
+                    id: 'link_' + k + '_html'
+                }).append(inputHtmlOptions());
+
             var itemForm1 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelLink)
-                    .append(inputLink);
+                .addClass('row')
+                .append(labelLink)
+                .append(inputLink);
 
             var itemForm2 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelTag)
-                    .append(inputTag);
+                .addClass('row')
+                .append(labelTag)
+                .append(inputTag);
 
             var itemForm3 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelKeyword)
-                    .append(inputKeyword);
+                .addClass('row')
+                .append(labelKeyword)
+                .append(inputKeyword);
 
+            var itemForm4 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelClassCss)
+                .append(inputClassCss);
+
+            var itemForm5 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelHtml)
+                .append(inputHtml);
+
+            /* creamos el div con los campos y las opciones del enlace */
             var itemOptions = $(document.createElement('div'))
-                    .addClass('itemOptions')
-                    .attr({
-                        id: 'linkOptions' + k,
-                    })
-                    .append(itemForm1)
-                    .append('<div class="clear"></div>')
-                    .append(itemForm2)
-                    .append('<div class="clear"></div>')
-                    .append(itemForm3)
-                    .append('<div class="clear"></div>')
+                .addClass('itemOptions')
+                .attr({
+                    id: 'linkOptions' + k,
+                })
+                .append(itemForm1)
+                .append('<div class="clear"></div>')
+                .append(itemForm2)
+                .append('<div class="clear"></div>')
+                .append(itemForm3)
+                .append('<div class="clear"></div>')
+                .append(itemForm4)
+                .append('<div class="clear"></div>')
+                .append(itemForm5)
+                .append('<div class="clear"></div>')
                     .append('<a style="float:right;font-size:10px;" onclick="$(\'#li_' + k + '\').remove()">[ Eliminar ]</a>');
 
             var div = $(document.createElement('div'))
@@ -407,32 +606,93 @@ function addPostCategory(token) {
                         id: 'link_' + k + '_keyword'
                     });
 
+            var labelClassCss = $(document.createElement('label'))
+                .attr({
+                    'for': 'link_' + k + '_class_css'
+                })
+                .addClass('neco-label')
+                .text('Clases CSS:');
+
+            var inputClassCss = $(document.createElement('input'))
+                .addClass('menu_class_css')
+                .css({
+                    width: '60%'
+                })
+                .attr({
+                    value: '',
+                    type: 'text',
+                    name: 'link[' + k + '][class_css]',
+                    id: 'link_' + k + '_class_css'
+                });
+
+            var labelHtml = $(document.createElement('label'))
+                .attr({
+                    'for': 'link_' + k + '_html'
+                })
+                .addClass('neco-label')
+                .text('Contenido HTML:');
+
+            inputHtmlOptions = function() {
+                html = '<option value="">Seleccione Contenido</option>';
+                $.each(pages, function(i, item){
+                    html += '<option value="'+ item.post_id +'">'+ item.title +'</option>';
+                });
+                return html;
+            };
+
+            var inputHtml = $(document.createElement('select'))
+                .addClass('menu_html')
+                .css({
+                    width: '60%'
+                })
+                .attr({
+                    value: '',
+                    type: 'text',
+                    name: 'link[' + k + '][page_id]',
+                    id: 'link_' + k + '_html'
+                }).append(inputHtmlOptions());
+
             var itemForm1 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelLink)
-                    .append(inputLink);
+                .addClass('row')
+                .append(labelLink)
+                .append(inputLink);
 
             var itemForm2 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelTag)
-                    .append(inputTag);
+                .addClass('row')
+                .append(labelTag)
+                .append(inputTag);
 
             var itemForm3 = $(document.createElement('div'))
-                    .addClass('row')
-                    .append(labelKeyword)
-                    .append(inputKeyword);
+                .addClass('row')
+                .append(labelKeyword)
+                .append(inputKeyword);
 
+            var itemForm4 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelClassCss)
+                .append(inputClassCss);
+
+            var itemForm5 = $(document.createElement('div'))
+                .addClass('row')
+                .append(labelHtml)
+                .append(inputHtml);
+
+            /* creamos el div con los campos y las opciones del enlace */
             var itemOptions = $(document.createElement('div'))
-                    .addClass('itemOptions')
-                    .attr({
-                        id: 'linkOptions' + k,
-                    })
-                    .append(itemForm1)
-                    .append('<div class="clear"></div>')
-                    .append(itemForm2)
-                    .append('<div class="clear"></div>')
-                    .append(itemForm3)
-                    .append('<div class="clear"></div>')
+                .addClass('itemOptions')
+                .attr({
+                    id: 'linkOptions' + k,
+                })
+                .append(itemForm1)
+                .append('<div class="clear"></div>')
+                .append(itemForm2)
+                .append('<div class="clear"></div>')
+                .append(itemForm3)
+                .append('<div class="clear"></div>')
+                .append(itemForm4)
+                .append('<div class="clear"></div>')
+                .append(itemForm5)
+                .append('<div class="clear"></div>')
                     .append('<a style="float:right;font-size:10px;" onclick="$(\'#li_' + k + '\').remove()">[ Eliminar ]</a>');
 
             var div = $(document.createElement('div'))

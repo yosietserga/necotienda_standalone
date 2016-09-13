@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"LOGÍSTICA COEX S.A.S.";gerencia@coexnort.com;www.coexnort.com;"(57) (7) 5781054";"Av7 17   N-50 Bdg N 2 B-5 Parque Industrial del Oriente Colombia, Cúcuta"
-"AGENCIA DE ADUANA TRASLADOS INTERNACIONALES";gerencia.mde@trasladosinternacionales.com;www.trasladosinternacionales.com;"(57) (4) 2300989";"Cr74 48-37 Of 931 Colombia, Medellín"
-"AGENCIA DE ADUANAS REPRESENTACIONES J.GUTIÉRREZ Y CÍA LTDA. NIVEL 1";;;"(57) (7) 5818181";"Av Camilo Daza 12-85 Zona Industrial Colombia, Cúcuta"

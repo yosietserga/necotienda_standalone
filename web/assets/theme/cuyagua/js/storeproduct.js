@@ -323,7 +323,7 @@ function contactForm(data,httpHome,token) {
     });
 }
 
-function productContact(isLogged,httpHome,token,data) {
+function productContact(isLogged,httpHome,token,data) {console.log('storeproduct.js line 326');
     overlayHelper();
     if (!isLogged) {
         loginForm(httpHome,token);
@@ -331,3 +331,4 @@ function productContact(isLogged,httpHome,token,data) {
         contactForm(data,httpHome,token);
     }
 }
+

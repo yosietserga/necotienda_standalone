@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"MADERAS ALHUE LTDA.";;;"(56) (2) 7354130";"Av. Perú 1201 Chile, Santiago"
-EFE;;;"(56) (71) 5855000";"Talca Chile, Talca"
-"MUEBLES CHICUREO";;;"(56) (2) 7383185";"Cam. Chicureo Esq El Alba Sitio D S/N Chile, Santiago"

@@ -3,11 +3,18 @@
 class ControllerCommonHome extends Controller {
 
     public function index() {
+        //tracker
+        $this->tracker->track(0, 'home_page');
+
+        if ($this->session->has('ref_email') && !$this->session->has('ref_cid')) {
+            $this->data['show_register_form_invitation'] = true;
+        }
+
         $Url = new Url($this->registry);
         $cached = $this->cache->get('home_page.' .
                 $this->config->get('config_language_id') . "." .
-                $this->request->hasQuery('hl') . "." .
-                $this->request->hasQuery('cc') . "." .
+                $this->request->getQuery('hl') . "." .
+                $this->request->getQuery('cc') . "." .
                 $this->customer->getId() . "." .
                 $this->config->get('config_currency') . "." .
                 (int) $this->config->get('config_store_id')
@@ -22,8 +29,8 @@ class ControllerCommonHome extends Controller {
             if (!$this->user->isLogged()) {
                 $this->cacheId = 'home_page.' .
                         $this->config->get('config_language_id') . "." .
-                        $this->request->hasQuery('hl') . "." .
-                        $this->request->hasQuery('cc') . "." .
+                        $this->request->getQuery('hl') . "." .
+                        $this->request->getQuery('cc') . "." .
                         $this->customer->getId() . "." .
                         $this->config->get('config_currency') . "." .
                         (int) $this->config->get('config_store_id');
@@ -44,7 +51,7 @@ class ControllerCommonHome extends Controller {
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
                 $this->template = $this->config->get('config_template') . '/' . $template;
             } else {
-                $this->template = 'choroni/' . $template;
+                $this->template = 'cuyagua/' . $template;
             }
 
             $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

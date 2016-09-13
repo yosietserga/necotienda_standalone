@@ -13,33 +13,34 @@
     </div>
 <?php } ?>
 
-<script>
-(function () {
-    var listResource = '<?php include(DIR_TEMPLATE  . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
-    var gridResource = '<?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
-    var gridModeIcon = '<i class="icon icon-sort">' + gridResource + '</i>';
-    var listModeIcon = '<i class="icon icon-sort">' + listResource + '</i>';
-    var listModeFlag = 'catalog-list';
-    var gridModeFlag = 'catalog-grid';
-    var $productsWrapper = $('#productsWrapper');
+<script id="sort">
+    (function () {
 
-    $("[data-action='sort']").click(function (e) {
-        var isOnListMode = $productsWrapper.hasClass(listModeFlag);
-        var $self = $(this);
-        e.stopPropagation();
-        e.preventDefault();
+        window.deferjQuery(function () {
+            var listResource = '<?php include(DIR_TEMPLATE  . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
+            var gridResource = '<?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
+            var gridModeIcon = '<i class="icon icon-sort">' + gridResource + '</i>';
+            var listModeIcon = '<i class="icon icon-sort">' + listResource + '</i>';
+            var listModeFlag = 'catalog-list';
+            var gridModeFlag = 'catalog-grid';
+            var $productsWrapper = $('#productsWrapper');
 
-        if (isOnListMode) {
-            $productsWrapper
-                .removeClass(listModeFlag)
-                .addClass(gridModeFlag);
-            $self.html(listModeIcon);
-        } else {
-            $productsWrapper
-                .removeClass(gridModeFlag)
-                .addClass(listModeFlag);
-            $self.html(gridModeIcon);
-        }
-    });
-})();
+            $("[data-action='sort']").click(function (e) {
+                var isOnListMode = $productsWrapper.hasClass(listModeFlag);
+                var $self = $(this);
+
+                if (isOnListMode) {
+                    $productsWrapper
+                        .removeClass(listModeFlag)
+                        .addClass(gridModeFlag);
+                    $self.html(listModeIcon);
+                } else {
+                    $productsWrapper
+                        .removeClass(gridModeFlag)
+                        .addClass(listModeFlag);
+                    $self.html(gridModeIcon);
+                }
+            });
+        });
+    })();
 </script>

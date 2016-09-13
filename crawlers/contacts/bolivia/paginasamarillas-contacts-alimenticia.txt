@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"HIPERSABOR MATERIAS PRIMAS Y ALIMENTICIAS";;;"Telefax: (591) (33) 3366922";"Cl Buenos Aires No. 514, Santa Cruz Bolivia, Santa Cruz de la Sierra"

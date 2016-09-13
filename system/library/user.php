@@ -74,7 +74,7 @@ final class User {
                 . "WHERE username = '" . $this->db->escape($username) . "' "
                 . "AND password = '" . $this->db->escape(md5($password . $suffix) . ':' . $suffix) . "'");
 
-        if ($user_query->num_rows) {
+        if ($user_query->num_rows > 0) {
             $this->session->set('user_id', $user_query->row['user_id']);
             $utoken = $this->session->has('utoken') ? $this->session->get('utoken') : md5(date('d-m-Y') . mt_rand(1000000000, 9999999999));
             $this->session->set('utoken', $utoken);

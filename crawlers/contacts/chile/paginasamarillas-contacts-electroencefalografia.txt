@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-INMUNOMEDICA;;;"(56) (71) 683700";"2 Norte 360 Chile, Talca"

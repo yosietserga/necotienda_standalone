@@ -359,6 +359,50 @@ class ControllerUserUser extends Controller {
         $this->setvar('user_group_id', $user_info, '');
         $this->setvar('status', $user_info, 0);
 
+        $image = $this->modelUser->getProperty($user_info['user_id'], 'user', 'image');
+        if (!empty($image) && file_exists(DIR_IMAGE . $image)) {
+            $this->data['preview'] = NTImage::resizeAndSave($image, 100, 100);
+        } else {
+            $this->data['preview'] = NTImage::resizeAndSave('no_image.jpg', 100, 100);
+        }
+
+        $scripts[] = array('id' => 'userFunctions', 'method' => 'function', 'script' =>
+            "function image_delete(field, preview) {
+                $('#' + field).val('');
+                $('#' + preview).attr('src','" . HTTP_IMAGE . "cache/no_image-100x100.jpg');
+            }
+
+            function image_upload(field, preview) {
+                var height = $(window).height() * 0.8;
+                var width = $(window).width() * 0.8;
+
+            	$('#dialog').remove();
+            	$('.box').prepend('<div id=\"dialog\" style=\"padding: 3px 0px 0px 0px;z-index:10000;\"><iframe src=\"" . Url::createAdminUrl("common/filemanager") . "&field=' + encodeURIComponent(field) + '\" style=\"padding:0; margin: 0; display: block; width: 100%; height: 100%;z-index:10000\" frameborder=\"no\" scrolling=\"auto\"></iframe></div>');
+
+                $('#dialog').dialog({
+            		title: '" . $this->data['text_image_manager'] . "',
+            		close: function (event, ui) {
+            			if ($('#' + field).attr('value')) {
+            				$.ajax({
+            					url: '" . Url::createAdminUrl("common/filemanager/image") . "',
+            					type: 'POST',
+            					data: 'image=' + encodeURIComponent($('#' + field).val()),
+            					dataType: 'text',
+            					success: function(data) {
+            						$('#' + preview).replaceWith('<img src=\"' + data + '\" id=\"' + preview + '\" class=\"image\" onclick=\"image_upload(\'' + field + '\', \'' + preview + '\');\">');
+            					}
+            				});
+            			}
+            		},
+            		bgiframe: false,
+            		width: width,
+            		height: height,
+            		resizable: false,
+            		modal: false
+            	});}");
+
+        $this->scripts = array_merge($this->scripts, $scripts);
+
         $this->data['user_groups'] = $this->modelUsergroup->getAll();
 
         $this->template = 'user/user_form.tpl';
@@ -423,7 +467,7 @@ class ControllerUserUser extends Controller {
             $this->error['username'] = $this->language->get('error_username');
         }
 
-        if ((strlen(utf8_decode($this->request->post['firstname'])) < 3) || (strlen(utf8_decode($this->request->post['firstname'])) > 32)) {
+        if ((strlen(utf8_decode($this->request->post['firstname'])) < 1) || (strlen(utf8_decode($this->request->post['firstname'])) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
         }
 
@@ -431,12 +475,12 @@ class ControllerUserUser extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
 
-        if ((strlen(utf8_decode($this->request->post['lastname'])) < 3) || (strlen(utf8_decode($this->request->post['lastname'])) > 32)) {
+        if ((strlen(utf8_decode($this->request->post['lastname'])) < 1) || (strlen(utf8_decode($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
 
         if (($this->request->post['password']) || (!isset($this->request->get['user_id']))) {
-            if ((strlen(utf8_decode($this->request->post['password'])) < 4) || (strlen(utf8_decode($this->request->post['password'])) > 20)) {
+            if (strlen(utf8_decode($this->request->post['password'])) < 4) {
                 $this->error['password'] = $this->language->get('error_password');
             }
 

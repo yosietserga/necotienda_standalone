@@ -77,6 +77,17 @@ class ControllerCommonHome extends Controller {
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
+    public function ping() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+        header('HTTP/1.1 200 OK');
+        $this->load->library('json');
+        $this->response->setOutput(Json::encode(array('msg'=>'OK')), $this->config->get('config_compression'));
+    }
+
     public function login() {
         if (!$this->user->validSession() && ($this->request->getQuery('r') != 'common/login/login') && ($this->request->getQuery('r') != 'common/login/recover')) {
             $this->user->logout();
@@ -99,6 +110,7 @@ class ControllerCommonHome extends Controller {
                 'common/login',
                 'common/login/login',
                 'common/login/recover',
+                'common/login/ping',
                 'common/logout',
                 'error/not_found',
                 'error/permission'
@@ -160,6 +172,7 @@ class ControllerCommonHome extends Controller {
                 'common/home',
                 'common/login/login',
                 'common/login/recover',
+                'common/login/ping',
                 'common/login',
                 'common/logout',
                 'error/not_found',
@@ -175,7 +188,7 @@ class ControllerCommonHome extends Controller {
         }
     }
 
-    public function slug() {
+    public function slug($folder) {
         //TODO: check if the slug doesn�t exists else put a number at the end
         $str = $_GET['slug'];
         if (isset($str)) {

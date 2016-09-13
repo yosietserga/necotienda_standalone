@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"LA CASITA S.A.";ventas@lacasita.com.co;www.lacasita.com.co;"(57) (5) 5744074";"Cr11 20-48 Brr. La Granja Colombia, Valledupar"

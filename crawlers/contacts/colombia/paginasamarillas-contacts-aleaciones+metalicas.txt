@@ -1,7 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ACEFER Y CIA. LTDA.";acefersup@yahoo.com;www.acefer.com.co;"(57) (1) 3648181";"Cr32 9-24 Colombia, Bogotá"
-"ANIIF - AVALÚOS NIIF";ingeval@cable.net.co;www.ingeval.co;"(57) (1) 7538403";"Cr59 136 A-03 Colombia, Bogotá"
-"METÁLICAS BM";metalicasbm@hotmail.com;www.metalicasbmpereira.com;"(57) (6) 3420206";"Cl 12 19-56 Br. La Aurora Baja Colombia, Dosquebradas"
-"FOTOGRABADOS MEL";fotograbado.mel@gmail.com;;"(57) (4) 4129629";"Cr84 37 B-185 Colombia, Medellín"
-"ALEACIONES - DISCOS, PESAS Y EQUIPOS TECNOMETALES LTDA.";servicioalcliente@tecnometalesbogota.com;www.tecnometalesbogota.com;"Telefax: (57) (1) 4508549";"Cr72 N 36-52 S Colombia, Bogotá"
-"INDUSTRIAS MURILLO RODRIGUEZ E.U.";industriasmurillorodrigues.20@gmail.com;www.industriasmurillorodriguez.com;"(57) (1) 7760804";"Cl 49 11-18 Colombia, Bogotá"

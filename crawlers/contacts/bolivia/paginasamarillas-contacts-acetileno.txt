@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PRAXAIR BOLIVIA";;;"(591) (33) 3462797";"Parque Industrial Pesado Bolivia, Santa Cruz de la Sierra"
-"OXÍGENO DE BOLIVIA S.A.";;;"(591) (33) 3564774";"Av Santos Dumont 6to. Anillo Pasando 50 Mts. La Entrada A Los Lotes Bolivia, Santa Cruz de la Sierra"
-"HIELO SECO S.R.L";;;"(591) (33) 3463367";"Parque Industrial Pesado P I 27 Bolivia, Santa Cruz de la Sierra"

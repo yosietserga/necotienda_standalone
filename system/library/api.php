@@ -1,72 +1,73 @@
 <?php
-final class Api { 
+
+class Api {
     /**
      * @param $public_key
-     * API key pública para ser utilizada desde cualquier sitio en internet, con esta llave se autentifica
-     * el usuario que está accediendo desde afuera, se verifica el status del usuario y se registra para hacer seguimientos
+     * API key pï¿½blica para ser utilizada desde cualquier sitio en internet, con esta llave se autentifica
+     * el usuario que estï¿½ accediendo desde afuera, se verifica el status del usuario y se registra para hacer seguimientos
      * user tracker
      * */
 	private $public_key = null;
     
     /**
      * @param $private_key
-     * API key privada para ser utilizada solo por el usuario, esta llave será utilizada para mostrar información privada del usuario
-     * y alterar los registros del usuario desde afuera, de tal manera que se puedan manipular objetos a través de otros sitios
+     * API key privada para ser utilizada solo por el usuario, esta llave serï¿½ utilizada para mostrar informaciï¿½n privada del usuario
+     * y alterar los registros del usuario desde afuera, de tal manera que se puedan manipular objetos a travï¿½s de otros sitios
      * */
 	private $private_key = null;
     
     /**
      * @param $action
-     * Es el nombre de la acción que se va a ejecutar, básicamente es el nombre del archivo que contiene las funciones
-     * necesarias para manipular la información
+     * Es el nombre de la acciï¿½n que se va a ejecutar, bï¿½sicamente es el nombre del archivo que contiene las funciones
+     * necesarias para manipular la informaciï¿½n
      * */
 	private $action;
     
     /**
      * @param $method
-     * Es el método que se va a utilizar para hacer el llamado de la función, si es una clase o un conjunto de funciones
+     * Es el mï¿½todo que se va a utilizar para hacer el llamado de la funciï¿½n, si es una clase o un conjunto de funciones
      * */
 	private $method = "class";
     
     /**
      * @param $funcname
-     * Es el nombre de la función que se va a utilizar
+     * Es el nombre de la funciï¿½n que se va a utilizar
      * */
 	private $funcname = "default";
     
     /**
      * @param $funcargs
-     * Son los parámetros o los argumentos que se van a pasar a la función
+     * Son los parï¿½metros o los argumentos que se van a pasar a la funciï¿½n
      * */
 	private $funcargs = array();
     
     /**
      * @param $r_method
-     * Es el método en el que se va a retornar la información
+     * Es el mï¿½todo en el que se va a retornar la informaciï¿½n
      * */
 	private $r_method = "json";
     
     /**
      * @param $ip_banned
-     * Utilizado para saber cuando la dirección ip está bloqueada
+     * Utilizado para saber cuando la direcciï¿½n ip estï¿½ bloqueada
      * */
     private $ip_banned = false;
     
     /**
      * @param $ip
-     * Dirección IP del solicitante
+     * Direcciï¿½n IP del solicitante
      * */
     private $ip = null;
     
     /**
      * @param $domain_banned
-     * Utilizado para saber cuando la dirección web está bloqueada
+     * Utilizado para saber cuando la direcciï¿½n web estï¿½ bloqueada
      * */
     private $domain_banned = false;
     
     /**
      * @param $user_banned
-     * Utilizado para saber cuando usuario está bloqueado
+     * Utilizado para saber cuando usuario estï¿½ bloqueado
      * */
     private $user_banned = false;
     
@@ -78,17 +79,17 @@ final class Api {
     
     
 
-    //TODO: construir un mapa de todas las funciones llamables a través de ajax
+    //TODO: construir un mapa de todas las funciones llamables a travï¿½s de ajax
   	public function __construct($registry) {
         $this->registry = $registry;
         $this->user = $this->registry->get('user');
         $this->db = $this->registry->get('db');
         $this->ip = $_SERVER['REMOTE_ADDR'];
+        /*
         if (!$this->check("action",$this->action)) $this->error = 100;
         if (!$this->check("funcname",$this->funcname)) $this->error = 101;
         if ($this->error) return $this->fail();
-        
-        return $this->result();
+        */
   	}
     
     public function __get($key) {
@@ -121,18 +122,24 @@ final class Api {
         }
     }
     
-    private function action($action) {
-        $file = DIR_SYSTEM . "library" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . $action . ".php";
-        if (!is_file($file)) {
+    public function action($module, $action, $params = array()) {
+        $file = DIR_SYSTEM . "library" . DIRECTORY_SEPARATOR . "api" . DIRECTORY_SEPARATOR . $module . ".php";
+        if (is_file($file)) {
+
             require_once($file);
-            $class = ucfirst($action);
+            unset($file);
+            $class = ucfirst($module) .'Api';
             $this->class = new $class($this->registry);
-            return true;
+            if ($this->checkFuncname($action)) {
+                $this->funcname = $action;
+                return $this->class->{$action}($params);
+            }
+
         }
         return false;
     }
     
-    private function funcname($funcname) {
+    private function checkFuncname($funcname) {
         return method_exists($this->class,$funcname);
     }
     

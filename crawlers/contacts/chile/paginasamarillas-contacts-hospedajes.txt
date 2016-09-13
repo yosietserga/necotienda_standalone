@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"HOSPEDAJES MIRTA";;;"(56) (32) 2660417";"San Miguel 242 Chile, Viña del Mar"

@@ -87,9 +87,21 @@
     
     <div class="grid_12">
         <div class="box">
+            <div id="ProductForm"></div>
             <div id="gridPreloader"></div>
             <div id="gridWrapper"></div>
         </div>
     </div>
 </div>
+<script>
+<?php echo file_get_contents(DIR_ADMIN_JS . 'app/system/route.js'); ?>
+
+<?php echo file_get_contents(DIR_ADMIN_JS . 'app/utils/db.js'); ?>
+<?php echo file_get_contents(DIR_ADMIN_JS . 'app/utils/connection.js'); ?>
+<?php echo file_get_contents(DIR_ADMIN_JS . 'app/utils/task.js'); ?>
+<?php echo file_get_contents(DIR_ADMIN_JS . 'app/utils/image.js'); ?>
+
+<?php echo file_get_contents(DIR_ADMIN_JS . 'app/models/store/products.js'); ?>
+<?php echo file_get_contents(DIR_ADMIN_JS . 'app/collections/store/products.js'); ?>
+</script>
 <?php echo $footer; ?>

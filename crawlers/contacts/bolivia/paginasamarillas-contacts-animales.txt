@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"SHOPPING ANIMAL'S";;;"(591) (22) 4401448";"Av. Santa Cruz No 1178 Entre Uyuni Y Padilla Bolivia, La Paz"
-"CLÍNICA VETERINARIA ANIMAL PARK";;;"(591) (33) 6334749";"Santa Cruz Bolivia, Santa Cruz de la Sierra"

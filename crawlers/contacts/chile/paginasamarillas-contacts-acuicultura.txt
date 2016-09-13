@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"MASTER QUALITY S.A";;;"(56) (2) 22187789";"Dardo regules 2449 Chile, Santiago"
-"CNG AQUA & LEX";;;"(56) (2) 6994723";"Rosa Rodriguez 1375 Of. 607 Chile, Santiago"
-DIAGNOTEC;;;"(56) (2) 22363022";"General Del Canto 460 Chile, Santiago"

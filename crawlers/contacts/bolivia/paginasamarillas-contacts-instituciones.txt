@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-FUNDEMPRESA;;;"(591) (22) 3430100";"Av Las Americas No 7/Gral Saavedra (Torres Cainco) Bolivia, La Paz"
-"GRUPO SOLIDARIO ESPIRITA";;;"(591) (33) 3546955";"Av Santos Dumont/Cl Choreti 35 Barrio Braniff Santa Cruz De La Sierra Bol ivia Bolivia, Santa Cruz de la Sierra"

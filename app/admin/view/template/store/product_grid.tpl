@@ -9,6 +9,8 @@
 </select>
 <a href="#" title="Ejecutar acci&oacute;n por lote" onclick="if ($('#batch').val().length <= 0) { return false; } else { window[$('#batch').val()](); return false;}" style="margin-left: 10px;font-size: 10px;">[ Ejecutar ]</a>
 <div class="clear"></div><br />
+
+<div class="clear"></div><br />
     <div class="pagination"><?php echo $pagination; ?></div>
     <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
       <table id="list">
@@ -52,7 +54,7 @@
               <input title="Seleccionar para una acci&oacute;n" type="checkbox" name="selected[]" value="<?php echo $product['product_id']; ?>"<?php if ($product['selected']) { ?> checked="checked"<?php } ?> />
             </td>
             <td data-title="<?php echo $Language->get('column_image'); ?>" class="center hideOnMobile"><img alt="<?php echo $product['name']; ?>" src="<?php echo $product['image']; ?>" style="padding: 1px; border: 1px solid #ccc;" /></td>
-            <td data-title="<?php echo $Language->get('column_name'); ?>"><?php echo $product['name']; ?></td>
+            <td data-title="<?php echo $Language->get('column_name'); ?>" contenteditable="true" data-field="name" data-id="<?php echo $product['product_id']; ?>" data-route="store/product/save"><?php echo $product['name']; ?></td>
             <td data-title="<?php echo $Language->get('column_model'); ?>"><?php echo $product['model']; ?></td>
             <td data-title="<?php echo $Language->get('column_quantity'); ?>"><?php if ($product['quantity'] <= 0) { ?>
               <span style="color: #FF0000;"><?php echo $product['quantity']; ?></span>
@@ -92,3 +94,34 @@
       </table>
     </form>
     <div class="pagination"><?php echo $pagination; ?></div>
+    
+<script>
+$(function(){
+    var currentData = {};
+    $("td[contenteditable=true]").blur(function(e){
+        console.log('blur');
+        if (currentData.value !== $(this).text()) {
+            console.log('save');
+            $.post(createAdminUrl($(this).attr('data-route')),
+            {
+                value: $(this).text(),
+                field: $(this).attr('data-field'),
+                id: $(this).attr('data-id')
+            },
+            function(resp){
+                data = $.parseJSON(resp);
+                if(data.error) {
+                    /* show error message and get back the original value */
+                } else {
+                    /* show success message */
+                }
+            });
+        }
+    }).focus(function(e){
+        console.log('focus');
+        currentData.value = $(this).text();
+        currentData.field = $(this).attr('data-field');
+        currentData.id = $(this).attr('data-id');
+    });
+});
+</script>

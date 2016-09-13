@@ -610,16 +610,12 @@ class ControllerSaleCoupon extends Controller {
         }
 
         foreach ($this->request->post['coupon_description'] as $language_id => $value) {
-            if ((strlen(utf8_decode($value['name'])) < 3) || (strlen(utf8_decode($value['name'])) > 64)) {
+            if (empty($value['name'])) {
                 $this->error['name'][$language_id] = $this->language->get('error_name');
-            }
-
-            if (strlen(utf8_decode($value['description'])) < 3) {
-                $this->error['description'][$language_id] = $this->language->get('error_description');
             }
         }
 
-        if ((strlen(utf8_decode($this->request->post['code'])) < 3) || (strlen(utf8_decode($this->request->post['code'])) > 24)) {
+        if (empty($this->request->post['code'])) {
             $this->error['code'] = $this->language->get('error_code');
         }
 

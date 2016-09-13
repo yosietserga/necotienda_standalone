@@ -1,4 +1,7 @@
 <?php
+if (file_exists(dirname(__FILE__). '/../install.php')) {
+    unlink(dirname(__FILE__). '/../install.php');
+}
 
 error_reporting(0);
 define('PACKAGE', 'standalone');
@@ -31,7 +34,7 @@ if (!file_exists($config_path . 'cconfig.php')) {
 }
 
 if (!$matches[1])
-    preg_match('/([^.]+)\.necoshop\.com/', $_SERVER['SERVER_NAME'], $matches);
+    preg_match('/([^.]+)\.necoshop\.dev/', $_SERVER['SERVER_NAME'], $matches);
 if (isset($matches[1]) && $matches[1] != 'www') {
     if (file_exists($config_path . "app/" . strtolower($matches[1]) . "/config.php")) {
         require_once($config_path . "app/" . strtolower($matches[1]) . "/config.php");
@@ -41,7 +44,6 @@ if (isset($matches[1]) && $matches[1] != 'www') {
 } else {
     require_once($config_path . 'app/shop/config.php');
 }
-
 // Startup
 require_once(DIR_SYSTEM . 'startup.php');
 
@@ -167,6 +169,7 @@ $language->load($languages[$code]['filename']);
 $log = new Log($config->get('config_error_filename'));
 $registry->set('log', $log);
 
+$_SESSION['necotimestart'] = microtime(true);
 function error_handler($errno, $errstr, $errfile, $errline) {
     global $log, $config;
 
@@ -188,13 +191,40 @@ function error_handler($errno, $errstr, $errfile, $errline) {
             break;
     }
 
-    //echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b></br >';
+    echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b></br >';
+    neco_logger($error . ': ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
     $log->write('PHP ' . $error . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
     return true;
 }
 
+function neco_logger($text) {
+    if (!file_exists(dirname(__FILE__) .'/php_error_log.txt')) {
+        $f = fopen (dirname(__FILE__) .'/php_error_log.txt', 'w+');
+    } else {
+        $fc = file_get_contents(dirname(__FILE__) .'/php_error_log.txt');
+    }
+
+    $time_start = $_SESSION['necotimestart'];
+    $time_end = microtime(true);
+    $ft = $text . " - IP {$_SERVER['REMOTE_ADDR']} - ". ($time_end - $time_start) . "seg - ". (memory_get_peak_usage(true)/1024/1024) ."MB\n";
+    $_SESSION['necotimestart'] = $time_end;
+
+    //$ft .=  implode(" included\n", get_included_files());
+
+    if ($f) {
+        fwrite($f, $ft);
+        fclose($f);
+    } else {
+        $f = fopen (dirname(__FILE__) .'/php_error_log.txt', 'w+');
+        $fc .= $ft;
+        fwrite($f, $fc);
+        fclose($f);
+    }
+}
+
 // Error Handler
-set_error_handler('error_handler');
+//set_error_handler('error_handler');
+
 // App Libs and Configs Preload
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app/shop/map.php');
 
@@ -207,7 +237,6 @@ $session->set('ntConfig_' . STORE_ID, serialize($config));
 
 // Front Controller 
 $controller = new Front($registry);
-
 // Maintenance Mode
 $controller->addPreAction(new Action('common/maintenance/check'));
 

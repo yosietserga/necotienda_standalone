@@ -5,6 +5,7 @@ final class Image {
     private $file;
     private $image;
     private $info;
+    private $bgColor;
 
     public function __construct($file) {
         if (file_exists($file)) {
@@ -19,9 +20,13 @@ final class Image {
                 'mime' => $info['mime']
             );
 
+            $this->bgColor['r'] = IMAGE_BG_COLOR_R;
+            $this->bgColor['g'] = IMAGE_BG_COLOR_G;
+            $this->bgColor['b'] = IMAGE_BG_COLOR_B;
+
             $this->image = $this->create($file);
         } else {
-            exit('Error: Could not load image ' . $file . '!');
+            echo('Error: Could not load image ' . $file . '!');
         }
     }
 
@@ -35,6 +40,12 @@ final class Image {
         } elseif ($mime == 'image/jpeg') {
             return imagecreatefromjpeg($image);
         }
+    }
+
+    public function setBgColor($r, $g, $b) {
+        $this->bgColor['r'] = $r;
+        $this->bgColor['g'] = $g;
+        $this->bgColor['b'] = $b;
     }
 
     public function save($file, $quality = 100) {
@@ -76,16 +87,16 @@ final class Image {
         $this->image = imagecreatetruecolor($width, $height);
 
         if (isset($this->info['mime']) && $this->info['mime'] == 'image/png') {
-            $background = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
-            imagecolortransparent($this->image, $background);
             imagealphablending($this->image, false);
             imagesavealpha($this->image, true);
+            $background = imagecolorallocatealpha($this->image, $this->bgColor['r'], $this->bgColor['g'], $this->bgColor['b'], 127);
+            imagecolortransparent($this->image, $background);
         } else {
-            $background = imagecolorallocate($this->image, 255, 255, 255);
+            $background = imagecolorallocate($this->image, $this->bgColor['r'], $this->bgColor['g'], $this->bgColor['b']);
         }
 
         imagefilledrectangle($this->image, 0, 0, $width, $height, $background);
-
+        
         imagecopyresampled($this->image, $image_old, $xpos, $ypos, 0, 0, $new_width, $new_height, $this->info['width'], $this->info['height']);
         imagedestroy($image_old);
 
@@ -224,6 +235,14 @@ final class Image {
 }
 
 class NTImage {
+    
+    public $watermark = null;
+    public $position = null;
+    
+    public static function setWatermark($file, $position) {
+        $this->watermark = $file;
+        $this->position = $position;
+    }
 
     public static function resizeAndSave($filename, $width, $height, $path = null) {
         if (isset($path)) {
@@ -255,6 +274,13 @@ class NTImage {
             $image = new Image($folder . $old_image);
             $image->resize($width, $height);
             $image->save($folder . $new_image);
+            /*
+            if ($this->watermark) {
+                $position = ($this->position) ? $this->position : 'bottomright';
+                $image->watermark($this->watermark, $position);
+            }
+             *
+             */
         }
 
         return HTTP_IMAGE . $new_image;

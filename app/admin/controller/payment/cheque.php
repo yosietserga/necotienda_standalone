@@ -11,7 +11,7 @@ class ControllerPaymentCheque extends Controller {
 
         $this->load->auto('setting/setting');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validate())) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
             $this->modelSetting->update('cheque', $this->request->post);
             $this->session->set('success', $this->language->get('text_success'));

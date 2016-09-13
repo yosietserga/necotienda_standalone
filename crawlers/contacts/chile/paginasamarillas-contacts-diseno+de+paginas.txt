@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"AGENCIA DE PUBLICIDAD Y DISEÑO CULTIVOCREATI VO";;;"Telefax: (56) (32) 2478004";"2 Poniente 355 Of. 21 Chile, Viña del Mar"
-MICROSAIT.COM;;;"(56) (58) 220821";"Av. Luis Valente Rossi 2120 D.33 Arica Chile, Arica"
-"DELFFINCAP LTDA.";;;"(56) (32) 2239300";"Salvador Donoso 1408 Of. 3 Chile, Valparaiso"
-"PARALELO WEB";;;"(56) 89243307";"Viña Del Mar Chile, Viña del Mar"

@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CONFECCIONES VAIN";cartera.vian@une.net.co;www.vain.com;"(57) (4) 5121001";"Cl 49 56-06 Bodegas La 49 L-1301 Colombia, Medellín"
-"CREACIONES SEX S.A.S";creaciones_sex@yahoo.com;www.sexunderwear.com.co;"(57) (4) 2855714";"Cl 7   S 51 A-21 Bdg 112 Colombia, Medellín"
-"LA CASA DEL DISFRAZ";lacasadeldisfraz@gmail.com;www.lacasadeldisfrazpalmira.com;"(57) (2) 2877563";"Cr27 21-21 Colombia, Palmira"
-"DISEÑOS MÁGICOS S.A.S.";disenosmagicossas@hotmail.com;;"(57) (4) 3718486";"Cr52 D 80-41 Itagüí Colombia, Medellín"

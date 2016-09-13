@@ -120,7 +120,9 @@ $(function(){
     window.field = '<?php echo $field; ?>';
     window.preview = '<?php echo $preview; ?>';
     window.isFckeditor = '<?php echo $fckeditor; ?>';
-    
+
+    window.errorSelect = '<?php echo $error_select; ?>';
+
     loadDirectories('<?php echo $GET['token']; ?>');
 });
 function searchFiles(e) {

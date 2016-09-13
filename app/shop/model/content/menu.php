@@ -24,12 +24,12 @@ class ModelContentMenu extends Model {
         AND ml.parent_id = '" . (int)$parent_id . "'
         AND m2s.store_id = '". (int)STORE_ID ."'");
         
-        foreach ($query->rows as $value) {
+        foreach ($query->rows as $k => $value) {
             $keyword = $this->db->query("SELECT keyword 
             FROM " . DB_PREFIX . "url_alias 
             WHERE query = '" . $this->db->escape($value['link']) . "'
             AND language_id = '". (int)$this->config->get('config_language_id') ."'");
-            $links[] = array(
+            $links[$k] = array(
                 'menu_link_id'   =>$value['menu_link_id'],
                 'menu_id'   =>$value['menu_id'],
                 'parent_id' =>$value['parent_id'],
@@ -38,6 +38,8 @@ class ModelContentMenu extends Model {
                 'sort_order'=>$value['sort_order'],
                 'keyword'   => $keyword->row['keyword']
             );
+            $links[$k]['class_css'] = $this->getProperty($value['menu_link_id'], 'menu_link', 'class_css');
+            $links[$k]['page_id'] = $this->getProperty($value['menu_link_id'], 'menu_link', 'page_id');
         }
         
 		return $links;

@@ -1,8 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PINTUDISOLVA LTDA.";claray_75@hotmail.com;www.pintudisolva.com;"(57) (2) 4359797";"Km 2.5 Urb Ind La Nubia Vía Cali Candelaria Colombia, Cali"
-"FERRETERÍA BARBOSA S.C.S.";info@ferreteriabarbosa.com;www.ferreteriabarbosa.com;"(57) (2) 4863000";"Cr1 31-84 Colombia, Cali"
-"FERRETERÍA SUMIVALLE LTDA.";fsumivalle@sumivalle.com;sumivalle.com;"(57) (2) 4862000";"Cr1 54-40 Colombia, Cali"
-"MEZCLAS & PINTURAS";mezclasypinturas@yahoo.com;www.mezclasypinturas.com;"(57) (6) 7413622";"Cr19 20-11 Colombia, Armenia"
-"PINTURAS AMÉRICA";pinamerica@hotmail.com;www.pintuamerica.com;"(57) (2) 4380625";"Cl 33 A 16-64 Colombia, Cali"
-"ALMACÉN PINTUCENTRO";banbab19801@hotmail.com;www.pintucentro.com;"(57) (6) 7445794";"Cr20 20-51 Colombia, Armenia"
-"PINTURAS QOLOR";quindicolor@hotmail.com;quindicolor.com;"(57) (6) 7477820";"Cl 21 18-57 L-3 Colombia, Armenia"

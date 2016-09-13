@@ -1,4 +1,5 @@
 <?php
+
 class CronSend {
     
     /**
@@ -68,14 +69,14 @@ class CronSend {
         /**
          * 
          * array (
-         * ,               // enviar felicitaciones de cumpleaños a todos los clientes que cumplan año
-         * send_new_products,           // enviar boletín de productos nuevos
-         * send_products_of_interest,   // enviar productos de interés para el cliente
-         * send_special,                // enviar boletín con los productos en ofertas
-         * send_new_private_sales       // enviar boletín con las nuevas ventas privadas
-         * send_open_orders             // enviar notificación con todas las órdenes que no se han concretado o pedidos abiertos
-         * send_inactive_customers      // enviar notificación a los clientes que están inactivos
-         * send_unapproved_customers    // enviar notificación a los clientes que están pendientes por verificación
+         * ,               // enviar felicitaciones de cumpleaï¿½os a todos los clientes que cumplan aï¿½o
+         * send_new_products,           // enviar boletï¿½n de productos nuevos
+         * send_products_of_interest,   // enviar productos de interï¿½s para el cliente
+         * send_special,                // enviar boletï¿½n con los productos en ofertas
+         * send_new_private_sales       // enviar boletï¿½n con las nuevas ventas privadas
+         * send_open_orders             // enviar notificaciï¿½n con todas las ï¿½rdenes que no se han concretado o pedidos abiertos
+         * send_inactive_customers      // enviar notificaciï¿½n a los clientes que estï¿½n inactivos
+         * send_unapproved_customers    // enviar notificaciï¿½n a los clientes que estï¿½n pendientes por verificaciï¿½n
          * )
          * - 
          * */
@@ -90,6 +91,16 @@ class CronSend {
             if ($query->num_rows) {
                 $htmlbody = $this->prepareTemplate($query->row['htmlbody']);
                 $count = 0;
+
+                if ($this->config->get('marketing_mailserver_happy_birthday')) {
+                    $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."setting ".
+                        " WHERE `group` = 'mail_server' ".
+                        " AND `key` = '". $this->config->get('marketing_mailserver_happy_birthday') ."'");
+                    $mail_server = unserialize($query->row['value']);
+                } else {
+                    $mail_server = 'localhost';
+                }
+
                 foreach ($task->getTaskQueue() as $key => $queue) {
                     if ($count >= 50) break;
                     
@@ -100,16 +111,28 @@ class CronSend {
                     $htmlbody = str_replace("{%company%}",$params['company'],$htmlbody);
                     $htmlbody = str_replace("{%email%}",$params['email'],$htmlbody);
                     $htmlbody = str_replace("{%telephone%}",$params['telephone'],$htmlbody);
-                    
-                    $this->mailer->AddAddress($params['email'],$params['fullname']);
-                    $this->mailer->IsHTML();
-                    $this->mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
-                    $this->mailer->Subject = "Feliz Cumpleaños - ". $this->config->get('config_name');
-                    $this->mailer->Body = $htmlbody;
-                    $this->mailer->Send();
-                    $this->mailer->ClearAllRecipients();
-                    
-                    $task->setQueueDone($key);
+
+                    $mailer = new Mailer();
+                    if ($mail_server !== 'localhost') {
+                        $mailer->IsSMTP();
+                        $mailer->Host = $mail_server['server'];
+                        $mailer->Username = $mail_server['username'];
+                        $mailer->Password = $mail_server['password'];
+                        if ($mail_server['port']) $mailer->Port     = $mail_server['port'];
+                        if ($mail_server['security']) $mailer->SMTPSecure     = $mail_server['security'];
+                        $mailer->SMTPAuth = true;
+                    } else {
+                        $mailer = $this->mailer;
+                    }
+                    $mailer->AddAddress($params['email'],$params['name']);
+                    $mailer->IsHTML();
+                    $mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+                    $mailer->Subject = html_entity_decode("Feliz Cumplea&ntilde;os - ". $this->config->get('config_name'));
+                    $mailer->Body = $htmlbody;
+                    $result = $mailer->Send();
+                    $mailer->ClearAllRecipients();
+
+                    if ($result) $task->setQueueDone($key);
                     $count++;
                 }
                 
@@ -130,6 +153,16 @@ class CronSend {
             $task->start();
             $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."newsletter WHERE newsletter_id = '". $task->object_id ."'");
             if ($query->num_rows) {
+
+                if ($this->config->get('marketing_mailserver_recommended_products')) {
+                    $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."setting ".
+                    " WHERE `group` = 'mail_server' ".
+                    " AND `key` = '". $this->config->get('marketing_mailserver_recommended_products') ."'");
+                    $mail_server = unserialize($query->row['value']);
+                } else {
+                    $mail_server = 'localhost';
+                }
+
                 $htmlbody = $this->prepareTemplate($query->row['htmlbody']);
                 $count = 0;
                 foreach ($task->getTaskQueue() as $key => $queue) {
@@ -161,16 +194,28 @@ class CronSend {
               		}
     	            $product_html .= "</tr></table>";
                     $htmlbody = str_replace("{%products%}",$product_html,$htmlbody);
-                   
-                    $this->mailer->AddAddress($params['email'],$params['fullname']);
-                    $this->mailer->IsHTML();
-                    $this->mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
-                    $this->mailer->Subject = "Productos Recomendados - ". $this->config->get('config_name');
-                    $this->mailer->Body = $htmlbody;
-                    $this->mailer->Send();
-                    $this->mailer->ClearAllRecipients();
-                    
-                    $task->setQueueDone($key);
+
+                    $mailer = new Mailer();
+                    if ($mail_server !== 'localhost') {
+                        $mailer->IsSMTP();
+                        $mailer->Host = $mail_server['server'];
+                        $mailer->Username = $mail_server['username'];
+                        $mailer->Password = $mail_server['password'];
+                        if ($mail_server['port']) $mailer->Port = $mail_server['port'];
+                        if ($mail_server['security']) $mailer->SMTPSecure = $mail_server['security'];
+                        $mailer->SMTPAuth = true;
+                    } else {
+                        $mailer = $this->mailer;
+                    }
+                    $mailer->AddAddress($params['email'],$params['name']);
+                    $mailer->IsHTML();
+                    $mailer->SetFrom($this->config->get('config_email'),$this->config->get('config_name'));
+                    $mailer->Subject = "Productos Recomendados - ". $this->config->get('config_name');
+                    $mailer->Body = $htmlbody;
+                    $result = $mailer->Send();
+                    $mailer->ClearAllRecipients();
+
+                    if ($result) $task->setQueueDone($key);
                     $count++;
             }
             
@@ -236,11 +281,11 @@ class CronSend {
                     $htmlbody = str_replace("{%email%}",$params['email'],$htmlbody);
                     $htmlbody = str_replace("{%telephone%}",$params['telephone'],$htmlbody);
                     $htmlbody = $this->prepareTemplate($htmlbody,$params);
-                     
+                    
                     $dom = new DOMDocument;
                     $dom->preserveWhiteSpace = false;
                     $dom->loadHTML($htmlbody);
-                    /*
+                    
                     if ($params['embed_image']) {
                         $images = $dom->getElementsByTagName('img');
                         foreach ($images as $image) {
@@ -256,11 +301,12 @@ class CronSend {
                             $total_images++;
                         }
                     }
-                    */
+                    
                     $vars = array(
                         'contact_id'=>$params['contact_id'],
                         'campaign_id'=>$params['campaign_id'],
-                        'referencedBy'=>$params['email'],
+                        'ref'=>$params['email'],
+                        'refBy'=>$params['email'], // this would be the
                     );
                     
                     /* trace the email */
@@ -277,7 +323,7 @@ class CronSend {
                                 
                         //TODO: validar enlaces
                         //TODO: sanitizar enlaces
-                                
+                        
                         $vars['link_index'] = $link_index = md5(time().mt_rand(1000000,9999999).$href);
                         $_link = Url::createUrl("marketing/campaign/link",$vars,'NONSSL',HTTP_HOME);
                         
@@ -293,10 +339,10 @@ class CronSend {
                         //TODO: agregar valor a la etiqueta title si esta vacia
                     }
                     
-                    $htmlbody = html_entity_decode(htmlentities($dom->saveHTML()));
+                    $htmlbody = $dom->saveHTML();
                 }
                 
-                $mailer       = new Mailer();
+                $mailer = new Mailer();
                 if ($mail_server !== 'localhost') {
                     $mailer->IsSMTP();
                     $mailer->Host = $mail_server['server'];
@@ -306,7 +352,7 @@ class CronSend {
                     if ($mail_server['security']) $mailer->SMTPSecure     = $mail_server['security'];
                     $mailer->SMTPAuth = true;
                  } else {
-                    $mailer->IsMail();
+                    $mailer = $this->mailer;
                  }
                 $mailer->AddAddress($params['email'],$params['name']);
                 $mailer->IsHTML();
@@ -314,10 +360,10 @@ class CronSend {
                 $mailer->AddReplyTo($campign_info['replyto_email'],$campign_info['from_name']);
                 $mailer->Subject = $campign_info['subject'];
                 $mailer->Body = $htmlbody;
-                $mailer->Send();
+                $result = $mailer->Send();
                 $mailer->ClearAllRecipients();
                 
-                $task->setQueueDone($key);
+                if ($result) $task->setQueueDone($key);
                 $count++;
             }
             
@@ -331,21 +377,21 @@ class CronSend {
         $task->update();
         
         /**
-         * - detectar la hora de la ejecución, si es mayor posponer tarea y actualizar el sort_order, si es menor y no se ha ejecutado, 
-         * cambiar la hora de ejecución para más tarde, si la hora se pasa el siguiente día entonces actualizar la fecha completa
+         * - detectar la hora de la ejecuciï¿½n, si es mayor posponer tarea y actualizar el sort_order, si es menor y no se ha ejecutado, 
+         * cambiar la hora de ejecuciï¿½n para mï¿½s tarde, si la hora se pasa el siguiente dï¿½a entonces actualizar la fecha completa
          * 
          * 
-         * - comprobar que la cola de trabajo está libre o no está bloqueada
-             * - si está bloqueada posponer time_exec 15 min a toda la tarea y la cola de trabajo
-             * - si no lo está, bloquearla actualizando la tabla task_exec y continuar
-                 * - obtener datos de la campaña (SQL)
+         * - comprobar que la cola de trabajo estï¿½ libre o no estï¿½ bloqueada
+             * - si estï¿½ bloqueada posponer time_exec 15 min a toda la tarea y la cola de trabajo
+             * - si no lo estï¿½, bloquearla actualizando la tabla task_exec y continuar
+                 * - obtener datos de la campaï¿½a (SQL)
                  * - dividir los contactos en grupos de 50
                  * - agregar los destinatarios al objeto mailer
                  * - enviar email
-                 * - actualizar queue con status 0 para indicar que están listas
+                 * - actualizar queue con status 0 para indicar que estï¿½n listas
                  * - al enviar el grupo de cincuenta, 
                     * - comprobar o contar cuantas actividades faltan
-                         * - si ya está lista, actualizar la tarea con status cero para indicar que ya fue enviada y actualizar el registro de la campaña y desbloquear la cola eliminando el registro de task_exec
+                         * - si ya estï¿½ lista, actualizar la tarea con status cero para indicar que ya fue enviada y actualizar el registro de la campaï¿½a y desbloquear la cola eliminando el registro de task_exec
                          * - sino
                              * - actualizar time_exec de la tarea sumando 15 min y time_last_exec con el tiempo ahora
                              * - actualizar toda la cola de trabajo agregando 15 min a las actividades pendientes

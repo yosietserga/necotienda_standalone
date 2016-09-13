@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-SAGITARIO;;;"Telefax: (591) (33) 3420490";"Av. Banzer 3er Anillo Interno Barrio Oscar Roman Vaca Cl. 1 No 3 Bolivia, Santa Cruz de la Sierra"

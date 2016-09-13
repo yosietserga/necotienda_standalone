@@ -3,13 +3,14 @@
 
 <!-- section-categories -->
 <section id="maincontent" class="row">
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcumbs.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl"); ?>
-    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
 
-    <h1><?php echo $heading_title; ?></h1>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcrumbs.tpl");?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl");?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl");?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-heading.tpl");?>
+
     <?php if($categories) { ?>
-    <nav class="catalog catalog-grid catalog-break">
+    <nav class="catalog catalog-grid catalog-break category-catalog">
         <ul>
         <?php foreach($categories as $category) { ?>
             <li>

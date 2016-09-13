@@ -138,14 +138,14 @@
                 <div class="clear"></div>
                 <ul id="storesWrapper" class="scrollbox necoStore">
                     <li class="stores">
-                        <input type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
-                        <b><?php echo $Language->get('text_default'); ?></b>
+                        <input id="scrollboxStores0" type="checkbox" name="stores[]" value="0"<?php if (in_array(0, $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <label for="scrollboxStores0"><?php echo $Language->get('text_default'); ?></label>
                         <div class="clear"></div>
                     </li>
                 <?php foreach ($stores as $store) { ?>
                     <li class="stores">
-                        <input type="checkbox" name="stores[]" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
-                        <b><?php echo $store['name']; ?></b>
+                        <input id="scrollboxStores<?php echo (int)$store['store_id']; ?>" type="checkbox" name="stores[]" value="<?php echo (int)$store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
+                        <label for="scrollboxStores<?php echo (int)$store['store_id']; ?>"><?php echo $store['name']; ?></label>
                         <div class="clear"></div>
                     </li>
                 <?php } ?>

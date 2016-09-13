@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"GERBER CHILE S.A";;;"(56) (2) 3377000";"Av. Del Parque 4161 Of. 503 Huechuraba Chile, Santiago"
-"PROEXA LTDA";;;"(56) (2) 6464863";"Jorge Hirmas 2690 Renca Chile, Santiago"

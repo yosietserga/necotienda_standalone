@@ -1,6 +1,10 @@
 <li class="nt-editable box carouselWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-    <?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><h1><?php echo $heading_title; ?></h1></div><?php } ?>
-    <div class="content" id="<?php echo $widgetName; ?>Content"></div>
+    <?php if ($heading_title) { ?>
+    <div class="header" id="<?php echo $widgetName; ?>Header">
+      <h1><?php echo $heading_title; ?></h1></div><?php } ?>
+      <div class="content" id="<?php echo $widgetName; ?>Content">
+
+      </div>
 </li>
 <script type="text/javascript">
 $(function(){

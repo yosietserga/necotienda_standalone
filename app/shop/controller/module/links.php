@@ -30,13 +30,14 @@ class ControllerModuleLinks extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/links.tpl')) {
             $this->template = $this->config->get('config_template') . '/module/links.tpl';
         } else {
-            $this->template = 'choroni/module/links.tpl';
+            $this->template = 'cuyagua/module/links.tpl';
         }
         $this->render();
     }
 
     protected function getLinks($menu_id = 0, $parent_id = 0) {
         $this->load->model('content/menu');
+        $this->load->model('content/page');
 
         $output = '';
         $results = $this->modelMenu->getLinks($menu_id, $parent_id);
@@ -44,7 +45,14 @@ class ControllerModuleLinks extends Controller {
             $output .= '<ul>';
             foreach ($results as $result) {
                 $childrens = $this->modelMenu->getLinks($menu_id, $result['menu_link_id']);
-                $output .= '<li><a href="' . $result['link'] . '" title="' . $result['tag'] . '">' . $result['tag'] . '</a></li>';
+                $output .= '<li'. ((isset($result['class_css']) && !empty($result['class_css'])) ? ' class="'. $result['class_css'] .'"': "") .'>';
+                if (isset($result['page_id']) && !empty($result['page_id'])) {
+                    $page = $this->modelPage->getById($result['page_id']);
+                    $output .= $page['description'];
+                } else {
+                    $output .= '<a href="'. Url::rewrite($result['link']) .'" title="'.$result['tag'].'">' . $result['tag'] . '</a>';
+                }
+                $output .= '</li>';
 
                 if ($childrens) {
                     foreach ($childrens as $child) {
@@ -80,21 +88,28 @@ class ControllerModuleLinks extends Controller {
             $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
         }
 
-        if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
+        if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
+            } else {
+                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
+            }
+        }
+
+        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+            if ($this->config->get('config_render_js_in_file')) {
+                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            } else {
+                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            }
         }
 
         if (count($styles)) {
             $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
         }
 
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-        }
-
         if (count($javascripts)) {
             $this->javascripts = array_merge($this->javascripts, $javascripts);
         }
     }
-
 }

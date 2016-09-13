@@ -1,6 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-ASTECI;;;"Telefax: (591) (33) 3642078";"Av.Virgen De Cotoca No.2516 Bolivia, Santa Cruz de la Sierra"
-"SIKA BOLIVIA S.A.";;;"Telefax: (591) (33) 3367756";"Santa Cruz Bolivia, Santa Cruz de la Sierra"
-DEGUSSA;;;"(591) (66) 6641501";"Tarija Bolivia, Tarija"
-"HONNEN LTDA.";;;"Telefax: (591) (33) 3526404";"Av El Trompillo, Esq. Choferes Del Chaco Bolivia, Santa Cruz de la Sierra"
-"CALERA ORIENTAL S.R.L.";;;"(591) (33) 3464769";"Parque Industrial Pi 15 Bolivia, Santa Cruz de la Sierra"

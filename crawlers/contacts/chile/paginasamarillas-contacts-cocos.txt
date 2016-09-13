@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CAYO COCO";;;"Telefax: (56) (55) 249770";"Av.Ejercito 50 Chile, Antofagasta"

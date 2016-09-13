@@ -39,31 +39,11 @@
 
                 <div class="box">
                     <div class="header">
-                        <h2>Mensajes</h2>
+                        <h2>Seleccione una opci&oacute;n del men&uacute; de la izquierda</h2>
                     </div>
                     <div class="content"></div>
                 </div>
 
-                <div class="box">
-                    <div class="header">
-                        <h2>Actividades Recientes</h2>
-                    </div>
-                    <div class="content"></div>
-                </div>
-
-                <div class="box">
-                    <div class="header">
-                        <h2>Últimos Pedidos</h2>
-                    </div>
-                    <div class="content"></div>
-                </div>
-
-                <div class="box">
-                    <div class="header">
-                        <h2>Recomendaciones</h2>
-                    </div>
-                    <div class="content"></div>
-                </div>
             </div>
 
             <?php if ($column_right) { ?><aside id="column_right" class="grid_3"><?php echo $column_right; ?></aside><?php } ?>

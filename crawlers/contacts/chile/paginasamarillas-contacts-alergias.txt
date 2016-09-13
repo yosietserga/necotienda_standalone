@@ -1,8 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"SAEZ HERRERA, ENZO";;;"(56) (2) 2359955";"General Flores 20 Of. 704 Chile, Santiago"
-"GALA VALIENTE MIGUEL A.";;;"(56) (72) 217838";"Torre Medica Bombero Villalobos 1049 Of.506 Chile, Rancagua"
-"ABARZUA F. JORGE";;;"(56) (2) 2191565";"Explorador Fawcet 1660 Of.62 Chile, Santiago"
-"GARU VILARRUBIAS JUAN";;;"(56) (2) 6331904";"Agustinas 641 Of.302 Chile, Santiago"
-"LUIS ALBERTO BELLOLIO ZAPPETINI";;;"(56) (2) 8323369";"Av. Ugalde 832 Chile, Santiago"
-"CENTRO DE ENFERMEDADES RESPIRATORIAS Y ALERGICAS VIÑA DEL MAR LTDA.";;;"Telefax: (56) (32) 2977490";"14 Norte 571 Of.611 Viña del Mar Chile, Valparaiso"
-"RIOS ROJAS, ALEJANDRO";;;"(56) (2) 7373811";"Av. Santa Maria 217 Piso 6 Dpto.62 Chile, Santiago"

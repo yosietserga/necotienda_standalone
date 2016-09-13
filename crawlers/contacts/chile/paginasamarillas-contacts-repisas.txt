@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"REPISAS EXPRESS";;;"(56) (2) 2848804";"Av. San Luis De Macul 5962 Chile, Santiago"

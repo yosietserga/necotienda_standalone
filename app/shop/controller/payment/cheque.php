@@ -1,5 +1,7 @@
 <?php
+
 class ControllerPaymentCheque extends Controller {
+
 	protected function index() {
 		$this->language->load('payment/cheque');
 		$this->load->model('account/order');
@@ -21,7 +23,7 @@ class ControllerPaymentCheque extends Controller {
         $results = $this->db->query("SELECT * FROM ". DB_PREFIX ."bank_account ba LEFT JOIN ". DB_PREFIX ."bank b ON (ba.bank_id=b.bank_id) WHERE ba.status = 1");
         $this->data['bank_accounts'] = $results->rows;
         
-        foreach ($this->modelOrder->getOrders(array('limit'=>1000)) as $key => $result) {
+        foreach ($this->modelOrder->getOrders(array('limit'=>100)) as $key => $result) {
         	$this->data['orders'][] = array(
                 'order_id'   => $result['order_id'],
           		'date_added' => date('d/m/Y', strtotime($result['dateAdded'])),
@@ -32,13 +34,15 @@ class ControllerPaymentCheque extends Controller {
         $this->load->model("marketing/newsletter");
         $result = $this->modelNewsletter->getById($this->config->get('cheque_newsletter_id'));
         $this->data['instructions'] = html_entity_decode($result['htmlbody']);
-                
-		$this->id = 'payment';
+
+        $this->id = 'payment';
+
+        $this->loadAssets();
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/payment/cheque.tpl')) {
 			$this->template = $this->config->get('config_template') . '/payment/cheque.tpl';
 		} else {
-			$this->template = 'choroni/payment/cheque.tpl';
+			$this->template = 'cuyagua/payment/cheque.tpl';
 		}	
 		
 		$this->render(); 
@@ -228,4 +232,46 @@ class ControllerPaymentCheque extends Controller {
         $this->load->library('json');
 		$this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
 	}
+
+    protected function loadAssets() {
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
+            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
+
+            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
+            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
+        } else {
+            $csspath = str_replace("%theme%", "default", $csspath);
+            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
+
+            $jspath = str_replace("%theme%", "default", $jspath);
+            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
+        }
+
+        if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
+            } else {
+                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
+            }
+        }
+
+        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+            if ($this->config->get('config_render_js_in_file')) {
+                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            } else {
+                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            }
+        }
+
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
+        }
+
+        if (count($javascripts)) {
+            $this->javascripts = array_merge($this->javascripts, $javascripts);
+        }
+    }
 }

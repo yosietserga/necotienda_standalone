@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"JCVC TECHNOLOGY";;;"(591) (33) 44232188";"Av. Villalobos entre Av. America y esq. F. Quiroga #1727 Bolivia, Santa Cruz de la Sierra"
-"BARBIAN COMUNICACION";;;"(591) (33) 3145216";"Cl.5 Oeste Pasillo.1 No.9 Equipetrol Bolivia, Santa Cruz de la Sierra"
-"BZ DESIGNERS";;;"(591) (33) 3415941";"Av.Beni No.277 Of.206 Bolivia, Santa Cruz de la Sierra"
-"DISEÑO DE PAGINAS WEB BOLIVIA";;;"(591) (33) 72595422";"lomas de Alto Irpavi C3 #092 Bolivia, Santa Cruz de la Sierra"

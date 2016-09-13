@@ -1,4 +1,4 @@
 <!-- catalog -->
-<ul class="catalog block-grid">
+<ul class="catalog block-grid" data-view="catalog">
 
 

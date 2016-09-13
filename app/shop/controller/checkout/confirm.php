@@ -118,8 +118,8 @@ class ControllerCheckoutConfirm extends Controller {
             $data['payment_zone_id'] = $payment_address['zone_id'];
             $data['payment_country'] = $payment_address['country'];
             $data['payment_country_id'] = $payment_address['country_id'];
-            $data['payment_telephone'] = $customer_address['telephone'];
-            $data['payment_email'] = $customer_address['email'];
+            $data['payment_telephone'] = $payment_address['telephone'];
+            $data['payment_email'] = $payment_address['email'];
             $data['payment_address_format'] = $payment_address['address_format'];
         } else {
             $data['payment_company'] = $this->customer->getCompany();
@@ -150,6 +150,7 @@ class ControllerCheckoutConfirm extends Controller {
                 'name' => $product['name'],
                 'model' => $product['model'],
                 'option' => $option_data,
+                'attributes' => $result['attributes'],
                 'download' => $product['download'],
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
@@ -188,9 +189,9 @@ class ControllerCheckoutConfirm extends Controller {
             $this->modelOrder->confirm($order_id, $this->config->get('cheque_order_status_id'));
             if ($this->request->hasQuery('resp') && $this->request->getQuery('resp') === 'json') {
                 $this->load->auto('json');
-                $this->response->setOutput(Json::encode([
+                $this->response->setOutput(Json::encode(array(
                     'order_id'=>$order_id
-                ]), $this->config->get('config_compression'));
+                )), $this->config->get('config_compression'));
             } else {
                 $this->redirect(Url::createUrl('checkout/success', array('order_id' => $order_id)));
             }

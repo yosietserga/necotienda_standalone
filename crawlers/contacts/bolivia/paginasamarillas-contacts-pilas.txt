@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PILAS Y LINTERNAS SACI";;;"(591) (33) 3423388";"Km 2 1/2 Av Cristo Redentor Bolivia, Santa Cruz de la Sierra"

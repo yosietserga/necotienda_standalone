@@ -31,6 +31,7 @@
         
         var settings = {};
         var data = {};
+
         var methods = {
             init : function(options) {
                 return this.each(function() {
@@ -40,10 +41,11 @@
                 });
             }
         };
- 
-        var helpers = {
-            _create: function() {
 
+        
+        var helpers = {
+           _create: function() {
+            
                 if ($(data.element).length > 0) {
                     $(data.element).addClass('neco-wizard');
                     
@@ -142,29 +144,32 @@
                     settings.stop();
                 }
             },
+            
             _next: function(e) {
                 helpers._start();
-                
+                var necowizardControls = $('[data-wizard="controls"]');
+                var necoWizardSteps = $('.neco-wizard-steps');
+                var currentStep = $('.neco-wizard-step-active');
+                var nextStep = currentStep.next();
+                var currentControl = $('.neco-wizard-control-active');
+                var nextControl = currentControl.next();
+                var nextControlName = $(nextControl).attr("data-wizard-step");
+
+
                 if (typeof settings.next == "function") {
                     error = settings.next(data);
-                    
                     if (typeof error != 'undefined' && error) {
                         return false;
                     } else {
-                        var c = $('.neco-wizard-step-active');
-                        var n = c.next();
-                        var cc = $('.neco-wizard-control-active');
-                        var cn = cc.next();
-                        
-                        c.animate({
+                        currentStep.animate({
                             opacity:0,
-                            marginLeft:'-' + $('.neco-wizard-steps').width(),
-                            marginTop:'-' + $('.neco-wizard-steps').height()
+                            marginLeft:'-' + necoWizardSteps.width(),
+                            marginTop:'-' +  necoWizardSteps.height()
                         }).css({
                             display:'none'
                         }).removeClass('neco-wizard-step-active');
                         
-                        $(n).css({
+                        $(nextStep).css({
                             marginLeft:$('.neco-wizard-steps').width() + 'px',
                             marginTop:$('.neco-wizard-steps').height() + 'px',
                             display:'block'
@@ -174,16 +179,12 @@
                             marginTop:'0px',
                         }).addClass('neco-wizard-step-active');
                         
-                        cc.removeClass('neco-wizard-control-active').addClass('neco-wizard-control-done');
-                        cn.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
+                        necowizardControls.attr("data-current-step", nextControlName);
+                        currentControl.removeClass('neco-wizard-control-active').addClass('neco-wizard-control-done');
+                        nextControl.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
                     }
                 } else {
-                        var c = $('.neco-wizard-step-active');
-                        var n = c.next();
-                        var cc = $('.neco-wizard-control-active');
-                        var cn = cc.next();
-                        
-                        c.animate({
+                        currentStep.animate({
                             opacity:0,
                             marginLeft:'-' + $('.neco-wizard-steps').width(),
                             marginTop:'-' + $('.neco-wizard-steps').height()
@@ -191,74 +192,73 @@
                             display:'none'
                         }).removeClass('neco-wizard-step-active');
                         
-                        $(n).css({
-                            marginLeft:$('.neco-wizard-steps').width() + 'px',
-                            marginTop:$('.neco-wizard-steps').height() + 'px',
+                        $(nextStep).css({
+                            marginLeft: necoWizardSteps.width() + 'px',
+                            marginTop: necoWizardSteps.height() + 'px',
                             display:'block'
                         }).animate({
                             opacity:1,
                             marginLeft:'0px',
                             marginTop:'0px',
                         }).addClass('neco-wizard-step-active');
-                        
-                        cc.removeClass('neco-wizard-control-active').addClass('neco-wizard-control-done');
-                        cn.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
+
+                        necowizardControls.attr("data-current-step", nextControlName);
+                        currentControl.removeClass('neco-wizard-control-active').addClass('neco-wizard-control-done');
+                        nextControl.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
                 }
                 
                 helpers._stop();
             },
             _prev: function() {
                 helpers._start();
+                var necowizardControls = $('[data-wizard="controls"]');
+                var necoWizardSteps = $('.neco-wizard-steps');
+                var currentStep = $('.neco-wizard-step-active');
+                var previousStep = currentStep.prev();
+                var currentControl = $('.neco-wizard-control-active');
+                var previousControl = currentControl.prev();
+                var nextControlName = previousControl.attr("data-wizard-step");
                 
                 if (typeof settings.prev == "function") {
                     res = settings.prev();
-                    
                     if (typeof res != 'undefined' && res.error) {
+                        return false;
                         
                     } else {
-                        var c = $('.neco-wizard-step-active');
-                        var b = c.prev();
-                        var cc = $('.neco-wizard-control-active');
-                        var cb = cc.prev();
-                        
-                        c.animate({
+                        currentStep.animate({
                             opacity:0,
-                            marginLeft:'-' + $('.neco-wizard-steps').width(),
-                            marginTop:'-' + $('.neco-wizard-steps').height()
+                            marginLeft:'-' +  necoWizardSteps.width(),
+                            marginTop:'-' +  necoWizardSteps.height()
                         }).css({
                             display:'none'
                         }).removeClass('neco-wizard-step-active');
                         
-                        $(b).css({
-                            marginLeft:$('.neco-wizard-steps').width() + 'px',
-                            marginTop:$('.neco-wizard-steps').height() + 'px',
+                        $(previousStep).css({
+                            marginLeft: necoWizardSteps.width() + 'px',
+                            marginTop:  necoWizardSteps.height() + 'px',
                             display:'block'
                         }).animate({
                             opacity:1,
                             marginLeft:'0px',
                             marginTop:'0px',
                         }).addClass('neco-wizard-step-active');
-                        
-                        cc.removeClass('neco-wizard-control-active').removeClass('neco-wizard-control-done');
-                        cb.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
+
+                        necowizardControls.attr("data-current-step", nextControlName);
+                        currentControl.removeClass('neco-wizard-control-active').removeClass('neco-wizard-control-done');
+                        previousControl.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
                     }
                 } else {
-                    var c = $('.neco-wizard-step-active');
-                    var b = c.prev();
-                    var cc = $('.neco-wizard-control-active');
-                    var cb = cc.prev();
-                            
-                    c.animate({
+                    currentStep.animate({
                         opacity:0,
-                        marginLeft:'-' + $('.neco-wizard-steps').width(),
-                        marginTop:'-' + $('.neco-wizard-steps').height()
+                        marginLeft:'-' + necoWizardSteps.width(),
+                        marginTop:'-' + necoWizardSteps.height()
                     }).css({
                         display:'none'
                     }).removeClass('neco-wizard-step-active');
                             
-                    $(b).css({
-                        marginLeft:$('.neco-wizard-steps').width() + 'px',
-                        marginTop:$('.neco-wizard-steps').height() + 'px',
+                    $(previousStep).css({
+                        marginLeft: necoWizardSteps.width() + 'px',
+                        marginTop: necoWizardSteps.height() + 'px',
                         display:'block'
                     }).animate({
                         opacity:1,
@@ -266,8 +266,9 @@
                         marginTop:'0px',
                     }).addClass('neco-wizard-step-active');
                             
-                    cc.removeClass('neco-wizard-control-active').addClass('neco-wizard-control-done');
-                    cb.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
+                    necowizardControls.attr("data-current-step", nextControlName);
+                    currentControl.removeClass('neco-wizard-control-active').addClass('neco-wizard-control-done');
+                    previousControl.removeClass('neco-wizard-control-done').addClass('neco-wizard-control-active');
                 }
                 helpers._stop();
             },

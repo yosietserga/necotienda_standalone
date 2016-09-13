@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CARNES FRIAS SUPERCERDO PAISA";supercerdo@supercerdo.com.co;www.supercerdo.com.co;"(57) (4) 4489229";"Cr51 10   S-03 Colombia, Medellín"
-"SUPERCERDO PAISA S.A.S.";supercerdo@supercerdo.com.co;www.supercerdo.com.co;"(57) (4) 4489229";"Cr51 10   S-03 Colombia, Medellín"
-"APOLO INGENIERÍA S.A.";pereira@apolosoft.com;apolosoft.com;"(57) (6) 3261309";"Cr11 Bis 40-25 Frente a Cataluña Colombia, Pereira"
-"CODIMARCAS S.A.S.";eduavellaneda@gmail.com;www.codimarcas.com;"(57) (8) 2619580";"Pasaje Beltrán Entrada C.C. Los Panches Of 204 Colombia, Ibagué"

@@ -38,7 +38,7 @@ class ControllerModulePage extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/page.tpl')) {
             $this->template = $this->config->get('config_template') . '/module/page.tpl';
         } else {
-            $this->template = 'choroni/module/page.tpl';
+            $this->template = 'cuyagua/module/page.tpl';
         }
 
         $this->render();
@@ -61,21 +61,28 @@ class ControllerModulePage extends Controller {
             $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
         }
 
-        if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
+        if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
+            } else {
+                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
+            }
+        }
+
+        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+            if ($this->config->get('config_render_js_in_file')) {
+                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            } else {
+                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            }
         }
 
         if (count($styles)) {
             $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
         }
 
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-        }
-
         if (count($javascripts)) {
             $this->javascripts = array_merge($this->javascripts, $javascripts);
         }
     }
-
 }

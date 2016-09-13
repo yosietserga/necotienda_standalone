@@ -6,7 +6,7 @@
 }
 .neco-wizard-control {
     margin:0px 2px;
-    padding:5px;
+    padding:5px 2px;
     background:#e3e3e3;
     font:bold 12px Arial;
     color:#222;
@@ -15,10 +15,6 @@
     display: block;
     float:left;
     border:solid 1px #ccc;
-    border-radius:4px;
-    -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-    behavior:url(ie-css3.htc);
 }
 .neco-wizard-control span {
     font:normal 10px Arial;
@@ -34,10 +30,12 @@
     color:transparent;
 }
 .neco-wizard-control-active {
-    background:#E4F4AD !important;
-    border-color:#CEF24B !important;
+    background:#E4F4AD;
 }
 .neco-wizard-control-done {
-    background:#1A70F2 !important;
-    border-color:transparent !important;
+    background:#3498db;
+    border-color:transparent;
+}
+.neco-wizard-control-done span {
+    color:#fff;
 }

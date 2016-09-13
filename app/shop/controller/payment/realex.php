@@ -1,5 +1,7 @@
 <?php
+
 class ControllerPaymentRealex extends Controller {
+
 	public function index() {
 		$this->load->language('payment/realex');
 
@@ -81,6 +83,8 @@ class ControllerPaymentRealex extends Controller {
 		}
 
 		$data['response_url'] = HTTPS_SERVER . 'index.php?route=payment/realex/notify';
+
+		$this->loadAssets();
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/realex.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/payment/realex.tpl', $data);
@@ -257,10 +261,54 @@ class ControllerPaymentRealex extends Controller {
 			}
 		}
 
+		$this->loadAssets();
+
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/realex_response.tpl')) {
 			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/realex_response.tpl', $data));
 		} else {
 			$this->response->setOutput($this->load->view('default/template/payment/realex_response.tpl', $data));
+		}
+	}
+
+	protected function loadAssets() {
+		$csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+		$jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+			$csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
+			$cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
+
+			$jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
+			$jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
+		} else {
+			$csspath = str_replace("%theme%", "default", $csspath);
+			$cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
+
+			$jspath = str_replace("%theme%", "default", $jspath);
+			$jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
+		}
+
+		if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
+			if ($this->config->get('config_render_css_in_file')) {
+				$this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
+			} else {
+				$styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
+			}
+		}
+
+		if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+			if ($this->config->get('config_render_js_in_file')) {
+				$javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+			} else {
+				$javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+			}
+		}
+
+		if (count($styles)) {
+			$this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
+		}
+
+		if (count($javascripts)) {
+			$this->javascripts = array_merge($this->javascripts, $javascripts);
 		}
 	}
 }

@@ -1,37 +1,57 @@
-<li class="nt-editable bannerWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-<?php if ($heading_title) { ?><div class="header" id="<?php echo $widgetName; ?>Header"><h1><?php echo $heading_title; ?></h1></div><?php } ?>
-<?php if (count($banner['items'])) { ?>
-<div class="content" id="<?php echo $widgetName; ?>Content">
-    <div id="<?php echo $widgetName; ?>slideshow">
-    <?php foreach ($banner['items'] as $item) { ?>
-        <?php if (empty($item['image'])) continue; ?>
-        <div>
-            <?php if (!empty($item['link'])) { ?><a href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>"><?php } ?>
-            <img src="<?php echo HTTP_IMAGE . $item['image']; ?>"<?php if (!empty($item['title']) && !empty($item['description'])) { ?> alt="<?php if (!empty($item['title'])) { echo '<h3>'. $item['title'] .'</h3>'; } if (!empty($item['description'])) { echo '<em>'. htmlentities($item['description']) .'</em>'; } ?>"<?php } ?> />
-            <?php if (!empty($item['link'])) { ?></a><?php } ?>
-        </div>
-    <?php } ?>
-    </div>
-</div>
-<script>
+<?php $classes = ($settings['class']) ? $settings['class'] : ''; ?>
 
-if (!$.fx.slideshow) {
-    $(document.createElement('link')).attr({
-        'href':'<?php echo HTTP_CSS; ?>sliders/evolution-v1.1.5/slider.css',
-        'rel':'stylesheet',
-        'media':'screen'
-    }).appendTo('head');
-    $(document.createElement('script')).attr({
-        'src':'<?php echo HTTP_JS; ?>sliders/evolution-v1.1.5/slider.js',
-        'type':'text/javascript',
-    }).appendTo('head');
-}
-$(function(){
-    $("#<?php echo $widgetName; ?>slideshow").slideshow({
-        width      : $('#<?php echo $widgetName; ?>').width(),
-        transition : 'explode'
-    });
-});
-</script>
-<?php } ?>
+<li id="<?php echo $widgetName;?>" class="banner-evolution <?php echo $classes ?> nt-editable"> 
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/module-heading.tpl");?> 
+    <div class="widget-content" id="<?php echo $widgetName; ?>Content" data-banner="evolution">
+        <?php foreach ($banner['items'] as $item) { ?>
+            <article class="item">
+                <?php if (!empty($item['image'])) { ?>
+                    <figure class="thumb">
+                        <img src="<?php echo HTTP_IMAGE . $item['image']; ?>" data-thumb="<?php echo $item['thumb']; ?>" alt="<?php echo $item['title']; ?>" title="<?php echo $item['title']; ?>" />
+                    </figure>
+                <?php } ?>
+                <section class="details">
+                    <?php if (!empty($item['title'])) { ?>
+                        <h2 class="title">
+                           <a href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>">
+                              <?php echo $item['title']; ?>
+                           </a>
+                        </h2>
+                    <?php } ?>
+                    <?php if (!empty($item['description'])) { ?>
+                        <p class="body">
+                           <?php echo $item['description']; ?>
+                        </p>
+                    <?php } ?>
+                    <?php if (!empty($item['link']) && (!empty($item['title']) || !empty($item['description']))) { ?>
+                        <div class="btn btn--primary">
+                           <a href="<?php echo $item['link']; ?>" title="<?php echo $item['title']; ?>">
+                              <?php echo $Language->get('text_more_details'); ?> 
+                           </a>
+                        </div>
+                    <?php } ?>
+                </section>
+            </article>
+        <?php } ?>
+    </div>
 </li>
+
+<script>
+    (function () {
+        window.deferPlugin('slick', function () {
+            var config = {
+               slidesToShow: 1,
+               slidesToScroll: 1,
+               infinite: true,
+               dots: true,
+               fade: true,
+               arrows: true,
+               slide: 'article',
+               prevArrow: '<button type="button" class="slick-prev"><?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/angle-left.tpl"); ?></button>',
+               nextArrow: '<button type="button" class="slick-next"><?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/angle-right.tpl"); ?></button>'
+
+            };
+            $("#<?php echo $widgetName; ?> *[data-banner='evolution']").slick(config);
+        });
+    })();
+</script>

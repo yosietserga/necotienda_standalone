@@ -1,19 +1,15 @@
-<div class="heading widget-heading featured-heading large-heading-dropdown" id="<?php echo $widgetName; ?>Header">
+<div class="heading large-heading-dropdown" id="<?php echo $widgetName; ?>Header">
     <div class="heading-title" onclick="$('#bankTransferGuide').slideToggle();">
-        <h3 >
-        <i class="heading-icon icon icon-library">
-            <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/library.tpl"); ?>
-        </i> 
+        <h3 > 
             <?php echo $Language->get('text_title'); ?>
         </h3>
     </div>
 </div>
 
-<div class="simple-form guide break" id="bankTransferGuide" style="display: none;">
+<div class="simple-form guide break" id="bankTransferGuide" style="display: none;" data-guide="payment">
     <?php if (!empty($instructions)) { echo $instructions; } ?>
 
-    <form id="bankTransferForm" name="bankTransferForm" method="post">
-
+    <form id="bankTransferForm" name="bankTransferForm" method="post" action="<?php echo $Url::createUrl("payment/bank_transfer/confirm"); ?>" data-form="payment" data-async>
         <div class="form-entry">
             <label for="bank_transfer_order_id"><?php echo $Language->get('entry_bank_transfer_order_id'); ?></label>
             <select name="bank_transfer_order_id" title="<?php echo $Language->get('help_bank_transfer_order_id'); ?>">
@@ -63,70 +59,6 @@
             <label for="bank_transfer_comment"><?php echo $Language->get('entry_bank_transfer_comment'); ?></label>
             <textarea name="bank_transfer_comment" title="<?php echo $Language->get('help_bank_transfer_comment'); ?>" placeholder="Ingresa tu comentario aqu&iacute;" showquick="off"></textarea>
         </div>
+        <div class="necoform-actions" data-actions="necoform"></div>
     </form>
 </div>
-<script type="text/javascript">
-$(function(){
-    if (!jQuery().ntForm) {
-        $(document.createElement('script')).attr({
-            'src':'<?php echo HTTP_JS; ?>necojs/neco.form.js',
-            'type':'text/javascript'
-        }).appendTo('body');
-    }
-    if (typeof jQuery.ui == 'undefined') {
-        $(document.createElement('script')).attr({
-            'src':'<?php echo HTTP_JS; ?>vendor/jquery-ui.min.js',
-            'type':'text/javascript'
-        }).appendTo('body');
-    }
-    
-    $('#bankTransferForm').ntForm({
-        lockButton: false,
-        ajax:true,
-        url:'<?php echo $Url::createUrl("payment/bank_transfer/confirm"); ?>',
-        beforeSend: function() {
-            $('#temp').remove();
-            $(document.createElement('div')).attr({
-                'class':'overlay',
-                'id':'temp'
-            })
-            .html('<img src="<?php echo HTTP_IMAGE; ?>loader.gif" alt="Cargando..." />')
-            .appendTo('#bankTransferGuide');
-        },
-        success:function(data) {
-            $('#temp').remove();
-            if (typeof data.error != 'undefined' && typeof data.msg != 'undefined') {
-                $(document.createElement('div')).attr({
-                    'id':'temp',
-                    'class':'message error',
-                })
-                .html(data.msg)
-                .appendTo('#bankTransferForm');
-            } else if (typeof data.warning != 'undefined') {
-                $(document.createElement('div')).attr({
-                    'id':'temp',
-                    'class':'message warning',
-                })
-                .html(data.msg)
-                .appendTo('#bankTransferForm');
-            } else if (typeof data.success != 'undefined') {
-                $('#bankTransferForm input').val('').removeAttr('checked').removeClass('neco-input-success').removeClass('neco-input-error');
-                $('#bankTransferForm select').removeClass('neco-input-success').removeClass('neco-input-error');
-                $('#bankTransferForm textarea').val('').removeClass('neco-input-success').removeClass('neco-input-error');
-            
-                $(document.createElement('div')).attr({
-                    'id':'temp',
-                    'class':'message success',
-                })
-                .html(data.msg)
-                .appendTo('#bankTransferForm');
-            }
-            if (typeof data.redirect != 'undefined') {
-                window.location.href = data.redirect;
-            }
-        }
-    });
-    $('#bankTransferForm select').ntSelect();
-    $('#bankTransferForm textarea').ntTextArea();
-});
-</script>

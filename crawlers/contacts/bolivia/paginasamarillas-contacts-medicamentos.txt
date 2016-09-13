@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ESPECIALIDADES FARMACÉUTICAS LTDA";;;"(591) (33) 3341201";"Rafael Peña # 138 Bolivia, Santa Cruz de la Sierra"

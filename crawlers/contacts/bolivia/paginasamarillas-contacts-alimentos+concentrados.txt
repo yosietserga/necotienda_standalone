@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ANTELO SERVICES";;;"(591) (33) 3301289";"Feria de la ComputaciÊn 1er. Subsuelo Local 1-150 Bolivia, Santa Cruz de la Sierra"

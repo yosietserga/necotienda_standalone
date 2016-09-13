@@ -1,5 +1,11 @@
-<div class="large-12 medium-12 small-12 columns">
-    <div id="featuredContent">
-        <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
-    </div>
-</div>
+<?php if($featuredWidgets && count($featuredWidgets) !== 0) { ?>
+<aside class="column home-grid-full">
+    <section id="featuredContent" class="widgets featured">
+        <ul>
+            <?php foreach ($featuredWidgets as $widget) { ?>
+                {%<?php echo $widget; ?>%}
+            <?php }  ?>
+        </ul>
+    </section>
+</aside>
+<?php }  ?>

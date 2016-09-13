@@ -58,8 +58,8 @@ class ControllerPageSitemap extends Controller {
             if (!$this->user->isLogged()) {
                 $this->cacheId = 'sitemap.' .
                         $this->config->get('config_language_id') . "." .
-                        $this->request->hasQuery('hl') . "." .
-                        $this->request->hasQuery('cc') . "." .
+                        $this->request->getQuery('hl') . "." .
+                        $this->request->getQuery('cc') . "." .
                         $this->customer->getId() . "." .
                         $this->config->get('config_currency') . "." .
                         $this->config->get('config_store_id');
@@ -75,7 +75,7 @@ class ControllerPageSitemap extends Controller {
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
                 $this->template = $this->config->get('config_template') . '/' . $template;
             } else {
-                $this->template = 'choroni/' . $template;
+                $this->template = 'cuyagua/' . $template;
             }
 
             $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

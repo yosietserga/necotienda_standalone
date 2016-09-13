@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CONVENIO INMOBILIARIA";;;"(591) (22) 3336666";"Cl España 271 2do Piso Of 10 Bolivia, La Paz"
-"FORTALEZA INVERSIONES INMOBILIARIAS";;;"(591) (22) 3393393";"Cl Bolivar No 560 Bolivia, La Paz"
-"INMOBILIARIA ""SN ANDRES""";;;"(591) (22) 3334330";"Cl 21De Mayo No 636 Bolivia, La Paz"
-"INMOBILIARIA NUEVA ESPERANZA NESA S.A";;;"(591) (33) 3556580";"Av 26 DE Febrero No. 535 Bolivia, Santa Cruz de la Sierra"

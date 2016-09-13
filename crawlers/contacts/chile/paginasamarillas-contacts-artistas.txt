@@ -1,6 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"MARCELO HERNÁNDEZ Y CIA. LTDA.";;;"(56) (2) 2245001";"Av Apoquindo 5555 Of. 1111, Las Condes Chile, Santiago"
-"ARTISTAS CONTRÁTELOS DIRECTAMENTE- ASOCIADOS";;;"(56) (2) 6380693";"Paseo Estado 215 Of. 1007 Chile, Santiago"
-"PATRICIO MENESES ALMARZA";;;"(56) (2) 4741785";"Pedro Lira 1365 Chile, Santiago"
-"PAYASITA TUKTUK";;;"(56) (2) 6383899";"Merced 450 Dpto. 1-D Chile, Santiago"
-"MARQUEZ LIMITADA";;;"(56) (2) 3565611";"Av Simón Bolivar 4263, Ñuñoa Chile, Santiago"

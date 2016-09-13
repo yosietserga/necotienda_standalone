@@ -1,6 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"MOVITEL TELECOMUNICACIONES";;;"(591) (33) 3326337";"Av. Viedma No. 600 Esq. A. Saavedra Bolivia, Santa Cruz de la Sierra"
-"SUPERTRADING S.R.L";;;"(591) (33) 3323004";"Cl Colón No. 220 Bolivia, Santa Cruz de la Sierra"
-"BRIGHSTAR PROVEEDOR DE SOLUCIONES TECNOLOGICAS S.A.";;;"(591) (33) 3121449";"Av.Enrique Finot No.190 Equipetrol Bolivia, Santa Cruz de la Sierra"
-"NUEVATEL P.C.S. DE BOLIVIA - VIVA GSM";;;"(591) (33) 3328842";"Cl. 24 de Septiembre/Florida Bolivia, Santa Cruz de la Sierra"
-"COTAS - SANTA CRUZ";;;"(591) (33) 121212";"Prolongacion Aroma # 78 Bolivia, Santa Cruz de la Sierra"

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"CAMISETAS DE FRANELA FINETTE";;;"Telefax: (56) (2) 7774491";"Manzano 150 Recoleta Chile, Santiago"

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"FOTO MEDALLA";;;"(591) (22) 3538282";"C/ Mario Flores 75 Bolivia, La Paz"

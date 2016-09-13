@@ -213,6 +213,7 @@
                 <a tab="#special" class="htab"><?php echo $Language->get('tab_special'); ?></a>
                 <a tab="#option" class="htab"><?php echo $Language->get('tab_option'); ?></a>
                 <a tab="#images" class="htab"><?php echo $Language->get('tab_image'); ?></a>
+                <a tab="#attributes" class="htab"><?php echo $Language->get('Attributes'); ?></a>
             </div>
 
             <div id="general"><?php require_once(dirname(__FILE__)."/product_form_general.tpl"); ?></div>
@@ -222,6 +223,7 @@
             <div id="special"><?php require_once(dirname(__FILE__)."/product_form_special.tpl"); ?></div>
             <div id="option"><?php require_once(dirname(__FILE__)."/product_form_option.tpl"); ?></div>
             <div id="images"><?php require_once(dirname(__FILE__)."/product_form_images.tpl"); ?></div>
+            <div id="attributes"><?php require_once(dirname(__FILE__)."/product_form_attributes.tpl"); ?></div>
 
         </form>
     </div>

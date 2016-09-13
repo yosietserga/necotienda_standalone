@@ -112,12 +112,12 @@ class Update {
             } else {
                 $file_update = $response;
             }
-
+//TODO: mostrar mensaje de error al fallar la validación de licencia y la causa
             $file_saved = DIR_ROOT . "updates/update.zip";
 
             $f = fopen($file_saved, 'wb');
             fwrite($f, $file_update);
-            fclose($f);echo __LINE__ .': '. sha1_file($file_saved) .'==='. $info['checksum'] .'<br />';
+            fclose($f);
             if (file_exists($file_saved) && sha1_file($file_saved) === $info['checksum']) {
                 $zip = new PclZip();
                 $zip->setZipName($file_saved);
@@ -131,6 +131,7 @@ class Update {
                         unlink(DIR_ROOT.'update.php');
                     }
                 } else {
+                    echo $zip->errorInfo(true);
                     return $zip->errorInfo(true);
                 }
             } else {
@@ -159,7 +160,6 @@ class Update {
      */
     public function getInfo() {
         $file_info = $this->handler->fetch($this->update_info);
-        
         if (isset($file_info['body'])) {
             return unserialize($file_info['body']);
         } else {

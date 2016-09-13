@@ -18,6 +18,7 @@
     <div class="grid_12">
         <div class="box">
             <h1><?php echo $Language->get('heading_title'); ?></h1>
+            <a href="<?php echo $Url::createAdminUrl('module/crm/dashboard'); ?>" class="button"><?php echo $Language->get('Dashboard'); ?></a>
             <a href="<?php echo $Url::createAdminUrl('module/crm/step'); ?>" class="button">Pasos de Venta</a>
             <a href="<?php echo $Url::createAdminUrl('module/crm/status'); ?>" class="button">Status</a>
             <a href="<?php echo $Url::createAdminUrl('module/crm/step'); ?>" class="button">Oportunidades</a>

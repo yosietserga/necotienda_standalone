@@ -3,7 +3,21 @@
 $_['heading_title']      = 'Carrito de Compra';
 
 // Text
+$_['table_head_shipping_method']        = 'Descripci&oacute;n';
+$_['table_head_shipping_price']        = 'Tarifa';
+$_['table_head_shipping_select']        = 'Seleccione M&eacute;todo de Env&iacute;o';
+$_['table_head_shipping_select']        = 'Seleccione M&eacute;todo de Env&iacute;o';
 $_['text_order_confirm'] = 'Confirmaci&oacute;n del Pedido';
+$_['text_weight']       = 'Peso';
+$_['text_payment_shipping_method']       = 'M&eacute;todo de Env&iacute;o';
+$_['text_payment_address']       = 'Direcci&oacute;n de Env&iacute;o';
+$_['text_shipping_address']       = 'Direcci&oacute;n de Env&iacute;o';
+$_['text_summary_model']       = 'Modelo';
+$_['text_summary_cant']       = 'Cantidad';
+$_['text_summary_price']       = 'Precio';
+$_['text_summary_total']       = 'Total';
+$_['text_summary_description']       = 'Descripci&oacute;n';
+$_['text_summary_description']       = 'Descripci&oacute;n';
 $_['text_firstname']       = 'Nombres';
 $_['text_lastname']       = 'Apellidos';
 $_['text_email']       = 'Email';
@@ -57,7 +71,7 @@ $_['entry_rif']            = 'RIF:';
 $_['entry_captcha']        = 'Ingrese el resultado de la ecuaci&oacute;n:';
 
 // Help
-$_['help_country']   = 'Selecciona el pa&iaacute;s de tu residencia';
+$_['help_processing']   = '<h2>Procesando</h2><br /><small>Por favor espere unos segundos, no cierre ni recargue la pesta&ntilde;a</small>';
 $_['help_country']   = 'Selecciona el pa&iaacute;s de tu residencia';
 $_['help_email']     = 'Ingrese su email, &eacute;ste ser&aacute; verificado contra su servidor para validarlo';
 $_['help_country']   = 'Selecciona el pa&iaacute;s de tu residencia';

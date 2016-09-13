@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"DIVERSIONES INFANTILES";childrenpark73@gmail.com;www.diversionesinfantiles.co;"(57) 3137683768";"Medellín Colombia, Medellín"
-"CENTRO COMERCIAL MEGAMALL";gerencia@megamall.com.co;www.megamall.com.co;"(57) (7) 6340020";"Cr33 A 29-15 Colombia, Bucaramanga"
-"DVD MOVIE STAR";dvdmovie@hotmail.com;;"(57) (4) 3004921271";"Cr27 36   S-46 L-9 Colombia, Medellín"
-"HELI SANCHEZ B. MUEBLES EN CUERO";mueblesencuero@helisanchez.co;www.helisanchezmuebles.com;"(57) (7) 3182917110";"Cl 36 33-26 El Prado Colombia, Bucaramanga"

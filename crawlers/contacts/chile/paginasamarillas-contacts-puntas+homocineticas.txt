@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"AUTOMECÁNICA PABLO BRAVO Y CÍA. LTDA.";;;"(56) (2) 2385388";"Los Olmos 2945, Macul Chile, Santiago"
-"HOMOCINÉTICA MANOLO";;;"(56) (2) 6359420";"Copiapó 865 Chile, Santiago"

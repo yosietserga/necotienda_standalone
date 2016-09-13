@@ -14,7 +14,7 @@
     <?php if ($msg || $error_warning) { ?><div class="grid_12"><div class="message warning"><?php echo ($msg) ? $msg : $error_warning; ?></div></div><?php } ?>
     <?php if ($error) { ?><div class="grid_12"><div class="message error"><?php echo $error; ?></div></div><?php } ?>
     <div class="grid_12" id="msg"></div>
-    
+
     <div class="box">
         <div class="header">
             <h1><?php echo $Language->get('heading_title'); ?></h1>

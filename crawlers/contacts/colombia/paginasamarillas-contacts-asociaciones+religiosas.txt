@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"FRANCISCANOS MENORES CONVENTUALES";fabiconv@hotmail.com;www.franciscanosconventuales.com;"(57) (4) 2790196";"Cl 74   S 57-160 La Estrella Colombia, Medellín"
-"RADIO MARÍA MEDELLÍN 1.320 A.M.";radiomariamedellin@radiomariacol.org;www.radiomariacol.org;"(57) (4) 5130613";"Cl 57 49-44 Of 215 Colombia, Medellín"

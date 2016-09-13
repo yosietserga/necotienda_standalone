@@ -87,5 +87,13 @@
         
         <div class="clear"></div>
     </div>
-    <?php } ?>   
+    <?php } ?>
+
+    <div class="row">
+        <label><?php echo $Language->get('Footer Powered Text'); ?></label>
+        <div class="clear"></div>
+        <textarea name="config_text_powered_by"><?php echo $config_text_powered_by; ?></textarea>
+    </div>
+
+    <div class="clear"></div>
 </div>         

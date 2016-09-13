@@ -1,26 +1,23 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcrumbs.tpl"); ?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl"); ?>
 
-    <?php if ($column_left && $column_right) { ?>
-    <section id="content" class="home-grid-small">
-    <?php } else if ($column_left || $column_right) { ?>
-        <section id="content" class="home-grid-medium">
+    <?php if ($column_right) { ?>
+        <section id="content" class="home-grid-small">
     <?php } else { ?>
-    <section id="content" class="home-grid-full">
+        <section id="content" class="home-grid-medium">
     <?php } ?>
 
     <!-- column-left -->
-        <?php if ($column_left) { ?>
-            <aside id="column_left" class="aside-column column-left large-3 medium-12 small-12 columns">
-                <div class="heading widget-heading heading-dropdown" id="<?php echo $widgetName; ?>Header">
+        <aside id="columnLeft" class="column-left large-3 medium-12 small-12 columns">
+            <div class="widgets aside-column">
+                <div class="heading widget-heading" id="<?php echo $widgetName; ?>Header">
                     <div class="heading-title">
                     <h3>
-                        <i class="heading-icon icon icon-filter">
-                        <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/target.tpl"); ?>
-                        </i>
-                            <?php echo $Language->get('text_filter'); ?>
-                        </h3>
+                        <?php echo $Language->get('text_filter'); ?>
+                    </h3>
                     </div>
                 </div>
 
@@ -28,10 +25,12 @@
                     <ul class="filters-list">
                         <?php if ($filters) { ?>
                             <li class="filter-selected">
-                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_select_filter'); ?></span></a>
-                                <div class="filter-options">
+                                <a class="filter-heading" href="javascript:void(0)" style="background-image: none;">
+                                    <strong><?php echo $Language->get('Filters'); ?></strong>
+                                </a>
+                                <div class="filter-options" style="display: block; max-height: 25rem; overflow-y: auto">
                                     <ul id="filter-selected" class="filter-list">
-                                        <?php foreach ($filters as $key => $value) { ?>
+                                        <?php foreach ($filters as $key => $value) { var_dump($value); ?>
                                         <li><a href="<?php echo $value['href']; ?>"><?php echo $value['name'];?></a></li>
                                         <?php } ?>
                                     </ul>
@@ -41,8 +40,10 @@
 
                         <?php if (!empty($filterCategories) && !isset($filters['category'])) { ?>
                             <li class="filter-categories">
-                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_category'); ?></span></a>
-                                <div class="filter-options">
+                                <a class="filter-heading" href="javascript:void(0)" style="background-image: none;">
+                                    <strong><?php echo $Language->get('By Category'); ?></strong>
+                                </a>
+                                <div class="filter-options" style="display: block; max-height: 25rem; overflow-y: auto">
                                     <ul id="filter-categories" class="filter-list">
                                         <?php foreach ($filterCategories as $key => $value) { ?>
                                             <li><a href="<?php echo rtrim($urlCriterias['forCategories'] .'_Cat_'. str_replace(' ','-',strtolower($value['name'])) .'?'. implode('',$urlQuery),'?'); ?>"><?php echo $value['name'];?> (<?php echo $value['total']; ?>)</a></li>
@@ -54,8 +55,10 @@
 
                         <?php if (!empty($filterManufacturers) && !isset($filters['manufacturer'])) { ?>
                             <li class="filter-manufacturers">
-                                <a href="javascript:void(0)" class="filter-heading"><span><?php echo $Language->get('text_filter_per_manufacturer'); ?></span></a>
-                                <div class="filter-options">
+                                <a href="javascript:void(0)" class="filter-heading" style="background-image: none;">
+                                    <strong><?php echo $Language->get('By Manufacturer'); ?></strong>
+                                </a>
+                                <div class="filter-options" style="display: block; max-height: 25rem; overflow-y: auto">
                                     <ul id="filter-manufacturers" class="filter-list">
                                         <?php foreach ($filterManufacturers as $key => $value) { ?>
                                         <li><a href="<?php echo rtrim($urlCriterias['forManufacturers'] .'_Marca_'. str_replace(' ','-',strtolower($value['name'])) .'?'. implode('',$urlQuery),'?'); ?>"><?php echo $value['name'];?> (<?php echo $value['total']; ?>)</a></li>
@@ -67,11 +70,15 @@
 
                         <?php if (!empty($filterZones) && !isset($filters['zone'])) { ?>
                             <li class="filter-zones">
-                                <a href="javascript:void(0)" class="filter-heading"><span><?php echo $Language->get('text_filter_per_status'); ?></span></a>
-                                <div class="filter-options">
+                                <a href="javascript:void(0)" class="filter-heading" style="background-image: none;">
+                                    <strong><?php echo $Language->get('By Zone'); ?></strong>
+                                </a>
+                                <div class="filter-options" style="display: block; max-height: 25rem; overflow-y: auto">
                                     <ul id="filter-zones" class="filter-list">
                                         <?php foreach ($filterZones as $key => $value) { ?>
-                                        <li><a href="<?php echo rtrim($urlCriterias['forZones'] .'_Estado_'. str_replace(' ','-',strtolower($value['name'])) .'?'. implode('',$urlQuery),'?'); ?>"><?php echo $value['name'];?> (<?php echo $value['total']; ?>)</a></li>
+                                        <li>
+                                            <a href="<?php echo rtrim($urlCriterias['forZones'] .'_Estado_'. str_replace(' ','-',strtolower($value['name'])) .'?'. implode('',$urlQuery),'?'); ?>"><?php echo $value['name'];?> (<?php echo $value['total']; ?>)</a>
+                                        </li>
                                         <?php } ?>
                                     </ul>
                                 </div>
@@ -80,11 +87,15 @@
 
                         <?php if (!empty($filterStores) && !isset($filters['stores'])) { ?>
                             <li class="filter-stores">
-                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_store'); ?></span></a>
-                                <div class="filter-options">
+                                <a class="filter-heading" href="javascript:void(0)" style="background-image: none;">
+                                    <strong><?php echo $Language->get('By Store'); ?></strong>
+                                </a>
+                                <div class="filter-options" style="display: block; max-height: 25rem; overflow-y: auto">
                                     <ul id="filter-stores" class="filter-list">
                                         <?php foreach ($filterStores as $key => $value) { ?>
-                                        <li><a href="<?php echo rtrim($urlCriterias['forStores'] .'_Tienda_'. str_replace(' ','-',strtolower($value['name'])) .'?'. implode('',$urlQuery),'?'); ?>"><?php echo $value['name'];?> (<?php echo $value['total']; ?>)</a></li>
+                                        <li>
+                                            <a href="<?php echo rtrim($urlCriterias['forStores'] .'_Tienda_'. str_replace(' ','-',strtolower($value['name'])) .'?'. implode('',$urlQuery),'?'); ?>"><?php echo $value['name'];?> (<?php echo $value['total']; ?>)</a>
+                                        </li>
                                         <?php } ?>
                                     </ul>
                                 </div>
@@ -93,9 +104,11 @@
 
                         <?php if (!empty($filterSellers) && !isset($filters['seller'])) { ?>
                             <li class="filter-sellers">
-                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_seller'); ?></span></a>
+                                <a class="filter-heading" href="javascript:void(0)" style="background-image: none;">
+                                    <strong><?php echo $Language->get('By Seller'); ?></strong>
+                                </a>
                                 <div class="filter-options">
-                                    <ul id="filter-sellers" class="filter-list">
+                                    <ul id="filter-sellers" class="filter-list" style="display: block; max-height: 25rem; overflow-y: auto">
                                         <?php foreach ($filterSellers as $key => $value) { ?>
                                         <li><a href="<?php echo rtrim($urlCriterias['forSellers'] .'_Vendedor_'. str_replace(' ','-',strtolower($value['company'])) .'?'. implode('',$urlQuery),'?'); ?>"><?php echo $value['company'];?> (<?php echo $value['total']; ?>)</a></li>
                                         <?php } ?>
@@ -106,14 +119,16 @@
 
                         <?php if (!empty($filterPrices) && !isset($filters['price'])) { ?>
                             <li class="filter-price">
-                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_price'); ?></span></a>
-                                <div id="filter-price" class="filter-options">
+                                <a class="filter-heading" href="javascript:void(0)" style="background-image: none;">
+                                    <strong><?php echo $Language->get('By Price'); ?></strong>
+                                </a>
+                                <div id="filter-price" class="filter-options" style="display: block; max-height: 25rem; overflow-y: auto">
                                     <div class="price-controls row">
                                         <div class="large-6 medium-6 small-5 columns">
-                                            <input type="text" name="bottomPrice" id="bottomPrice" placeholder="Precio Min"/>
+                                            <input type="text" name="bottomPrice" id="bottomPrice" placeholder="Min"/>
                                         </div>
                                         <div class="large-6 medium-6 small-5 columns">
-                                            <input type="text" name="topPrice" id="topPrice" placeholder="Precio Max" />
+                                            <input type="text" name="topPrice" id="topPrice" placeholder="Max"/>
                                         </div>
                                     </div>
                                     <ul>
@@ -127,8 +142,10 @@
 
                         <?php if ($filterColors) { ?>
                             <li class="filter-list color-filter">
-                                <a class="filter-heading" href="javascript:void(0)"><span><?php echo $Language->get('text_filter_per_color'); ?></span></a>
-                                <ul id="filter-color" class="filter-list">
+                                <a class="filter-heading" href="javascript:void(0)">
+                                    <strong><?php echo $Language->get('text_filter_per_color'); ?></strong>
+                                </a>
+                                <ul id="filter-color" class="filter-list" style="display: block; max-height: 25rem; overflow-y: auto">
                                     <li>
                                         <a href="<?php echo $Url::createUrl("store/search",array('co'=>'Rojo')) . $urlPrices; ?>" class="filterColor" title="Rojo" style="background: red;"></a>
                                         <a href="<?php echo $Url::createUrl("store/search",array('co'=>'Azul')) . $urlPrices; ?>" class="filterColor" title="Azul" style="background: blue;"></a>
@@ -154,22 +171,24 @@
                             </li>
                         <?php } ?>
                     </ul>
-                </div>
+                </div> 
+    <?php if ($column_left) { ?>
             <?php echo $column_left; ?>
-        </aside>
     <?php } ?>
     <!-- /column-left -->
-
+        </div>
+    </aside> 
     <!--column-center -->
-    <?php if ($column_left && $column_right) { ?>
-        <div class="column-center large-6 medium-12 small-12 columns">
-    <?php } elseif ($column_left || $column_right) { ?>
-        <div class="column-center large-9 medium-12 small-12 columns">
+    <?php if ($column_right) { ?>
+        <aside id="columnCenter" class="large-6 medium-12 small-12 columns">
+            <div class="widgets center-column"> 
     <?php } else { ?>
-        <div class="column-center large-12 medium-12 small-12 columns">
-    <?php } ?>
-
-        <h1><?php echo $Language->get('text_search_results'); ?></h1>
+        <aside id="columnCenter" class="large-9 medium-12 small-12 columns">
+            <div class="widgets center-column">
+    <?php } ?> 
+        <header class="page-heading">
+            <h1><?php echo $Language->get('text_search_results'); ?></h1>
+        </header>
         <?php if ($noResults) { ?><div class="message warning"><?php echo $Language->get('text_no_results'); ?></div><?php } ?>
         <?php if ($sorts) { ?>
             <div class="sort filter-sort">
@@ -188,39 +207,42 @@
 
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/catalog-list.tpl"); ?>
     <!-- column-center -->
-
     <!-- column-right -->
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
     <!-- column-right -->
 
+
 </section>
 <script>
-(function () {
-    var listResource = '<?php include(DIR_TEMPLATE  . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
-    var gridResource = '<?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
-    var gridModeIcon = '<i class="icon icon-sort">' + gridResource + '</i>';
-    var listModeIcon = '<i class="icon icon-sort">' + listResource + '</i>';
-    var listModeFlag = 'catalog-list';
-    var gridModeFlag = 'catalog-grid';
-    var $productsWrapper = $('#productsWrapper');
 
-    $("[data-action='sort']").click(function (e) {
-        var isOnListMode = $productsWrapper.hasClass(listModeFlag);
-        var $self = $(this);
-        e.stopPropagation();
-        e.preventDefault();
+(function () { 
+    window.deferjQuery(function () {
+        var listResource = '<?php include(DIR_TEMPLATE  . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
+        var gridResource = '<?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
+        var gridModeIcon = '<i class="icon icon-sort">' + gridResource + '</i>';
+        var listModeIcon = '<i class="icon icon-sort">' + listResource + '</i>';
+        var listModeFlag = 'catalog-list';
+        var gridModeFlag = 'catalog-grid';
+        var $productsWrapper = $('#productsWrapper');
 
-        if (isOnListMode) {
-            $productsWrapper
-                .removeClass(listModeFlag)
-                .addClass(gridModeFlag);
-            $self.html(listModeIcon);
-        } else {
-            $productsWrapper
-                .removeClass(gridModeFlag)
-                .addClass(listModeFlag);
-            $self.html(gridModeIcon);
-        }
+        $("[data-action='sort']").click(function (e) {
+            var isOnListMode = $productsWrapper.hasClass(listModeFlag);
+            var $self = $(this);
+            e.stopPropagation();
+            e.preventDefault();
+
+            if (isOnListMode) {
+                $productsWrapper
+                    .removeClass(listModeFlag)
+                    .addClass(gridModeFlag);
+                $self.html(listModeIcon);
+            } else {
+                $productsWrapper
+                    .removeClass(gridModeFlag)
+                    .addClass(listModeFlag);
+                $self.html(gridModeIcon);
+            }
+        });
     });
 })();
 </script>

@@ -1,20 +1,12 @@
 <li class="nt-editable box lightboxWidget<?php echo ($settings['class']) ? " ".$settings['class'] : ''; ?>" id="<?php echo $widgetName; ?>">
-    <span<?php if ($settings['width'] || $settings['height']) { ?> style="<?php echo ($settings['width']) ? "width:".$settings['width'] : ""; ?>;<?php echo ($settings['height']) ? "height:".$settings['height'] : ""; ?>"<?php } ?>>
-    
-        <?php if ($heading_title) { ?>
-        <div class="header" id="<?php echo $widgetName; ?>Header">
-            <hgroup>
-                <h1><?php echo $heading_title; ?></h1>
-            </hgroup>
-        </div>
-        <?php } ?>
-        
+    <span<?php if ($settings['width'] || $settings['height']) { ?> style="<?php echo ($settings['width']) ? "width:".$settings['width'] : ""; ?>;<?php echo ($settings['height']) ? "height:".$settings['height'] : ""; ?>"<?php } ?>> 
+
+        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/module-heading.tpl");?> 
+
         <div class="content" id="<?php echo $widgetName; ?>Content">
             <?php echo html_entity_decode($page['description']); ?>
-        </div>
-        
-    </span>
-    
+        </div> 
+    </span> 
     <div class="close">X</div>
     
 </li>

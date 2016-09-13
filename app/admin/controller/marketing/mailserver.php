@@ -13,7 +13,6 @@ class ControllerMarketingMailserver extends Controller
 
     public function insert()
     {
-        $this->load->auto('setting/setting');
         $this->document->title = $this->language->get('heading_title');
         if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validateForm()) {
             $data['server'] = $this->request->getPost('server');

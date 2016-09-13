@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"LOS COCOS";;;"(591) (22) 44136578";"Av. Benigno Paz Acera Sud Lado Farmacia Chapare Bolivia, La Paz"

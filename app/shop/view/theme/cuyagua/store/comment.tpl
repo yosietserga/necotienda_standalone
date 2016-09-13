@@ -1,39 +1,26 @@
-<div id="msgReview" class="msg-review"></div>
-<div class="content comment-content">
+<div id="msgReview"></div>
+<div class="content clearfix">
     <div>
-        <div class="comment-body">
+        <div class="detail">
             <textarea name="text" id="text" placeholder="Escribe tu pregunta o comentario aqu&iacute;"></textarea>
         </div>
     </div>
-    <div>
-        <div class="rating-heading"><?php echo $Language->get('entry_rating'); ?></div>
-        <div id="content" class="rating-points">
-            <!--<span><?php echo $Language->get('entry_bad'); ?></span>-->
-            <div class="star-item" data-hover-item="1">
-                <a class="star_review" id="1" data-review-rating-star="1"></a>
+        <div class="label" style="margin-top: 0.875rem;">
+            <strong><?php echo $Language->get('entry_rating'); ?><strong>
+            <div style="display:inline; margin-left: 0.5rem;" class="detail">
+                <a class="star_review" id="1"></a>
+                <a class="star_review" id="2"></a>
+                <a class="star_review" id="3"></a>
+                <a class="star_review" id="4"></a>
+                <a class="star_review" id="5"></a>
+                <input type="hidden" name="rating" id="review_" value="0"/>
             </div>
-            <div class="star-item" data-hover-item="2">
-                <a class="star_review" id="2" data-review-rating-star="2"></a>
-            </div>
-            <div class="star-item" data-hover-item="3">
-                <a class="star_review" id="3" data-review-rating-star="3"></a>
-            </div>
-            <div class="star-item" data-hover-item="4">
-                <a class="star_review" id="4" data-review-rating-star="4"></a>
-            </div>
-            <div class="star-item" data-hover-item="5">
-                <a class="star_review" id="5" data-review-rating-star="5"></a>
-            </div>
-            <input data-value="review" type="hidden" name="rating" id="review_" value="0" />
-            <!--<span><?php echo $Language->get('entry_good'); ?></span>-->
-        </div>
+        </div> 
+    <div class="btn btn--primary" style="margin-top: 1.25rem;">
+        <a title="<?php echo $Language->get('button_continue'); ?>" onclick="review();"><?php echo $Language->get('button_continue'); ?></a>
     </div>
-    <a title="<?php echo $Language->get('button_continue'); ?>" onclick="review();" class="button action-comment"><?php echo $Language->get('button_continue'); ?></a>
-</div>
-
+</div> 
 <script>
-
-var ratingStars = '*[data-review-rating-star]';
 $(function(){
     $('#text').on('focus',function(e){
         $(this).animate({
@@ -46,37 +33,35 @@ $(function(){
             });
         }
     });
-    $('*[data-hover-item]').hover(
-        function(e) {
-            var self = this;
-            var dataHoverItem = ~~self.dataset.hoverItem;
-
-            $(ratingStars).each (function(i, e) {
-                var dataReviewStar = ~~e.dataset.reviewRatingStar;
-                if (dataReviewStar <= dataHoverItem) {
-                    $(this).css({'background-position':'0 top'});
+    $('#content .star_review').hover(
+        function() {
+            var idThis = $(this).attr('id');
+            $('#content .star_review').each (function() {
+                var idStar = $(this).attr('id');
+                if (idStar <= idThis) {
+                    $(this).css({'background-position':'left top'});
                 }
             });
         },
         function() {
-            $(ratingStars).each (function(i, e) {
-                $(e).css({'background-position':'14px top'});
+            $('#content .star_review').each (function() {
+                $(this).css({'background-position':'right top'});
             });
         }
     );
-    $('*[data-hover-item]').click(function(e) {
-        var self = this;
-        var dataHoverItem = ~~self.dataset.hoverItem;
-
-        $('*[data-value="review"]').val(dataHoverItem);
-        $(ratingStars).each (function(i, e) {
-            var dataReviewStar = ~~e.dataset.reviewRatingStar;
-            if (dataReviewStar <= dataHoverItem) {
-                $(e).removeClass();
-                $(e).addClass('star_clicked');
+    $('#content .detail a').click(function() {
+        var idThis = $(this).attr('id');
+        $('#content input[name=rating]').val(idThis);
+        $('#content .detail a').each (function() {
+            var idStar = $(this).attr('id');
+            if (idStar <= idThis) {
+                $(this).removeClass();
+                $(this).addClass('star_clicked');
+                $(this).css({'background-position':'left top'});
             } else {
-                $(e).removeClass();
-                $(e).addClass('star_review');
+                $(this).removeClass();
+                $(this).addClass('star_review');
+                $(this).css({'background-position':'right top'});
             }
         });
     });
@@ -87,7 +72,7 @@ function review() {
         if ($('#text').val().length > 0) {
             $('.success, .warning').remove();
  			$('#review_button').hide();
-        	$('#msgReview').html('<div class="message warning"><img src="<?php echo HTTP_IMAGE; ?>loading_1.gif" alt="<?php echo addslashes($text_wait); ?>"><?php echo $Language->get('text_wait'); ?></div>');
+        	$('#msgReview').html('<div class="message warning"><?php echo $Language->get('text_wait'); ?></div>');
         	$.post('<?php echo $Url::createUrl('store/product/write'); ?>&product_id=<?php echo $product_id; ?>',
         		{
                     'text': encodeURIComponent($('textarea[name=\'text\']').val()),
@@ -112,18 +97,21 @@ function review() {
                             $(this).css({'background-position':'right top'});
                         });
                         if (typeof data.show != 'undefined') {
-                            html = '<li id="review_'+ data.review_id +'" class="row review_item">';
-                            html += '<div class="large-2 medium-4 small-4">';
-                            html += '<span>'+ data.author +'</span>';
-                            html += '<img src="<?php echo HTTP_IMAGE; ?>stars_'+ data.rating +'.png" />';
-                            html += '<time datetime='.concat(data.date_added).concat(">").concat(data.date_added).concat('</time>');
+                            html = '<li id="review_'+ data.review_id +'" class="review_item row">';
+                            html += '<div class="column">';
+                            html += '<strong>'+ data.author +'</strong>';
+                            html += '<time style="font-size: 0.835rem;font-style:italic;margin-left: 0.375rem;">'+ data.date_added +'</time>';
                             html += '</div>';
-                            html += '<div class="large-6 medium-12 small 12 columns">'+ data.text +'</div>';
-                            html += '<div class="large-5 medium-12 small 12 columns review-buttons">';
-                            html += '<a class="review-reply" onclick="addReply(this,\''+ data.product_id +'\',\''+ data.review_id +'\')">Replicar</a>';
-                            html += '<a class="review-delete" onclick="deleteComment(this,\''+ data.product_id +'\',\''+ data.review_id +'\')">Eliminar</a>';
-                            html += '<a class="review-dislike" onclick="dislikeComment(this,\''+ data.product_id +'\',\''+ data.review_id +'\')"></a>';
-                            html += '<a class="review-like" onclick="likeComment(this,\''+ data.product_id +'\',\''+ data.review_id +'\')"></a>';
+                            html += '<div class="column" style="margin-top: 0.835rem">'; 
+                            html += '<img src="<?php echo HTTP_IMAGE; ?>stars_'+ data.rating +'.png" />'; 
+                            html += '</div>'; 
+                            html += '<div class="column" style="margin-top: 0.835rem; font-size: 0.835rem;">'+ data.text +'</div>';
+
+                            html += '<div class="review-buttons">';
+                            html += '<a class="review-reply" onclick="addReply(this,\''+ data.product_id +'\',\''+ data.review_id +'\')" style="margin-right: 0.835rem;">Replicar</a>';
+                            html += '<a class="review-delete" onclick="deleteComment(this,\''+ data.product_id +'\',\''+ data.review_id +'\')" style="margin-right: 0.835rem;">Eliminar</a>';
+                            html += '<a class="review-dislike" onclick="dislikeComment(this,\''+ data.product_id +'\',\''+ data.review_id +'\')" style="margin-right: 0.835rem;"></a>';
+                            html += '<a class="review-like" onclick="likeComment(this,\''+ data.product_id +'\',\''+ data.review_id +'\')" style="margin-right: 0.835rem;"></a>';
                             html += '</div>';
                             html += '</li>';
                             $('.review_item:first-child').before(html);
@@ -133,7 +121,7 @@ function review() {
                             $(cloned).css({
                                 'background':'#AEDF4F',
                                 'position':'absolute',
-                                'top':'60px',
+                                'top':'0px',
                                 'left':'0px',
                                 'marginTop':'210px'
                             });

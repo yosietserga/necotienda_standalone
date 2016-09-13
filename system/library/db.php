@@ -27,4 +27,20 @@ final class DB {
   	public function getLastId() {
 		return $this->driver->getLastId();
   	}
+
+	public function checkDbScheme() {
+
+	}
+
+	public function repairDbScheme() {
+
+	}
+
+	public function getTables($pattern=null) {
+		return $this->driver->getTables($pattern);
+	}
+
+	public function getTableFields($table, $pattern=null) {
+		return $this->driver->getTableFields($table, $pattern);
+	}
 }

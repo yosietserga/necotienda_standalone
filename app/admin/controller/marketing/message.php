@@ -22,8 +22,17 @@ class ControllerMarketingMessage extends Controller {
 
         $this->data['newsletters'] = $this->modelNewsletter->getAll();
         $this->data['pages'] = $this->modelPage->getAll();
+        $this->load->auto('setting/setting');
+        foreach ($this->modelSetting->getSetting('mail_server') as $id => $result) {
+            $this->data['mail_servers'][$id] = unserialize($result);
+        }
+
 
         $this->setvar('marketing_page_contact_id');
+        $this->setvar('marketing_page_new_customer');
+        $this->setvar('marketing_page_activate_customer');
+        $this->setvar('marketing_page_add_to_cart');
+
         $this->setvar('marketing_email_new_customer');
         $this->setvar('marketing_email_activate_customer');
         $this->setvar('marketing_email_new_order');
@@ -41,9 +50,22 @@ class ControllerMarketingMessage extends Controller {
         $this->setvar('marketing_email_promote_product');
         $this->setvar('marketing_email_invite_friends');
 
-        $this->setvar('marketing_page_new_customer');
-        $this->setvar('marketing_page_activate_customer');
-        $this->setvar('marketing_page_add_to_cart');
+        $this->setvar('marketing_mailserver_new_customer');
+        $this->setvar('marketing_mailserver_activate_customer');
+        $this->setvar('marketing_mailserver_new_order');
+        $this->setvar('marketing_mailserver_order_pdf');
+        $this->setvar('marketing_mailserver_new_comment');
+        $this->setvar('marketing_mailserver_new_reply');
+        $this->setvar('marketing_mailserver_old_order');
+        $this->setvar('marketing_mailserver_new_payment');
+        $this->setvar('marketing_mailserver_update_order');
+        $this->setvar('marketing_mailserver_new_contact');
+        $this->setvar('marketing_mailserver_add_balance');
+        $this->setvar('marketing_mailserver_subtract_balance');
+        $this->setvar('marketing_mailserver_happy_birthday');
+        $this->setvar('marketing_mailserver_recommended_products');
+        $this->setvar('marketing_mailserver_promote_product');
+        $this->setvar('marketing_mailserver_invite_friends');
 
         $this->document->breadcrumbs = array();
 

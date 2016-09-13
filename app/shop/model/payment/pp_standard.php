@@ -22,6 +22,7 @@ class ModelPaymentPPStandard extends Model {
 		if ($status) {  
       		$method_data = array( 
         		'id'         => 'pp_standard',
+        		'code'         => 'pp_standard',
         		'title'      => $this->language->get('text_title'),
 				'sort_order' => $this->config->get('pp_standard_sort_order')
       		);
@@ -30,4 +31,3 @@ class ModelPaymentPPStandard extends Model {
     	return $method_data;
   	}
 }
-?>

@@ -1,8 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ACEITUNAS FERMATT";;;"Telefax: (56) (58) 228375";"Camino de Azapa Km.4 Chile, Arica"
-"AGRO SACRAMENTO";;;"(56) (58) 229177";"Camino Azapa Km.4 Chile, Arica"
-"MI BODEGA SAJAMA SONIA E HIJOS";;;"(56) (58) 225909";"Kilómetro 12 Parcela 36 Azapa Chile, Arica"
-SAVONA;;;"(56) (2) 2340273";"Luis Thayer Ojeda 0127 Of. 405 - Providencia Chile, Santiago"
-"ACEITUNAS LA TILTILANA";;;"(56) (2) 28461214";"Av. La Paz 386 - Recoleta Chile, Santiago"
-"DE ROSSETTI";;;"(56) (2) 6226682";"Santiago Chile, Santiago"
-"MUSTAFA ACEITUNAS";;;"(56) (2) 23575279";"Huanuco 2370 Independencia Chile, Santiago"

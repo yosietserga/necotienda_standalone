@@ -2,10 +2,8 @@
 <?php echo $navigation; ?>
     <section id="maincontent" class="row">
 
-        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
-        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/message.tpl"); ?>
+        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-start.tpl");?>
 
-        <h1><?php echo $Language->get('heading_text'); ?></h1>
         <div class="simple-form">
             <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" enctype="multipart/form-data" id="passwordConfirmForm">
                 <div class="entry-password form-entry">

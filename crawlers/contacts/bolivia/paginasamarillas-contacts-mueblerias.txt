@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"MUEBLERIA NUEVO ESTILO";;;"(591) (33) 3393571";"Libertad # 763 Bolivia, Santa Cruz de la Sierra"

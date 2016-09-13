@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"FÁBRICA DE ROPA ANGOL LTDA.";;;"(56) (2) 6718712";"Abdon Cifuentes 185 Santiago Chile, Santiago"
-"FABRICA DE PARKAS Y ROPA DEPORTIVA LOGOTEX";;;"Telefax: (56) (32) 2112106";"4 Norte 421 Chile, Viña del Mar"

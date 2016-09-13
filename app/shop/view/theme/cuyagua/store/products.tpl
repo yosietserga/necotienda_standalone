@@ -19,13 +19,21 @@
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/catalog-list.tpl"); ?>
 
 <script>
-$(function() {
-    
-    /*$("#productsWrapper img").lazyload();*/
+    (function() {
+        window.deferjQuery(function () {
+            window.appendScriptSource("<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/elevatezoom/jquery.elevateZoom-3.0.8.min.js'; ?>");
+            window.appendScriptSource("<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/slick/slick/slick.min.js'; ?>");
+            window.appendScriptSource("<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/rrssb/js/rrssb.min.js'; ?>");
+        });
+    })();
+</script>
 
-    (function () {
-        var listResource = '<?php include(DIR_TEMPLATE  . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
-        var gridResource = '<?php include(DIR_TEMPLATE. $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
+<script>
+/*$("#productsWrapper img").lazyload();*/
+(function () {
+    window.deferjQuery(function () {
+        var listResource = '<?php include(DIR_TEMPLATE . $this->config->get('config_template') . '/shared/icons/menu.tpl');?>';
+        var gridResource = '<?php include(DIR_TEMPLATE . $this->config->get('config_template') . '/shared/icons/th-large.tpl'); ?>';
         var gridModeIcon = '<i class="icon icon-sort">' + gridResource + '</i>';
         var listModeIcon = '<i class="icon icon-sort">' + listResource + '</i>';
         var listModeFlag = 'catalog-list';
@@ -50,7 +58,7 @@ $(function() {
                 $self.html(gridModeIcon);
             }
         });
-    })();
-});
+    });
+})();
 </script>
 <?php } ?>

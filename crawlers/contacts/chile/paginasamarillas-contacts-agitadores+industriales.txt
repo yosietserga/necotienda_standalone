@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-DHIWOLL;;;"(56) (2) 7292900";"Rafael Cañas 47 Piso 3 Providencia Chile, Santiago"

@@ -168,10 +168,12 @@ abstract class Controller {
         }
         
         if (file_exists($file)) {
+            $this->data['Api'] = $this->registry->get('api');
             $this->data['Config'] = $this->registry->get('config');
             $this->data['Language'] = $this->registry->get('language');
             $this->data['Url'] = new Url($this->registry);
-            
+            $this->data['Image'] = new NTImage;
+
             extract($this->data);
             ob_start();
             require($file);
@@ -189,12 +191,14 @@ abstract class Controller {
                     $content = str_replace('{%' . $this->data[$key . "_hook"] . '%}', $this->data[$key . "_code"], $content);
                 }
             }
-            
-            $content = str_replace("\n", "", $content);
-            $content = str_replace("\r", "", $content);
-            $content = preg_replace('/\s{2,}/', "", $content);
-            $content = preg_replace('/\n\s*\n/', "\n", $content);
-            
+
+            if ($this->data['Config']->get('config_minified_html') && defined('STORE_ID')) {
+                $content = preg_replace('!/\*.*?\*/!s', '', $content);
+                $content = str_replace("\n", "", $content);
+                $content = str_replace("\r", "", $content);
+                $content = preg_replace('/\s{2,}/', "", $content);
+                $content = preg_replace('/\n\s*\n/', "\n", $content);
+            }
             return $content;
         } else {
             exit('Error: Could not load template ' . $file . '!');

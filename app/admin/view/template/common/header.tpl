@@ -36,12 +36,16 @@
     <?php } ?>
         window.nt.http_home = '<?php echo HTTP_HOME; ?>';
         window.nt.http_admin_image = '<?php echo HTTP_ADMIN_IMAGE; ?>';
+        window.nt.route = '<?php echo $this->Route; ?>';
     </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.min.js"></script> -->
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
     <script>window.Modernizr || document.write('<script src="js/vendor/modernizr.js"><\/script>')</script>
     <script>window.$ || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
     <script type="text/javascript">window.CKEDITOR_BASEPATH = '<?php echo HTTP_ADMIN_JS; ?>vendor/ckeditor/';</script>
+
 </head>
 <body>
 
@@ -50,8 +54,10 @@
     <div id="topNav">
         <div class="fixed">
             <div class="wrapper">
-                <a id="simple-menu" href="#sidr" style="margin:5px 10px;float:left;"><i class="fa fa-bars fa-2x" style="color:#fff"></i></a>
+                <a id="simple-menu" href="#sidr" style="margin:5px 10px;float:left;" onclick="if (!$.sidr) { return false; }"><i class="fa fa-bars fa-2x" style="color:#fff"></i></a>
+                <!--
                 <a id="right-menu" href="#sidr-right" style="margin:5px 10px;float:right;"><i class="fa fa-bars fa-2x" style="color:#900"></i></a>
+                -->
                 
                 <div class="userNav">
                     <ul>
@@ -61,6 +67,7 @@
                                 <span class="hideOnTablet"><?php echo $Language->get('text_delete_cache'); ?></span>
                             </a>
                         </li>
+                        <!--
                         <li>
                             <a href="<?php echo $Url::createAdminUrl("sale/order"); ?>" title="<?php echo $Language->get('text_orders'); ?>">
                                 <span><i class="fa fa-bell fa-2x"></i></span>
@@ -70,6 +77,7 @@
                         <li class="dd hideOnMobile">
                             <span><i class="fa fa-comments fa-2x"></i></span>
                         </li>
+                        -->
                         <li class="dd hideOnMobile">
                             <span><i class="fa fa-shopping-cart fa-2x"></i></span>
                             <ul class="menu_body">
@@ -79,11 +87,13 @@
                                 <?php } ?>
                             </ul>
                         </li>
+                        <!--
                         <li class="hideOnMobile">
                             <a href="<?php echo $Url::createAdminUrl("setting/setting"); ?>" title="<?php echo $Language->get('tab_help'); ?>">
                                <span><i class="fa fa-life-ring fa-2x"></i></span>
                             </a>
                         </li>
+                        -->
                         <li class="hideOnMobile">
                             <a href="<?php echo $Url::createAdminUrl("setting/setting"); ?>" title="<?php echo $Language->get('text_setting'); ?>">
                                <span><i class="fa fa-cog fa-2x"></i></span>

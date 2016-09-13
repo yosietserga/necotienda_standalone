@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PULIDORAS DE BALDOSAS ARRIAGADA";;;"(56) (2) 8599012";"Av. Pedro de Valdivia 0345 San Bernardo Chile, Santiago"

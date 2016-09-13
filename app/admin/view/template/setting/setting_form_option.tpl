@@ -20,6 +20,24 @@
             </td>
         </tr>
         <tr>
+            <td><?php echo $Language->get('Render HTML Minified'); ?></td>
+            <td>
+                <input type="checkbox" name="config_minified_html" value="1"<?php if ($config_minified_html) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $Language->get('Generate CSS Into Files'); ?></td>
+            <td>
+                <input type="checkbox" name="config_render_css_in_file" value="1"<?php if ($config_render_css_in_file) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $Language->get('Generate JS Into Files'); ?></td>
+            <td>
+                <input type="checkbox" name="config_render_js_in_file" value="1"<?php if ($config_render_js_in_file) { echo ' checked="checked"'; } ?> />
+            </td>
+        </tr>
+        <tr>
             <td><?php echo $Language->get('entry_store_mode'); ?></td>
             <td>
                 <select name="config_store_mode">

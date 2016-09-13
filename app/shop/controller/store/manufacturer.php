@@ -21,6 +21,13 @@ class ControllerStoreManufacturer extends Controller {
         $manufacturer_info = $this->modelManufacturer->getManufacturer($this->data['manufacturer_id']);
 
         if ($manufacturer_info) {
+            //tracker
+            $this->tracker->track($manufacturer_info['manufacturer_id'], 'manufacturer');
+
+            if ($this->session->has('ref_email') && !$this->session->has('ref_cid')) {
+                $this->data['show_register_form_invitation'] = true;
+            }
+
             $this->session->set('redirect', Url::createUrl("store/manufacturer", array('manufacturer_id' => $this->data['manufacturer_id'])));
 
             $this->modelManufacturer->updateStats($this->request->getQuery('manufacturer_id'), $this->customer->getId());
@@ -28,8 +35,8 @@ class ControllerStoreManufacturer extends Controller {
             $cached = $this->cache->get('manufacturer.' .
                     $this->data['manufacturer_id'] .
                     $this->config->get('config_language_id') . "." .
-                    $this->request->hasQuery('hl') . "." .
-                    $this->request->hasQuery('cc') . "." .
+                    $this->request->getQuery('hl') . "." .
+                    $this->request->getQuery('cc') . "." .
                     $this->customer->getId() . "." .
                     $this->config->get('config_currency') . "." .
                     $this->config->get('config_store_id')
@@ -56,8 +63,8 @@ class ControllerStoreManufacturer extends Controller {
                     $this->cacheId = 'manufacturer.' .
                             $this->data['manufacturer_id'] .
                             $this->config->get('config_language_id') . "." .
-                            $this->request->hasQuery('hl') . "." .
-                            $this->request->hasQuery('cc') . "." .
+                            $this->request->getQuery('hl') . "." .
+                            $this->request->getQuery('cc') . "." .
                             $this->customer->getId() . "." .
                             $this->config->get('config_currency') . "." .
                             $this->config->get('config_store_id');
@@ -75,7 +82,7 @@ class ControllerStoreManufacturer extends Controller {
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
                     $this->template = $this->config->get('config_template') . '/' . $template;
                 } else {
-                    $this->template = 'choroni/' . $template;
+                    $this->template = 'cuyagua/' . $template;
                 }
 
                 $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -126,7 +133,7 @@ class ControllerStoreManufacturer extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -241,7 +248,7 @@ class ControllerStoreManufacturer extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));

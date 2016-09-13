@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"INSTITUTO PSICOEDUCATIVO DE COLOMBIA";mercadeo.ipsicol@gmail.com;www.ipsicol.com.co;"(57) (4) 5380958";"Cr50 A 61-22 Colombia, Medellín"
-"ESTUDIO JURÍDICO GRACIA BARÓN";estudio@graciabaron.com;www.graciabaron.com;"(57) (1) 6025606";"Cl 74 15-80 Int 1 Of 514 Colombia, Bogotá"

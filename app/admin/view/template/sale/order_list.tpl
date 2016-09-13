@@ -20,7 +20,9 @@
             <div class="header">
                 <h1><?php echo $Language->get('heading_title'); ?></h1>
                 <div class="buttons">
+                    <!--
                     <a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $Language->get('button_insert'); ?></a>
+                    -->
                     <a onclick="location = '<?php echo $invoice; ?>'" class="button"><?php echo $Language->get('button_invoices'); ?></a>
                 </div>
             </div>    

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ZAPATERÍA CASA REAL";;;"(56) (2) 2317307";"Av Pedro de Valdivia 8, Providencia Chile, Santiago"

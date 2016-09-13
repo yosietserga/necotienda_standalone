@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class ControllerAccountRegister extends Controller {
 
@@ -105,8 +105,13 @@ class ControllerAccountRegister extends Controller {
                     $mailer->Body = html_entity_decode(htmlspecialchars_decode($message));
                     $mailer->Send();
                 }
-                if ($this->customer->login($email, $password) && $this->session->has('redirect')) {
-                    $this->redirect($this->session->get('redirect'));
+
+                if ($this->customer->login($email, $password)) {
+                    if ($this->session->has('redirect')) {
+                        $this->redirect($this->session->get('redirect'));
+                    } else {
+                        $this->redirect(Url::createUrl("account/account"));
+                    }
                 } else {
                     $this->redirect(Url::createUrl("account/success"));
                 }
@@ -146,7 +151,7 @@ class ControllerAccountRegister extends Controller {
         $this->data['error_password'] = isset($this->error['password']) ? $this->error['password'] : "";
         $this->data['error_confirm'] = isset($this->error['confirm']) ? $this->error['confirm'] : "";
         $this->data['error_captcha'] = isset($this->error['captcha']) ? $this->error['captcha'] : "";
-        $this->data['error_recaptcha'] = isset($this->error['recaptcha']) ? $this->error['recaptcha'] : null;
+        
 
         $this->setvar('company');
         $this->setvar('riftype');
@@ -199,7 +204,7 @@ class ControllerAccountRegister extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
         } else {
-            $this->template = 'choroni/' . $template;
+            $this->template = 'cuyagua/' . $template;
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
@@ -242,13 +247,6 @@ class ControllerAccountRegister extends Controller {
         if ($this->request->post['confirm'] != $this->request->post['password']) {
             $this->error['confirm'] = $this->language->get('error_confirm');
             $this->validar->custom("<li>La confirmaci&oacute;n de la contrase&ntilde;a no coincide</li>");
-        }
-
-        $rc = $this->recaptcha->checkAnswer($this->request->post['recaptcha_challenge_field'], $this->request->post['recaptcha_response_field']);
-
-        if (!$rc) {
-            $this->error['recaptcha'] = $this->language->get('error_recaptcha');
-            $this->validar->custom("<li>Debe ingresar las frases de la imagen</b></li>");
         }
 
         $this->data['mostrarError'] = $this->validar->mostrarError();

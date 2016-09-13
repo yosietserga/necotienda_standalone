@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"AISLACIONES MARCOS SALDAÑA BOZA";;;"(56) (2) 5289808";"Av. Los Morros 13320, El Bosque Chile, Santiago"

@@ -12,6 +12,15 @@ $registry->set('cache', new Cache());
 $registry->set('document', $document = new Document());
 $registry->set('language', $language);
 $registry->set('user', new User($registry));
+
+// for background color when it resizes images
+(!defined('IMAGE_BG_COLOR_R') && $config->get('config_image_bg_color_r')) ?
+    define('IMAGE_BG_COLOR_R', $config->get('config_image_bg_color_r')) : define('IMAGE_BG_COLOR_R', 255);
+(!defined('IMAGE_BG_COLOR_G') && $config->get('config_image_bg_color_g')) ?
+    define('IMAGE_BG_COLOR_G', $config->get('config_image_bg_color_g')) : define('IMAGE_BG_COLOR_G', 255);
+(!defined('IMAGE_BG_COLOR_B') && $config->get('config_image_bg_color_b')) ?
+    define('IMAGE_BG_COLOR_B', $config->get('config_image_bg_color_b')) : define('IMAGE_BG_COLOR_B', 255);
+
 $route = strtolower($request->get['r']);
 switch ($route) {
     case 'common/home':
@@ -62,6 +71,20 @@ switch ($route) {
         $loader->auto('store/category');
         $loader->auto('store/product');
         $loader->auto('image');
+        break;
+    case 'store/attribute':
+    case 'store/attribute/grid':
+    case 'store/attribute/delete':
+        $language->load('store/attribute');
+        $loader->auto('store/attribute');
+        $loader->auto('pagination');
+        break;
+    case 'store/attribute/insert':
+    case 'store/attribute/update':
+        $language->load('store/attribute');
+        $loader->auto('store/attribute');
+        $loader->auto('store/store');
+        $loader->auto('store/category');
         break;
     case 'store/download':
     case 'store/download/grid':
@@ -241,6 +264,7 @@ switch ($route) {
     case 'content/post/insert':
     case 'content/post/update':
         $language->load('content/post');
+        $loader->auto('content/post_category');
         $loader->auto('content/post');
         $loader->auto('store/store');
         $loader->auto('sale/customergroup');
@@ -575,6 +599,18 @@ switch ($route) {
 		$loader->auto('currency');
         $registry->set('currency', new Currency($registry));
         break;
+    case 'marketing/mailserver':
+    case 'marketing/mailserver/grid':
+    case 'marketing/mailserver/delete':
+        $language->load('marketing/mailserver');
+        $loader->auto('setting/setting');
+        $loader->auto('pagination');
+        break;
+    case 'marketing/mailserver/insert':
+    case 'marketing/mailserver/update':
+        $language->load('marketing/mailserver');
+        $loader->auto('setting/setting');
+        break;
     case 'marketing/newsletter':
     case 'marketing/newsletter/grid':
     case 'marketing/newsletter/delete':
@@ -589,7 +625,6 @@ switch ($route) {
         $loader->auto('store/category');
         $loader->library('email/newsletter');
         $loader->library('email/template');
-        $loader->library('url');
         $registry->set('newsletter', new Newsletter());
         $registry->set('email_template', new EmailTemplate($registry));
         break;
@@ -732,3 +767,44 @@ switch ($route) {
         $registry->set('currency', new Currency($registry));
         break;
 }
+
+$tpl = $config->get('config_admin_template') ? $config->get('config_admin_template') : 'default';
+
+$javascripts = $styles = $scripts = array();
+
+if (file_exists(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_JS) . 'deps.php')) {
+    require_once(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_JS) . 'deps.php');
+    foreach ($js_assets as $i => $routes) {
+        if (empty($routes)) continue;
+        if (is_array($routes) && in_array($route, $routes) || $routes === '*') {
+            array_push($javascripts, $i);
+        }
+    }
+
+    if ($jsx_assets) {
+        foreach ($jsx_assets as $i => $routes) {
+            if (empty($routes)) continue;
+            if (((is_array($routes) && in_array($route, $routes)) || $routes === '*')) {
+                array_push($scripts, array(
+                    'method'=>'jsx',
+                    'id'=>$i,
+                    'script'=>file_get_contents($i)
+                ));
+            }
+        }
+    }
+}
+
+if (file_exists(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_CSS) . 'deps.php')) {
+    require_once(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_CSS) . 'deps.php');
+    foreach ($css_assets as $i => $asset) {
+        if (empty($asset['css'])) continue;
+        if (is_array($routes) && in_array($route, $asset['routes']) || $asset['routes'] === '*') {
+            array_push($styles, $asset['css']);
+        }
+    }
+}
+
+$registry->set('javascripts', $javascripts);
+$registry->set('styles', $styles);
+$registry->set('scripts', $scripts);

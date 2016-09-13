@@ -1,4 +1,4 @@
-<div class="heading widget-heading feature-heading" id="<?php echo $widgetName; ?>Header">
+<div class="heading widget-heading feature-heading form-heading" id="<?php echo $widgetName; ?>Header">
     <div class="heading-title">
         <h3>
             <i class="heading-icon icon icon-file-text">

@@ -127,7 +127,7 @@ function bindEventsRenderedFiles() {
                         
     $('#fileMgrFiles li').on('dblclick', function () {
         var filename = $(this).find('a:eq(0)').attr('file');
-        parent.$('#<?php echo $field; ?>').attr('value', 'data/' + filename);
+        parent.$('#'+ window.field).attr('value', 'data/' + filename);
         parent.$('#dialog').dialog('close');
         parent.$('#dialog').remove();
     });
@@ -518,7 +518,7 @@ $(function(){
                         }
                     });
                 } else {
-                    alert('<?php echo $error_select; ?>');
+                    alert(window.errorSelect);
                 }
             }
         }

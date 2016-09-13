@@ -1,64 +1,68 @@
 <?php echo $header; ?>
 <?php echo $navigation; ?>
 <section id="maincontent" class="row">
-    <!-- breadcrumbs -->
-        <div class="large-12 small-12 medium-12 columns">
-            <ul id="breadcrumbs" class="breadcrumbs nt-editable">
-            <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-                <li>
-                     <a title="<?php echo $breadcrumb['text']; ?>" href="<?php echo str_replace('&', '&amp;', $breadcrumb['href']); ?>">
-                         <?php echo $breadcrumb['text']; ?>
-                     </a>
-                </li>
-            <?php } ?>
-            </ul>
+
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/breadcrumbs.tpl"); ?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/featured-widgets.tpl");?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/page-heading.tpl");?>
+
+    <?php if ($description && strlen($description) > 1) { ?>
+        <div class="category-description">
+            <p><?php echo $description; ?></p>
         </div>
-        <!-- /breadcrumbs -->
+    <?php } ?>
 
-        <!-- breadcrumbs -->
-        <div class="large-12 medium-12 small-12 columns">
-            <div id="featuredContent" class="feature-content">
-            <ul class="widgets"><?php if($featuredWidgets) { foreach ($featuredWidgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } } ?></ul>
-            </div>
-        </div>
-        <!-- breadcrumbs -->
-
-
-        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-start.tpl"); ?>
-
-            <h1><?php echo $heading_title; ?></h1>
-            <?php if ($description && strlen($description) > 10) { ?>
-                <div class="category-description">
-                    <p><?php echo $description; ?></p>
+    <?php if($categories) { ?>
+    <nav class="catalog catalog-grid catalog-break">
+        <ul class="category-view">
+        <?php foreach($categories as $category) { ?>
+            <li>
+                <figure class="picture">
+                <a class="thumb" href="<?php echo str_replace('&', '&amp;', $category['href']); ?>" title="<?php echo $category['name']; ?>"><img src="<?php echo $category['thumb']; ?>" alt="<?php echo $category['name']; ?>" /></a>
+                </figure>
+                <div class="info">
+                    <a class="name" href="<?php echo str_replace('&', '&amp;', $category['href']); ?>" title="<?php echo $category['name']; ?>"><?php echo $category['name']; ?></a>
                 </div>
-            <?php } ?>
+            </li>
+        <?php } ?>
+        </ul>
+    </nav>
+    <?php } ?>
 
-            <?php if($categories) { ?>
-            <nav class="catalog catalog-grid catalog-break">
-                <ul class="category-view">
-                <?php foreach($categories as $category) { ?>
-                    <li>
-                        <figure class="picture">
-                        <a class="thumb" href="<?php echo str_replace('&', '&amp;', $category['href']); ?>" title="<?php echo $category['name']; ?>"><img src="<?php echo $category['thumb']; ?>" alt="<?php echo $category['name']; ?>" /></a>
-                        </figure>
-                        <div class="info">
-                            <a class="name" href="<?php echo str_replace('&', '&amp;', $category['href']); ?>" title="<?php echo $category['name']; ?>"><?php echo $category['name']; ?></a>
-                        </div>
-                    </li>
-                <?php } ?>
-                </ul>
-            </nav>
-            <?php } ?>
-
-            <div id="products"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
-            <?php if($widgets) { ?>
-                 <ul class="widgets">
-                     <?php foreach ($widgets as $widget) { ?>
-                         {%<?php echo $widget; ?>%}
-                     <?php } ?>
-                 </ul>
+    <div id="products"><img src='<?php echo HTTP_IMAGE; ?>data/loader.gif' alt='Cargando...' /></div>
+    <?php if($widgets) { ?>
+         <ul class="widgets">
+             <?php foreach ($widgets as $widget) { ?>
+                 {%<?php echo $widget; ?>%}
              <?php } ?>
-
-        <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
+         </ul>
+     <?php } ?>
+    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
     </section>
+    <script>
+        $(function() {
+            var elevateZoomScript;
+            var slickScript;
+            var rrssbScript;
+            if (!$.fn.elevateZoom) {
+                elevateZoomScript = document.createElement("script");
+                elevateZoomScript.async = "true";
+                elevateZoomScript.src = "<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/elevatezoom/jquery.elevateZoom-3.0.8.min.js'; ?>";
+                document.body.appendChild(elevateZoomScript);
+            }
+            if (!$.fn.slick) {
+                slickScript = document.createElement("script");
+                slickScript.async = "true";
+                slickScript.src = "<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/slick/slick/slick.min.js'; ?>";
+                document.body.appendChild(slickScript);
+            }
+            if (!window.rrssbInit) {
+                rrssbScript = document.createElement("script");
+                rrssbScript.async = "true";
+                rrssbScript.src = "<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/rrssb/js/rrssb.min.js'; ?>";
+                document.body.appendChild(rrssbScript);
+            }
+        });
+</script>
 <?php echo $footer; ?>

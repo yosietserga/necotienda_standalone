@@ -6,7 +6,7 @@ $(function(){
             $('#widgetsPanel li').show();
         } else {
             $('#widgetsPanel li b').each(function(){
-                if ($(this).text().toLowerCase().indexOf( valor ) > 0) {
+                if ($(this).text().toLowerCase().indexOf( valor ) >= 0) {
                     $(this).closest('li').show();
                 } else {
                     $(this).closest('li').hide();

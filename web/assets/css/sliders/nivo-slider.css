@@ -108,12 +108,12 @@
 }
 .nivo-controlNav {
     position:relative;
-    margin-left:21px;
-    margin-top:-107px;
+    margin-left: 1.313rem;
+    margin-top: 4.188rem;
 	padding: 10px 19px 10px 30px;
-    background:rgba(0,0,0,0.7);
-    width:649px;
-    height: 67px;
+    background: rgba(0,0,0,0.7);
+    width:40.563rem;
+    height: 4.188rem;
     overflow: hidden;
     z-index:9999;
 }

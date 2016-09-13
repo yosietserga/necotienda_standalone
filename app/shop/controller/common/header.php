@@ -11,7 +11,7 @@ class ControllerCommonHeader extends Controller {
         }
 
         if ($this->request->hasQuery('hl') || $this->request->hasQuery('cc')) {
-            
+
             if ($this->request->hasQuery('_route_')) {
                 $this->session->set('redirect', HTTP_HOME . $this->request->getQuery('_route_'));
             } elseif ($this->request->hasQuery('r')) {
@@ -32,7 +32,7 @@ class ControllerCommonHeader extends Controller {
                 $this->session->set('redirect', HTTP_HOME);
             }
         }
-        
+
         if ($this->request->hasQuery('hl')) {
             $this->session->set('language', $this->request->getQuery('hl'));
             if (!$this->request->hasQuery('cc')) {
@@ -53,9 +53,6 @@ class ControllerCommonHeader extends Controller {
             } else {
                 $this->redirect(HTTP_HOME);
             }
-        }
-
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && isset($this->request->post['currency_code'])) {
         }
 
         if (!$this->session->has('token')) {
@@ -100,12 +97,19 @@ class ControllerCommonHeader extends Controller {
                 $this->data['theme_editor'] = true;
                 if ($this->request->hasQuery('template') && file_exists(DIR_TEMPLATE . $this->request->getQuery('template') . '/common/header.tpl')) {
                     $this->config->set('config_template', $this->request->getQuery('template'));
+
+                    $this->data['new_theme']= Url::createAdminUrl('style/theme/insert',array(),'NONSSL',HTTP_ADMIN);
+                    $this->data['save_theme']= Url::createAdminUrl('style/theme/save',array('theme_id'=>$this->request->getQuery('theme_id'),'template'=>$this->request->getQuery('template')),'NONSSL',HTTP_ADMIN);
+                    $this->data['download_theme']= Url::createAdminUrl('style/theme/download',array('theme_id'=>$this->request->getQuery('theme_id'),'template'=>$this->request->getQuery('template')),'NONSSL',HTTP_ADMIN);
                 }
             }
         }
 
+        $this->loadAssets();
+
         $this->loadCss();
-        
+        $this->loadJs();
+
         $this->data['store'] = $this->config->get('config_name');
         $this->data['isLogged'] = $this->customer->isLogged();
 
@@ -195,6 +199,7 @@ class ControllerCommonHeader extends Controller {
         }
 
         $this->session->set('state', md5(rand()));
+        $this->data['google_analytics_code'] = $this->config->get('google_analytics_code');
         $this->data['live_client_id'] = $this->config->get('social_live_client_id');
         $this->data['google_client_id'] = $this->config->get('social_google_client_id');
         $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
@@ -202,7 +207,7 @@ class ControllerCommonHeader extends Controller {
 
         $this->load->helper('widgets');
         $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
+        foreach ($widgets->getWidgets('header') as $widget) {
             $settings = (array) unserialize($widget['settings']);
             if ($settings['asyn']) {
                 $url = Url::createUrl("{$settings['route']}", $settings['params']);
@@ -210,7 +215,7 @@ class ControllerCommonHeader extends Controller {
                     'id' => $widget['name'],
                     'method' => 'ready',
                     'script' =>
-                    "$(document.createElement('div'))
+                        "$(document.createElement('div'))
                         .attr({
                             id:'" . $widget['name'] . "'
                         })
@@ -224,7 +229,7 @@ class ControllerCommonHeader extends Controller {
                         if ($settings['autoload']) {
                             $this->data['widgets'][] = $widget['name'];
                         }
-                        
+
                         $this->children[$widget['name']] = $settings['route'];
                         $this->widget[$widget['name']] = $widget;
                     }
@@ -236,7 +241,7 @@ class ControllerCommonHeader extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
             $this->template = $this->config->get('config_template') . '/common/header.tpl';
         } else {
-            $this->template = 'choroni/common/header.tpl';
+            $this->template = 'cuyagua/common/header.tpl';
         }
 
         $this->render();
@@ -262,12 +267,12 @@ class ControllerCommonHeader extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/localisation/languages.tpl')) {
             $this->template = $this->config->get('config_template') . '/localisation/languages.tpl';
         } else {
-            $this->template = 'choroni/localisation/languages.tpl';
+            $this->template = 'cuyagua/localisation/languages.tpl';
         }
-        
+
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
-    
+
     public function getCurrencies() {
         $this->load->auto('localisation/currency');
         $this->data['currencies'] = array();
@@ -287,54 +292,88 @@ class ControllerCommonHeader extends Controller {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/localisation/currencies.tpl')) {
             $this->template = $this->config->get('config_template') . '/localisation/currencies.tpl';
         } else {
-            $this->template = 'choroni/localisation/currencies.tpl';
+            $this->template = 'cuyagua/localisation/currencies.tpl';
         }
-        
+
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
-    
+
+    protected function loadJs() {
+        $f_output = '';
+        if ($this->config->get('config_render_js_in_file')) {
+            $done = array();
+            foreach ($this->header_javascripts as $key => $js) {
+                if (in_array($js, $done)) continue;
+                $done[] = $js;
+                $f_output .= file_get_contents($js);
+            }
+            $this->header_javascripts = null;
+        }
+
+        $this->data['scripts'] .= ($f_output) ? "<script> \n " . $f_output . " </script>" : "";
+    }
+
     protected function loadCss() {
         $this->data['css'] = "";
-        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'vendor.css')) {
-            $this->data['css'] .= file_get_contents(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'vendor.css');
-        }
-        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'theme.css')) {
-            $this->data['css'] .= file_get_contents(str_replace('%theme%', $this->config->get('config_template'), DIR_THEME_CSS) . 'theme.css');
-        }
-        
+
         $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
             $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
             $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
         } else {
-            $csspath = str_replace("%theme%", "choroni", $csspath);
-            $cssFolder = str_replace("%theme%", "choroni", DIR_THEME_CSS);
+            $csspath = str_replace("%theme%", "cuyagua", $csspath);
+            $cssFolder = str_replace("%theme%", "cuyagua", DIR_THEME_CSS);
+        }
+
+        if (file_exists($cssFolder . 'theme.css')) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . 'theme.css');
+            } else {
+                $styles['theme.css'] = array('media' => 'all', 'href' => $csspath . 'theme.css');
+            }
+        }
+
+        if (file_exists($cssFolder . 'vendor.css')) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . 'vendor.css');
+            } else {
+                $styles['vendor.css'] = array('media' => 'all', 'href' => $csspath . 'vendor.css');
+            }
         }
 
         if (file_exists($cssFolder . str_replace('/', '', strtolower($this->Route) . '.css'))) {
-            $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('/', '', strtolower($this->Route) . '.css'));
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . str_replace('/', '', strtolower($this->Route) . '.css'));
+            } else {
+                $styles['vendor.css'] = array('media' => 'all', 'href' => $csspath . str_replace('/', '', strtolower($this->Route) . '.css'));
+            }
         }
 
         if (count($styles)) {
             $this->styles = array_merge($this->styles, $styles);
         }
-        
-        foreach ($this->styles as $css) {
-            $this->data['css'] .= file_get_contents($css['href']);
+
+        if ($this->config->get('config_render_css_in_file')) {
+            $done = array();
+            foreach ($this->styles as $k => $css) {
+                if (in_array($css['href'], $done)) continue;
+                $done[] = $css['href'];
+                $this->data['css'] .= file_get_contents($css['href']);
+            }
+            $this->styles = null;
+            $styles = null;
         }
 
         $this->load->auto('style/theme');
         $cssmainpath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
-        foreach ($this->modelTheme->getAll() as $theme) {
-            if ($this->config->get('theme_default_id') === $theme['theme_id']) {
-                if (file_exists(DIR_CSS . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
-                    $this->data['css'] .= file_get_contents($cssmainpath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
-                    break;
-                } elseif (file_exists($cssFolder . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
-                    $this->data['css'] .= file_get_contents($csspath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
-                    break;
-                }
+        $theme = $this->modelTheme->getById($this->config->get('theme_default_id'));
+        if ($theme['theme_id']) {
+            if (file_exists(DIR_CSS . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
+                $this->data['css'] .= file_get_contents($cssmainpath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
+            } elseif (file_exists($cssFolder . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css")) {
+                $this->data['css'] .= file_get_contents($csspath . "custom-" . $theme['theme_id'] . "-" . $this->config->get('config_template') . ".css");
             }
+
         }
 
         if ($this->data['css']) {
@@ -346,15 +385,56 @@ class ControllerCommonHeader extends Controller {
         $this->load->library('user');
         if ($this->user->getId()) {
             $this->data['is_admin'] = true;
-            $styles[] = array('media' => 'screen', 'href' => $cssmainpath . 'jquery-ui/jquery-ui.min.css');
             $styles[] = array('media' => 'screen', 'href' => HTTP_ADMIN . 'css/front/admin.css');
             if ($this->request->hasQuery('theme_editor') && $this->request->hasQuery('template')) {
-                    $styles[] = array('media' => 'screen', 'href' => $cssmainpath . 'neco.colorpicker.css');
+                $styles[] = array('media' => 'screen', 'href' => $cssmainpath . 'neco.colorpicker.css');
             }
         }
 
         if ($styles)
-        $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
+            $this->styles = array_merge($this->styles, $styles);
+        $this->data['styles'] = $this->styles;
     }
 
+    protected function loadAssets() {
+        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
+        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
+            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
+            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
+
+            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
+            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
+        } else {
+            $csspath = str_replace("%theme%", "default", $csspath);
+            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
+
+            $jspath = str_replace("%theme%", "default", $jspath);
+            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
+        }
+
+        if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
+            if ($this->config->get('config_render_css_in_file')) {
+                $this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
+            } else {
+                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
+            }
+        }
+
+        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
+            if ($this->config->get('config_render_js_in_file')) {
+                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            } else {
+                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            }
+        }
+
+        if (count($styles)) {
+            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
+        }
+
+        if (count($javascripts)) {
+            $this->javascripts = array_merge($this->javascripts, $javascripts);
+        }
+    }
 }

@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"PALLCO LTDA.";gerencia@pallco.co;www.pallco.co;"(57) (5) 4223868";"Km 2 Vía Gaira Colombia, Santa Marta"

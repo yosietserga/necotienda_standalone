@@ -1,5 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"RESIDENCIAL GUARACACHI";;;"(591) (33) 3465078";"4to. Anillo Calle Tajibo N³1 Zona Feria Nueva Barrio Lindo Bolivia, Santa Cruz de la Sierra"
-"RESIDENCIAL ""SUIZA""";;;"(591) (33) 3376370";"Calle Prolongación México N³45 Bolivia, Santa Cruz de la Sierra"
-"RESIDENCIAL VALLEGRANDE";;;"(591) (33) 3523493";"Av. Isabel La Católica N³553 Bolivia, Santa Cruz de la Sierra"
-"GRAN RESIDENCIAL 26 DE ENERO";;;"(591) (33) 3337519";"Calle Camiri N³32 Bolivia, Santa Cruz de la Sierra"

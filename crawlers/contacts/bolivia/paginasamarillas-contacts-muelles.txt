@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"MUELLERIA COTOCA";;;"(591) (33) 3467801";"Km 3 1/2 Carret A Cotoca A Una Cuadra Del Surtidor Guaracachi Bolivia, Santa Cruz de la Sierra"
-"LA SUSPENSION";;;"(591) (33) 3526619";"Cnel Dario Legie # 86 Bolivia, Santa Cruz de la Sierra"
-"LA CASA DEL MUELLE II";;;"(591) (33) 3462834";"Av. Virgen De Cotoca No. 2010 Bolivia, Santa Cruz de la Sierra"

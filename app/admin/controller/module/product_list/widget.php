@@ -52,6 +52,8 @@ class ControllerModuleProductListWidget extends Controller {
             $data['order'] = ($this->request->hasQuery('order')) ? $this->request->getQuery('order') : 0;
             $data['store_id'] = ($this->request->hasQuery('store_id')) ? $this->request->getQuery('store_id') : 0;
 
+            $this->load->model('store/category');
+            $c = $this->modelCategory->getAllForList(0, null);
             if ($this->request->hasQuery('w')) {
                 $this->load->model('style/widget');
                 $widget_info = $this->modelWidget->getByName($data['name']);
@@ -70,8 +72,8 @@ class ControllerModuleProductListWidget extends Controller {
                     $landing_pages[] = $lp['landing_page'];
                 }
                 $this->data['landing_pages'] = $landing_pages;
-
                 $this->data['settings'] = (array) unserialize($widget_info['settings']);
+                $this->data['categories'] = $this->getCategories($c, true, $widget_info['name'], $this->data['settings']['categories']);
             } else {
                 $settings = new stdClass;
                 $settings->route = 'module/product_list';
@@ -81,6 +83,7 @@ class ControllerModuleProductListWidget extends Controller {
                 $data['settings'] = $settings;
                 $widget->save($data);
                 $this->setvar('name');
+                $this->data['categories'] = $this->getCategories($c, true, $data['name'], null);
             }
 
             $this->data['routes'] = $widget->getRoutes();
@@ -97,6 +100,29 @@ class ControllerModuleProductListWidget extends Controller {
 
         $this->load->library('json');
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
+    }
+
+    private function getCategories($categories, $parent = false, $name, $settingsCategories) {
+        $output = '';
+        if ($categories) {
+            foreach ($categories as $result) {
+                if ($parent === true)
+                    $output .= '<li>';
+                else
+                    $output .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                $output .= '<input id="'. $name .'Settingscategories' . $result['category_id'] . '" type="checkbox" name="Widgets['. $name .'][settings][categories][]" value="' . $result['category_id'] .'"';
+                $output .= (in_array($result['category_id'], $settingsCategories) || empty($settingsCategories)) ? ' checked="checked"' : '';
+                $output .= '">';
+                $output .= '<label for="'. $name .'Settingscategories' . $result['category_id'] . '">' . $result['name'] . '</label>';
+                
+                // subcategories
+                if ($result['childrens']) {
+                    $output .= $this->getCategories($result['childrens'], 2);
+                }
+                $output .= '</li>';
+            }
+        }
+        return $output;
     }
 
 }

@@ -1,9 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"MODELISTA NAVAL MODAL";;;"(56) (61) 267523";"America Vespucio 2540 Chile, Punta Arenas"
-"MULTIMAQUETAS CRISTOFFANINI";;;"(56) (2) 2894461";"Hornitos 0714 Chile, Santiago"
-"MAQUETAS Y FICTICIOS LTDA.";;;"(56) (2) 7375851";"Condor 899, Dp.207-A Chile, Santiago"
-CURVO;;;"(56) (2) 2229532";"Av. Francisco Bilbao 348 B Chile, Santiago"
-"A ESC";;;"(56) (2) 89643644";"Los Pumas 1830 - Temuco Chile, Santiago"
-"ARAYA & PEÑA Y LILLO ASOCIADOS.";;;"(56) (2) 2216821";"CasaBlanca 3825 Chile, Santiago"
-"BLANCO ARRIAGADA, CLAUDIO";;;"(56) (2) 2717529";"Contramaestre Micalvi 543 Dpto.203 Chile, Santiago"
-"BRAVO CHANDIA, OSVALDO";;;"(56) (2) 2847253";"Departamental 3989 Chile, Santiago"

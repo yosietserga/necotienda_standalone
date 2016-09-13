@@ -285,6 +285,94 @@ ul.right {
     width:128px;
     height:128px;
 }
+/** tasksWrapper **/
+.tasksWrapper {
+    padding-bottom:50px;
+    width:100%;
+    min-height:100px;
+    height:auto;
+    display:block;
+    float:left;
+}
+.tasksWrapper .onHold,
+.tasksWrapper .inProcess,
+.tasksWrapper .overdue,
+.tasksWrapper .rejected,
+.tasksWrapper .completed,
+.tasksWrapper .canceled
+{
+    margin:4px 0px;
+    padding:2px 0px;
+    text-align: center;
+    color:#fff;
+    font:bold 8px arial, sans-serif;
+    width:100%;
+    height:auto;
+    display:block;
+    float:left;
+}
+.tasksWrapper .onHold {
+    background: #bbb;
+}
+.tasksWrapper .inProcess {
+    background: #3E78FD;
+}
+.tasksWrapper .overdue {
+    background: #e08d11;
+}
+.tasksWrapper .rejected {
+    background: #900;
+}
+.tasksWrapper .completed {
+    background: #51a351;
+}
+.tasksWrapper .canceled {
+    background: #FF0000;
+}
+.tasksWrapper .moveTask {
+    cursor:move;
+}
+.tasksWrapper li {
+    padding:12px 5px;
+    background: #fff;
+    width:100%;
+    height:auto;
+    display:block;
+    border-bottom:dashed 1px #ccc;
+    float:left;
+}
+.tasksWrapper li img {
+    padding: 5px;
+    border-right: solid 1px #ccc;
+    float:left;
+}
+.tasksWrapper li a {
+    margin: 0px;
+}
+.tasksWrapper li h2, .tasksWrapper li h3, .tasksWrapper li small {
+    margin:0px;
+    padding:0px;
+    padding-left:5px;
+    float:left;
+}
+.tasksWrapper li h2 {
+    font:normal 14px verdana, sans-serif;
+}
+.tasksWrapper li h3 {
+    font:bold 11px verdana, sans-serif;
+}
+.tasksWrapper li small {
+    color:#666;
+}
+.tasksPlaceHolder {
+    background: #fff !important;
+    width:100%;
+    height:80px !important;
+    display:block;
+    border:dashed 1px #900;
+    clear:both;
+}
+/** /tasksWrapper **/
 .box {
     margin: 5px;
     padding:1%;
@@ -362,6 +450,12 @@ ul.right {
     padding: 5px;
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
+}
+td[contenteditable=true]:focus, td[contenteditable=true]:active {
+  border: dashed 1px #ccc !important;
+  background: #fff !important;
+  color:#333 !important;
+  box-shadow: 0px 0px 4px #222 !important;
 }
 .box tr, .box td {
     border:none;
@@ -492,8 +586,10 @@ ul.right {
 }
 .scrollbox li {
     margin: 0px;
-    padding: 3px;
-    cursor:pointer !important;
+    padding: 10px 3px;
+    float: left;
+    width: 98%;
+    display:block;
 }
 .scrollbox input {
     margin-right: 3px;
@@ -504,7 +600,17 @@ ul.right {
 .scrollbox li:nth-child(odd) {
     background: #fefefe;
 }
-.scrollbox li:hover, .scrollbox b.selected {
+.scrollbox label {
+    float: right;
+    line-height: normal;
+    width:90%;
+    max-width:90%;
+    min-width:60px;
+    height:auto;
+    display:block;
+    cursor:pointer !important;
+}
+.scrollbox li:hover, .scrollbox label.selected {
     background: #136ED6;
     color:#fff !important;
 }
@@ -872,7 +978,6 @@ div.item div.actions {
         left:-9999px !important;
     }
     input, select, textarea {
-        float: !important;
         clear: both !important;
         display: inline-block !important;
         width:90% !important;

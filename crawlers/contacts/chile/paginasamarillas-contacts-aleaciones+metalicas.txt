@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-SELTIX;;;"(56) (51) 9701464";"Viña 2924 La Serena Chile, La Serena"

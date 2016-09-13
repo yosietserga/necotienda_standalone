@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-CUPCARSPORT;;;"(56) (2) 5970696";"Lautaro 2215, La Pintana Chile, Santiago"
-"ESTORIL LTDA.";;;"(56) (2) 5574693";"Cam. A Melipilla 7419, Cerrillos Chile, Santiago"
-"CIMPA LTDA.";;;"(56) (2) 5575473";"Valdivieso 45, Cerrillos Chile, Santiago"

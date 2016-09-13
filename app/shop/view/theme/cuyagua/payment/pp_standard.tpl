@@ -1,18 +1,15 @@
-<div class="heading widget-heading featured-heading large-heading-dropdown" id="<?php echo $widgetName; ?>Header">
-    <div  onclick="$('#bankTransferGuide').slideToggle();" class="heading-title">
-        <h3>
-            <i class="heading-icon icon icon-star">
-                <?php include(DIR_TEMPLATE. $this->config->get('config_template') . "/shared/icons/star-full.tpl"); ?>
-            </i>
+<div class="heading large-heading-dropdown" id="<?php echo $widgetName; ?>Header">
+    <div  onclick="$('#paypalGuide').slideToggle();" class="heading-title">
+        <h3> 
             <?php echo $Language->get('text_title'); ?>
         </h3>
     </div>
 </div>
 
-<div class="simple-form guide" id="paypalGuide" style="display: none;">
+<div class="simple-form guide" id="paypalGuide" style="display: none;" data-guide="payment">
     <?php if (!empty($instructions)) { echo $instructions; } ?>
     
-    <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" id="paypalCheckoutForm">
+    <form action="<?php echo str_replace('&', '&amp;', $action); ?>" method="post" id="paypalCheckoutForm" data-form="payment" data-async>
         <input type="hidden" name="cmd" value="_xclick">
         <input type="hidden" name="business" value="<?php echo $business; ?>">
         <input type="hidden" name="item_name" value="<?php echo $item_name; ?>">
@@ -39,25 +36,3 @@
     </form>
 </div>
 
-<script type="text/javascript">
-$(function(){
-    if (!$.fn.ntForm) {
-        $(document.createElement('script')).attr({
-            'src':'<?php echo HTTP_JS; ?>necojs/neco.form.js',
-            'type':'text/javascript'
-        }).appendTo('body');
-    }
-    if (!$.fn.ui) {
-        $(document.createElement('script')).attr({
-            'src':'<?php echo HTTP_JS; ?>vendor/jquery-ui.min.js',
-            'type':'text/javascript'
-        }).appendTo('body');
-    }
-
-    $('#paypalCheckoutForm').ntForm({
-        lockButton: false,
-        url: '<?php echo str_replace('&', '&amp;', $action); ?>'
-    });
-    
-});
-</script>

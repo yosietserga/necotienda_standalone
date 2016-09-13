@@ -1,2 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ALMACENERIA BOLIVIANA S.A. ALBO S.A.";;;"(591) (33) 3467020";"Av.San Martin No.6 Bolivia, Santa Cruz de la Sierra"

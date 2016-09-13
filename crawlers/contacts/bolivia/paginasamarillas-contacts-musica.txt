@@ -1,4 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ACADEMIA DE MUSICA UBAL";;;"(591) (22) 2317159";"Edificio Mexico Subsuelo Of 2 Centro Colombia y Mexico Bolivia, La Paz"
-"CONSERVATORIO NACIONAL DE MUSICA";;;"(591) (22) 2441297";"C.Reyes Ortiz No 56 Y Av.6 De Agosto 2092 Bolivia, La Paz"
-"ABAIEM-ASOCIACIÓN BOLIVIANA DE ARTISTAS INTERPRETES Y EJECUTANTES DE MÚSICA";;;"Telefax: (591) (22) 2492425";"Av 20 de Octubre No 1687 Edif Wiracocha Planta Baja Of ""F"" Bolivia, La Paz"

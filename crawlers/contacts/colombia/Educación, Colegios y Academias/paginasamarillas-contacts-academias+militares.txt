@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"ACADEMIA MILITAR GENERAL JOSÉ MARÍA CABAL";director@academiacabal.com;www.academiacabal.com;"(57) (2) 3230455";"Cl 2 C Oe 83-30 Alto Nápoles Colombia, Cali"
-"DISTRITO DE INCORPORACIÓN NAVAL N°5";disme@armada.mil.co;www.haztemarino.mil.co;"(57) (4) 2647575";"Cr77 C 51-99 Colombia, Medellín"

@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"EL ALERO";;;"(56) (2) 6349033";"Argomedo 446 Santiago Chile, Santiago"
-"ALERO ELECTRICIDAD";;;"(56) (2) 5565230";"Sierra Bella 1970 Chile, Santiago"

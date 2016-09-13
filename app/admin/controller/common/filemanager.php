@@ -572,15 +572,6 @@ class ControllerCommonFileManager extends Controller {
 
             $name = str_replace('.' . $ext, '', $name);
             $name = $this->config->get('config_name') . "-" . $name;
-            $name = strtolower($name);
-            $name = str_replace(' ', '-', $name);
-            $name = str_replace('�', 'a', $name);
-            $name = str_replace('�', 'e', $name);
-            $name = str_replace('�', 'i', $name);
-            $name = str_replace('�', 'o', $name);
-            $name = str_replace('�', 'u', $name);
-            $name = str_replace('�', 'n', $name);
-
             if ($name !== mb_convert_encoding(mb_convert_encoding($name, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32'))
                 $name = mb_convert_encoding($name, 'UTF-8', mb_detect_encoding($name));
             $name = htmlentities($name, ENT_NOQUOTES, 'UTF-8');

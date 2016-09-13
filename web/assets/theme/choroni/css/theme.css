@@ -466,7 +466,7 @@ tr:hover {
     margin-left:-15px;
     background:#fff;
     display:none;
-    width: 230px;
+    width: 100%;
     height:auto;
     z-index:999;
     border:solid 1px #e0e0e0;
@@ -476,8 +476,8 @@ tr:hover {
     display:block;
 }
 #nav li li {
-    width:200px;
-    height:30px;
+    width:100%;
+    height:auto;
     display:block;
 }
 #nav li li a {

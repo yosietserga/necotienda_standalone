@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"AMÉRICA ELEVADORES";;;"(56) (2) 7803983";"Sargento Menadier 3117, Puente Alto Chile, Santiago"
-"A.T.M. ELEVADORES Y MONTACARGAS";;;"(56) (2) 8141125";"Camino a la Costa 0691, Malloco Chile, Santiago"

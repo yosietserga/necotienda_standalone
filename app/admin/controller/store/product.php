@@ -228,10 +228,10 @@ class ControllerStoreProduct extends Controller {
                     $this->request->post['product_special'][$key]['date_end'] = $dpe[2] . "-" . $dpe[1] . "-" . $dpe[0];
                 }
             }
-            
+
+            //TODO: verificar configuración regional y adaptar
             $this->request->post['price'] = str_replace('.','',$this->request->post['price']);
             $this->request->post['price'] = str_replace(',','.',$this->request->post['price']);
-            
 
             $this->modelProduct->update($this->request->getQuery('product_id'), $this->request->post);
             $this->modelProduct->setProperty($this->request->getQuery('product_id'), 'customer_groups', 'customer_groups', $this->request->getPost('customer_groups'));
@@ -904,7 +904,7 @@ class ControllerStoreProduct extends Controller {
                             }
                         });
                     }
-                }).disableSelection();
+                });
                 $('#list .move').css('cursor','move');
             });
             $('#formFilter').ntForm({
@@ -1365,6 +1365,36 @@ class ControllerStoreProduct extends Controller {
             $this->data['product_category'] = array();
         }
 
+        /* product attributes */
+        foreach ($this->modelProduct->getAllProperties( $this->request->getQuery('product_id'), 'attribute' ) as $attribute) {
+            list($name, $attribute_id, $attribute_group_id) = explode(':', $attribute['key']);
+            $attrValues[$attribute_group_id][$attribute_id] = $attribute['value'];
+        }
+
+        foreach ($attrValues as $k => $attr) {
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."product_attribute_group WHERE product_attribute_group_id = ". (int)$k);
+            $attribute_group = $query->row;
+
+            $this->data['attributes'][$k]['product_attribute_group_id'] = ($attribute_group['product_attribute_group_id']) ? $attribute_group['product_attribute_group_id'] : null;
+            $this->data['attributes'][$k]['title'] = ($attribute_group['name']) ? $attribute_group['name'] : null;
+            $this->data['attributes'][$k]['categoriesAttributes'] = array_unique($this->modelProduct->getCategoriesByAttributeGroupId($k));
+
+
+            $query = $this->db->query("SELECT * FROM ". DB_PREFIX ."product_attribute WHERE product_attribute_group_id = ". (int)$k);
+            foreach ($query->rows as $key => $item) {
+                $this->data['attributes'][$k]['items'][$key]['product_attribute_id'] = ($item['product_attribute_id']) ? $item['product_attribute_id'] : null;
+                $this->data['attributes'][$k]['items'][$key]['type'] = ($item['type']) ? $item['type'] : null;
+                $this->data['attributes'][$k]['items'][$key]['name'] = ($item['name']) ? $item['name'] : null;
+                $this->data['attributes'][$k]['items'][$key]['value'] = ($item['value']) ? $item['value'] : null;
+                $this->data['attributes'][$k]['items'][$key]['label'] = ($item['label']) ? $item['label'] : null;
+                $this->data['attributes'][$k]['items'][$key]['pattern'] = ($item['pattern']) ? $item['pattern'] : null;
+                $this->data['attributes'][$k]['items'][$key]['value'] = ($item['default']) ? $item['default'] : $attr[$item['product_attribute_id']];
+                $this->data['attributes'][$k]['items'][$key]['required'] = ($item['required']) ? $item['required'] : null;
+            }
+        }
+        /* /product attributes */
+
+
         if (isset($this->request->post['product_related'])) {
             $this->data['product_related'] = $this->request->post['product_related'];
         } elseif (isset($product_info)) {
@@ -1592,7 +1622,6 @@ class ControllerStoreProduct extends Controller {
         $this->children[] = 'common/header';
         $this->children[] = 'common/nav';
         $this->children[] = 'common/footer';
-
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
@@ -2401,4 +2430,79 @@ class ControllerStoreProduct extends Controller {
         return $array;
     }
 
+    public function api() {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: no-cache");
+        header("Content-type: application/json");
+
+        $resp = array();
+        $funcs = array(
+            'insert',
+            'update',
+            '_products'
+        );
+        
+        $func = $this->request->hasQuery('action') ? $this->request->getQuery('action') : null;
+
+        if (in_array($func, $funcs)) {
+            $resp = $this->{$func}();
+            if (isset($resp['error'])) {
+                header('HTTP/1.1 400 Bad Request');
+            } else {
+                header('HTTP/1.1 200 OK');
+            }
+        }
+
+        $this->load->auto('json');
+        $this->response->setOutput(Json::encode($resp), $this->config->get('config_compression'));
+    }
+
+    private function _products() {
+        $resp = array();
+        $this->load->auto('store/product');
+        switch($this->request->server['REQUEST_METHOD']) {
+            case 'GET':
+            default:
+                $id = $this->request->hasQuery('id') ? $this->request->getQuery('id') : null;
+                if ((int)$id) {
+                    $model = $this->modelProduct->getById($id);
+                    $resp['data'] = $model;
+                    $resp['success'] = 1;
+                } else {
+                    $filters = array();
+                    $model = $this->modelProduct->getAll($filters);
+                    $resp['data'] = array(
+                        array('id'=>1, 'name'=>'ipad'),
+                        array('id'=>2, 'name'=>'galaxy'),
+                        array('id'=>3, 'name'=>'surface')
+                    );
+                    $resp['pagination'] = array(
+                        'total'=>100,
+                        'limit'=>100,
+                        'next'=>100,
+                        'prev'=>100,
+                        'current'=>100,
+                        'url'=>100
+                    );
+                    $resp['success'] = 1;
+                }
+                break;
+            case 'POST':
+                $resp['data'] = array(
+                    'id'=>1,
+                    'product_id'=>1
+                );
+                $resp['success'] = 1;
+                break;
+            case 'PUT':
+                $resp['success'] = 1;
+                break;
+            case 'DELETE':
+                $resp['success'] = 1;
+                break;
+        }
+        return $resp;
+    }
 }

@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-AAA-HOSTING;;;"(56) (2) 4750478";"Coronel Stgo. Bueras 142 Of. 11 Chile, Santiago"
-"TUXHOST WEB HOSTING SOLUTIONS";;;"(56) (2) 9480875";"Av. Del Centro 1458 Chile, Santiago"

@@ -1,3 +1,0 @@
-"First Name";"Email Address";Url;Telephone;Address
-"RAUTOP LTDA.";;;"(56) (2) 719875";"San Fernando Chile, Santiago"
-"TAP M. R.";;;"(56) (2) 5284955";"Cam. La Vara 03983 San Bernardo Chile, Santiago"

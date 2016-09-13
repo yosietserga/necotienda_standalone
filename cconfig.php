@@ -16,6 +16,6 @@ define('CRYPT_KEY',"A875n4vi9m0jqbe63wcfb293f9rYerPraO7zYLOu6jrnvg8gh5ngVGEIVN84
 define('DB_DRIVER',     'mysql'); 
 define('DB_HOSTNAME',   'localhost'); 
 define('DB_USERNAME',   'root');
-define('DB_PASSWORD',   '12345678');
+define('DB_PASSWORD',   '');
 define('DB_DATABASE',   'nt_shop');
 define('DB_PREFIX',     'nts_');

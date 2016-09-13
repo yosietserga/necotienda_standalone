@@ -15,7 +15,7 @@
                 <?php foreach ($stores as $store) { ?>
                     <li class="stores">
                         <input type="checkbox" name="stores[]" value="<?php echo $store['store_id']; ?>"<?php if (in_array($store['store_id'], $_stores)) { ?> checked="checked"<?php } ?> showquick="off" />
-                        <b><?php echo $store['name']; ?></b>
+                        <label for="scrollboxStores<?php echo (int)$store['store_id']; ?>"><?php echo $store['name']; ?></label>
                     </li>
                 <?php } ?>
                 </ul>

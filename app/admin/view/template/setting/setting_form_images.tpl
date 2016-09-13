@@ -52,15 +52,26 @@
         <a onclick="image_delete('mobile_logo', 'preview_mobile_logo');" style="color:#FFA500;font-size:10px">[ Quitar ]</a>
         <input type="hidden" showquick="off" id="mobile_logo" name="config_mobile_logo" value="<?php echo $config_mobile_logo; ?>" />
     </div>
-                
+
+    <div class="clear"></div>
+
+    <div class="row">
+        <label><?php echo $Language->get('Image Background Color (rgb)'); ?></label>
+        <input type="necoNumber" name="config_image_bg_color_r" value="<?php echo $config_image_bg_color_r; ?>" size="3" showquick="off" />
+        <input type="necoNumber" name="config_image_bg_color_g" value="<?php echo $config_image_bg_color_g; ?>" size="3" showquick="off" />
+        <input type="necoNumber" name="config_image_bg_color_b" value="<?php echo $config_image_bg_color_b; ?>" size="3" showquick="off" />
+    </div>
+
+    <div class="clear"></div>
+
     <div class="row">
         <label><?php echo $Language->get('entry_image_thumb'); ?></label>
         <input type="necoNumber" name="config_image_thumb_width" value="<?php echo $config_image_thumb_width; ?>" size="3" required="true"<?php if (isset($error_image_thumb)) echo ' class="neco-input-error'; ?> />
         <input type="necoNumber" name="config_image_thumb_height" value="<?php echo $config_image_thumb_height; ?>" size="3" required="true"<?php if (isset($error_image_thumb)) echo ' class="neco-input-error'; ?> />
     </div>
-                                     
+
     <div class="clear"></div>
-    
+
     <div class="row">
         <label><?php echo $Language->get('entry_image_popup'); ?></label>
         <input type="necoNumber" name="config_image_popup_width" value="<?php echo $config_image_popup_width; ?>" size="3" required="true"<?php if (isset($error_image_popup)) echo ' class="neco-input-error'; ?> />

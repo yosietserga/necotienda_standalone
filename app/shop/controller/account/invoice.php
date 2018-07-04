@@ -3,6 +3,10 @@
 class ControllerAccountInvoice extends Controller {
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if (!$this->customer->isLogged()) {
             if (isset($this->request->get['order_id'])) {
@@ -18,30 +22,29 @@ class ControllerAccountInvoice extends Controller {
         $this->load->model('account/customer');
         $customer_address = $this->modelCustomer->getCustomer($this->customer->getId());
 
-        $this->document->title = $this->language->get('heading_title');
+        $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
 
         $this->document->breadcrumbs = array();
-
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("common/home"),
+            'href' => $Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/account"),
+            'href' => $Url::createUrl("account/account"),
             'text' => $this->language->get('text_account'),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/history"),
+            'href' => $Url::createUrl("account/history"),
             'text' => $this->language->get('text_history'),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/invoice", array("order_id" => $this->request->get['order_id'])),
+            'href' => $Url::createUrl("account/invoice", array("order_id" => $this->request->get['order_id'])),
             'text' => $this->language->get('text_invoice'),
             'separator' => $this->language->get('text_separator')
         );
@@ -57,31 +60,6 @@ class ControllerAccountInvoice extends Controller {
         $order_info = $this->modelOrder->getOrder($order_id);
 
         if ($order_info) {
-            $this->data['heading_title'] = $this->language->get('heading_title');
-
-            $this->data['text_invoice_id'] = $this->language->get('text_invoice_id');
-            $this->data['text_order_id'] = $this->language->get('text_order_id');
-            $this->data['text_email'] = $this->language->get('text_email');
-            $this->data['text_telephone'] = $this->language->get('text_telephone');
-            $this->data['text_fax'] = $this->language->get('text_fax');
-            $this->data['text_shipping_address'] = $this->language->get('text_shipping_address');
-            $this->data['text_shipping_method'] = $this->language->get('text_shipping_method');
-            $this->data['text_payment_address'] = $this->language->get('text_payment_address');
-            $this->data['text_payment_method'] = $this->language->get('text_payment_method');
-            $this->data['text_order_history'] = $this->language->get('text_order_history');
-            $this->data['text_product'] = $this->language->get('text_product');
-            $this->data['text_model'] = $this->language->get('text_model');
-            $this->data['text_quantity'] = $this->language->get('text_quantity');
-            $this->data['text_price'] = $this->language->get('text_price');
-            $this->data['text_total'] = $this->language->get('text_total');
-            $this->data['text_comment'] = $this->language->get('text_comment');
-
-            $this->data['column_date_added'] = $this->language->get('column_date_added');
-            $this->data['column_status'] = $this->language->get('column_status');
-            $this->data['column_comment'] = $this->language->get('column_comment');
-
-            $this->data['button_continue'] = $this->language->get('button_continue');
-
             $this->data['order_id'] = $this->request->get['order_id'];
 
             if ($order_info['invoice_id']) {
@@ -191,9 +169,7 @@ class ControllerAccountInvoice extends Controller {
             }
 
             $this->data['totals'] = $this->modelOrder->getOrderTotals($this->request->get['order_id']);
-
             $this->data['comment'] = $order_info['comment'];
-
             $this->data['historys'] = array();
 
             $results = $this->modelOrder->getOrderHistories($this->request->get['order_id']);
@@ -248,39 +224,30 @@ class ControllerAccountInvoice extends Controller {
         ");
 
             $this->scripts = array_merge($this->scripts, $scripts);
-
-            $this->children = array(
-                'common/nav',
-                'account/column_left',
-                'common/footer',
-                'common/header'
-            );
-
-            $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         } else {
             $this->data['heading_title'] = $this->language->get('heading_title');
-
-            $this->data['text_error'] = $this->language->get('text_error');
-
-            $this->data['button_continue'] = $this->language->get('button_continue');
-
-            $this->data['continue'] = Url::createUrl("account/history");
+            $this->data['continue'] = $Url::createUrl("account/history");
 
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/error/not_found.tpl')) {
                 $this->template = $this->config->get('config_template') . '/error/not_found.tpl';
             } else {
                 $this->template = 'cuyagua/error/not_found.tpl';
             }
-
-            $this->children = array(
-                'common/nav',
-                'common/column_left',
-                'common/footer',
-                'common/header'
-            );
-
-            $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }
+
+        $this->session->set('landing_page','account/invoice');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
+
+
+        $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
 
 }

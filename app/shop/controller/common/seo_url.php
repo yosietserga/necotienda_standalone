@@ -82,16 +82,9 @@ class ControllerCommonSeoUrl extends Controller {
                     }
 
                     if ($url[0] == 'post_category_id') {
-                        if (!isset($this->request->get['path'])) {
-                            $this->request->get['path'] = $url[1];
-                        } else {
-                            $this->request->get['path'] .= '_' . $url[1];
-                        }
-                    }
-
-                    if ($url[0] == 'post_category_id') {
                         $this->request->get['post_category_id'] = $url[1];
                     }
+
                 } else {
                     $this->request->get['r'] = 'error/not_found';
                 }
@@ -103,6 +96,8 @@ class ControllerCommonSeoUrl extends Controller {
                 $this->request->get['r'] = 'store/category';
             } elseif (isset($this->request->get['manufacturer_id'])) {
                 $this->request->get['r'] = 'store/manufacturer';
+            } elseif ($this->request->get['_route_'] == 'fabricantes' || $this->request->get['_route_'] == 'manufacturers') {
+                $this->request->get['r'] = 'store/manufacturer/all';
             } elseif (isset($this->request->get['page_id'])) {
                 $this->request->get['r'] = 'content/page';
             } elseif (isset($this->request->get['post_id'])) {
@@ -111,12 +106,12 @@ class ControllerCommonSeoUrl extends Controller {
                 $this->request->get['r'] = 'content/category';
             } elseif ($this->request->get['_route_'] == 'sitemap') {
                 $this->request->get['r'] = 'page/sitemap';
-            } elseif ($this->request->get['_route_'] == 'contact' || $this->request->get['_route_'] == 'contacto') {
-                $this->request->get['r'] = 'page/contact';
             } elseif ($this->request->get['_route_'] == 'special' || $this->request->get['_route_'] == 'ofertas') {
                 $this->request->get['r'] = 'store/special';
             } elseif ($this->request->get['_route_'] == 'blog') {
                 $this->request->get['r'] = 'content/category';
+            } elseif ($this->request->get['_route_'] == 'posts' || $this->request->get['_route_'] == 'articulos') {
+                $this->request->get['r'] = 'content/post/all';
             } elseif ($this->request->get['_route_'] == 'pages' || $this->request->get['_route_'] == 'paginas') {
                 $this->request->get['r'] = 'content/page/all';
             } elseif ($this->request->get['_route_'] == 'productos' || $this->request->get['_route_'] == 'products') {
@@ -129,6 +124,10 @@ class ControllerCommonSeoUrl extends Controller {
                 $this->request->get['r'] = 'account/order';
             } elseif ($this->request->get['_route_'] == $profile) {
                 $this->request->get['r'] = 'account/account';
+            } elseif ($this->request->get['_route_'] == 'login') {
+                $this->request->get['r'] = 'account/login';
+            } elseif ($this->request->get['_route_'] == 'register') {
+                $this->request->get['r'] = 'account/register';
             } elseif ($this->request->get['_route_'] == $profile . '/mensajes' && $profile != 'profile') {
                 $this->request->get['r'] = 'account/message';
             } elseif ($this->request->get['_route_'] == $profile . '/pagos' || $this->request->get['_route_'] == $profile . '/payments') {
@@ -139,8 +138,8 @@ class ControllerCommonSeoUrl extends Controller {
                 $this->request->get['r'] = 'checkout/cart';
             }
 
-            if (isset($this->request->get['r'])) {
-                return $this->forward($this->request->get['r']);
+            if ($this->request->hasQuery('r')) {
+                return $this->forward($this->request->getQuery('r'));
             }
         }
     }

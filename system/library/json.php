@@ -8,6 +8,10 @@ final class Json {
         header("Cache-Control: no-cache, must-revalidate");
         header("Pragma: no-cache");
         header("Content-type: application/json");
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Content-Type');
+        header('Access-Control-Allow-Methods: GET');
+        header("HTTP/1.0 200 Success", true, 200);
         
         if (function_exists('json_encode')) {
             return json_encode($data) . "\n\n\n\n\n\n";

@@ -1,6 +1,7 @@
 <?php
 // Heading
 $_['heading_title']    = 'Listado de Productos';
+$_['description']      = '';
 
 $_['text_carousel']       = 'Listado de Productos';
 

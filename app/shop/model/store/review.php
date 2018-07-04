@@ -1,8 +1,13 @@
 <?php
-class ModelStoreReview extends Model {		
-	public function addReview($object_id, $data, $object_type = 'product') {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET 
-        author      = '" . $this->db->escape($this->customer->getFirstName() ." ". $this->customer->getLastName()) . "', 
+
+class ModelStoreReview extends Model
+{
+    public function addReview($object_id, $data, $object_type = 'product')
+    {
+        if (!$object_type) return false;
+
+        $this->db->query("INSERT INTO " . DB_PREFIX . "review SET 
+        author      = '" . $this->db->escape($this->customer->getFirstName() . " " . $this->customer->getLastName()) . "', 
         customer_id = '" . (int)$this->customer->getId() . "', 
         store_id   = '" . (int)STORE_ID . "', 
         object_id   = '" . (int)$object_id . "', 
@@ -12,308 +17,466 @@ class ModelStoreReview extends Model {
         status      = '" . (int)$data['status'] . "', 
         date_added  = NOW()");
         return $this->db->getLastId();
-	}
+    }
 
-	public function addReply($data, $object_type = 'product') {
-        if (!(int)$data['review_id'] && !(int)$data['object_id']) return false;
-		$this->db->query("INSERT INTO " . DB_PREFIX . "review SET 
-        author      = '". $this->db->escape($this->customer->getFirstName() ." ". $this->customer->getLastName()) . "', 
-        parent_id   = '". (int)$data['review_id'] ."', 
-        customer_id = '". (int)$this->customer->getId() ."', 
+    public function addReply($data, $object_type = 'product')
+    {
+        if (!(int)$data['review_id'] || !(int)$data['object_id'] || !$object_type) return false;
+        $this->db->query("INSERT INTO " . DB_PREFIX . "review SET 
+        author      = '" . $this->db->escape($this->customer->getFirstName() . " " . $this->customer->getLastName()) . "', 
+        parent_id   = '" . (int)$data['review_id'] . "', 
+        customer_id = '" . (int)$this->customer->getId() . "', 
         store_id   = '" . (int)STORE_ID . "', 
-        object_id   = '". (int)$data['object_id'] ."', 
+        object_id   = '" . (int)$data['object_id'] . "', 
         object_type = '" . $this->db->escape($object_type) . "', 
-        text        = '". $this->db->escape(strip_tags($data['text'])) ."', 
+        text        = '" . $this->db->escape(strip_tags($data['text'])) . "', 
         rating      = '0', 
         status      = '" . (int)$data['status'] . "', 
         date_added  = NOW()");
-	}
-    
-	public function likeReview($review_id=null, $object_id=null, $object_type = 'product') {
-        if (!$review_id && !$object_id) return false;
-        
-       $result = $this->db->query("SELECT * 
-           FROM ". DB_PREFIX ."review_likes 
-           WHERE review_id = '". (int)$review_id ."' 
-           AND customer_id = '". (int)$this->customer->getId() ."'");
-       
-       if ($result->num_rows) {
+    }
+
+    public function likeReview($review_id = null, $object_id = null, $object_type = 'product')
+    {
+        if (!$review_id || !$object_id || !$object_type) return false;
+
+        $result = $this->db->query("SELECT * 
+           FROM " . DB_PREFIX . "review_likes 
+           WHERE review_id = '" . (int)$review_id . "' 
+           AND customer_id = '" . (int)$this->customer->getId() . "'");
+
+        if ($result->num_rows) {
             if ($result->row['like'] == 0) {
                 $this->db->query("UPDATE " . DB_PREFIX . "review_likes SET 
                 `like`        = 1,
                 `dislike`     = 0, 
                 `date_added`  = NOW()
-                WHERE review_id = '". (int)$review_id ."' 
-                AND customer_id = '". (int)$this->customer->getId() ."'
-                AND object_id   = '". (int)$object_id ."'
-                AND object_type = '". $this->db->escape($object_type) ."'");
+                WHERE review_id = '" . (int)$review_id . "' 
+                AND customer_id = '" . (int)$this->customer->getId() . "'
+                AND object_id   = '" . (int)$object_id . "'
+                AND object_type = '" . $this->db->escape($object_type) . "'");
             }
-       } else {
+        } else {
             $this->db->query("INSERT INTO " . DB_PREFIX . "review_likes SET  
-            `review_id`   = '". (int)$review_id ."', 
-            `customer_id` = '". (int)$this->customer->getId() ."', 
-            `object_id`   = '". (int)$object_id ."', 
-            `object_type` = '". $this->db->escape($object_type) ."', 
-            `store_id`    = '". (int)STORE_ID ."', 
+            `review_id`   = '" . (int)$review_id . "', 
+            `customer_id` = '" . (int)$this->customer->getId() . "', 
+            `object_id`   = '" . (int)$object_id . "', 
+            `object_type` = '" . $this->db->escape($object_type) . "', 
+            `store_id`    = '" . (int)STORE_ID . "', 
             `like`        = 1, 
             `dislike`     = 0, 
             `date_added`  = NOW()");
-       }
-       $result = $this->db->query("SELECT SUM(`like`) AS likes, SUM(dislike) AS dislikes FROM ". DB_PREFIX ."review_likes WHERE review_id = '". (int)$review_id ."'");
-       return $result->row;
-	}
-    
-	public function dislikeReview($review_id=null,$object_id=null) {
-        if (!$review_id && !$object_id) return false;
-       $result = $this->db->query("SELECT * 
-           FROM ". DB_PREFIX ."review_likes 
-           WHERE review_id = '". (int)$review_id ."' 
-           AND customer_id = '". (int)$this->customer->getId() ."'");
-       
-       if ($result->num_rows) {
+        }
+        $result = $this->db->query("SELECT SUM(`like`) AS likes, SUM(dislike) AS dislikes FROM " . DB_PREFIX . "review_likes WHERE review_id = '" . (int)$review_id . "'");
+        return $result->row;
+    }
+
+    public function dislikeReview($review_id = null, $object_id = null, $object_type = 'product')
+    {
+        if (!$review_id || !$object_id || !$object_type) return false;
+
+        $result = $this->db->query("SELECT * 
+           FROM " . DB_PREFIX . "review_likes 
+           WHERE review_id = '" . (int)$review_id . "' 
+           AND customer_id = '" . (int)$this->customer->getId() . "'");
+
+        if ($result->num_rows) {
             if ($result->row['dislike'] == 0) {
                 $this->db->query("UPDATE " . DB_PREFIX . "review_likes SET 
                 `like`        = 0,
                 `dislike`     = 1, 
                 `date_added`  = NOW()
-                WHERE review_id = '". (int)$review_id ."' 
-                AND customer_id = '". (int)$this->customer->getId() ."'
-                AND object_id   = '". (int)$object_id ."'
-                AND object_type = '". $this->db->escape($object_type) ."'");
+                WHERE review_id = '" . (int)$review_id . "' 
+                AND customer_id = '" . (int)$this->customer->getId() . "'
+                AND object_id   = '" . (int)$object_id . "'
+                AND object_type = '" . $this->db->escape($object_type) . "'");
             }
-       } else {
+        } else {
             $this->db->query("INSERT INTO " . DB_PREFIX . "review_likes SET  
-            `review_id`   = '". (int)$review_id ."', 
-            `customer_id` = '". (int)$this->customer->getId() ."', 
-            `object_id`   = '". (int)$object_id ."', 
-            `object_type` = '". $this->db->escape($object_type) ."', 
-            `store_id`    = '". (int)STORE_ID ."', 
+            `review_id`   = '" . (int)$review_id . "', 
+            `customer_id` = '" . (int)$this->customer->getId() . "', 
+            `object_id`   = '" . (int)$object_id . "', 
+            `object_type` = '" . $this->db->escape($object_type) . "', 
+            `store_id`    = '" . (int)STORE_ID . "', 
             `dislike`     = 1, 
             `like`        = 0, 
             `date_added`  = NOW()");
-       }
-       $result = $this->db->query("SELECT SUM(`like`) AS likes, SUM(dislike) AS dislikes FROM ". DB_PREFIX ."review_likes WHERE review_id = '". (int)$review_id ."'");
-       return $result->row;
-	}
-    
-    public function deleteReview($id) {
-        $this->db->query("DELETE FROM ". DB_PREFIX ."review WHERE review_id = '". (int)$id ."'");
-        $this->db->query("DELETE FROM ". DB_PREFIX ."review WHERE parent_id = '". (int)$id ."'");
-        $this->db->query("DELETE FROM ". DB_PREFIX ."review_likes WHERE review_id = '". (int)$id ."'");
+        }
+        $result = $this->db->query("SELECT SUM(`like`) AS likes, SUM(dislike) AS dislikes FROM " . DB_PREFIX . "review_likes WHERE review_id = '" . (int)$review_id . "'");
+        return $result->row;
     }
-	
-	public function getReviewsByProductId($object_id, $start = 0, $limit = 20) {
-		$query = $this->db->query("SELECT r.customer_id, r.review_id, r.author, r.rating, r.text, p.product_id, pd.name, p.price, p.image, r.date_added, SUM(rl.like) AS likes, SUM(rl.dislike) AS dislikes 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "review_likes rl ON (r.review_id = rl.review_id) 
-            LEFT JOIN " . DB_PREFIX . "product p ON (r.object_id = p.product_id) 
-            LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
-        WHERE p.product_id = '" . (int)$object_id . "' 
-            AND p.date_available <= NOW() 
-            AND p.status = '1' 
-            AND r.status = '1' 
-            AND r.parent_id = '0' 
-            AND r.object_type = 'product' 
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-        GROUP BY r.review_id
-        ORDER BY r.date_added DESC 
-        LIMIT " . (int)$start . "," . (int)$limit);
-		
-		return $query->rows;
-	}
-    
-	public function getCustomersReviewsByProductId($object_id) {
-		$query = $this->db->query("SELECT * 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id) 
-        WHERE r.object_id = '" . (int)$object_id . "'
-            AND r.object_type = 'product'
-            AND r.store_id = '". (int)STORE_ID ."'
-        GROUP BY r.customer_id");
-		return $query->rows;
-	}
-    
-	public function getReviewsByPostId($object_id, $start = 0, $limit = 20) {
-		$query = $this->db->query("SELECT r.customer_id, r.review_id, r.author, r.rating, r.text, p.post_id, pd.title, p.image, r.date_added, SUM(rl.like) AS likes, SUM(rl.dislike) AS dislikes 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "review_likes rl ON (r.review_id = rl.review_id) 
-            LEFT JOIN " . DB_PREFIX . "post p ON (r.object_id = p.post_id) 
-            LEFT JOIN " . DB_PREFIX . "post_description pd ON (p.post_id = pd.post_id) 
-        WHERE p.post_id = '" . (int)$object_id . "' 
-            AND (p.date_publish_start <= NOW() OR p.date_publish_start = '0000-00-00 00:00:00') 
-            AND (p.date_publish_end >= NOW() OR p.date_publish_end = '0000-00-00 00:00:00') 
-            AND p.status = '1' 
-            AND r.status = '1' 
-            AND r.parent_id = '0' 
-            AND r.object_type = 'post' 
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-        GROUP BY r.review_id
-        ORDER BY r.date_added DESC 
-        LIMIT " . (int)$start . "," . (int)$limit);
-		
-		return $query->rows;
-	}
-    
-	public function getCustomersReviewsByPostId($object_id) {
-		$query = $this->db->query("SELECT * 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id) 
-        WHERE r.object_id = '" . (int)$object_id . "'
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND r.object_type = 'post'");
-		return $query->rows;
-	}
-    
-	public function getReviewsByPageId($object_id, $start = 0, $limit = 20) {
-		$query = $this->db->query("SELECT r.customer_id, r.review_id, r.author, r.rating, r.text, p.post_id, pd.title, p.image, r.date_added, SUM(rl.like) AS likes, SUM(rl.dislike) AS dislikes 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "review_likes rl ON (r.review_id = rl.review_id) 
-            LEFT JOIN " . DB_PREFIX . "post p ON (r.object_id = p.post_id) 
-            LEFT JOIN " . DB_PREFIX . "post_description pd ON (p.post_id = pd.post_id) 
-        WHERE p.post_id = '" . (int)$object_id . "' 
-            AND (p.date_publish_start <= NOW() OR p.date_publish_start = '0000-00-00 00:00:00') 
-            AND (p.date_publish_end >= NOW() OR p.date_publish_end = '0000-00-00 00:00:00') 
-            AND p.status = '1' 
-            AND r.status = '1' 
-            AND r.parent_id = '0' 
-            AND r.object_type = 'page' 
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-        GROUP BY r.review_id
-        ORDER BY r.date_added DESC 
-        LIMIT " . (int)$start . "," . (int)$limit);
-		
-		return $query->rows;
-	}
-    
-	public function getCustomersReviewsByPageId($object_id) {
-		$query = $this->db->query("SELECT * 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = r.customer_id) 
-        WHERE r.object_id = '" . (int)$object_id . "'
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND r.object_type = 'page'");
-		return $query->rows;
-	}
-    
-    public function getReplies($review_id) {
-		$query = $this->db->query("SELECT * 
-        FROM " . DB_PREFIX . "review r 
-        WHERE parent_id = ". (int)$review_id ." 
-        AND status = '1' 
-        ORDER BY date_added ASC");
-		return $query->rows;
-	}
-    
-	public function getAverageRating($object_id, $object_type = 'product') {
-		$query = $this->db->query("SELECT AVG(rating) AS total 
-        FROM " . DB_PREFIX . "review 
-        WHERE status = '1' 
-            AND object_id = '" . (int)$object_id . "' 
-            AND object_type = '". $this->db->escape($object_type) ."'
-        GROUP BY object_id");
-		
-		if (isset($query->row['total'])) {
-			return (int)$query->row['total'];
-		} else {
-			return 0;
-		}
-	}	
-	
-	public function getTotalReviewsByProductId($object_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "product p ON (r.object_id = p.product_id) 
-        WHERE p.product_id = '" . (int)$object_id . "' 
-            AND p.date_available <= NOW() 
-            AND p.status = '1' 
-            AND r.parent_id = '0' 
-            AND r.status = '1' 
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND r.object_type = 'product' ");
-		return $query->row['total'];
-	}
-    
-	public function getTotalReviewsByPostId($object_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "post p ON (r.object_id = p.post_id) 
-        WHERE p.post_id = '" . (int)$object_id . "' 
-            AND (p.date_publish_start <= NOW() OR p.date_publish_start = '0000-00-00 00:00:00') 
-            AND (p.date_publish_end >= NOW() OR p.date_publish_end = '0000-00-00 00:00:00') 
-            AND p.status = '1' 
-            AND r.parent_id = '0' 
-            AND r.status = '1' 
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND r.object_type = 'post' ");
-		return $query->row['total'];
-	}
-    
-	public function getTotalReviewsByPageId($object_id) {
-		$query = $this->db->query("SELECT COUNT(*) AS total 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "post p ON (r.object_id = p.post_id) 
-        WHERE p.post_id = '" . (int)$object_id . "' 
-            AND (p.date_publish_start <= NOW() OR p.date_publish_start = '0000-00-00 00:00:00') 
-            AND (p.date_publish_end >= NOW() OR p.date_publish_end = '0000-00-00 00:00:00') 
-            AND p.status = '1' 
-            AND r.parent_id = '0' 
-            AND r.status = '1' 
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND r.object_type = 'page' ");
-		return $query->row['total'];
-	}
-    
-   	public function getById($id) {
-        if (!$id) return false;
-		$query = $this->db->query("SELECT *, p.product_id AS pid, r.date_added AS dateAdded 
-        FROM " . DB_PREFIX . "review r 
-            LEFT JOIN " . DB_PREFIX . "product p ON (r.object_id = p.product_id) 
-            LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) 
-        WHERE r.review_id = '" . (int)$id . "' 
-            AND p.date_available <= NOW() 
-            AND p.status = '1' 
-            AND r.store_id = '". (int)STORE_ID ."'
-            AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-		
-		return $query->row;
-	}
-    
-    public function getAllByCustomerTotal($id) {
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r 
-        LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.object_id = pd.product_id) 
-        WHERE r.customer_id = '" . (int)$id . "'
-            AND r.store_id = '". (int)STORE_ID ."'
-        AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-		
-		return $query->row['total'];
+
+    public function deleteReview($id)
+    {
+        $this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE review_id = '" . (int)$id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE parent_id = '" . (int)$id . "'");
+        $this->db->query("DELETE FROM " . DB_PREFIX . "review_likes WHERE review_id = '" . (int)$id . "'");
     }
-    
-	public function getAllByCustomer($id,$data) {
-		if ($data['start'] < 0) $data['start'] = 0;
-		if ($data['limit'] <= 0) $data['limit'] = 25;
-        
-		$sql = "SELECT *, r.date_added AS dateAdded, pd.name AS product 
-        FROM `" . DB_PREFIX . "review` r 
-        LEFT JOIN " . DB_PREFIX . "product_description pd ON (r.object_id = pd.product_id) ";	
-	
+
+    public function getAll($data) {
+            $cache_prefix = "shop.reviews";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
+
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
+            $sql = "SELECT *, 
+            r.review_id AS review_id, 
+            r.object_id AS object_id, 
+            r.object_type AS object_type, 
+            r.date_added AS dateAdded, 
+            SUM(rl.like) AS likes, 
+            SUM(rl.dislike) AS dislikes ".
+                "FROM " . DB_PREFIX . "review r ".
+                "LEFT JOIN " . DB_PREFIX . "review_likes rl ON (r.review_id = rl.review_id) ";
+
+
+            if (!isset($sort_data)) {
+                $sort_data = array(
+                    'r.sort_order',
+                    'r.date_added'
+                );
+            }
+
+            $sql .= $this->buildSQLQuery($data, $sort_data);
+
+            $query = $this->db->query($sql);
+            $this->cache->set($cachedId, $query->rows, $cache_prefix);
+            return $query->rows;
+        } else {
+            return $cached;
+        }
+    }
+
+    public function getAllAvg($data) {
+            $cache_prefix = "shop.reviews.avg";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
+
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
+            $sql = "SELECT AVG(rating) AS total ".
+                "FROM " . DB_PREFIX . "review r ";
+
+            $sql .= $this->buildSQLQuery($data, null, true);
+
+            $query = $this->db->query($sql);
+
+            $this->cache->set($cachedId, $query->row['total'],$cache_prefix);
+
+            return $query->row['total'];
+        } else {
+            return $cached;
+        }
+    }
+
+    public function getAllTotal($data) {
+            $cache_prefix = "shop.reviews.total";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
+
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
+            $sql = "SELECT COUNT(*) AS total ".
+                "FROM " . DB_PREFIX . "review r ";
+
+            $sql .= $this->buildSQLQuery($data, null, true);
+
+            $query = $this->db->query($sql);
+
+            $this->cache->set($cachedId, $query->row['total'],$cache_prefix);
+
+            return $query->row['total'];
+        } else {
+            return $cached;
+        }
+    }
+
+    private function buildSQLQuery($data, $sort_data = null, $countAsTotal = false) {
         $criteria = array();
-        
-        $criteria[] = " r.store_id = '". (int)STORE_ID ."' ";
-        $criteria[] = " r.customer_id = '" . (int)$id . "' ";
-        $criteria[] = " pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
-        
+        $sql = "";
+
+        $sql .= " LEFT JOIN " . DB_PREFIX . "customer cu ON (r.customer_id = cu.customer_id) ";
+
+        $data['customer_id'] = !is_array($data['customer_id']) && !empty($data['customer_id']) ? array($data['customer_id']) : $data['customer_id'];
+        $data['review_id'] = !is_array($data['review_id']) && !empty($data['review_id']) ? array($data['review_id']) : $data['review_id'];
+        $data['object_id'] = !is_array($data['object_id']) && !empty($data['object_id']) ? array($data['object_id']) : $data['object_id'];
+        $data['object_type'] = isset($data['object_type']) && !empty($data['object_type']) ? $data['object_type'] : '';
+        $data['manufacturer_id'] = !is_array($data['manufacturer_id']) && !empty($data['manufacturer_id']) ? array($data['manufacturer_id']) : $data['manufacturer_id'];
+        $data['product_id'] = !is_array($data['product_id']) && !empty($data['product_id']) ? array($data['product_id']) : $data['product_id'];
+        $data['category_id'] = !is_array($data['category_id']) && !empty($data['category_id']) ? array($data['category_id']) : $data['category_id'];
+        $data['parent_id'] = !is_array($data['parent_id']) && (!empty($data['parent_id']) || $data['parent_id'] === 0) ? array($data['parent_id']) : $data['parent_id'];
+        $data['stores'] = !is_array($data['stores']) && !empty($data['stores']) ? array($data['stores']) : $data['stores'];
+        $data['customers'] = !is_array($data['customers']) && !empty($data['customers']) ? array($data['customers']) : $data['customers'];
+        $data['sellers'] = !is_array($data['sellers']) && !empty($data['sellers']) ? array($data['sellers']) : $data['sellers'];
+        $data['post_id'] = !is_array($data['post_id']) && !empty($data['post_id']) ? array($data['post_id']) : $data['post_id'];
+        $data['page_id'] = !is_array($data['page_id']) && !empty($data['page_id']) ? array($data['page_id']) : $data['page_id'];
+        $data['post_category_id'] = !is_array($data['post_category_id']) && !empty($data['post_category_id']) ? array($data['post_category_id']) : $data['post_category_id'];
+        $data['status'] = isset($data['status']) && is_numeric($data['status']) ? $data['status'] : 1;
+
+        if (isset($data['review_id']) && !empty($data['review_id'])) {
+            $criteria[] = " r.review_id IN (" . implode(', ', $data['review_id']) . ") ";
+        }
+
+        if (isset($data['customer_id']) && !empty($data['customer_id'])) {
+            $criteria[] = " r.customer_id IN (" . implode(', ', $data['customer_id']) . ") ";
+        }
+
+        if (isset($data['object_id']) && !empty($data['object_id'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['object_id']) . ") ";
+        }
+
+        if (isset($data['parent_id'])) {
+            $criteria[] = " r.parent_id IN (" . implode(', ', $data['parent_id']) . ") ";
+        }
+
+        if (isset($data['status']) && !empty($data['status'])) {
+            $criteria[] = " r.status = '" . intval($data['status']) . "' ";
+        }
+
+        if (isset($data['manufacturer_id']) && !empty($data['manufacturer_id']) || isset($data['object_type']) && $data['object_type'] === 'manufacturer') {
+            $criteria['object_type'] = " r.object_type = 'manufacturer' ";
+        }
+
+        if (isset($data['category_id']) && !empty($data['category_id']) || isset($data['object_type']) && $data['object_type'] === 'category') {
+            $criteria['object_type'] = " r.object_type = 'category' ";
+        }
+
+        if (isset($data['post_category_id']) && !empty($data['post_category_id']) || isset($data['object_type']) && $data['object_type'] === 'post_category') {
+            $criteria['object_type'] = " r.object_type = 'post_category' ";
+        }
+
+        if (isset($data['product_id']) && !empty($data['product_id']) || isset($data['object_type']) && $data['object_type'] === 'product') {
+            $criteria['object_type'] = " r.object_type = 'product' ";
+        }
+
+        if (isset($data['post_id']) && !empty($data['post_id']) || isset($data['object_type']) && $data['object_type'] === 'post') {
+            $sql .= " LEFT JOIN " . DB_PREFIX . "post po ON (r.object_id = po.post_id) ";
+            $criteria['object_type'] = " r.object_type = 'post' ";
+        }
+
+        if (isset($data['page_id']) && !empty($data['page_id']) || isset($data['object_type']) && $data['object_type'] === 'page') {
+            $sql .= " LEFT JOIN " . DB_PREFIX . "post po ON (r.object_id = po.post_id) ";
+            $criteria['object_type'] = " r.object_type = 'page' ";
+        }
+
+        if (isset($data['stores']) && !empty($data['stores']) || isset($data['object_type']) && $data['object_type'] === 'store') {
+            $criteria['object_type'] = " r.object_type = 'store' ";
+        }
+
+        if (isset($data['customers']) && !empty($data['customers']) || isset($data['object_type']) && $data['object_type'] === 'customer') {
+            $criteria['object_type'] = " r.object_type = 'customer' ";
+        }
+
+        if (isset($data['sellers']) && !empty($data['sellers']) || isset($data['object_type']) && $data['object_type'] === 'seller') {
+            $criteria['object_type'] = " r.object_type = 'seller' ";
+        }
+
+        if (isset($data['manufacturer_id']) && !empty($data['manufacturer_id'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['manufacturer_id']) . ") ";
+        }
+
+        if (isset($data['category_id']) && !empty($data['category_id'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['category_id']) . ") ";
+        }
+
+        if (isset($data['post_category_id']) && !empty($data['post_category_id'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['post_category_id']) . ") ";
+        }
+
+        if (isset($data['product_id']) && !empty($data['product_id'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['product_id']) . ") ";
+        }
+
+        if (isset($data['post_id']) && !empty($data['post_id'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['post_id']) . ") ";
+            $criteria[] = isset($data['post_type']) && !empty($data['post_type']) ? " po.post_type = '{$this->db->escape($data['post_type'])}' " : " po.post_type = 'post' ";
+        }
+
+        if (isset($data['page_id']) && !empty($data['page_id'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['page_id']) . ") ";
+            $criteria[] = " po.post_type = 'page' ";
+        }
+
+        if (isset($data['stores']) && !empty($data['stores'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['stores']) . ") ";
+        }
+
+        if (isset($data['customers']) && !empty($data['customers'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['customers']) . ") ";
+        }
+
+        if (isset($data['sellers']) && !empty($data['sellers'])) {
+            $criteria[] = " r.object_id IN (" . implode(', ', $data['sellers']) . ") ";
+        }
+
+        if (!empty($data['store_id']) && is_numeric($data['store_id'])) {
+            $criteria[] = " r.store_id = '". intval($data['store_id']) ."' ";
+        } elseif (!empty($data['store_id']) && is_array($data['store_id'])) {
+            $criteria[] = " r.store_id IN ('" . implode("','", $data['store_id']) . "') ";
+        } else {
+            $criteria[] = " r.store_id = '". (int)STORE_ID ."' ";
+        }
+
         if ($criteria) {
             $sql .= " WHERE " . implode(" AND ",$criteria);
         }
-            
-        $sql .= "ORDER BY r.date_added DESC, pd.name DESC ";
-        $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-        
-		$query = $this->db->query($sql);
-		return $query->rows;
-	}
-	
+
+        if (!$countAsTotal) {
+            if (isset($data['groupBy']) && !empty($data['groupBy'])) {
+                $sql .= " GROUP BY {$this->db->escape($data['groupBy'])} ";
+            } else {
+                $sql .= " GROUP BY r.review_id";
+            }
+
+            if (isset($sort_data)) {
+                $sql .= (in_array($data['sort'], $sort_data)) ? " ORDER BY " . $data['sort'] : " ORDER BY r.date_added";
+                $sql .= ($data['order'] == 'DESC') ? " DESC" : " ASC";
+            }
+
+            if ($data['start'] && $data['limit']) {
+                if ($data['start'] < 0) $data['start'] = 0;
+                if (!$data['limit']) $data['limit'] = 24;
+
+                $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+            } elseif ($data['limit']) {
+                if (!$data['limit']) $data['limit'] = 24;
+
+                $sql .= " LIMIT ". (int)$data['limit'];
+            }
+        }
+
+        return $sql;
+    }
+
+    public function getReviewsByProductId($object_id, $start = 0, $limit = 20)
+    {
+        return $this->getAll(array(
+            'product_id'=>$object_id,
+            'start' => $start,
+            'limit' => $limit,
+            'groupBy' => 'r.review_id'
+        ));
+    }
+
+    public function getCustomersReviewsByProductId($object_id)
+    {
+        return $this->getAll(array(
+            'product_id'=>$object_id,
+            'groupBy' => 'r.customer_id'
+        ));
+    }
+
+    public function getReviewsByPostId($object_id, $start = 0, $limit = 20)
+    {
+        return $this->getAll(array(
+            'post_id'=>$object_id,
+            'start' => $start,
+            'limit' => $limit,
+            'groupBy' => 'r.review_id'
+        ));
+    }
+
+    public function getCustomersReviewsByPostId($object_id)
+    {
+        return $this->getAll(array(
+            'post_id'=>$object_id,
+            'groupBy' => 'r.customer_id'
+        ));
+    }
+
+    public function getReviewsByPageId($object_id, $start = 0, $limit = 20)
+    {
+        return $this->getAll(array(
+            'page_id'=>$object_id,
+            'start' => $start,
+            'limit' => $limit,
+            'groupBy' => 'r.review_id'
+        ));
+    }
+
+    public function getCustomersReviewsByPageId($object_id)
+    {
+        return $this->getAll(array(
+            'post_id'=>$object_id,
+            'groupBy' => 'r.customer_id'
+        ));
+    }
+
+    public function getReplies($review_id)
+    {
+        return $this->getAll(array(
+            'parent_id'=>$review_id
+        ));
+    }
+
+    public function getAverageRating($object_id, $object_type = 'product') {
+        return $this->getAllAvg(array(
+            'object_id'=>$object_id,
+            'object_type'=>$object_type
+        ));
+    }
+
+    public function getTotalReviewsByProductId($object_id)
+    {
+        return $this->getAllTotal(array(
+            'product_id'=>$object_id
+        ));
+    }
+
+    public function getTotalReviewsByPostId($object_id)
+    {
+        return $this->getAllTotal(array(
+            'post_id'=>$object_id
+        ));
+    }
+
+    public function getTotalReviewsByPageId($object_id)
+    {
+        return $this->getAllTotal(array(
+            'page_id'=>$object_id
+        ));
+    }
+
+    public function getById($id)
+    {
+        return $this->getAll(array(
+            'review_id'=>$id
+        ));
+    }
+
+    public function getAllByCustomerTotal($id)
+    {
+        return $this->getAllTotal(array(
+            'customer_id'=>$id
+        ));
+    }
+
+    public function getAllByCustomer($id)
+    {
+        return $this->getAll(array(
+            'customer_id'=>$id
+        ));
+    }
+
 }

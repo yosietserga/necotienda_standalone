@@ -39,25 +39,21 @@ final class Front {
         $this->registry->set('Method', $method);
         $this->registry->set('Route', $action->route);
         $action = '';
-
+        
         if (file_exists($file)) {
             require_once($file);
-
             $controller = new $class($this->registry);
-
             if (is_callable(array($controller, $method))) {
                 $action = call_user_func_array(array($controller, $method), $args);
             } else {
                 $action = $this->error;
-
                 $this->error = '';
             }
         } else {
             $action = $this->error;
-
+            
             $this->error = '';
         }
-
         return $action;
     }
 

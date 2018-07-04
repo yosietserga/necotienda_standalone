@@ -14,7 +14,7 @@
 <?php } ?>
 <!-- Featured Footer -->
 
-<!-- footer/underbottom -->
+<!-- footer underbottom -->
 <?php if (count($widgets) !== 0) { ?>
     <footer class="underbottom">
         <section class="row">
@@ -26,7 +26,7 @@
         </section>
     </footer>
 <?php } ?>
-<!-- footer/underbottom --> 
+<!-- footer underbottom -->
 <!-- terms -->
 <section class="terms">
     <div class="row">

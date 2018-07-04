@@ -1,0 +1,213 @@
+/**
+ * Owl Carousel v2.2.1
+ * Copyright 2013-2017 David Deutsch
+ * Licensed under  ()
+ */
+/*
+ *  Owl Carousel - Core
+ */
+.tabs .tab-item {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #F9F9F9;
+    background-clip: padding-box;
+}
+
+.tabs {
+    margin: 0 auto 1.0625rem auto;
+    margin-left: -1.375rem;
+    margin-right: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+    margin: 0 0 1rem 0;
+}
+
+.tabs > li {
+    list-style: none;
+    float: left;
+    margin-left: 1.375rem;
+    display: block;
+}
+
+.tabs > li > * {
+    display: block;
+}
+
+.tabs .tab-item {
+    min-width: 8.375rem;
+    padding: 0.875rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 40em) {
+    .tabs .tab-item {
+        text-align: left;
+    }
+}
+
+.tabs .tab {
+    padding: 0px;
+    margin: 0;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.tabs .tab span {
+    font-weight: 400;
+}
+
+.tabs .tab:first-child {
+    margin-left: 0;
+}
+
+.tabs .tab.active .tab-item,
+.tabs .tab:not(.active) .tab-item {
+    border-width: 1px 1px 1px 1px;
+}
+
+.tabs .tab.active:first-child .tab-item,
+.tabs .tab:not(.active):first-child .tab-item {
+    border-width: 1px 0px 1px 1px;
+}
+
+.tabs .tab.active:last-child .tab-item,
+.tabs .tab:not(.active):last-child .tab-item {
+    border-width: 1px 1px 1px 0px;
+}
+
+.tabs .tab.active .tab-item {
+    background: #CB2128;
+    color: #fff;
+}
+
+@media only screen and (max-width: 40em) {
+    .tabs .tab-item {
+        border: none !important;
+    }
+}
+
+@media only screen and (max-width: 40em) {
+    .tabs > li {
+        float: none;
+    }
+
+    .tabs > li .tab-item {
+        width: 100%;
+    }
+}
+
+.product-tabs .info {
+    text-align: center;
+}
+
+.product-tabs .info > * + * {
+    margin-top: 0.875rem;
+}
+
+.product-tabs .rating {
+    line-height: 1;
+    text-align: center;
+}
+
+.product-tabs .name {
+    color: #000;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.product-tabs .description {
+    display: none;
+}
+
+.product-tabs .price {
+    color: #5a6465;
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.product-tabs .overview {
+    display: none;
+}
+
+.product-tabs {
+    margin: 0 0 1rem 0;
+}
+
+.product-tabs .thumb img {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@media only screen and (max-width: 40em) {
+    .product-tabs .thumb img {
+        left: auto;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.product-tabs li {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: 75rem;
+    border-width: 0 0 1px 0;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+.product-tabs .name {
+    text-transform: uppercase;
+}
+
+.product-tabs .overview {
+    font-size: 0.875rem;
+    font-weight: normal;
+    color: #5a6465;
+}
+
+.product-tabst .new-price, .product-tabs .price {
+    font-weight: 700;
+}
+
+.product-tabs .product-info .overview {
+    display: block;
+}
+
+.product-tabs .rating.placeholder {
+    display: none;
+}
+
+.product-tabs .rating img {
+    width: auto !important;
+    margin: 10px auto;
+}
+
+.product-tabs .picture {
+    position:relative;
+}
+
+.product-tabs .picture .items {
+    margin-left:55px;
+}
+
+.product-tabs .thumbs {
+    position:absolute;
+    height:100%;
+    width:55px;
+    display:block;
+    overflow:hidden;
+    top:0;
+    left:0;
+}
+
+.product-tabs .thumbs img {
+    width:50px;
+    margin:auto;
+    margin-top:5px;
+    border:solid 1px #ddd;
+}

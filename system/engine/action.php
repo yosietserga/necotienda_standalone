@@ -20,6 +20,7 @@ final class Action {
                 continue;
             }
 
+            //TODO: put a debugger to notify when the convention name is wrong
             if (is_file(DIR_APPLICATION . 'controller/' . str_replace('../', '', $path) . '.php')) {
                 $this->file = DIR_APPLICATION . 'controller/' . str_replace('../', '', $path) . '.php';
                 $this->class = 'Controller' . preg_replace('/[^a-zA-Z0-9]/', '', $path);

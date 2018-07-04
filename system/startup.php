@@ -80,6 +80,9 @@ require_once(DIR_SYSTEM . 'engine/loader.php');
 require_once(DIR_SYSTEM . 'engine/model.php');
 require_once(DIR_SYSTEM . 'engine/registry.php');
 
+// Main Classes
+require_once(DIR_SYSTEM . 'classes/module.php');
+
 // Common
 require_once(DIR_SYSTEM . 'library/cache.php');
 require_once(DIR_SYSTEM . 'library/config.php');

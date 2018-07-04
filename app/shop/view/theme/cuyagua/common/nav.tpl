@@ -1,20 +1,5 @@
 <div class="content">
-
-  <!-- main-header -->
-  <header class="main-header">
-    <section class="row">
-      <aside class="logo large-3 columns nt-editable">
-        <?php if ($Config->get('config_logo')) { ?>
-        <a title="<?php echo $store; ?>" href="<?php echo $Url::createUrl('common/home'); ?>">
-           <img src="<?php echo HTTP_IMAGE. $Config->get('config_logo'); ?>" title="<?php echo $store; ?>" alt="<?php echo $store; ?>" />
-        </a>
-        <?php } else { ?>
-        <a class="text-store" title="<?php echo $store; ?>" href="<?php echo $Url::createUrl("common/home"); ?>">
-           <?php echo $text_store; ?>
-      </a>
-      <?php } ?>
-    </aside>
-    <nav id="leftOffCanvas" class="main-nav large-9 columns">
+    <nav id="leftOffCanvas" class="main-nav large-12 columns">
       <div class="nav-links">
         <?php if (!empty($links)) { ?>
         <?php echo $links; ?> 
@@ -54,8 +39,6 @@
         </ul>
       </div>
     </nav>
-  </section>
-</header>
 <script>
   (function () {
     var $nav;

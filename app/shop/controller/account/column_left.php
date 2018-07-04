@@ -3,6 +3,9 @@
 class ControllerAccountColumnLeft extends Controller {
 
     protected function index() {
+        $this->loadWidgets('column_left');
+        
+
         $Url = new Url($this->registry);
 
         $this->language->load('account/account');
@@ -36,7 +39,7 @@ class ControllerAccountColumnLeft extends Controller {
 
         $this->scripts = array_merge($this->scripts, $scripts);
 
-        $this->id = 'column_left';
+        $this->id = 'account_column_left';
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/account/column_left.tpl')) {
             $this->template = $this->config->get('config_template') . '/account/column_left.tpl';

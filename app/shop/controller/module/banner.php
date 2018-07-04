@@ -1,6 +1,6 @@
 <?php
 
-class ControllerModuleBanner extends Controller {
+class ControllerModuleBanner extends Module {
 
     protected function index($widget = null) {
         $this->language->load('module/banner');
@@ -12,17 +12,10 @@ class ControllerModuleBanner extends Controller {
 
         if (!$this->data['settings']['module'])
             $this->data['settings']['module'] = 'banner';
-        $this->data['settings']['width'] = isset($this->data['settings']['width']) ? $this->data['settings']['width'] : 80;
+        $this->data['settings']['width'] = isset($this->data['settings']['width']) ? $this->data['settings']['width'] : '180px';
         $this->data['settings']['height'] = isset($this->data['settings']['height']) ? $this->data['settings']['height'] : 80;
 
-        if (isset($settings['title'])) {
-            $this->data['heading_title'] = $settings['title'];
-        } else {
-            $this->data['heading_title'] = $this->language->get('heading_title');
-        }
-
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
+        $this->data['heading_title'] = isset($settings['title']) ? $settings['title'] : $this->language->get('heading_title');
 
         if ((int) $settings['banner_id']) {
             $this->data['Image'] = new NTImage;
@@ -30,17 +23,29 @@ class ControllerModuleBanner extends Controller {
             $this->data['banner'] = $this->modelBanner->getById($settings['banner_id']);
 
             if (!empty($this->data['banner']['jquery_plugin'])) {
-                $this->loadAssets($this->data['banner']['jquery_plugin']);
+
+                $this->data['banner']['style'] = "width: ". $this->data['settings']['width'] .";";
+                $this->data['banner']['style'] .= "margin: ". $this->data['settings']['margin'] .";";
+                $this->data['banner']['style'] .= "padding: ". $this->data['settings']['padding'] .";";
+                $this->data['banner']['style'] .= ($settings['float']) ? "float: left;" : "";
+
+                if (file_exists(DIR_JS .'sliders/'. $this->data['banner']['jquery_plugin'] .'/slider.js')) {
+                    $this->javascripts = array_merge($this->javascripts, array($this->data['banner']['jquery_plugin'] => HTTP_JS .'sliders/'. $this->data['banner']['jquery_plugin'] .'/slider.js'));
+                }
+                if (file_exists(DIR_CSS .'sliders/'. $this->data['banner']['jquery_plugin'] .'/slider.css')) {
+                    $this->styles = array_merge($this->styles, array(array(
+                        'href'=> HTTP_CSS .'sliders/'. $this->data['banner']['jquery_plugin'] .'/slider.css',
+                        'media'=>'all'
+                    )));
+                }
+                $filename = $controller = str_replace('controller', '', strtolower(__CLASS__)) . $this->data['banner']['jquery_plugin'];
+                $this->loadWidgetAssets($filename);
 
                 if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/banner/' . $this->data['banner']['jquery_plugin'] . '.tpl')) {
                     $this->template = $this->config->get('config_template') . '/banner/' . $this->data['banner']['jquery_plugin'] . '.tpl';
                 } else {
                     $this->template = 'cuyagua/banner/nivo-slider.tpl';
                 }
-            } else {
-                $this->loadAssets('nivo-slider');
-
-                $this->template = 'cuyagua/banner/nivo-slider.tpl';
             }
 
             $this->id = 'banner';
@@ -64,6 +69,9 @@ class ControllerModuleBanner extends Controller {
             if (!file_exists(DIR_IMAGE . $v['image']))
                 $json['results'][$k]['image'] = HTTP_IMAGE . "no_image.jpg";
             $json['results'][$k]['thumb'] = NTImage::resizeAndSave($v['image'], $width, $height);
+            $json['results'][$k]['title'] = $v['title'];
+            $json['results'][$k]['description'] = $v['description'];
+            $json['results'][$k]['link'] = $v['link'];
         }
 
         if (!count($json['results']))
@@ -71,69 +79,4 @@ class ControllerModuleBanner extends Controller {
 
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
-
-    protected function loadAssets($jquery_plugin) {
-        //$jquery_plugin = str_replace(array('-','_'),'',strtolower($jquery_plugin));
-
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
-
-        if ($this->config->get('config_render_css_in_file')) {
-            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-                $styles[] = array('media' => 'all', 'href' => $cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-            }
-
-            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.css'))) {
-                $styles[] = array('media' => 'all', 'href' => $cssFolder . str_replace('controller', '', strtolower(__CLASS__. $jquery_plugin) . '.css'));
-            }
-
-            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            }
-
-            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js'))) {
-                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js');
-            }
-
-        } else {
-            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-                $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__) . '.css'));
-            }
-
-            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.css'))) {
-                $styles[] = array('media' => 'all', 'href' => $csspath . str_replace('controller', '', strtolower(__CLASS__. $jquery_plugin) . '.css'));
-            }
-
-            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            }
-
-            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js'))) {
-                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__ . $jquery_plugin) . '.js');
-            }
-
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
-    }
-
 }

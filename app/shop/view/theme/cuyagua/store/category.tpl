@@ -40,29 +40,4 @@
      <?php } ?>
     <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
     </section>
-    <script>
-        $(function() {
-            var elevateZoomScript;
-            var slickScript;
-            var rrssbScript;
-            if (!$.fn.elevateZoom) {
-                elevateZoomScript = document.createElement("script");
-                elevateZoomScript.async = "true";
-                elevateZoomScript.src = "<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/elevatezoom/jquery.elevateZoom-3.0.8.min.js'; ?>";
-                document.body.appendChild(elevateZoomScript);
-            }
-            if (!$.fn.slick) {
-                slickScript = document.createElement("script");
-                slickScript.async = "true";
-                slickScript.src = "<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/slick/slick/slick.min.js'; ?>";
-                document.body.appendChild(slickScript);
-            }
-            if (!window.rrssbInit) {
-                rrssbScript = document.createElement("script");
-                rrssbScript.async = "true";
-                rrssbScript.src = "<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/rrssb/js/rrssb.min.js'; ?>";
-                document.body.appendChild(rrssbScript);
-            }
-        });
-</script>
 <?php echo $footer; ?>

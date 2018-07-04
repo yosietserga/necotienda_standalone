@@ -1,6 +1,7 @@
 <?php
 // Heading
 $_['heading_title']    = 'Descripci&oacute;n de la Tienda';
+$_['description']      = '';
 
 // Text
 $_['text_module']      = 'M&oacute;dulos';

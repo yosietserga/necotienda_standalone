@@ -16,11 +16,19 @@ final class Cart
         }
     }
 
-    public function getProducts()
+    public function getProducts($data=null)
     {
         $product_data = array();
 
-        foreach ($this->session->get('cart') as $key => $value) {
+        if (isset($data['start'])) {
+            $a = $this->session->get('cart');
+            $limit = abs($data['limit'] - count($a));
+            $results = array_slice($a, $data['start'], $limit, true);
+        } else {
+            $results = $this->session->get('cart');
+        }
+
+        foreach ($results as $key => $value) {
             $array = explode(':', $key);
             $product_id = $array[0];
             $quantity = $value;

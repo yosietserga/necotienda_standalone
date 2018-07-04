@@ -3,29 +3,37 @@
 class ControllerPageSitemap extends Controller {
 
     public function index() {
-        $cached = $this->cache->get('sitemap.' .
-                $this->config->get('config_language_id') . "." .
-                $this->request->hasQuery('hl') . "." .
-                $this->request->hasQuery('cc') . "." .
-                $this->customer->getId() . "." .
-                $this->config->get('config_currency') . "." .
-                $this->config->get('config_store_id')
-        );
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
+        $cacheId = 'html-sitemap.' .
+            $this->config->get('config_language_id') . "." .
+            $this->request->hasQuery('hl') . "." .
+            $this->request->hasQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            $this->config->get('config_store_id');
+
+        $cached = $this->cache->get($cacheId);
+
         $this->load->library('user');
         if ($cached && !$this->user->isLogged()) {
             $this->response->setOutput($cached, $this->config->get('config_compression'));
         } else {
+            $Url = new Url($this->registry);
+
             $this->language->load('page/sitemap');
             $this->document->title = $this->language->get('heading_title');
 
             $this->document->breadcrumbs = array();
             $this->document->breadcrumbs[] = array(
-                'href' => Url::createUrl("common/home"),
+                'href' => $Url::createUrl("common/home"),
                 'text' => $this->language->get('text_home'),
                 'separator' => false
             );
             $this->document->breadcrumbs[] = array(
-                'href' => Url::createUrl("page/sitemap"),
+                'href' => $Url::createUrl("page/sitemap"),
                 'text' => $this->language->get('heading_title'),
                 'separator' => $this->language->get('text_separator')
             );
@@ -35,41 +43,34 @@ class ControllerPageSitemap extends Controller {
             $this->load->model('store/category');
             $this->load->model('content/page');
 
-            $this->data['special'] = Url::createUrl("store/special");
-            $this->data['account'] = Url::createUrl("account/account");
-            $this->data['edit'] = Url::createUrl("account/edit");
-            $this->data['password'] = Url::createUrl("account/password");
-            $this->data['address'] = Url::createUrl("account/address");
-            $this->data['history'] = Url::createUrl("account/history");
-            $this->data['download'] = Url::createUrl("account/download");
-            $this->data['cart'] = Url::createUrl("checkout/cart");
-            $this->data['checkout'] = Url::createUrl("checkout/shipping");
-            $this->data['search'] = Url::createUrl("store/search");
-            $this->data['contact'] = Url::createUrl("page/contact");
+            $this->data['special'] = $Url::createUrl("store/special");
+            $this->data['account'] = $Url::createUrl("account/account");
+            $this->data['edit'] = $Url::createUrl("account/edit");
+            $this->data['password'] = $Url::createUrl("account/password");
+            $this->data['address'] = $Url::createUrl("account/address");
+            $this->data['history'] = $Url::createUrl("account/history");
+            $this->data['download'] = $Url::createUrl("account/download");
+            $this->data['cart'] = $Url::createUrl("checkout/cart");
+            $this->data['checkout'] = $Url::createUrl("checkout/shipping");
+            $this->data['search'] = $Url::createUrl("store/search");
+            $this->data['contact'] = $Url::createUrl("page/contact");
 
             $this->data['category'] = $this->getCategories(0);
             $this->data['pages'] = $this->modelPage->getAll();
 
-            $this->loadWidgets();
+            $this->session->set('landing_page','page/sitemap');
+            $this->loadWidgets('featuredContent');
+            $this->loadWidgets('main');
+            $this->loadWidgets('featuredFooter');
 
-            if ($scripts)
-                $this->scripts = array_merge($this->scripts, $scripts);
+            $this->addChild('common/column_left');
+            $this->addChild('common/column_right');
+            $this->addChild('common/footer');
+            $this->addChild('common/header');
 
             if (!$this->user->isLogged()) {
-                $this->cacheId = 'sitemap.' .
-                        $this->config->get('config_language_id') . "." .
-                        $this->request->getQuery('hl') . "." .
-                        $this->request->getQuery('cc') . "." .
-                        $this->customer->getId() . "." .
-                        $this->config->get('config_currency') . "." .
-                        $this->config->get('config_store_id');
+                $this->cacheId = $cacheId;
             }
-
-            $this->children[] = 'common/column_left';
-            $this->children[] = 'common/column_right';
-            $this->children[] = 'common/nav';
-            $this->children[] = 'common/header';
-            $this->children[] = 'common/footer';
 
             $template = ($this->config->get('default_view_sitemap')) ? $this->config->get('default_view_sitemap') : 'page/sitemap.tpl';
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -83,6 +84,8 @@ class ControllerPageSitemap extends Controller {
     }
 
     protected function getCategories($parent_id, $current_path = '') {
+        $Url = new Url($this->registry);
+
         $output = '';
 
         $results = $this->modelCategory->getCategories($parent_id);
@@ -100,7 +103,7 @@ class ControllerPageSitemap extends Controller {
 
             $output .= '<li>';
 
-            $output .= '<a href="' . Url::createUrl("store/category", array("path" => $new_path)) . '">' . $result['name'] . '</a>';
+            $output .= '<a href="' . $Url::createUrl("store/category", array("path" => $new_path)) . '">' . $result['name'] . '</a>';
 
             $output .= $this->getCategories($result['category_id'], $new_path);
 
@@ -113,99 +116,4 @@ class ControllerPageSitemap extends Controller {
 
         return $output;
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

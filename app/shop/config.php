@@ -10,11 +10,10 @@ $mainPath       = dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEP
 $protocol       = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === false ? 'http://' : 'https://';
 $httpDefaultPath= isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] : substr($_SERVER['PHP_SELF'],0,strrpos($_SERVER['PHP_SELF'],"/")+1);
 $httpPath = str_replace('/index.php',"",$httpDefaultPath);
-//$httpPath = str_replace('/web/',"",$httpPath);
 
  // HTTP addresses
 define('HTTP_HOME',     "http://" . $httpPath . "/");
-define('HTTP_ADMIN',     "http://" . $httpPath . "/". ADMIN ."/");
+define('HTTP_ADMIN',     "http://" . $httpPath ."/". ADMIN ."/");
 define('HTTP_IMAGE',    HTTP_HOME . "assets/images/");
 define('HTTP_CSS',      HTTP_HOME . "assets/css/");
 define('HTTP_JS',       HTTP_HOME . "assets/js/");
@@ -51,7 +50,10 @@ define('DIR_THEME_IMAGE', $publictPath . "assets/theme/%theme%/image/");
 
 // System files
 define('DIR_SYSTEM',    $mainPath . "system" . DIRECTORY_SEPARATOR);
-define('DIR_DATABASE',  DIR_SYSTEM . 'database/');
-define('DIR_CONFIG',    DIR_SYSTEM . 'config/');
-define('DIR_CACHE',     DIR_SYSTEM . 'cache/');
-define('DIR_LOGS',      DIR_SYSTEM . 'logs' . DIRECTORY_SEPARATOR . 'frontend' . DIRECTORY_SEPARATOR);
+define('DIR_DATABASE',  DIR_SYSTEM . 'database' . DIRECTORY_SEPARATOR);
+define('DIR_CONFIG',    DIR_SYSTEM . 'config' . DIRECTORY_SEPARATOR);
+define('DIR_CACHE',     DIR_SYSTEM . 'temp' . DIRECTORY_SEPARATOR);
+define('DIR_LOGS',      DIR_SYSTEM . 'logs' . DIRECTORY_SEPARATOR);
+
+
+define('NTS_DEBUG_MODE', true);

@@ -3,10 +3,20 @@
 class ControllerCheckoutSuccess extends Controller {
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if ($this->config->get('config_store_mode') != 'store') {
             $this->redirect(HTTP_HOME);
         }
+
+        if (!$this->customer->isLogged()) {
+            $this->session->set('redirect', Url::createUrl("checkout/cart"));
+            $this->redirect(Url::createUrl("account/login"));
+        }
+
         $this->language->load('checkout/success');
 
         $this->data['heading_title'] = $this->document->title = $this->language->get('heading_title');
@@ -343,9 +353,16 @@ class ControllerCheckoutSuccess extends Controller {
             $this->template = 'cuyagua/checkout/success.tpl';
         }
 
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/footer';
-        $this->children[] = 'common/header';
+        
+
+        $this->session->set('landing_page','checkout/success');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }

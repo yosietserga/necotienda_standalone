@@ -2,7 +2,7 @@
 
 class ControllerCommonHeader extends Controller {
 
-    protected function index() {
+    protected function index($params = null) {
         $this->load->library('browser');
         $Url = new Url($this->registry);
         $browser = new Browser;
@@ -56,7 +56,7 @@ class ControllerCommonHeader extends Controller {
         }
 
         if (!$this->session->has('token')) {
-            $this->session->set('token', md5(rand()));
+            $this->session->set('token', md5(rand().time()));
         }
 
         $this->data['token'] = $this->session->get('token');
@@ -89,6 +89,27 @@ class ControllerCommonHeader extends Controller {
         $this->data['links'] = $this->document->links;
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
 
+        if (isset($params['product']) && !empty($params['product'])) {
+            $this->data['opengraph']['og:type'] = 'product';
+            $this->data['opengraph']['og:title'] = $params['product']['name'];
+            $this->data['opengraph']['og:description'] = $params['product']['overview'];
+            $this->data['opengraph']['og:url'] = $Url::createUrl('store/product',array('product_id'=>$params['product']['product_id']));
+            $this->data['opengraph']['og:image'] = $params['product']['images'][0]['preview'];
+            $this->data['opengraph']['product:plural_title'] = $params['product']['name'];
+            $this->data['opengraph']['product:price:amount'] = $params['product']['original_price'];
+            $this->data['opengraph']['product:price:currency'] = $this->config->get('config_currency');
+            $this->data['headAttributes'] = ' prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#"';
+        }
+
+        if (isset($params['category']) && !empty($params['category'])) {
+            $this->data['opengraph']['og:type'] = 'product.group';
+            $this->data['opengraph']['og:title'] = $params['category']['name'];
+            $this->data['opengraph']['og:description'] = $params['category']['overview'];
+            $this->data['opengraph']['og:url'] = $Url::createUrl('store/category',array('path'=>$params['category']['category_id']));
+            $this->data['opengraph']['og:image'] = $params['category']['thumb'];
+            $this->data['headAttributes'] = ' prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#"';
+        }
+
         $this->load->library('user');
         if ($this->user->getId()) {
             $this->data['is_admin'] = true;
@@ -96,8 +117,6 @@ class ControllerCommonHeader extends Controller {
             if ($this->request->hasQuery('theme_editor')) {
                 $this->data['theme_editor'] = true;
                 if ($this->request->hasQuery('template') && file_exists(DIR_TEMPLATE . $this->request->getQuery('template') . '/common/header.tpl')) {
-                    $this->config->set('config_template', $this->request->getQuery('template'));
-
                     $this->data['new_theme']= Url::createAdminUrl('style/theme/insert',array(),'NONSSL',HTTP_ADMIN);
                     $this->data['save_theme']= Url::createAdminUrl('style/theme/save',array('theme_id'=>$this->request->getQuery('theme_id'),'template'=>$this->request->getQuery('template')),'NONSSL',HTTP_ADMIN);
                     $this->data['download_theme']= Url::createAdminUrl('style/theme/download',array('theme_id'=>$this->request->getQuery('theme_id'),'template'=>$this->request->getQuery('template')),'NONSSL',HTTP_ADMIN);
@@ -105,8 +124,8 @@ class ControllerCommonHeader extends Controller {
             }
         }
 
-        $this->loadAssets();
-
+        $this->loadWidgets('header', 'shop', true);
+        
         $this->loadCss();
         $this->loadJs();
 
@@ -199,43 +218,6 @@ class ControllerCommonHeader extends Controller {
         }
 
         $this->session->set('state', md5(rand()));
-        $this->data['google_analytics_code'] = $this->config->get('google_analytics_code');
-        $this->data['live_client_id'] = $this->config->get('social_live_client_id');
-        $this->data['google_client_id'] = $this->config->get('social_google_client_id');
-        $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
-        $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
-
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('header') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
 
         $this->id = 'header';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
@@ -304,13 +286,16 @@ class ControllerCommonHeader extends Controller {
             $done = array();
             foreach ($this->header_javascripts as $key => $js) {
                 if (in_array($js, $done)) continue;
+                if (!file_exists($js)) continue;
                 $done[] = $js;
                 $f_output .= file_get_contents($js);
             }
             $this->header_javascripts = null;
+            $this->data['scripts'] .= ($f_output) ? "<script> \n " . $f_output . " </script>" : "";
+        } else {
+            $this->data['header_javascripts'] = $this->header_javascripts;
         }
 
-        $this->data['scripts'] .= ($f_output) ? "<script> \n " . $f_output . " </script>" : "";
     }
 
     protected function loadCss() {
@@ -325,27 +310,12 @@ class ControllerCommonHeader extends Controller {
             $cssFolder = str_replace("%theme%", "cuyagua", DIR_THEME_CSS);
         }
 
-        if (file_exists($cssFolder . 'theme.css')) {
+        $cssFile = str_replace('/', '', strtolower($this->Route) . '.css');
+        if (file_exists($cssFolder . $cssFile)) {
             if ($this->config->get('config_render_css_in_file')) {
-                $this->data['css'] .= file_get_contents($cssFolder . 'theme.css');
+                $this->data['css'] .= file_get_contents($cssFolder . $cssFile);
             } else {
-                $styles['theme.css'] = array('media' => 'all', 'href' => $csspath . 'theme.css');
-            }
-        }
-
-        if (file_exists($cssFolder . 'vendor.css')) {
-            if ($this->config->get('config_render_css_in_file')) {
-                $this->data['css'] .= file_get_contents($cssFolder . 'vendor.css');
-            } else {
-                $styles['vendor.css'] = array('media' => 'all', 'href' => $csspath . 'vendor.css');
-            }
-        }
-
-        if (file_exists($cssFolder . str_replace('/', '', strtolower($this->Route) . '.css'))) {
-            if ($this->config->get('config_render_css_in_file')) {
-                $this->data['css'] .= file_get_contents($cssFolder . str_replace('/', '', strtolower($this->Route) . '.css'));
-            } else {
-                $styles['vendor.css'] = array('media' => 'all', 'href' => $csspath . str_replace('/', '', strtolower($this->Route) . '.css'));
+                $styles[$cssFile] = array('media' => 'all', 'href' => $csspath . $cssFile);
             }
         }
 
@@ -357,6 +327,7 @@ class ControllerCommonHeader extends Controller {
             $done = array();
             foreach ($this->styles as $k => $css) {
                 if (in_array($css['href'], $done)) continue;
+                if (!file_exists($css['href'])) continue;
                 $done[] = $css['href'];
                 $this->data['css'] .= file_get_contents($css['href']);
             }
@@ -385,7 +356,7 @@ class ControllerCommonHeader extends Controller {
         $this->load->library('user');
         if ($this->user->getId()) {
             $this->data['is_admin'] = true;
-            $styles[] = array('media' => 'screen', 'href' => HTTP_ADMIN . 'css/front/admin.css');
+            $styles[] = array('media' => 'screen', 'href' => HTTP_ADMIN . 'css/frontend/admin.css');
             if ($this->request->hasQuery('theme_editor') && $this->request->hasQuery('template')) {
                 $styles[] = array('media' => 'screen', 'href' => $cssmainpath . 'neco.colorpicker.css');
             }
@@ -393,48 +364,5 @@ class ControllerCommonHeader extends Controller {
 
         if ($styles)
             $this->styles = array_merge($this->styles, $styles);
-        $this->data['styles'] = $this->styles;
-    }
-
-    protected function loadAssets() {
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
-
-        if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
-            if ($this->config->get('config_render_css_in_file')) {
-                $this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
-            } else {
-                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
-            }
-        }
-
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            if ($this->config->get('config_render_js_in_file')) {
-                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            } else {
-                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            }
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
     }
 }

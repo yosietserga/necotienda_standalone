@@ -2,7 +2,7 @@
 
 class ControllerCommonFooter extends Controller {
 
-    protected function index() {
+    protected function index($params = null) {
         $this->language->load('common/footer');
         $this->load->library('user');
         $this->data['config_js_security'] = $this->config->get('config_js_security');
@@ -15,68 +15,6 @@ class ControllerCommonFooter extends Controller {
         }
 
         $this->id = 'footer';
-
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgetsBeforeFooter'][] = $widget['name'];
-                        }
-
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('footer') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                        "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
 
         // SCRIPTS
         if ($this->config->get('config_seo_url')) {
@@ -141,7 +79,7 @@ class ControllerCommonFooter extends Controller {
             });
             window.location = url;
         }");
-
+        
         $this->scripts = array_merge($this->scripts, $scripts);
         $r_output = $w_output = $s_output = $f_output = "";
         $script_keys = array();
@@ -162,9 +100,46 @@ class ControllerCommonFooter extends Controller {
                     break;
             }
         }
+        
+        $this->loadWidgets('footer');
+        
+        $this->loadJs();
+        
+        if ($this->config->get('config_render_js_in_file')) {
+            $done = array();
+            foreach ($this->javascripts as $key => $js) {
+                if (in_array($js, $done) || !file_exists($js)) continue;
+                $done[] = $js;
+                $f_output .= file_get_contents($js);
+            }
+            $this->javascripts = null;
+            $javascripts = null;
+        }
+        
+        $this->data['scripts'] .= ($f_output) ? "<script> \n " . $f_output . " </script>" : "";
+        $this->data['scripts'] .= $s_output;
+        $this->data['scripts'] .= ($r_output) ? "<script> \n $(function(){" . $r_output . "}); </script>" : "";
+        $this->data['scripts'] .= ($w_output) ? "<script> \n (function($){ $(window).load(function(){ " . $w_output . " }); })(jQuery);</script>" : "";
 
-        $this->loadAssets();
+        if ($javascripts)
+            $this->javascripts = array_merge($this->javascripts, $javascripts);
 
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/footer.tpl')) {
+            $this->template = $this->config->get('config_template') . '/common/footer.tpl';
+        } else {
+            $this->template = 'cuyagua/common/footer.tpl';
+        }
+        
+        $this->data['google_analytics_code'] = $this->config->get('google_analytics_code');
+        $this->data['live_client_id'] = $this->config->get('social_live_client_id');
+        $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
+        $this->data['google_client_id'] = $this->config->get('social_google_client_id');
+        $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
+
+        $this->render();
+    }
+    
+    protected function loadJs() {
         $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
             $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
@@ -182,99 +157,18 @@ class ControllerCommonFooter extends Controller {
             }
         }
 
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
-
-        if ($this->config->get('config_render_js_in_file')) {
-            $done = array();
-            foreach ($this->javascripts as $key => $js) {
-                if (in_array($js, $done)) continue;
-                $done[] = $js;
-                $f_output .= file_get_contents($js);
-            }
-            $this->javascripts = null;
-            $javascripts = null;
-        }
-
-        $this->data['scripts'] .= ($f_output) ? "<script> \n " . $f_output . " </script>" : "";
-        $this->data['scripts'] .= $s_output;
-        $this->data['scripts'] .= ($r_output) ? "<script> \n $(function(){" . $r_output . "}); </script>" : "";
-        $this->data['scripts'] .= ($w_output) ? "<script> \n (function($){ $(window).load(function(){ " . $w_output . " }); })(jQuery);</script>" : "";
-
         $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
         
         // javascript files
         if ($this->user->getId()) {
-            $javascripts[] = HTTP_ADMIN . "js/front/admin.js";
+            $javascripts[] = HTTP_ADMIN . "js/frontend/admin.js";
 
             if ($this->request->hasQuery('theme_editor') && $this->request->hasQuery('theme_id') && (int) $this->request->getQuery('theme_id') > 0) {
                 $javascripts[] = $jspath . "vendor/jquery-ui.min.js";
                 $javascripts[] = $jspath . "necojs/neco.css.js";
                 $javascripts[] = $jspath . "necojs/neco.colorpicker.js";
-                $javascripts[] = HTTP_ADMIN . "js/front/theme_editor.js";
+                $javascripts[] = HTTP_ADMIN . "js/frontend/theme_editor.js";
             }
-        }
-
-        if ($javascripts)
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-
-        $this->data['javascripts'] = $this->javascripts;
-
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/footer.tpl')) {
-            $this->template = $this->config->get('config_template') . '/common/footer.tpl';
-        } else {
-            $this->template = 'cuyagua/common/footer.tpl';
-        }
-
-        $this->data['google_analytics_code'] = $this->config->get('google_analytics_code');
-        $this->data['live_client_id'] = $this->config->get('social_live_client_id');
-        $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
-        $this->data['google_client_id'] = $this->config->get('social_google_client_id');
-        $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
-
-        $this->render();
-    }
-
-    protected function loadAssets() {
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
-
-        if ($this->config->get('config_render_css_in_file')) {
-            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-                $this->data['css'] .= file_get_contents($cssFolder . str_replace('/', '', strtolower(__CLASS__) . '.css'));
-            }
-        } else {
-            if (file_exists($cssFolder . str_replace('controller', '', strtolower(__CLASS__) . '.css'))) {
-                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . str_replace('/', '', strtolower(__CLASS__) . '.css'));
-            }
-        }
-
-        if ($this->config->get('config_render_js_in_file')) {
-            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            }
-        } else {
-            if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            }
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
         }
 
         if (count($javascripts)) {

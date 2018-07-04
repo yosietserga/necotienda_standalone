@@ -31,7 +31,7 @@ final class Language {
         }
 
         if (empty($_)) {
-            echo 'Error: Could not load language ' . $filename . '!';
+            echo('<div class="msg warning">Error: Could not load language ' . $filename . '!</div>');
         } else {
             $this->data = array_merge($this->data, $_);
         }

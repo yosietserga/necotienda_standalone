@@ -1,0 +1,7 @@
+.banner ul {
+    display: flex;
+    flex-wrap: wrap;
+}
+.banner li {
+    list-style: none;
+}

@@ -1,0 +1,229 @@
+@charset "utf-8";
+/* @group Retina compatibility */
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 144dpi) {
+    .chzn-rtl .chzn-search input, .chzn-container-single .chzn-single abbr, .chzn-container-single .chzn-single div b, .chzn-container-single .chzn-search input, .chzn-container-multi .chzn-choices .search-choice .search-choice-close, .chzn-container .chzn-results-scroll-down span, .chzn-container .chzn-results-scroll-up span {
+        background-image: url('../images/chosen-sprite@2x.png') !important;
+        background-repeat: no-repeat !important;
+        background-size: 52px 37px !important;
+    }
+}
+
+/* @end */
+
+.neco-form {
+    margin: 8px;
+    padding: 4px;
+}
+.neco-form .form-entry {
+    margin:15px 10px;
+    clear:both;
+    float:left;
+    width: 100%;
+    display: block;
+}
+
+.neco-label {
+    width: 180px;
+}
+
+.neco-form label,
+.neco-form input:not([type="checkbox"]):not([type="radio"]),
+.neco-form textarea,
+.neco-form select {
+    height: auto;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.neco-form input:not([type="checkbox"]):not([type="radio"]),
+.neco-form textarea,
+.neco-form select {
+    width: 100%;
+    height: 2.75rem;
+    transition-property: all;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
+    transition-property: box-shadow, border, background-color;
+    padding: 0 0.875rem;
+    color: #000;
+    font-size: 0.875rem;
+    font-family: "Raleway", "Roboto", serif;
+    border: 1px solid #ccc;
+    position: relative;
+    vertical-align: top;
+}
+
+.neco-form input:focus,
+.neco-form textarea:focus {
+    border: 1px solid #75b9e7 !important;
+    background: #fafafa !important;
+}
+
+.neco-form textarea {
+    padding-top: 0.75rem;
+    height: 8.25rem;
+    width: 100%;
+}
+
+.neco-form fieldset {
+    padding: 1rem;
+    display: block;
+    border: none;
+}
+
+.neco-form input[type=checkbox],
+.neco-form input[type=radio] {
+    width: 10px;
+    height: 10px;
+}
+.neco-form input:hover {
+    background: #eee;
+}
+
+.neco-input-required,
+.neco-submit-error {
+    color: #F00;
+    font-weight: bold;
+}
+
+.neco-input-error {
+    background: #F66;
+    border-color: #F00 !important;
+    box-shadow: none !important;
+}
+
+.neco-input-success {
+    background: #A7EBBE;
+    border-color: #0C0 !important;
+    box-shadow: none !important;
+}
+
+.neco-form-arroba {
+    margin-left: 5px;
+    padding: 3px;
+    background: #000;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+
+.neco-form-help, 
+.neco-form-tip, 
+.neco-form-error {
+    margin-left: 5px;
+    padding: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.neco-form-help {
+    background: url(../images/help.png) transparent left top no-repeat;
+}
+
+.neco-form-tip {
+    background: url(../images/warning.png) transparent left top no-repeat;
+}
+
+a .neco-tooltip {
+    position: absolute;
+    top: 0px;
+    left: 75%;
+    padding: 5px 8px;
+    display: none;
+    line-height: 14px;
+    z-index: 10;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px #999;
+}
+
+a:hover .neco-tooltip {
+    display: block
+}
+
+a.neco-form-help .neco-tooltip {
+    background: #34BDEF;
+    color: #fff !important;
+}
+
+a.neco-form-tip .neco-tooltip {
+    background: #FF9A07;
+    color: #fff !important;
+}
+
+a.neco-form-error .neco-tooltip {
+    background: #F00;
+    color: #fff !important;
+}
+
+#neco-unlock-sample p {
+    padding: 4px;
+    background: #BF2D4D;
+    font: bold 14px verdana;
+    border: solid 1px #ddd;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.neco-unlock-sample {
+    background: url(../images/slide_sample.gif) transparent no-repeat;
+    width: 192px;
+    height: 72px;
+    display: block
+}
+
+#neco-unlock-form {
+    position: relative;
+    width: 320px;
+    height: 94px;
+    background-image: url(../images/lock-bottom.png);
+}
+
+#slide-to-unlock {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 94px;
+    background: url(../images/slide-to-unlock.gif) transparent no-repeat;
+}
+
+#neco-unlock-slider-wrapper {
+    padding-left: 22px;
+    padding-top: 23px;
+}
+
+#neco-unlock-slider {
+    width: 207px;
+    height: 50px;
+}
+
+.ui-slider .ui-slider-handle {
+    position: absolute;
+    z-index: 10 !important;
+    height: 50px;
+    width: 72px;
+    top: 0px;
+    left: 0px;
+    margin-left: 0px;
+    background: url(../images/lock-slider.png) transparent no-repeat;
+    border: none;
+    cursor: pointer
+}
+
+.ui-slider {
+    background: transparent;
+    border: none
+}
+
+/* Used by the jQuery slider */
+.ui-slider {
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.entry-rif div {
+    margin:0px !important;
+    float:left;
+}

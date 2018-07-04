@@ -1,0 +1,1 @@
+<p class="overview"><?php echo substr($product['overview'],0,140)."... "; ?>&nbsp;<a href="<?php echo $Url::createUrl('store/product',array('product_id'=>$product['product_id'])); ?>" title="<?php echo $product['name']; ?>">Más detalles</a></p>

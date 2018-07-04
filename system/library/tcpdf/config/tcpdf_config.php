@@ -91,17 +91,17 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * cache directory for temporary files (full path)
 	 */
-	define ('K_PATH_CACHE', DIR_CACHE);
+	define ('K_PATH_CACHE', realpath(DIR_CACHE).'/');
 
 	/**
 	 * cache directory for temporary files (url path)
 	 */
-	define ('K_PATH_URL_CACHE', DIR_CACHE);
+	define ('K_PATH_URL_CACHE', realpath(DIR_CACHE).'/');
 
 	/**
 	 *images directory
 	 */
-	define ('K_PATH_IMAGES', DIR_IMAGE);
+	define ('K_PATH_IMAGES', realpath(DIR_IMAGE).'/');
 
 	/**
 	 * blank image

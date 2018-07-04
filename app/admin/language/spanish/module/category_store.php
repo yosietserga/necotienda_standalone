@@ -1,6 +1,7 @@
 <?php
 // Heading
 $_['heading_title']    = 'Categorias de Productos';
+$_['description']      = '';
 
 // Text
 $_['text_module']      = 'Modulos';

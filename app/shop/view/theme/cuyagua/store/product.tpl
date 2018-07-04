@@ -37,14 +37,16 @@
             <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/share-button.tpl"); ?>
 
             <?php if ($review_status) { ?>
-                <div itemprop="aggregateRating"itemscope itemtype="http://schema.org/AggregateRating" class="property average nt-editable" id="productAverage">
+                <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="property average nt-editable" id="productAverage">
+                    <span class="rating-text" itemprop="ratingValue"><?php echo (float)$average; ?></span>
+                    <span class="rating-text" itemprop="reviewCount"><?php echo count($revews); ?></span>
                     <span class="rating-text">Rating</span>
                     <img class="rating-stars" src="<?php echo HTTP_IMAGE; ?>stars_<?php echo (int)$average . '.png'; ?>" alt="<?php echo $Language->get('text_stars'); ?>" />
                 </div>
             <?php } ?>
 
             <div itemprop="model" class="property model nt-editable" id="productModel"><?php echo $Language->get('text_model'); ?><span><?php echo $model; ?></span></div>
-            <div itemprop="description" class="overview nt-editable" id="productOverview"><p><?php echo $overview; ?></p></div>
+            <div itemprop="description" itemprop="description" class="overview nt-editable" id="productOverview"><p><?php echo $overview; ?></p></div>
             <div itemprop="availability" href="http://schema.org/InStock" class="property model nt-editable" id="productAvailability">
                 <?php echo $Language->get('text_availability'); ?><span><?php echo $stock; ?></span>
             </div>
@@ -62,6 +64,22 @@
                 </div>
             <?php } ?>
             <!-- /product-related-data -->
+
+            <!-- product links -->
+            <?php if ($tags || $manufacturer || $categories) { ?>
+            <ul class="tags nt-editable" id="productTags">
+                <?php if ($manufacturer) { ?>
+                <li><a class="manufacturer nt-editable" id="productManufacturer" title="<?php echo $manufacturer; ?>" href="<?php echo str_replace('&', '&amp;', $manufacturers); ?>"><?php echo $manufacturer; ?></a></li>
+                <?php } ?>
+                <?php foreach ($categories as $tag) { ?>
+                <li><a class="category nt-editable" id="productCategory<?php echo $tag['category_id']; ?>" title="<?php echo $tag['name']; ?>" href="<?php echo str_replace('&', '&amp;', $Url::createUrl('store/category',array('path'=>$tag['category_id']))); ?>"><?php echo $tag['name']; ?></a></li>
+                <?php } ?>
+                <?php foreach ($tags as $tag) { ?>
+                <li><a title="<?php echo $tag['tag']; ?>" href="<?php echo str_replace('&', '&amp;', $tag['href']); ?>"><?php echo $tag['tag']; ?></a></li>
+                <?php } ?>
+            </ul>
+            <?php } ?>
+            <!-- /product links -->
 
             <!-- product-modify-actions -->
             <?php if ($Config->get('config_store_mode')=='store') { ?>
@@ -111,7 +129,7 @@
                     <?php if ($tags || $manufacturer || $categories) { ?>
                     <ul class="tags nt-editable" id="productTags">
                         <?php if ($manufacturer) { ?>
-                        <li><a class="manufacturer nt-editable" id="productManufacturer" title="<?php echo $manufacturer; ?>" href="<?php echo str_replace('&', '&amp;', $manufacturers); ?>"><?php echo $manufacturer; ?></a></li>
+                        <li><a class="manufacturer nt-editable" id="productManufacturer" title="<?php echo $manufacturer; ?>" href="<?php echo str_replace('&', '&amp;', $manufacturers); ?>" itemprop="brand"><?php echo $manufacturer; ?></a></li>
                         <?php } ?>
                         <?php foreach ($categories as $tag) { ?>
                         <li><a class="category nt-editable" id="productCategory<?php echo $tag['category_id']; ?>" title="<?php echo $tag['name']; ?>" href="<?php echo str_replace('&', '&amp;', $Url::createUrl('store/category',array('path'=>$tag['category_id']))); ?>"><?php echo $tag['name']; ?></a></li>
@@ -235,7 +253,6 @@
     </div>
 <?php } ?>
 
-<?php /*
 <!-- widgets -->
 <?php if($widgets) { ?>
    <ul class="widgets">
@@ -245,7 +262,6 @@
    </ul>
 <?php } ?> 
 <!-- /widgets -->
-    */ ?>
 
 <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
 </section>

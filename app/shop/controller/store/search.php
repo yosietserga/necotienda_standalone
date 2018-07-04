@@ -1,8 +1,11 @@
 <?php
-
 class ControllerStoreSearch extends Controller {
 
-    public function index($q) {
+    public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $criteria = array();
         $criteria['page'] = $this->request->hasQuery('page') ? $this->request->getQuery('page') : 1;
         $criteria['sort'] = $this->request->hasQuery('sort') ? $this->request->getQuery('sort') : 'pd.name';
@@ -31,16 +34,17 @@ class ControllerStoreSearch extends Controller {
             $this->data['show_register_form_invitation'] = true;
         }
 
-        $this->cacheId = 'search_page_' . md5($this->data['urlSearch']) .
-                $this->config->get('config_language_id') . "." .
-                $this->request->getQuery('hl') . "." .
-                $this->request->getQuery('cc') . "." .
-                $this->customer->getId() . "." .
-                $this->config->get('config_currency') . "." .
-                (int) $this->config->get('config_store_id');
+        $cacheId = 'html-search_page_' . md5($this->data['urlSearch']) .
+            serialize($this->request->get).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int) $this->config->get('config_store_id');
 
         $this->load->library('user');
-        $cached = $this->cache->get($this->cacheId);
+        $cached = $this->cache->get($cacheId);
         if ($cached && !$this->user->isLogged()) {
             $this->response->setOutput($cached, $this->config->get('config_compression'));
         } else {
@@ -593,7 +597,20 @@ class ControllerStoreSearch extends Controller {
                 if (window.location.hash.length > 0) {
                     $('#products').load('" . Url::createUrl("store/search") . "&q='+ window.location.hash.replace('#', ''));
                 }");
-            $this->loadWidgets();
+
+            $this->session->set('landing_page','store/search');
+            $this->loadWidgets('featuredContent');
+            $this->loadWidgets('main');
+            $this->loadWidgets('featuredFooter');
+
+            $this->addChild('common/column_left');
+            $this->addChild('common/column_right');
+            $this->addChild('common/footer');
+            $this->addChild('common/header');
+
+            if (!$this->user->isLogged()) {
+                $this->cacheId = $cacheId;
+            }
 
             if ($scripts)
                 $this->scripts = array_merge($this->scripts, $scripts);
@@ -605,107 +622,7 @@ class ControllerStoreSearch extends Controller {
                 $this->template = 'cuyagua/' . $template;
             }
 
-            $this->children[] = 'common/footer';
-            $this->children[] = 'common/column_left';
-            $this->children[] = 'common/nav';
-            $this->children[] = 'common/header';
-
             $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

@@ -53,7 +53,7 @@ class ControllerPaymentBluePayHostedForm extends Controller {
 		$data['button_confirm'] = $this->language->get('button_confirm');
 		$data['text_loading'] = $this->language->get('text_loading');
 
-		$this->loadAssets();
+
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/bluepay_hosted_form.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/payment/bluepay_hosted_form.tpl', $data);
@@ -96,41 +96,4 @@ class ControllerPaymentBluePayHostedForm extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($this->request->get));
 	}
-
-	public function loadAssets() {
-		$jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-			$jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-			$jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-		} else {
-			$jspath = str_replace("%theme%", "cuyagua", $jspath);
-			$jsFolder = str_replace("%theme%", "cuyagua", DIR_THEME_JS);
-		}
-
-		if (file_exists($jsFolder . str_replace('/', '', str_replace('controller','',strtolower(__CLASS__)) . '.js'))) {
-			$javascripts[] = $jspath . str_replace('/', '', str_replace('controller','',strtolower(__CLASS__)) . '.js');
-		}
-
-		if (count($javascripts)) {
-			$this->javascripts = array_merge($this->javascripts, $javascripts);
-		}
-
-		$csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-			$csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-			$cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-		} else {
-			$csspath = str_replace("%theme%", "cuyagua", $csspath);
-			$cssFolder = str_replace("%theme%", "cuyagua", DIR_THEME_CSS);
-		}
-
-		if (file_exists($cssFolder . str_replace('/', '', strtolower($this->Route) . '.css'))) {
-			$styles[] = array('media' => 'all', 'href' => $csspath . str_replace('/', '', strtolower($this->Route) . '.css'));
-		}
-
-		if (count($styles)) {
-			$this->styles = array_merge($this->styles, $styles);
-		}
-	}
-
 }

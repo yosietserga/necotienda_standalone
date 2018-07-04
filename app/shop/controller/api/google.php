@@ -48,7 +48,6 @@ class ControllerApiGoogle extends Controller {
             $this->google->setRedirectUri($redirect_uri);
 
             if ($this->request->hasQuery('code') && !isset($_SESSION['gtoken'])) {
-                var_dump($this->google);
                 $this->google->authenticate($this->request->getQuery('code'));
                 $_SESSION[gtoken] = $this->google->getAccessToken();
                 $_SESSION[gcode] = $this->request->getQuery('code');

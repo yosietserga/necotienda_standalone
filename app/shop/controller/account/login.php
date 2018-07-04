@@ -5,6 +5,10 @@ class ControllerAccountLogin extends Controller {
     private $error = array();
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if ($this->customer->isLogged()) {
             $this->redirect(Url::createUrl("account/account"));
@@ -26,17 +30,17 @@ class ControllerAccountLogin extends Controller {
 
         $this->document->breadcrumbs = array();
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("common/home"),
+            'href' => $Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/account"),
+            'href' => $Url::createUrl("account/account"),
             'text' => $this->language->get('text_account'),
             'separator' => $this->language->get('text_separator')
         );
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/login"),
+            'href' => $Url::createUrl("account/login"),
             'text' => $this->language->get('text_login'),
             'separator' => $this->language->get('text_separator')
         );
@@ -44,8 +48,8 @@ class ControllerAccountLogin extends Controller {
         $this->data['breadcrumbs'] = $this->document->breadcrumbs;
 
         $this->data['error'] = isset($this->error['message']) ? $this->error['message'] : '';
-        $this->data['action'] = Url::createUrl("account/login");
-        $this->data['register'] = Url::createUrl("account/register");
+        $this->data['action'] = $Url::createUrl("account/login");
+        $this->data['register'] = $Url::createUrl("account/register");
 
         if (isset($this->request->post['redirect'])) {
             $this->data['redirect'] = $this->request->post['redirect'];
@@ -83,18 +87,19 @@ class ControllerAccountLogin extends Controller {
         $this->data['facebook_app_id'] = $this->config->get('social_facebook_app_id');
         $this->data['twitter_oauth_token_secret'] = $this->config->get('social_twitter_oauth_token_secret');
 
-        $this->data['forgotten'] = Url::createUrl("account/forgotten");
+        $this->data['forgotten'] = $Url::createUrl("account/forgotten");
 
-        $this->loadWidgets();
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
 
-        $this->children[] = 'common/column_left';
-        $this->children[] = 'common/column_right';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->session->set('landing_page','account/login');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
         $template = ($this->config->get('default_view_account_login')) ? $this->config->get('default_view_account_login') : 'account/login.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -172,99 +177,4 @@ class ControllerAccountLogin extends Controller {
         $this->load->auto('json');
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

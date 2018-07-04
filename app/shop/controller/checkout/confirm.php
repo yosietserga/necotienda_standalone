@@ -5,6 +5,10 @@ class ControllerCheckoutConfirm extends Controller {
     private $error = array();
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if ($this->config->get('config_store_mode') != 'store') {
             $this->redirect(HTTP_HOME);
@@ -12,17 +16,17 @@ class ControllerCheckoutConfirm extends Controller {
         $this->load->model('checkout/extension');
         if (!$this->cart->hasProducts() || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
             $this->session->set('message', 'No existe la cantidad solicitada disponible para el art&iacute;lo se&ntilde;alado con tres (3) asteriscos');
-            $this->redirect(Url::createUrl("checkout/cart"));
+            if ($this->request->getQuery('resp') != 'json') $this->redirect(Url::createUrl("checkout/cart"));
         }
 
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("checkout/cart"));
-            $this->redirect(Url::createUrl("account/login"));
+            if ($this->request->getQuery('resp') != 'json') $this->redirect(Url::createUrl("account/login"));
         }
 
         if ($this->cart->hasShipping() && $this->session->get('shipping_methods') && !$this->request->hasPost('shipping_method')) {
             $this->session->set('message', $this->language->get('error_must_select_shipping_method'));
-            $this->redirect(Url::createUrl("checkout/cart"));
+            if ($this->request->getQuery('resp') != 'json') $this->redirect(Url::createUrl("checkout/cart"));
         } else {
             $this->session->clear('shipping_address_id');
             $this->session->clear('shipping_methods');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ModelStoreAttribute
  *
@@ -9,7 +10,8 @@
  * @access public
  * @see Model
  */
-class ModelStoreAttribute extends Model {
+class ModelStoreAttribute extends Model
+{
     /**
      * ModelStoreAttribute::getById()
      *
@@ -18,7 +20,8 @@ class ModelStoreAttribute extends Model {
      * @see Cache
      * @return array sql record
      */
-    public function getById($id) {
+    public function getById($id)
+    {
         $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product_attribute_group ag WHERE product_attribute_group_id = '" . (int)$id . "'");
 
         $return = array(
@@ -41,7 +44,8 @@ class ModelStoreAttribute extends Model {
      * @see Cache
      * @return array sql record
      */
-    public function getCategoriesByGroupId($id) {
+    public function getCategoriesByGroupId($id)
+    {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_attribute_to_category WHERE product_attribute_group_id = '" . (int)$id . "'");
         return $query->rows;
     }
@@ -54,7 +58,8 @@ class ModelStoreAttribute extends Model {
      * @see Cache
      * @return array sql record
      */
-    public function getAttributesByGroupId($id) {
+    public function getAttributesByGroupId($id)
+    {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_attribute WHERE product_attribute_group_id = '" . (int)$id . "'");
         return $query->rows;
     }
@@ -67,7 +72,8 @@ class ModelStoreAttribute extends Model {
      * @see Cache
      * @return int Count sql records
      */
-    public function getTotalGroups($data = array()) {
+    public function getTotalGroups($data = array())
+    {
         $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_attribute_group ag ";
 
         $criteria = array();
@@ -87,7 +93,7 @@ class ModelStoreAttribute extends Model {
         }
 
         if ($criteria) {
-            $sql .= " WHERE ". implode(" AND ",$criteria);
+            $sql .= " WHERE " . implode(" AND ", $criteria);
         }
 
         $query = $this->db->query($sql);
@@ -103,7 +109,8 @@ class ModelStoreAttribute extends Model {
      * @see Cache
      * @return int Count sql records
      */
-    public function getAllGroups($data=array()) {
+    public function getAllGroups($data = array())
+    {
         $sql = "SELECT * FROM " . DB_PREFIX . "product_attribute_group ag ";
 
         $criteria = array();
@@ -123,7 +130,7 @@ class ModelStoreAttribute extends Model {
         }
 
         if ($criteria) {
-            $sql .= " WHERE ". implode(" AND ",$criteria);
+            $sql .= " WHERE " . implode(" AND ", $criteria);
         }
 
         $sort_data = array(

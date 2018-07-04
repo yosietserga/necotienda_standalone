@@ -72,13 +72,18 @@ class Update {
         $this->db = $registry->get('db');
         $this->load = $registry->get('load');
 
+        if (!defined('UPDATE_STATUS_PACKAGE')) {
+            define('UPDATE_STATUS_PACKAGE','stable');
+        }
+
         $this->update_info = "http://www.necotienda.org/api/index.php?r=update/info"
                 . "&p=" . urlencode(PACKAGE)
                 . "&v=" . urlencode(VERSION)
                 . "&c=" . urlencode(C_CODE)
+                . "&s=" . urlencode(UPDATE_STATUS_PACKAGE)
                 . "&i=" . urlencode($_SERVER['SERVER_ADDR'])
                 . "&d=" . urlencode(HTTP_HOME);
-         
+
         if (in_array('curl', get_loaded_extensions())) {
             $this->handler = new xhttp;
         } else {
@@ -106,14 +111,18 @@ class Update {
                 return $requirements;
             }
 
+//TODO: mostrar mensaje de error al fallar la validación de licencia y la causa
+            if (!is_dir(DIR_ROOT . "updates")) {
+                mkdir(DIR_ROOT . "updates", '0755');
+            }
+            $file_saved = DIR_ROOT . "updates/update". time() .".zip";
+
             $response = $this->handler->fetch($info['url_update']);
             if (isset($response['body']) && $response['successful']) {
                 $file_update = $response['body'];
             } else {
                 $file_update = $response;
             }
-//TODO: mostrar mensaje de error al fallar la validación de licencia y la causa
-            $file_saved = DIR_ROOT . "updates/update.zip";
 
             $f = fopen($file_saved, 'wb');
             fwrite($f, $file_update);
@@ -178,6 +187,10 @@ class Update {
         if (!ini_get('safe_mode')) {
             preg_match('/[0-9]\.[0-9]+\.[0-9]+/', shell_exec('mysql -V'), $version);
 
+            if (empty($version[0])) {
+                $version[0] = $this->db->getVersion();
+            }
+
             if (version_compare($version[0], $requirements['mysql_version'], '<')) {
                 $return['requirements_error'] = true;
                 $return['php_version'] = 'Se necesita la versi&oacute;n de MySQL mayor o igual a ' . $requirements['mysql_version'] . ' y actualmente posee la versi&oacute;n ' . $version[0];
@@ -191,6 +204,13 @@ class Update {
             if (!extension_loaded($extension)) {
                 $return['requirements_error'] = true;
                 $return[$extension] = 'Debe instalar y activar en PHP la extensi&oacute;n ' . $extension;
+            }
+        }
+
+        foreach ($requirements['php_vars'] as $var => $value) {
+            if (ini_get($var) != $value) {
+                $return['requirements_error'] = true;
+                $return[$extension] = 'Debe configurar la variable de php '. $var .' con el valor ' . $value;
             }
         }
 

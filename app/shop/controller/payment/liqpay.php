@@ -27,7 +27,7 @@ class ControllerPaymentLiqPay extends Controller {
 		$data['xml'] = base64_encode($xml);
 		$data['signature'] = base64_encode(sha1($this->config->get('liqpay_signature') . $xml . $this->config->get('liqpay_signature'), true));
 
-		$this->loadAssets();
+
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/liqpay.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/payment/liqpay.tpl', $data);
@@ -49,48 +49,6 @@ class ControllerPaymentLiqPay extends Controller {
 			$this->load->model('checkout/order');
 
 			$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'));
-		}
-	}
-
-	protected function loadAssets() {
-		$csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-		$jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-			$csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-			$cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-			$jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-			$jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-		} else {
-			$csspath = str_replace("%theme%", "default", $csspath);
-			$cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-			$jspath = str_replace("%theme%", "default", $jspath);
-			$jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-		}
-
-		if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
-			if ($this->config->get('config_render_css_in_file')) {
-				$this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
-			} else {
-				$styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
-			}
-		}
-
-		if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-			if ($this->config->get('config_render_js_in_file')) {
-				$javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-			} else {
-				$javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-			}
-		}
-
-		if (count($styles)) {
-			$this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-		}
-
-		if (count($javascripts)) {
-			$this->javascripts = array_merge($this->javascripts, $javascripts);
 		}
 	}
 }

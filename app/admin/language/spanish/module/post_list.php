@@ -3,6 +3,7 @@
 $_['heading_title']    = 'Listado de Art&iacute;culos';
 $_['post_list']    = 'Listado de Art&iacute;culos';
 $_['text_post_list']    = 'Listado de Art&iacute;culos';
+$_['description']      = '';
 
 // Entry
 $_['entry_scroll']       = 'Paginaci&oacute;n:';

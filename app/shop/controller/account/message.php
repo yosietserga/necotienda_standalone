@@ -5,10 +5,14 @@ class ControllerAccountMessage extends Controller {
     private $error = array();
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if (!$this->customer->isLogged()) {
-            $this->session->set('redirect', Url::createUrl("account/message"));
-            $this->redirect(Url::createUrl("account/login"));
+            $this->session->set('redirect', $Url::createUrl("account/message"));
+            $this->redirect($Url::createUrl("account/login"));
         }
 
         $this->language->load('account/message');
@@ -16,12 +20,12 @@ class ControllerAccountMessage extends Controller {
 
         $this->document->breadcrumbs = array();
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("common/home"),
+            'href' => $Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/message"),
+            'href' => $Url::createUrl("account/message"),
             'text' => $this->language->get('text_message'),
             'separator' => $this->language->get('text_separator')
         );
@@ -96,15 +100,16 @@ class ControllerAccountMessage extends Controller {
 
         $this->data['action'] = Url::createUrl("account/message");
 
-        $this->loadWidgets();
+        $this->session->set('landing_page','account/message');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
-
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
         $template = ($this->config->get('default_view_account_message')) ? $this->config->get('default_view_account_message') : 'account/message.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -117,6 +122,11 @@ class ControllerAccountMessage extends Controller {
     }
 
     public function sent() {
+        $Url = new Url($this->registry);
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/message"));
             $this->redirect(Url::createUrl("account/login"));
@@ -147,10 +157,6 @@ class ControllerAccountMessage extends Controller {
 
         $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title_outbounce');
 
-        $this->data['text_read'] = $this->language->get('text_read');
-        $this->data['text_non_read'] = $this->language->get('text_non_read');
-        $this->data['text_spam'] = $this->language->get('text_spam');
-
         $page = ($this->request->get['page']) ? $this->request->get['page'] : 1;
         $data['sort'] = $sort = ($this->request->get['sort']) ? $this->request->get['sort'] : 'm.date_added';
         $data['order'] = $order = ($this->request->get['order']) ? $this->request->get['order'] : 'ASC';
@@ -173,9 +179,6 @@ class ControllerAccountMessage extends Controller {
         if (isset($this->request->get['limit'])) {
             $url .= '&limit=' . $this->request->get['limit'];
         }
-
-        $this->load->library('url');
-        $this->data['Url'] = new Url($this->registry);
 
         $this->data['letters'] = range('A', 'Z');
 
@@ -217,17 +220,19 @@ class ControllerAccountMessage extends Controller {
             $this->data['error_warning'] = '';
         }
 
-        $this->data['action'] = Url::createUrl("account/message");
+        $this->data['action'] = $Url::createUrl("account/message");
 
-        $this->loadWidgets();
+        $this->session->set('landing_page','account/message/sent');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
 
         $template = ($this->config->get('default_view_account_message_sent')) ? $this->config->get('default_view_account_message_sent') : 'account/message_sent.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -260,6 +265,10 @@ class ControllerAccountMessage extends Controller {
     }
 
     public function create() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/message"));
             $this->redirect(Url::createUrl("account/login"));
@@ -293,105 +302,17 @@ class ControllerAccountMessage extends Controller {
 
         $this->data['action'] = Url::createUrl("account/message/send");
 
-        // style files
-        $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
-        str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS);
-        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS) . 'neco.form.css')) {
-            $styles[] = array('media' => 'all', 'href' => str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS) . 'neco.form.css');
-        } else {
-            $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.form.css');
-        }
-        $this->styles = array_merge($styles, $this->styles);
+        $this->session->set('landing_page','account/message/create');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        // javascript files
-        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
-        $javascripts[] = $jspath . "necojs/neco.form.js";
-        $this->javascripts = array_merge($this->javascripts, $javascripts);
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
-        // SCRIPTS
-        $scripts[] = array('id' => 'messageScripts', 'method' => 'ready', 'script' =>
-            "$('#messageForm').ntForm({
-            ajax:true,
-            url:'{$this->data['action']}',
-            success:function(data) {
-                if (data.success) {
-                    window.location.href = '" . Url::createUrl('account/message') . "';
-                }
-                if (data.error) {
-                    $('#messageForm').append(data.msg);
-                }
-            }
-        });
-        
-        $('#messageForm textarea').ntInput();
-        
-        var cache = {};
-        $( '#addresses' ).on( 'keydown', function( event ) {
-            if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( 'autocomplete' ).menu.active ) {
-                event.preventDefault();
-            }
-        })
-        .autocomplete({
-            source: function( request, response ) {
-                var term = request.term;
-                if ( term in cache ) {
-                    response( cache[ term ] );
-                    return;
-                }
-                $.getJSON( '" . Url::createUrl('account/message/getcustomers') . "', {
-                    term: extractLast( request.term )
-                }, 
-                function( data, status, xhr ) {
-                    cache[ term ] = data;
-                    response( data );
-                });
-            },
-            search: function() {
-                var term = extractLast( this.value );
-                if ( term.length < 2 ) {
-                    return false;
-                }
-            },
-            focus: function() {
-                return false;
-            },
-            select: function( event, ui ) {
-                
-                var ids = split( $('#to').val() );
-                ids.pop();
-                ids.push( ui.item.id );
-                ids.push( '' );
-                $('#to').val(ids.join( '; ' ));
-                
-                var terms = split( this.value );
-                terms.pop();
-                terms.push( ui.item.value );
-                terms.push( '' );
-                this.value = terms.join( '; ' );
-                
-                return false;
-            }
-        });");
-
-        $scripts[] = array('id' => 'messageFunctions', 'method' => 'function', 'script' =>
-            "function split( val ) { 
-            return val.split( /;\s*/ ); 
-        }
-        function extractLast( term ) {
-            return split( term ).pop();
-        }");
-
-        $this->scripts = array_merge($this->scripts, $scripts);
-
-        $this->loadWidgets();
-
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
-
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
 
         $template = ($this->config->get('default_view_account_message_create')) ? $this->config->get('default_view_account_message_create') : 'account/message_create.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -404,6 +325,10 @@ class ControllerAccountMessage extends Controller {
     }
 
     public function read() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/message"));
             $this->redirect(Url::createUrl("account/login"));
@@ -447,108 +372,19 @@ class ControllerAccountMessage extends Controller {
             $this->data['entry_message'] = $this->language->get('entry_message');
         }
 
-
         $this->data['action'] = Url::createUrl("account/message/reply");
 
-        // style files
-        $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
-        str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS);
-        if (file_exists(str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS) . 'neco.form.css')) {
-            $styles[] = array('media' => 'all', 'href' => str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS) . 'neco.form.css');
-        } else {
-            $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.form.css');
-        }
-        $this->styles = array_merge($styles, $this->styles);
+        $this->session->set('landing_page','account/message/read');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        // javascript files
-        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
-        $javascripts[] = $jspath . "necojs/neco.form.js";
-        $this->javascripts = array_merge($this->javascripts, $javascripts);
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
-        // SCRIPTS
-        $scripts[] = array('id' => 'messageScripts', 'method' => 'ready', 'script' =>
-            "$('#messageForm').ntForm({
-            ajax:true,
-            url:'{$this->data['action']}',
-            success:function(data) {
-                if (data.success) {
-                    window.location.href = '" . Url::createUrl('account/message/read', array('message_id' => $message_id)) . "';
-                }
-                if (data.error) {
-                    $('#messageForm').append(data.msg);
-                }
-            }
-        });
-        
-        $('#messageForm textarea').ntInput();
-        
-        var cache = {};
-        $( '#addresses' ).on( 'keydown', function( event ) {
-            if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( 'autocomplete' ).menu.active ) {
-                event.preventDefault();
-            }
-        })
-        .autocomplete({
-            source: function( request, response ) {
-                var term = request.term;
-                if ( term in cache ) {
-                    response( cache[ term ] );
-                    return;
-                }
-                $.getJSON( '" . Url::createUrl('account/message/getcustomers') . "', {
-                    term: extractLast( request.term )
-                }, 
-                function( data, status, xhr ) {
-                    cache[ term ] = data;
-                    response( data );
-                });
-            },
-            search: function() {
-                var term = extractLast( this.value );
-                if ( term.length < 2 ) {
-                    return false;
-                }
-            },
-            focus: function() {
-                return false;
-            },
-            select: function( event, ui ) {
-                
-                var ids = split( $('#to').val() );
-                ids.pop();
-                ids.push( ui.item.id );
-                ids.push( '' );
-                $('#to').val(ids.join( '; ' ));
-                
-                var terms = split( this.value );
-                terms.pop();
-                terms.push( ui.item.value );
-                terms.push( '' );
-                this.value = terms.join( '; ' );
-                
-                return false;
-            }
-        });");
-
-        $scripts[] = array('id' => 'messageFunctions', 'method' => 'function', 'script' =>
-            "function split( val ) { 
-            return val.split( /;\s*/ ); 
-        }
-        function extractLast( term ) {
-            return split( term ).pop();
-        }");
-
-        $this->scripts = array_merge($this->scripts, $scripts);
-
-        $this->loadWidgets();
-
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
-
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
 
         $template = ($this->config->get('default_view_account_message_read')) ? $this->config->get('default_view_account_message_read') : 'account/message_read.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -683,99 +519,4 @@ class ControllerAccountMessage extends Controller {
             return false;
         }
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

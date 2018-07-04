@@ -1,0 +1,29 @@
+.widget-product-list-carousel .rating img {
+    width: auto !important;
+    margin: 10px auto;
+}
+
+.widget-product-list-carousel .picture {
+    position:relative;
+}
+
+.widget-product-list-carousel .picture .items {
+    margin-left:55px;
+}
+
+.widget-product-list-carousel .thumbs {
+    position:absolute;
+    height:100%;
+    width:55px;
+    display:block;
+    overflow:hidden;
+    top:0;
+    left:0;
+}
+
+.widget-product-list-carousel .thumbs img {
+    width:50px;
+    margin:auto;
+    margin-top:5px;
+    border:solid 1px #ddd;
+}

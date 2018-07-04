@@ -1,6 +1,6 @@
 <?php
 
-class ControllerModuleLinks extends Controller {
+class ControllerModuleLinks extends Module {
 
     protected $links_id = 0;
     protected $path = array();
@@ -12,20 +12,21 @@ class ControllerModuleLinks extends Controller {
         }
         $this->language->load('module/links');
 
-        if (isset($settings['title'])) {
-            $this->data['heading_title'] = $settings['title'];
+        $this->data['heading_title'] = $settings['title'];
+
+        if ($settings['is_main_menu']) {
+            $this->data['links'] = $this->drawMainMenu($this->getLinks($settings['menu_id']), $this->data['rows']);
         } else {
-            $this->data['heading_title'] = $this->language->get('heading_title');
+            $this->data['links'] = $this->drawLinksGroup($this->getLinks($settings['menu_id']));
         }
 
-        $this->data['links'] = $this->getLinks($settings['menu_id']);
-
-        $this->loadAssets();
-
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
-
         $this->id = 'links';
+
+        $settings['view'] = isset($settings['view']) ? $settings['view'] : 'default';
+        $filename = $controller = str_replace('controller', '', strtolower(__CLASS__)) . $settings['view'];
+        $this->loadWidgetAssets($filename);
+
+        $this->data['settings'] = $settings;
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/module/links.tpl')) {
             $this->template = $this->config->get('config_template') . '/module/links.tpl';
@@ -39,77 +40,130 @@ class ControllerModuleLinks extends Controller {
         $this->load->model('content/menu');
         $this->load->model('content/page');
 
-        $output = '';
-        $results = $this->modelMenu->getLinks($menu_id, $parent_id);
+        $return = array();
+        $results = $this->modelMenu->getAllItems(array(
+            'menu_id'=>$menu_id,
+            'parent_id'=>$parent_id
+        ));
+
         if ($results) {
-            $output .= '<ul>';
-            foreach ($results as $result) {
-                $childrens = $this->modelMenu->getLinks($menu_id, $result['menu_link_id']);
-                $output .= '<li'. ((isset($result['class_css']) && !empty($result['class_css'])) ? ' class="'. $result['class_css'] .'"': "") .'>';
+            foreach ($results as $k => $result) {
+                $return[$k] = $result;
+
                 if (isset($result['page_id']) && !empty($result['page_id'])) {
                     $page = $this->modelPage->getById($result['page_id']);
-                    $output .= $page['description'];
-                } else {
-                    $output .= '<a href="'. Url::rewrite($result['link']) .'" title="'.$result['tag'].'">' . $result['tag'] . '</a>';
-                }
-                $output .= '</li>';
+                    if ($page) {
+                        $return[$k]['page'] = $page;
 
-                if ($childrens) {
-                    foreach ($childrens as $child) {
-                        $output .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="' . $child['link'] . '" title="' . $child['tag'] . '">' . $child['tag'] . '</a></li>';
-                        $childs = $this->modelMenu->getLinks($menu_id, $child['menu_link_id']);
-                        if ($childs) {
-                            foreach ($childs as $ch) {
-                                $output .= '<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="' . $ch['link'] . '" title="' . $ch['tag'] . '">' . $ch['tag'] . '</a></li>';
-                            }
-                        }
+                        $this->session->clear('object_type');
+                        $this->session->clear('object_id');
+                        $this->session->clear('landing_page');
+
+                        $this->session->set('object_type', 'page');
+                        $this->session->set('object_id', $page['post_id']);
+                        $this->session->set('landing_page', 'content/page');
+
+                        $this->loadWidgets('featuredContent');
+                        $this->loadWidgets('main');
+                        $this->loadWidgets('featuredFooter');
                     }
                 }
+
+                $return[$k]['children'] = $this->getLinks($menu_id, $result['menu_link_id']);
             }
-            $output .= '</ul>';
         }
+
+        return $return;
+    }
+
+    protected function drawLinksGroup($links, $submenu = false) {
+        $output = "<ul". ($submenu ? ' class="submenu"' : "") .">";
+        foreach ($links as $k => $result) {
+            $output .= '<li'. ((isset($result['class_css']) && !empty($result['class_css'])) ? ' class="'. $result['class_css'] .'"': "") .'>';
+            $output .= '<a href="'. Url::rewrite($result['link']) .'" title="'.$result['tag'].'">' . $result['tag'] . '</a>';
+
+            if ($result['children']) {
+                $output .= $this->drawLinksGroup($result['children'], true);
+            }
+
+            $output .= '</li>';
+
+        }
+        $output .= '</ul>';
+
         return $output;
     }
 
-    protected function loadAssets() {
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
+    protected function drawMainMenu($links, $rows, $submenu = false) {
+        $tpl = "<ul". ($submenu ? ' class="submenu"' : "") .">";
+        foreach ($links as $result) {
+            $tpl .= '<li'. ((isset($result['class_css']) && !empty($result['class_css'])) ? ' class="'. $result['class_css'] .'"': "") .'>';
 
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
+            $tpl .= '<a href="'. Url::rewrite($result['link']) .'" title="'. $result['tag'] .'">'. $result['tag'] .'</a>';
 
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
+            if ($result['page']) {
 
-        if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
-            if ($this->config->get('config_render_css_in_file')) {
-                $this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
-            } else {
-                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
+                $tpl .= '<div class="submenu">';
+
+                $tpl .= '<div class="large-12">';
+                $tpl .=  $this->drawWidgets('featuredContent', $rows);
+                $tpl .= '</div>';
+
+                $tpl .= '<div class="row">';
+
+                $tpl .= '<div class="large-12">';
+                $tpl .= html_entity_decode($result['page']['pdescription']);
+                $tpl .=  $this->drawWidgets('main', $rows);
+                $tpl .= '</div>';
+
+                $tpl .= '</div>';
+
+                $tpl .= '<div class="large-12">';
+                $tpl .=  $this->drawWidgets('featuredFooter', $rows);
+                $tpl .= '</div>';
+
+                $tpl .= '</div>';
+            } elseif ($result['children']) {
+                $tpl .= $this->drawMainMenu($result['children'], $rows, true);
             }
-        }
 
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            if ($this->config->get('config_render_js_in_file')) {
-                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            } else {
-                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
+            $tpl .= "</li>";
+        }
+        $tpl .= "</ul>";
+
+        return $tpl;
+    }
+
+    protected function drawWidgets($position, $rows) {
+        $tpl = '';
+
+        foreach($rows[$position] as $j => $row) {
+            if (!$row['key']) continue;
+            $row_id = $row['key'];
+            $row_settings = unserialize($row['value']);
+
+            $tpl .= '<div class="row" id="'. $position .'_'. $row_id .'" nt-editable>';
+
+            foreach($row['columns'] as $k => $column) {
+                if (!$column['key']) continue;
+                $column_id = $column['key'];
+                $column_settings = unserialize($column['value']);
+
+                $tpl .= '<div class="large-'. $column_settings['grid_large'] .' medium-'. $column_settings['grid_medium'] .' small-'. $column_settings['grid_small'] .'" id="'. $position .'_'. $column_id .'" nt-editable>';
+
+                $tpl .= '<ul class="widgets">';
+
+                foreach($column['widgets'] as $l => $widget) {
+                    $tpl .= '{%'. $widget['name'] .'%}';
+                }
+
+                $tpl .= '</ul>';
+
+                $tpl .= '</div>';
             }
+            $tpl .= '</div>';
         }
 
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-        }
+        return $tpl;
     }
 }

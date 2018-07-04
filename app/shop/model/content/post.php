@@ -23,7 +23,8 @@ class ModelContentPost extends Model {
     }
 
     public function getAll($data, $sort_data= null) {
-        $cachedId = "all_posts_".
+            $cache_prefix = "shop.posts";
+        $cachedId = $cache_prefix.
             (int)STORE_ID ."_".
             implode('_',$data).
             $this->config->get('config_language_id') . "." .
@@ -33,15 +34,7 @@ class ModelContentPost extends Model {
             $this->config->get('config_currency') . "." .
             (int)$this->config->get('config_store_id');
 
-        if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-            $cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-        $cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-        $cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-        $cachedId = strtolower( trim($cachedId, '-') );
-
-        $cached = $this->cache->get($cachedId);
+        $cached = $this->cache->get($cachedId, $cache_prefix);
         if (!$cached) {
             $sql = "SELECT *, p.date_added AS created, p.image AS pimage ".
                 "FROM " . DB_PREFIX . "post p ".
@@ -71,7 +64,8 @@ class ModelContentPost extends Model {
     }
 
     public function getAllTotal($data) {
-        $cachedId = "all_posts_total".
+            $cache_prefix = "shop.posts.total";
+        $cachedId = $cache_prefix.
             (int)STORE_ID ."_".
             implode('_',$data).
             $this->config->get('config_language_id') . "." .
@@ -81,15 +75,7 @@ class ModelContentPost extends Model {
             $this->config->get('config_currency') . "." .
             (int)$this->config->get('config_store_id');
 
-        if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-            $cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-        $cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-        $cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-        $cachedId = strtolower( trim($cachedId, '-') );
-
-        $cached = $this->cache->get($cachedId);
+        $cached = $this->cache->get($cachedId, $cache_prefix);
         if (!$cached) {
             $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "post p
             LEFT JOIN " . DB_PREFIX . "post_description pd ON (p.post_id = pd.post_id) ";
@@ -114,7 +100,7 @@ class ModelContentPost extends Model {
         $sql .= " LEFT JOIN " . DB_PREFIX . "store s ON (s.store_id = p2s.store_id) ";
 
         $data['post_id'] = !is_array($data['post_id']) && !empty($data['post_id']) ? array($data['post_id']) : $data['post_id'];
-        $data['category_id'] = !is_array($data['category_id']) && !empty($data['category_id']) ? array($data['category_id']) : $data['category_id'];
+        $data['post_category_id'] = !is_array($data['post_category_id']) && !empty($data['post_category_id']) ? array($data['post_category_id']) : $data['post_category_id'];
 
         if (!empty($data['language_id']) && is_numeric($data['language_id'])) {
             $criteria[] = " pd.language_id = '". intval($data['language_id']) ."' ";
@@ -168,19 +154,19 @@ class ModelContentPost extends Model {
             }
         }
 
-        if (!empty($data['category']) || !empty($data['category_id'])) {
+        if (!empty($data['category']) || !empty($data['post_category_id'])) {
             $sql .= " LEFT JOIN " . DB_PREFIX . "post_to_category p2c ON (p.post_id = p2c.post_id) ";
         }
 
         if (!empty($data['category'])) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "post_category_description cd ON (cd.category_id = p2c.category_id) ";
+            $sql .= " LEFT JOIN " . DB_PREFIX . "post_category_description cd ON (cd.post_category_id = p2c.post_category_id) ";
             $criteria[] = " LCASE(cd.name) LIKE '%" . $this->db->escape(strtolower($data['category'])) . "%' collate utf8_general_ci ";
         }
 
-        if (!empty($data['category_id'])) {
+        if (!empty($data['post_category_id'])) {
             $sql .= " LEFT JOIN " . DB_PREFIX . "post_category_to_store c2s ON (p2c.post_category_id = c2s.post_category_id) ";
             $criteria[] = " c2s.store_id = '" . (int) STORE_ID . "' ";
-            $criteria[] = " p2c.post_category_id IN (" . implode(', ', $data['category_id']) . ") ";
+            $criteria[] = " p2c.post_category_id IN (" . implode(', ', $data['post_category_id']) . ") ";
         }
 
         if (!empty($data['properties'])) {
@@ -303,8 +289,67 @@ class ModelContentPost extends Model {
     }
 
     public function getLatestPost($data = array()) {
-        $data['sort'] = 'DESC';
+        $data['order'] = 'DESC';
         $data['sort'] = 'p.date_added';
+        return $this->getAll($data);
+    }
+
+    public function getRecommendedPost($data) {
+        $query = $this->db->query("SELECT DISTINCT object_id ".
+            "FROM " . DB_PREFIX . "stat s ".
+            "WHERE s.object_type = 'post' ".
+            "AND s.customer_id = '" . (int) $this->customer->getId() . "' ".
+            "GROUP BY object_id, object_type ".
+            "ORDER BY s.date_added DESC ".
+            "LIMIT " . (int)$data['limit']);
+
+        foreach ($query->rows as $k=>$v) {
+            $data['post_id'][$k] = $v['object_id'];
+        }
+
+        return $this->getAll($data);
+    }
+
+    public function getTotalRecommendedPost($data) {
+        $query = $this->db->query("SELECT DISTINCT object_id ".
+            "FROM " . DB_PREFIX . "stat s ".
+            "WHERE s.object_type = 'post' ".
+            "AND s.customer_id = '" . (int) $this->customer->getId() . "' ");
+
+        foreach ($query->rows as $k=>$v) {
+            $data['post_id'][$k] = $v['object_id'];
+        }
+
+        return $this->getAllTotal($data);
+    }
+
+    public function getPopularPost($data) {
+        $query = $this->db->query("SELECT DISTINCT object_id, COUNT(*) AS total ".
+            "FROM " . DB_PREFIX . "stat s ".
+            "WHERE s.object_type = 'post' ".
+            "GROUP BY (object_id) ".
+            "ORDER BY total DESC ".
+            "LIMIT " . (int)$data['limit']);
+
+        foreach ($query->rows as $k=>$v) {
+            $data['post_id'][$k] = $v['object_id'];
+        }
+
+        return $this->getAll($data);
+    }
+
+    public function getTotalPopularPost($data) {
+        $query = $this->db->query("SELECT DISTINCT object_id, COUNT(*) AS total ".
+            "FROM " . DB_PREFIX . "stat s ".
+            "WHERE s.object_type = 'post' ".
+            "GROUP BY (object_id) ".
+            "ORDER BY total DESC ".
+            "LIMIT " . (int)$data['limit']);
+
+        foreach ($query->rows as $k=>$v) {
+            $data['post_id'][$k] = $v['object_id'];
+        }
+
         return $this->getAll($data);
     }
 
@@ -312,6 +357,12 @@ class ModelContentPost extends Model {
         $data['post_id'] = $id;
         $data['related'] = true;
         return $this->getAll($data);
+    }
+
+    public function getTotalPostRelated($id, $data) {
+        $data['post_id'] = $id;
+        $data['related'] = true;
+        return $this->getAllTotal($data);
     }
 
     public function getAllByCategoryId($data) {

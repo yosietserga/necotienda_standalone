@@ -3,6 +3,10 @@
 class ControllerAccountBalance extends Controller {
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/balance"));
@@ -14,37 +18,24 @@ class ControllerAccountBalance extends Controller {
         $this->document->breadcrumbs = array();
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("common/home"),
+            'href' => $Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/account"),
+            'href' => $Url::createUrl("account/account"),
             'text' => $this->language->get('text_account'),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/balance"),
+            'href' => $Url::createUrl("account/balance"),
             'text' => $this->language->get('text_history'),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
-
-        $this->data['text_order'] = $this->language->get('text_order');
-        $this->data['text_status'] = $this->language->get('text_status');
-        $this->data['text_date_added'] = $this->language->get('text_date_added');
-        $this->data['text_customer'] = $this->language->get('text_customer');
-        $this->data['text_products'] = $this->language->get('text_products');
-        $this->data['text_total'] = $this->language->get('text_total');
-        $this->data['text_transferencia'] = $this->language->get('text_transferencia');
-        $this->data['text_deposito'] = $this->language->get('text_deposito');
-
-        $this->data['button_view'] = $this->language->get('button_view');
-        $this->data['button_continue'] = $this->language->get('button_continue');
-        $this->data['button_back'] = $this->language->get('button_back');
 
         $data['page'] = $page = ($this->request->get['page']) ? $this->request->get['page'] : 1;
         $data['sort'] = $sort = ($this->request->get['sort']) ? $this->request->get['sort'] : 'op.date_added';
@@ -99,15 +90,19 @@ class ControllerAccountBalance extends Controller {
             $this->data['pagination'] = $pagination->render();
         }
 
-        $this->loadWidgets();
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
 
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->session->set('landing_page','account/balance');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
+
 
         $template = ($this->config->get('default_view_account_balance')) ? $this->config->get('default_view_account_balance') : 'account/balance.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -120,6 +115,10 @@ class ControllerAccountBalance extends Controller {
     }
 
     public function report() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/balance"));
             $this->redirect(Url::createUrl("account/login"));
@@ -172,15 +171,19 @@ class ControllerAccountBalance extends Controller {
             $this->data['amount'] = $this->currency->format($this->data['amount']);
         }
 
-        $this->loadWidgets();
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
 
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->session->set('landing_page','account/balance/report');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
+
 
         $template = ($this->config->get('default_view_account_balance_receipt')) ? $this->config->get('default_view_account_balance_receipt') : 'account/balance_receipt.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -193,6 +196,10 @@ class ControllerAccountBalance extends Controller {
     }
 
     public function register() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $this->load->auto('account/address');
         $address = $this->modelAddress->getAddress($this->customer->getAddressId());
         $method_data = array();
@@ -231,15 +238,19 @@ class ControllerAccountBalance extends Controller {
         );
         $this->styles = array_merge($styles, $this->styles);
 
-        $this->loadWidgets();
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
 
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->session->set('landing_page','account/balance/register');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
+
 
         $template = ($this->config->get('default_view_account_order_balance')) ? $this->config->get('default_view_account_order_balance') : 'account/order_balance.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -250,99 +261,4 @@ class ControllerAccountBalance extends Controller {
 
         $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

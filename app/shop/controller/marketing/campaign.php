@@ -76,7 +76,7 @@ class ControllerMarketingCampaign extends Controller {
         $task->time_exec = date('Y-m-d H:i:s', strtotime($campaign_data['date_start']));
         $task->params = $params;
         $task->time_interval = $campaign_data['repeat'];
-        $task->time_last_exec = $row['time_last_exec'];
+        $task->time_last_exec = $campaign_data['time_last_exec'];
         $task->run_once = !(bool) $campaign_data['repeat'];
         $task->status = 1;
         $task->date_start_exec = date('Y-m-d H:i:s', strtotime($campaign_data['date_start']));

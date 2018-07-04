@@ -31,8 +31,10 @@ final class Image {
     }
 
     private function create($image) {
-        $mime = $this->info['mime'];
+        $info = getimagesize($image);
 
+        $mime = $info['mime'];
+        
         if ($mime == 'image/gif') {
             return imagecreatefromgif($image);
         } elseif ($mime == 'image/png') {
@@ -48,29 +50,32 @@ final class Image {
         $this->bgColor['b'] = $b;
     }
 
-    public function save($file, $quality = 100) {
+    public function save($file, $quality = 100, $source = null) {
         $info = pathinfo($file);
 
         $extension = strtolower($info['extension']);
 
+        if ($source !== null) {
+            $image = $source;
+        } else {
+            $image = $this->image;
+        }
+        
         if ($extension == 'jpeg' || $extension == 'jpg') {
-            imagejpeg($this->image, $file, $quality);
+            imagejpeg($image, $file, $quality);
         } elseif ($extension == 'png') {
-            imagepng($this->image, $file, 0);
+            imagepng($image, $file, 0);
         } elseif ($extension == 'gif') {
-            imagegif($this->image, $file);
+            imagegif($image, $file);
         }
 
-        imagedestroy($this->image);
+        imagedestroy($image);
     }
 
     public function resize($width = 0, $height = 0) {
         if (!$this->info['width'] || !$this->info['height']) {
             return;
         }
-
-        $xpos = 0;
-        $ypos = 0;
 
         $scale = min($width / $this->info['width'], $height / $this->info['height']);
 
@@ -116,7 +121,8 @@ final class Image {
         }
 
         $old_image = $filename;
-        $new_image = 'cache/' . substr($filename, 0, strrpos($filename, '.')) . '-' . $width . 'x' . $height . '.jpg';
+        $extension = pathinfo($folder . $filename);
+        $new_image = 'cache/' . substr($filename, 0, strrpos($filename, '.')) . '-' . $width . 'x' . $height . '.'. strtolower($extension['extension']);
 
         if (!file_exists($folder . $new_image) || (filemtime($folder . $old_image) > filemtime($folder . $new_image))) {
             $path = '';
@@ -136,20 +142,32 @@ final class Image {
             $image->save($folder . $new_image);
         }
 
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-            return HTTPS_IMAGE . $new_image;
-        } else {
-            return HTTP_IMAGE . $new_image;
-        }
+        return HTTP_IMAGE . $new_image;
     }
 
-    public function watermark($file, $position = 'bottomright') {
-        $watermark = $this->create($file);
+    public function watermark($image_path, $stamp, $position = null) {
+        if (isset($path)) {
+            $folder = $path;
+        } else {
+            $folder = DIR_IMAGE;
+        }
 
+        if (file_exists($image_path)) {
+            $image = $this->create($image_path);
+        } else {
+            $image = $this->image;
+        }
+
+        $watermark = $this->create($folder.$stamp);
+        
         $watermark_width = imagesx($watermark);
         $watermark_height = imagesy($watermark);
 
         switch ($position) {
+            default:
+                $watermark_pos_x = ($this->info['width'] - $watermark_width) / 2;
+                $watermark_pos_y = ($this->info['height'] - $watermark_height) / 2;
+                break;
             case 'topleft':
                 $watermark_pos_x = 0;
                 $watermark_pos_y = 0;
@@ -168,9 +186,10 @@ final class Image {
                 break;
         }
 
-        imagecopy($this->image, $watermark, $watermark_pos_x, $watermark_pos_y, 0, 0, 120, 40);
-
+        imagecopy($image, $watermark, $watermark_pos_x, $watermark_pos_y, 0, 0, $watermark_width, $watermark_height);
+        
         imagedestroy($watermark);
+        $this->save($image_path, 70, $image);
     }
 
     public function crop($top_x, $top_y, $bottom_x, $bottom_y) {
@@ -206,8 +225,8 @@ final class Image {
     private function merge($file, $x = 0, $y = 0, $opacity = 100) {
         $merge = $this->create($file);
 
-        $merge_width = imagesx($image);
-        $merge_height = imagesy($image);
+        $merge_width = imagesx($this->image);
+        $merge_height = imagesy($this->image);
 
         imagecopymerge($this->image, $merge, $x, $y, 0, 0, $merge_width, $merge_height, $opacity);
     }
@@ -236,12 +255,12 @@ final class Image {
 
 class NTImage {
     
-    public $watermark = null;
-    public $position = null;
+    public static $watermark = null;
+    public static $position = null;
     
-    public static function setWatermark($file, $position) {
-        $this->watermark = $file;
-        $this->position = $position;
+    public static function setWatermark($file, $position = null) {
+        self::$watermark = $file;
+        self::$position = $position;
     }
 
     public static function resizeAndSave($filename, $width, $height, $path = null) {
@@ -256,13 +275,14 @@ class NTImage {
         }
 
         $old_image = $filename;
-        $new_image = 'cache/' . substr($filename, 0, strrpos($filename, '.')) . '-' . $width . 'x' . $height . '.jpg';
+        $extension = pathinfo($folder . $filename);
+        $new_image = 'cache/' . substr($filename, 0, strrpos($filename, '.')) . '-' . $width . 'x' . $height .'.'. $extension['extension'];
 
         if (!file_exists($folder . $new_image) || (filemtime($folder . $old_image) > filemtime($folder . $new_image))) {
             $path = '';
 
             $directories = explode('/', dirname(str_replace('../', '', $new_image)));
-
+            
             foreach ($directories as $directory) {
                 $path = $path . '/' . $directory;
 
@@ -270,17 +290,15 @@ class NTImage {
                     @mkdir($folder . $path, 0777);
                 }
             }
-
+            
             $image = new Image($folder . $old_image);
             $image->resize($width, $height);
             $image->save($folder . $new_image);
-            /*
-            if ($this->watermark) {
-                $position = ($this->position) ? $this->position : 'bottomright';
-                $image->watermark($this->watermark, $position);
+
+            if (self::$watermark) {
+                $position = (self::$position) ? self::$position : null;
+                $image->watermark($folder . $new_image, self::$watermark, $position);
             }
-             *
-             */
         }
 
         return HTTP_IMAGE . $new_image;

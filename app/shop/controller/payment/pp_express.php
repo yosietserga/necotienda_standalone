@@ -13,7 +13,7 @@ class ControllerPaymentPPExpress extends Controller {
 		 */
 		unset($this->session->data['paypal']);
 
-		$this->loadAssets();
+		
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_express.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/payment/pp_express.tpl', $data);
@@ -736,7 +736,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
-		$this->loadAssets();
+		
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_express_confirm.tpl')) {
 			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/pp_express_confirm.tpl', $data));
@@ -1578,7 +1578,7 @@ class ControllerPaymentPPExpress extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
 
-			$this->loadAssets();
+			
 
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/not_found.tpl')) {
 				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/not_found.tpl'));
@@ -2006,54 +2006,12 @@ class ControllerPaymentPPExpress extends Controller {
 			'link' => $this->url->link('account/recurring', '', 'SSL')
 		);
 
-		$this->loadAssets();
+		
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/buttons.tpl')) {
 			return $this->load->view($this->config->get('config_template') . '/template/common/buttons.tpl', $data);
 		} else {
 			return $this->load->view('default/template/common/buttons.tpl', $data);
 		}
-	}
 
-	protected function loadAssets() {
-		$csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-		$jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-			$csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-			$cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-			$jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-			$jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-		} else {
-			$csspath = str_replace("%theme%", "default", $csspath);
-			$cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-			$jspath = str_replace("%theme%", "default", $jspath);
-			$jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-		}
-
-		if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
-			if ($this->config->get('config_render_css_in_file')) {
-				$this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
-			} else {
-				$styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
-			}
-		}
-
-		if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-			if ($this->config->get('config_render_js_in_file')) {
-				$javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-			} else {
-				$javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-			}
-		}
-
-		if (count($styles)) {
-			$this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-		}
-
-		if (count($javascripts)) {
-			$this->javascripts = array_merge($this->javascripts, $javascripts);
-		}
-	}
 }

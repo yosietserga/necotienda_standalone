@@ -1,5 +1,12 @@
 <!doctype html>
-<head>
+<head<?php if (isset($headAttributes)) { echo $headAttributes; } ?>>
+
+    <?php if (isset($opengraph)) {
+    foreach ($opengraph as $k=>$v) {
+        if (empty($v)) continue; ?>
+    <meta property="<?php echo $k; ?>" content="<?php echo $v; ?>" />
+    <?php } } ?>
+
     <meta charset="UTF-8" />
     <title><?php echo $title; ?></title>
     <?php if ($keywords) { ?>
@@ -40,24 +47,6 @@
     <body data-section="home" class="home-page"> 
 <?php } ?>
 
-
-<!-- Featured Header --> 
-<?php if($widgets && count($widgets) !== 0) { ?> 
-   <div id="headerWidgets" class="widgets featured featured-header home-grid-full">
-      <section class="row">
-         <div class="column">
-            <ul>
-               <?php if($widgets) { foreach ($widgets as $widget) { ?>
-                  {%<?php echo $widget; ?>%}
-               <?php } } ?>
-            </ul>
-         </div>
-      </section>
-   </div> 
-<?php } ?> 
-<!-- Featured Header -->
-
-
 <div id="page" class="overheader">
     <!-- overheader-actions --> 
     <section id="overheader" class="row nt-editable">
@@ -79,5 +68,40 @@
       <!-- /location-actions -->
     </section>
 </div>
+
+
+<!-- main-header -->
+<header class="main-header">
+    <section class="row">
+        <aside class="logo nt-editable">
+            <?php if ($Config->get('config_logo')) { ?>
+            <a title="<?php echo $store; ?>" href="<?php echo $Url::createUrl('common/home'); ?>">
+               <img src="<?php echo HTTP_IMAGE. $Config->get('config_logo'); ?>" title="<?php echo $store; ?>" alt="<?php echo $store; ?>" />
+            </a>
+            <?php } else { ?>
+            <a class="text-store" title="<?php echo $store; ?>" href="<?php echo $Url::createUrl("common/home"); ?>">
+               <?php echo $text_store; ?>
+            </a>
+            <?php } ?>
+        </aside>
+    </section>
+    
+    
+    <!-- Featured Header --> 
+    <?php if($widgets && count($widgets) !== 0) { ?> 
+       <div id="headerWidgets" class="widgets featured featured-header home-grid-full">
+          <section class="row">
+             <div class="column">
+                <ul>
+                   <?php if($widgets) { foreach ($widgets as $widget) { ?>
+                      {%<?php echo $widget; ?>%}
+                   <?php } } ?>
+                </ul>
+             </div>
+          </section>
+       </div> 
+    <?php } ?> 
+    <!-- Featured Header -->
+</header>
 
 

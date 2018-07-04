@@ -3,6 +3,10 @@
 class ControllerStoreSpecial extends Controller {
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $this->language->load('store/special');
         $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -34,10 +38,16 @@ class ControllerStoreSpecial extends Controller {
 
             $this->session->set('redirect', Url::createUrl('store/special') . $url);
 
-            $this->loadWidgets();
+            $this->session->set('landing_page','store/special');
+            $this->loadWidgets('featuredContent');
+            $this->loadWidgets('main');
+            $this->loadWidgets('featuredFooter');
 
-            if ($scripts)
-                $this->scripts = array_merge($this->scripts, $scripts);
+            $this->addChild('common/column_left');
+            $this->addChild('common/column_right');
+
+            $this->addChild('common/footer');
+            $this->addChild('common/header');
 
             $template = ($this->config->get('default_view_special')) ? $this->config->get('default_view_special') : 'store/special.tpl';
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -45,12 +55,6 @@ class ControllerStoreSpecial extends Controller {
             } else {
                 $this->template = 'cuyagua/' . $template;
             }
-
-            $this->children[] = 'common/column_left';
-            $this->children[] = 'common/column_right';
-            $this->children[] = 'common/nav';
-            $this->children[] = 'common/header';
-            $this->children[] = 'common/footer';
 
             $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         } else {
@@ -61,8 +65,6 @@ class ControllerStoreSpecial extends Controller {
     protected function error404() {
         $this->data['text_error'] = $this->language->get('text_empty');
 
-        $this->loadWidgets();
-
         $template = ($this->config->get('default_view_special_error')) ? $this->config->get('default_view_special_error') : 'error/not_found.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
             $this->template = $this->config->get('config_template') . '/' . $template;
@@ -70,11 +72,16 @@ class ControllerStoreSpecial extends Controller {
             $this->template = 'cuyagua/' . $template;
         }
 
-        $this->children[] = 'common/column_left';
-        $this->children[] = 'common/column_right';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->session->set('landing_page','store/special');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
     }
@@ -200,101 +207,8 @@ class ControllerStoreSpecial extends Controller {
 
         $results = $this->modelProduct->getProductSpecials($sort, $order, ($page - 1) * $this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit'));
 
-        require_once(DIR_CONTROLLER . "store/product_array.php");
+        $this->load->library('product');
+        $Product = new Product($this->registry);
+        return $this->data['products'] = $Product->getProductsArray($results, true);
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

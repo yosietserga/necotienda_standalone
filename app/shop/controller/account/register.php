@@ -5,6 +5,10 @@ class ControllerAccountRegister extends Controller {
     private $error = array();
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if ($this->customer->isLogged()) {
             $this->redirect(Url::createUrl("account/account"));
@@ -41,7 +45,6 @@ class ControllerAccountRegister extends Controller {
                     $barcode = new Barcode39(C_CODE);
 
                     $qrStore = "cache/" . str_replace(".", "_", $this->config->get('config_owner')) . '.png';
-                    $eanStore = "cache/" . str_replace(" ", "_", $this->config->get('config_owner') . "_barcode_39_order_id_" . $order_id) . '.gif';
 
                     if (!file_exists(DIR_IMAGE . $qrStore)) {
                         $qr->url(HTTP_HOME);
@@ -78,7 +81,7 @@ class ControllerAccountRegister extends Controller {
                     $message = str_replace("{%date_added%}", date('d-m-Y h:i A'), $message);
                     $message = str_replace("{%ip%}", $_SERVER['REMOTE_ADDR'], $message);
                     $message = str_replace("{%qr_code_store%}", '<img src="' . HTTP_IMAGE . $qrStore . '" alt="QR Code" />', $message);
-                    $message = str_replace("{%barcode_39_order_id%}", '<img src="' . HTTP_IMAGE . $eanStore . '" alt="NT Code" />', $message);
+
 
                     $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; " . date('Y') . "</p>";
 
@@ -107,13 +110,13 @@ class ControllerAccountRegister extends Controller {
                 }
 
                 if ($this->customer->login($email, $password)) {
-                    if ($this->session->has('redirect')) {
+                    if ($this->session->has('redirect') && $this->session->get('redirect') !== 'error/not_found') {
                         $this->redirect($this->session->get('redirect'));
                     } else {
-                        $this->redirect(Url::createUrl("account/account"));
+                        $this->redirect($Url::createUrl("account/account"));
                     }
                 } else {
-                    $this->redirect(Url::createUrl("account/success"));
+                    $this->redirect($Url::createUrl("account/success"));
                 }
             }
         }
@@ -189,16 +192,19 @@ class ControllerAccountRegister extends Controller {
         $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.form.css');
         $this->styles = array_merge($this->styles, $styles);
 
-        $this->loadWidgets();
+        
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
+        $this->session->set('landing_page','account/register');
+        $this->session->set('landing_page','account/account');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        $this->children[] = 'common/column_left';
-        $this->children[] = 'common/column_right';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
+
 
         $template = ($this->config->get('default_view_account_register')) ? $this->config->get('default_view_account_register') : 'account/register.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -262,15 +268,20 @@ class ControllerAccountRegister extends Controller {
         $this->load->model("account/customer");
         $this->load->library("json");
         $json = array();
-        if (!isset($this->request->post['email'])) {
+        $result = null;
+        $email = $this->request->hasPost('email') ? $this->request->getPost('email') : $this->request->getQuery('email');
+        if (!$email) {
             $json['error'] = 1;
             $json['msg'] = $this->language->get('error_email');
+        } else {
+            $result = $this->modelCustomer->getTotalCustomersByEmail($email);
+
+            if ($result) {
+                $json['error'] = 1;
+                $json['msg'] = $this->language->get('error_exists');
+            }
         }
-        $result = $this->modelCustomer->getTotalCustomersByEmail($this->request->post['email']);
-        if ($result) {
-            $json['error'] = 1;
-            $json['msg'] = $this->language->get('error_exists');
-        }
+
         $this->response->setOutput(Json::encode($json), $this->config->get('config_compression'));
     }
 
@@ -281,21 +292,21 @@ class ControllerAccountRegister extends Controller {
             $this->load->library('email/mailer');
             $this->load->library('BarcodeQR');
             $mailer = new Mailer;
-
+            
             if (!file_exists(DIR_IMAGE . "cache/" . str_replace(".", "_", $this->config->get('config_owner')) . '.png')) {
                 $qr = new BarcodeQR;
                 $qr->url(HTTP_HOME);
                 $qr->draw(100, DIR_IMAGE . "cache/" . str_replace(".", "_", $this->config->get('config_owner')) . '.png');
             }
-
+            
             $this->request->post['rif'] = $this->request->post['riftype'] . $this->request->post['rif'];
             $this->request->post['password'] = substr(md5(rand(11111111, 99999999)), 0, 8);
-
+            
             if ($this->request->hasPost('referencedBy')) {
                 $promotor = $this->modelCustomer->getCustomerByEmail($this->request->getPost('referencedBy'));
                 $this->request->post['referenced_by'] = ($promotor['customer_id']) ? $promotor['customer_id'] : 0;
             }
-
+            
             if ($this->modelCustomer->addCustomer($this->request->post)) {
                 $this->customer->login($this->request->post['email'], $this->request->post['password'], true);
                 if ($this->request->post['session_address_var']) {
@@ -306,7 +317,7 @@ class ControllerAccountRegister extends Controller {
                     $newsletter = $this->modelNewsletter->getById($this->config->get('marketing_email_register_customer'));
                     $message = $newsletter['htmlbody'];
 
-
+                    
                     $message = str_replace("{%store_name%}", $this->config->get('config_owner'), $message);
                     $message = str_replace("{%store_rif%}", $this->config->get('config_rif'), $message);
                     $message = str_replace("{%store_address%}", $this->config->get('config_address'), $message);
@@ -380,99 +391,4 @@ class ControllerAccountRegister extends Controller {
 
         $this->response->setOutput($output, $this->config->get('config_compression'));
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

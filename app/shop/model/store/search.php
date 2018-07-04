@@ -21,22 +21,24 @@ class ModelStoreSearch extends Model {
 	}
 
 	public function getAllProducts($data) {
-	   $cachedId = "search_product_". (int)STORE_ID ."_". implode('_',$data);
+            $cache_prefix = "shop.searches.products";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
 
-       if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-        		$cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-      	$cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-      	$cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-      	$cachedId = strtolower( trim($cachedId, '-') );
-
-	   $cached = $this->cache->get($cachedId);
-       if (!$cached) {
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
             $sql = "SELECT DISTINCT *, pd.name AS name FROM " . DB_PREFIX . "product p
             LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
 
    	        $criteria = array();
+            $search = "";
 
             $criteria[] = " pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
             $criteria[] = " p.status = '1'";
@@ -160,18 +162,19 @@ class ModelStoreSearch extends Model {
 	}
 
 	public function getAllProductsTotal($data) {
-	   $cachedId = "search_product_total". (int)STORE_ID ."_". implode('_',$data);
+            $cache_prefix = "shop.searches.products.total";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
 
-       if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-        		$cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-      	$cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-      	$cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-      	$cachedId = strtolower( trim($cachedId, '-') );
-
-	   $cached = $this->cache->get($cachedId);
-       if (!$cached) {
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
             $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product p
             LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) ";
 
@@ -281,23 +284,25 @@ class ModelStoreSearch extends Model {
 	}
 
     public function getCategoriesByProduct($data) {
-	   $cachedId = "search_categories_". (int)STORE_ID ."_". implode('_',$data);
+            $cache_prefix = "shop.searches.categories";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
 
-       if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-        		$cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-      	$cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-      	$cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-      	$cachedId = strtolower( trim($cachedId, '-') );
-
-	   $cached = $this->cache->get($cachedId);
-       if (!$cached) {
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
             $sql = "SELECT DISTINCT cd.category_id, cd.name, COUNT(*) AS total FROM " . DB_PREFIX . "product_to_category p2c
                 LEFT JOIN " . DB_PREFIX . "category_description cd ON (p2c.category_id = cd.category_id)
                 LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = p2c.product_id)
                 LEFT JOIN " . DB_PREFIX . "product_description pd ON (pd.product_id = p2c.product_id) ";
 
+            $search = "";
    	        $criteria   = array();
             $criteria[] = " p.status = '1'";
             $criteria[] = " p.date_available <= NOW()";
@@ -394,29 +399,31 @@ class ModelStoreSearch extends Model {
    			$this->cache->set($cachedId,$query->rows);
     		return $query->rows;
         } else {
-            return $this->cache->get($cachedId);
+            return $this->cache->get($cachedId, $cache_prefix);
         }
 
     }
 
     public function getStoresByProduct($data) {
-	   $cachedId = "search_stores_". (int)STORE_ID ."_". implode('_',$data);
+            $cache_prefix = "shop.searches.stores";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
 
-       if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-        		$cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-      	$cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-      	$cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-      	$cachedId = strtolower( trim($cachedId, '-') );
-
-	   $cached = $this->cache->get($cachedId);
-       if (!$cached) {
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
             $sql = "SELECT DISTINCT s.store_id, s.name, s.folder, COUNT(*) AS total FROM " . DB_PREFIX . "product_to_store p2s
                 LEFT JOIN " . DB_PREFIX . "store s ON (p2s.store_id = s.store_id)
                 LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = p2s.product_id)
                 LEFT JOIN " . DB_PREFIX . "product_description pd ON (pd.product_id = p2s.product_id) ";
 
+            $search ="";
        	    $criteria   = array();
             $criteria[] = " p.status = '1'";
             $criteria[] = " p2s.store_id <> 0";
@@ -514,29 +521,23 @@ class ModelStoreSearch extends Model {
    			$this->cache->set($cachedId,$query->rows);
     		return $query->rows;
         } else {
-            return $this->cache->get($cachedId);
+            return $this->cache->get($cachedId, $cache_prefix);
         }
 
     }
 
     public function getZonesByProduct($data) {
-	   $cachedId = "search_zones_". (int)STORE_ID ."_". implode('_',$data);
+        $cache_prefix = "shop.searches.zones";
+        $cachedId = $cache_prefix.(int)STORE_ID ."_". implode('_',$data);
 
-       if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-        		$cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-      	$cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-      	$cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-      	$cachedId = strtolower( trim($cachedId, '-') );
-
-	   $cached = $this->cache->get($cachedId);
+	   $cached = $this->cache->get($cachedId, $cache_prefix);
        if (!$cached) {
             $sql = "SELECT DISTINCT z.zone_id, z.name, COUNT(*) AS total FROM " . DB_PREFIX . "product_to_zone p2z
                 LEFT JOIN " . DB_PREFIX . "zone z ON (p2z.zone_id = z.zone_id)
                 LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = p2z.product_id)
                 LEFT JOIN " . DB_PREFIX . "product_description pd ON (pd.product_id = p2z.product_id) ";
 
+            $search = "";
    	        $criteria = array();
 
             $criteria[] = " p.status = '1'";
@@ -634,28 +635,30 @@ class ModelStoreSearch extends Model {
    			$this->cache->set($cachedId,$query->rows);
     		return $query->rows;
         } else {
-            return $this->cache->get($cachedId);
+            return $this->cache->get($cachedId, $cache_prefix);
         }
 
     }
 
     public function getManufacturersByProduct($data) {
-	   $cachedId = "search_manufacturers_". (int)STORE_ID ."_". implode('_',$data);
+            $cache_prefix = "shop.searches.manufacturers";
+        $cachedId = $cache_prefix.
+            (int)STORE_ID ."_".
+            serialize($data).
+            $this->config->get('config_language_id') . "." .
+            $this->request->getQuery('hl') . "." .
+            $this->request->getQuery('cc') . "." .
+            $this->customer->getId() . "." .
+            $this->config->get('config_currency') . "." .
+            (int)$this->config->get('config_store_id');
 
-       if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-        		$cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-      	$cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-      	$cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-      	$cachedId = strtolower( trim($cachedId, '-') );
-
-	   $cached = $this->cache->get($cachedId);
-       if (!$cached) {
+        $cached = $this->cache->get($cachedId, $cache_prefix);
+        if (!$cached) {
             $sql = "SELECT DISTINCT m.manufacturer_id, m.name, COUNT(*) AS total FROM " . DB_PREFIX . "product p
                 LEFT JOIN " . DB_PREFIX . "manufacturer m ON (m.manufacturer_id = p.manufacturer_id)
                 LEFT JOIN " . DB_PREFIX . "product_description pd ON (pd.product_id = p.product_id) ";
 
+            $search ="";
    	        $criteria = array();
 
             $criteria[] = " p.status = '1'";
@@ -756,28 +759,22 @@ class ModelStoreSearch extends Model {
    			$this->cache->set($cachedId,$query->rows);
     		return $query->rows;
         } else {
-            return $this->cache->get($cachedId);
+            return $this->cache->get($cachedId, $cache_prefix);
         }
 
     }
 
     public function getSellersByProduct($data) {
-	   $cachedId = "search_sellers_". (int)STORE_ID ."_". implode('_',$data);
+        $cache_prefix = "shop.searches.sellers";
+        $cachedId = $cache_prefix. (int)STORE_ID ."_". implode('_',$data);
 
-       if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-        		$cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-      	$cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-      	$cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-      	$cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-      	$cachedId = strtolower( trim($cachedId, '-') );
-
-	   $cached = $this->cache->get($cachedId);
+	   $cached = $this->cache->get($cachedId, $cache_prefix);
        if (!$cached) {
             $sql = "SELECT DISTINCT c.customer_id, c.company, COUNT(*) AS total FROM " . DB_PREFIX . "product p
                 LEFT JOIN " . DB_PREFIX . "customer c ON (c.customer_id = p.owner_id)
                 LEFT JOIN " . DB_PREFIX . "product_description pd ON (pd.product_id = p.product_id) ";
 
+            $search ="";
    	        $criteria = array();
 
             $criteria[] = " p.status = '1'";
@@ -876,7 +873,7 @@ class ModelStoreSearch extends Model {
    			$this->cache->set($cachedId,$query->rows);
     		return $query->rows;
         } else {
-            return $this->cache->get($cachedId);
+            return $this->cache->get($cachedId, $cache_prefix);
         }
 
     }
@@ -961,4 +958,16 @@ class ModelStoreSearch extends Model {
 			return $products;
 		}
 	}
+
+
+    public function getPath($category_id) {
+        $string = $category_id . ',';
+        $results = $this->modelCategory->getCategories($category_id);
+        foreach ($results as $result) {
+            $string .= $this->getPath($result['category_id']);
+        }
+
+        return $string;
+    }
+
 }

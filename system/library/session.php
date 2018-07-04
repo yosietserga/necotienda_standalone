@@ -6,7 +6,7 @@ final class Session {
 
     public function __construct() {
         if (!session_id()) {
-            header("Set-Cookie: cookiename=cookievalue; expires=Tue, 06-Jan-" . (date('Y') + 1) . " 23:39:49 GMT; path=/; domain=" . substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'], "."), 100));
+            header("Set-Cookie: nts_token=". mt_rand() ."; expires=Tue, 06-Jan-" . (date('Y') + 1) . " 23:39:49 GMT; path=/; domain=" . substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'], "."), 100));
             ini_set('session.use_cookies', 'On');
             ini_set('session.use_trans_sid', 'Off');
             ini_set('session.cookie_domain', substr($_SERVER['SERVER_NAME'], strpos($_SERVER['SERVER_NAME'], "."), 100));

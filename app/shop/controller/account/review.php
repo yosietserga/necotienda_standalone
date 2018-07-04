@@ -5,6 +5,10 @@ class ControllerAccountReview extends Controller {
     private $error = array();
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/review"));
@@ -40,6 +44,7 @@ class ControllerAccountReview extends Controller {
         $data['letter'] = ($this->request->get['letter']) ? $this->request->get['letter'] : null;
         $data['status'] = ($this->request->get['status']) ? $this->request->get['status'] : null;
         $data['start'] = ($page - 1) * $limit;
+        $data['customer_id'] = $this->customer->getId();
 
         $url = '';
         if (isset($this->request->get['sort'])) {
@@ -57,22 +62,29 @@ class ControllerAccountReview extends Controller {
 
         $this->data['letters'] = range('A', 'Z');
 
-        $review_total = $this->modelReview->getAllByCustomerTotal($this->customer->getId());
+        $review_total = $this->modelReview->getAllTotal($data);
 
         if ($review_total) {
-            $reviews = $this->modelReview->getAllByCustomer($this->customer->getId(), $data);
+            $reviews = $this->modelReview->getAll($data);
             foreach ($reviews as $key => $value) {
 
-                $this->data['reviews'][] = array(
+                $this->data['reviews'][$key] = array(
                     'review_id' => $value['review_id'],
-                    'product_id' => $value['product_id'],
-                    'product' => $value['product'],
-                    'product_href' => Url::createUrl("store/product", array('product_id' => $value['product_id'])),
+                    'object_id' => $value['object_id'],
+                    'object_type' => $value['object_type'],
                     'rating' => $value['rating'],
                     'status' => $value['status'] ? $this->language->get('text_approve') : $this->language->get('text_no_approve'),
                     'date_added' => date('d/m/Y h:i A', strtotime($value['dateAdded'])),
                     'text' => substr($value['text'], 0, 130) . "..."
                 );
+
+                if (in_array($value['object_type'], array('product','category','manufacturer'))) {
+                    $this->data['reviews'][$key]['href'] = $Url::createUrl("store/". $value['object_type'], array($value['object_type'] .'_id' => $value['object_id']));
+                }
+
+                if (in_array($value['object_type'], array('post','post_category','page'))) {
+                    $this->data['reviews'][$key]['href'] = $Url::createUrl("content/". $value['object_type'], array($value['object_type'] .'_id' => $value['object_id']));
+                }
             }
 
             $this->load->library('pagination');
@@ -91,15 +103,18 @@ class ControllerAccountReview extends Controller {
             $this->data['error_warning'] = '';
         }
 
-        $this->loadWidgets();
+        
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
+        $this->session->set('landing_page','account/review');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
         $template = ($this->config->get('default_view_account_review')) ? $this->config->get('default_view_account_review') : 'account/review.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -112,6 +127,10 @@ class ControllerAccountReview extends Controller {
     }
 
     public function read() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/review"));
             $this->redirect(Url::createUrl("account/login"));
@@ -146,149 +165,36 @@ class ControllerAccountReview extends Controller {
 
             $this->document->title = $this->data['heading_title'] = $this->language->get('heading_title');
 
-            $review_id = $this->request->get['review_id'];
             $this->data['review'] = array();
             if ((int) $review_id) {
                 $this->data['heading_title'] = "Comentario #" . $review_id;
-                $this->data['review'] = $this->modelReview->getById($review_id);
+                $this->data['review'] = $review;
                 $this->data['replies'] = $this->modelReview->getReplies($review_id);
                 $this->load->auto('image');
                 $image = !empty($this->data['review']['image']) ? $this->data['review']['image'] : 'no_image.jpg';
                 $this->data['review']['thumb'] = NTImage::resizeAndSave($image, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'));
                 $this->data['review']['description'] = html_entity_decode($this->data['review']['description'], ENT_QUOTES, 'UTF-8');
             }
-
-            $this->data['action'] = Url::createUrl("account/review/reply");
-
-            // style files
-            $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
-            str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS);
-            if (file_exists(str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS) . 'neco.form.css')) {
-                $styles[] = array('media' => 'all', 'href' => str_replace('%theme%', $this->config->get('config_template'), HTTP_THEME_CSS) . 'neco.form.css');
-            } else {
-                $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.form.css');
-            }
-            $this->styles = array_merge($styles, $this->styles);
-
-            // javascript files
-            $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
-            $javascripts[] = $jspath . "necojs/neco.form.js";
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
-
-            // SCRIPTS
-            $scripts[] = array('id' => 'reviewScripts', 'method' => 'ready', 'script' =>
-                "$('#reviewForm').ntForm({
-                ajax:true,
-                url:'{$this->data['action']}',
-                success:function(data) {
-                    if (data.success) {
-                        window.location.href = '" . Url::createUrl('account/review/read', array('review_id' => $review_id)) . "';
-                    }
-                    if (data.error) {
-                        $('#reviewForm').append(data.msg);
-                    }
-                }
-            });
-            
-            $('#reviewForm textarea').ntInput();
-            
-            var cache = {};
-            $( '#addresses' ).on( 'keydown', function( event ) {
-                if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( 'autocomplete' ).menu.active ) {
-                    event.preventDefault();
-                }
-            })
-            .autocomplete({
-                source: function( request, response ) {
-                    var term = request.term;
-                    if ( term in cache ) {
-                        response( cache[ term ] );
-                        return;
-                    }
-                    $.getJSON( '" . Url::createUrl('account/review/getcustomers') . "', {
-                        term: extractLast( request.term )
-                    }, 
-                    function( data, status, xhr ) {
-                        cache[ term ] = data;
-                        response( data );
-                    });
-                },
-                search: function() {
-                    var term = extractLast( this.value );
-                    if ( term.length < 2 ) {
-                        return false;
-                    }
-                },
-                focus: function() {
-                    return false;
-                },
-                select: function( event, ui ) {
-                    
-                    var ids = split( $('#to').val() );
-                    ids.pop();
-                    ids.push( ui.item.id );
-                    ids.push( '' );
-                    $('#to').val(ids.join( '; ' ));
-                    
-                    var terms = split( this.value );
-                    terms.pop();
-                    terms.push( ui.item.value );
-                    terms.push( '' );
-                    this.value = terms.join( '; ' );
-                    
-                    return false;
-                }
-            });");
-
-            $scripts[] = array('id' => 'reviewFunctions', 'method' => 'function', 'script' =>
-                "function split( val ) { 
-                return val.split( /;\s*/ ); 
-            }
-            function extractLast( term ) {
-                return split( term ).pop();
-            }");
-
-            $this->scripts = array_merge($this->scripts, $scripts);
-
-            $this->loadWidgets();
-
-            if ($scripts)
-                $this->scripts = array_merge($this->scripts, $scripts);
-
-            $this->children[] = 'account/column_left';
-            $this->children[] = 'common/nav';
-            $this->children[] = 'common/header';
-            $this->children[] = 'common/footer';
-
-            $template = ($this->config->get('default_view_account_review_read')) ? $this->config->get('default_view_account_review_read') : 'account/review_read.tpl';
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
-                $this->template = $this->config->get('config_template') . '/' . $template;
-            } else {
-                $this->template = 'cuyagua/' . $template;
-            }
-        } else {
-            $this->document->title = $this->data['heading_title'] = $this->language->get('text_error');
-            $this->data['continue'] = Url::createUrl('account/review');
-
-            $this->loadWidgets();
-
-            if ($scripts)
-                $this->scripts = array_merge($this->scripts, $scripts);
-
-            $this->children[] = 'account/column_left';
-            $this->children[] = 'common/nav';
-            $this->children[] = 'common/header';
-            $this->children[] = 'common/footer';
-
-            $template = ($this->config->get('default_view_account_review_read_error')) ? $this->config->get('default_view_account_review_read_error') : 'error/not_found.tpl';
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
-                $this->template = $this->config->get('config_template') . '/' . $template;
-            } else {
-                $this->template = 'cuyagua/' . $template;
-            }
-
-            $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
         }
+
+        $this->session->set('landing_page','account/review/read');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
+
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
+
+        $template = ($this->config->get('default_view_account_review_read')) ? $this->config->get('default_view_account_review_read') : 'account/review_read.tpl';
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
+            $this->template = $this->config->get('config_template') . '/' . $template;
+        } else {
+            $this->template = 'cuyagua/' . $template;
+        }
+
         $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
 
@@ -302,99 +208,4 @@ class ControllerAccountReview extends Controller {
             $this->modelReview->delete($_GET['id'], $this->customer->getId());
         }
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

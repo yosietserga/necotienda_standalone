@@ -27,8 +27,7 @@ class Url {
         if (isset($params)) {
             if (is_array($params)) {
                 foreach ($params as $key => $value) {
-                    if (empty($key))
-                        continue;
+                    if (empty($key)) continue;
                     $url .= "&" . trim($key) . "=" . trim($value);
                 }
             } else {
@@ -75,9 +74,10 @@ class Url {
                 parse_str($url_data['query'], $data);
                 foreach ($data as $key => $value) {
                     if (($key == 'product_id' && $data['r'] == 'store/product') ||
-                            ($key == 'manufacturer_id' && $data['r'] == 'store/manufacturer') ||
-                            ($key == 'post_id' && $data['r'] == 'content/post') ||
-                            ($key == 'category_id' && $data['r'] == 'content/category')) {
+                        ($key == 'category_id' && $data['r'] == 'store/category') ||
+                        ($key == 'manufacturer_id' && $data['r'] == 'store/manufacturer') ||
+                        ($key == 'post_id' && $data['r'] == 'content/post') ||
+                        ($key == 'post_category_id' && $data['r'] == 'content/category')) {
                         $query = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = '" . self::$db->escape($key . '=' . (int) $value) . "'");
                         if ($query->num_rows) {
                             $url_ .= '/' . $query->row['keyword'];
@@ -85,24 +85,36 @@ class Url {
                         }
                     } elseif ($key == 'path' && $data['r'] == 'store/category') {
                         $categories = explode('_', $value);
-                        foreach ($categories as $category) {
-                            $query = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'category_id=" . (int) $category . "'");
+                        $cid = array_pop($categories);
+                        $qry = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'category_id=" . (int) $cid . "'");
 
-                            if ($query->num_rows) {
-                                $url_ .= '/' . $query->row['keyword'];
+                        if ($qry->num_rows) {
+                            foreach ($categories as $category) {
+                                $query = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'category_id=" . (int) $category . "'");
+
+                                if ($query->num_rows) {
+                                    $url_ .= '/' . $query->row['keyword'];
+                                }
                             }
+                            $url_ .= '/' . $qry->row['keyword'];
+                            unset($data[$key]);
                         }
-                        unset($data[$key]);
                     } elseif ($key == 'path' && $data['r'] == 'content/category') {
                         $categories = explode('_', $value);
-                        foreach ($categories as $category) {
-                            $query = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'post_category_id=" . (int) $category . "'");
 
-                            if ($query->num_rows) {
-                                $url_ .= '/' . $query->row['keyword'];
+                        $cid = array_pop($categories);
+                        $qry = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'post_category_id=" . (int) $cid . "'");
+
+                        if ($qry->num_rows) {
+                            foreach ($categories as $category) {
+                                $query = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'post_category_id=" . (int) $category . "'");
+
+                                if ($query->num_rows) {
+                                    $url_ .= '/' . $query->row['keyword'];
+                                }
                             }
+                            unset($data[$key]);
                         }
-                        unset($data[$key]);
                     } elseif ($key == 'page_id' && $data['r'] == 'content/page') {
                         $pages = explode('_', $value);
                         foreach ($pages as $page) {
@@ -128,26 +140,34 @@ class Url {
                     } elseif ($data['r'] == 'page/sitemap') {
                         $url_ .= '/sitemap';
                         unset($data[$key]);
-                    } elseif ($data['r'] == 'page/contact') {
-                        $url_ .= '/contacto';
-                        unset($data[$key]);
                     } elseif ($data['r'] == 'store/special') {
                         $url_ .= '/ofertas';
                         unset($data[$key]);
-                    } elseif ($key != 'category_id' && $data['r'] == 'content/category') {
+                    } elseif (!isset($data['post_category_id']) && $data['r'] == 'content/category') {
                         $url_ .= '/blog';
+                        unset($data[$key]);
+                    } elseif ($key != 'post_id' && $data['r'] == 'content/post/all') {
+                        $url_ .= '/posts';
                         unset($data[$key]);
                     } elseif ($key != 'page_id' && $data['r'] == 'content/page/all') {
                         $url_ .= '/paginas';
                         unset($data[$key]);
                     } elseif ($key != 'product_id' && $data['r'] == 'store/product/all') {
                         $url_ .= '/productos';
+                    } elseif ($key != 'manufacturer_id' && $data['r'] == 'store/manufacturer/all') {
+                        $url_ .= '/fabricantes';
                         unset($data[$key]);
                     } elseif ($key != 'path' && $data['r'] == 'store/category/all') {
                         $url_ .= '/categorias';
                         unset($data[$key]);
                     } elseif ($data['r'] == 'store/search') {
                         $url_ .= '/buscar';
+                        unset($data[$key]);
+                    } elseif ($data['r'] == 'account/login') {
+                        $url_ .= "/login";
+                        unset($data[$key]);
+                    } elseif ($data['r'] == 'account/register') {
+                        $url_ .= "/register";
                         unset($data[$key]);
                     } elseif ($data['r'] == 'account/order') {
                         $url_ .= "/$profile/pedidos";
@@ -181,8 +201,10 @@ class Url {
                             $query = '?' . trim($query, '&');
                         }
                     }
+                    //return $url_data['scheme'] . '://' . $url_data['host'] . (isset($url_data['port']) ? ':' . $url_data['port'] : '') . str_replace(array('/web','/index.php'), '', $url_data['path']) . $url_ . $query;
                     return $url_data['scheme'] . '://' . $url_data['host'] . (isset($url_data['port']) ? ':' . $url_data['port'] : '') . str_replace('/index.php', '', $url_data['path']) . $url_ . $query;
                 } else {
+                    //return str_replace(array('/web'), '', $url);
                     return $url;
                 }
             }
@@ -230,9 +252,10 @@ class Url {
                 parse_str($url_data['query'], $data);
                 foreach ($data as $key => $value) {
                     if (($key == 'product_id' && $data['r'] == 'store/product') ||
-                            ($key == 'manufacturer_id' && $data['r'] == 'store/manufacturer') ||
-                            ($key == 'post_id' && $data['r'] == 'content/post') ||
-                            ($key == 'category_id' && $data['r'] == 'content/category')) {
+                        ($key == 'category_id' && $data['r'] == 'store/category') ||
+                        ($key == 'manufacturer_id' && $data['r'] == 'store/manufacturer') ||
+                        ($key == 'post_id' && $data['r'] == 'content/post') ||
+                        ($key == 'post_category_id' && $data['r'] == 'content/category')) {
                         $query = self::$db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = '" . self::$db->escape($key . '=' . (int) $value) . "'");
                         if ($query->num_rows) {
                             $url_ .= '/' . $query->row['keyword'];
@@ -271,13 +294,11 @@ class Url {
                     } elseif ($data['r'] == 'page/sitemap') {
                         $url_ .= '/sitemap';
                         unset($data[$key]);
-                    } elseif ($data['r'] == 'page/contact') {
-                        $url_ .= '/contacto';
                         unset($data[$key]);
                     } elseif ($data['r'] == 'store/special') {
                         $url_ .= '/ofertas';
                         unset($data[$key]);
-                    } elseif ($key != 'category_id' && $data['r'] == 'content/category') {
+                    } elseif ($key != 'post_category_id' && $data['r'] == 'content/category') {
                         $url_ .= '/blog';
                         unset($data[$key]);
                     } elseif ($key != 'page_id' && $data['r'] == 'content/page/all') {
@@ -324,7 +345,7 @@ class Url {
                             $query = '?' . trim($query, '&');
                         }
                     }
-                    return $url_data['scheme'] . '://' . $url_data['host'] . (isset($url_data['port']) ? ':' . $url_data['port'] : '') . str_replace('/index.php', '', $url_data['path']) . $url_ . $query;
+                    return $url_data['scheme'] . '://' . $url_data['host'] . (isset($url_data['port']) ? ':' . $url_data['port'] : '') . str_replace(array('/web','/index.php'), '', $url_data['path']) . $url_ . $query;
                 } else {
                     return $url;
                 }

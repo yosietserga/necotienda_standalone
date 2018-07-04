@@ -7,7 +7,15 @@
     <span><?php echo $Language->get('text_published') ." ". $date_added; ?></span>
 
     <div class="generic-page">
+
         <?php echo $description; ?>
+        
+        <!-- widgets -->
+        <div class="large-12 medium-12 small-12 columns">
+            <?php if($widgets) { ?><ul class="widgets"><?php foreach ($widgets as $widget) { ?>{%<?php echo $widget; ?>%}<?php } ?></ul><?php } ?>
+        </div>
+        <!-- widgets -->
+
     </div>
 
     <div id="postSocial" class="social-actions">
@@ -23,30 +31,32 @@
    <?php include(DIR_TEMPLATE. $this->config->get('config_template') ."/shared/columns-end.tpl"); ?>
 </section>
 
-<script type="text/javascript" src="<?php echo HTTP_JS; ?>necojs/neco.carousel.js"></script>
 <div id="fb-root"></div>
 <script>
-$(window).load(function(){
-    <?php if ($related) { ?>
-    $("#related").ntCarousel({
-        url:'<?php echo $Url::createUrl("content/post/relatedJson") ."&post_id=". $post_id; ?>',
-        image: {
-          width:80,
-          height:80  
+$(function(){
+    ntPlugins = window.ntPlugins || [];
+
+    ntPlugins.push({
+        id:'#related',
+        config:{
+            url:'<?php echo $Url::createUrl("content/post/relatedJson") ."&post_id=". $post_id; ?>',
+            image: {
+              width:80,
+              height:80  
+            },
+            loading: {
+              image: '<?php echo HTTP_IMAGE; ?>loader.gif'
+            },
+            options: {
+                scroll: 1
+            }
         },
-        loading: {
-          image: '<?php echo HTTP_IMAGE; ?>loader.gif'
-        },
-        options: {
-            scroll: 1
-        }
+        plugin:'ntCarousel'
     });
-    <?php } ?>
+    window.ntPlugins = ntPlugins;
     
     $('#review').load('<?php echo $Url::createUrl("content/post/review") ."&post_id=". $post_id; ?>');
     $('#comment').load('<?php echo $Url::createUrl("content/post/comment") ."&post_id=". $post_id; ?>');
-
 });
 </script>
-<script src="<?php echo HTTP_HOME . 'assets/theme/' . $this->config->get('config_template') . '/js/vendor/rrssb/js/rrssb.min.js'; ?>"></script>
 <?php echo $footer; ?>

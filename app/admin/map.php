@@ -1,4 +1,8 @@
 <?php
+
+define('UPDATE_STATUS_PACKAGE','stable');
+define('NECOTIENDA_API_URL','http://www.necotienda.org/api/');
+
 $loader->auto('user');
 $loader->auto('url');
 $registry->set('load', $loader);
@@ -211,7 +215,7 @@ switch ($route) {
         $loader->auto('content/banner');
         $loader->auto('store/product');
         $loader->auto('store/category');
-		$loader->auto('setting/store');
+		$loader->auto('store/store');
         $loader->auto('localisation/language');
         break;
     case 'content/menu':
@@ -225,12 +229,13 @@ switch ($route) {
     case 'content/menu/update':
         $language->load('content/menu');
         $loader->auto('url');
-        $loader->auto('content/menu');
-        $loader->auto('content/page');
-        $loader->auto('setting/store');
+        $loader->auto('localisation/language');
+        $loader->auto('store/store');
         $loader->auto('content/post_category');
         $loader->auto('store/category');
         $loader->auto('store/manufacturer');
+        $loader->auto('content/menu');
+        $loader->auto('content/page');
         break;
     case 'content/post_category':
     case 'content/post_category/grid':
@@ -371,6 +376,7 @@ switch ($route) {
     case 'localisation/currency/update':
         $language->load('localisation/currency');
         $loader->auto('localisation/currency');
+        $loader->auto('localisation/language');
         break;
     case 'localisation/weight_class':
     case 'localisation/weight_class/grid':
@@ -522,6 +528,7 @@ switch ($route) {
     case 'sale/customer/update':
         $language->load('sale/customer');
         $loader->auto('sale/customer');
+        $loader->auto('sale/address');
 		$loader->auto('sale/customergroup');
 		$loader->auto('localisation/country');		
         break;
@@ -535,13 +542,15 @@ switch ($route) {
     case 'sale/customergroup/grid':
     case 'sale/customergroup/delete':
         $language->load('sale/customer_group');
-		$loader->auto('sale/customergroup');
+        $loader->auto('sale/customergroup');
+		$loader->auto('sale/customer');
         $loader->auto('pagination');
         break;
     case 'sale/customergroup/insert':
     case 'sale/customergroup/update':
         $language->load('sale/customer_group');
 		$loader->auto('sale/customergroup');
+        $loader->auto('sale/customer');
         break;
     case 'sale/order':
     case 'sale/order/grid':
@@ -772,6 +781,10 @@ $tpl = $config->get('config_admin_template') ? $config->get('config_admin_templa
 
 $javascripts = $styles = $scripts = array();
 
+$jsSharedPath = ($config->get('config_render_js_in_file')) ? DIR_JS : HTTP_JS;
+$jsPath = ($config->get('config_render_js_in_file')) ? DIR_ADMIN_THEME_JS : HTTP_ADMIN_THEME_JS;
+$jsAppPath = ($config->get('config_render_js_in_file')) ? DIR_ADMIN_THEME_JS : HTTP_ADMIN_THEME_JS;
+
 if (file_exists(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_JS) . 'deps.php')) {
     require_once(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_JS) . 'deps.php');
     foreach ($js_assets as $i => $routes) {
@@ -799,7 +812,7 @@ if (file_exists(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_CSS) . 'deps.php'))
     require_once(str_replace("%theme%", $tpl, DIR_ADMIN_THEME_CSS) . 'deps.php');
     foreach ($css_assets as $i => $asset) {
         if (empty($asset['css'])) continue;
-        if (is_array($routes) && in_array($route, $asset['routes']) || $asset['routes'] === '*') {
+        if (is_array($asset['routes']) && in_array($route, $asset['routes']) || $asset['routes'] === '*') {
             array_push($styles, $asset['css']);
         }
     }

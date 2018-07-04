@@ -1,13 +1,14 @@
 <?php
 // Heading
 $_['heading_title']    = 'Banner';
+$_['text_banner']      = 'Banner';
+$_['description']      = '';
 
 // Text
 $_['text_module']      = 'M&oacute;dulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 $_['text_left']        = 'Columna Izquierda';
 $_['text_right']       = 'Columna Derecha';
-$_['text_banner']      = 'Banner';
 
 // Entry
 $_['entry_banner']     = 'Banner:';

@@ -1,13 +1,13 @@
 <?php
 // Heading
-$_['heading_title']    = 'Plugin Template';
+$_['heading_title']    = $_['text_plugin_template'] = 'Plugin Template';
+$_['description']      = '<small>[ not delete this module ]</small>';
 
 // Text
 $_['text_module']      = 'Modulos';
 $_['text_success']     = 'Se ha actualizado satisfactoriamente!';
 $_['text_left']        = 'Columna Izquierda';
 $_['text_right']       = 'Columna Derecha';
-$_['text_plugin_template']       = 'Plugin Template';
 
 // Entry
 $_['entry_field_1']       = 'Campo 1:';

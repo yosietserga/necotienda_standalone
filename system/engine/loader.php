@@ -34,7 +34,7 @@ final class Loader {
         if (file_exists($file)) {
             include_once($file);
         } else {
-            exit('Error: Could not load library ' . $library . '!');
+            exit('<div class="msg error">Error: Could not load library ' . $library . '!</div>');
         }
     }
 
@@ -51,7 +51,7 @@ final class Loader {
                 return $this->registry->get('model' . ucfirst($m[0]));
             }
         } else {
-            exit('Error: Could not load model ' . $model . '!');
+            exit('<div class="msg error">Error: Could not load model ' . $model . '!</div>');
         }
     }
 
@@ -64,7 +64,7 @@ final class Loader {
 
             $this->registry->set(str_replace('/', '_', $driver), new $class());
         } else {
-            exit('Error: Could not load database ' . $driver . '!');
+            exit('<div class="msg error">Error: Could not load database ' . $driver . '!</div>');
         }
     }
 
@@ -74,7 +74,7 @@ final class Loader {
         if (file_exists($file)) {
             include_once($file);
         } else {
-            exit('Error: Could not load helper ' . $helper . '!');
+            exit('<div class="msg error">Error: Could not load helper ' . $helper . '!</div>');
         }
     }
 
@@ -97,6 +97,7 @@ final class Loader {
             $this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
         } else {
             exit('Error: Could not load model ' . $model . '!');
+            exit('<div class="msg error">Error: Could not load model ' . $file . '!</div>');
         }
     }
 
@@ -106,7 +107,7 @@ final class Loader {
         if (file_exists($file)) {
             include_once($file);
         } else {
-            exit('Error: Could not load library ' . $library . '!');
+            exit('<div class="msg error">Error: Could not load library ' . $file . '!</div>');
         }
     }
 

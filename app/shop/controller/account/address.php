@@ -5,6 +5,11 @@ class ControllerAccountAddress extends Controller {
     private $error = array();
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+        $this->session->set('landing_page','account/address');
+
         $Url = new Url($this->registry);
         if (!$this->customer->isLogged()) {
             $this->session->set('redirect', Url::createUrl("account/address"));
@@ -13,98 +18,7 @@ class ControllerAccountAddress extends Controller {
         $this->language->load('account/address');
         $this->document->title = $this->language->get('heading_title');
         $this->load->model('account/address');
-        $this->getList();
-    }
 
-    public function insert() {
-        if (!$this->customer->isLogged()) {
-            $this->session->set('redirect', Url::createUrl("account/address"));
-            $this->redirect(Url::createUrl("account/login"));
-        }
-
-        $this->language->load('account/address');
-
-        $this->document->title = $this->language->get('heading_title');
-
-        $this->load->model('account/address');
-
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->modelAddress->addAddress($this->request->post);
-            $this->session->set('success', $this->language->get('text_insert'));
-            $this->redirect(Url::createUrl("account/address"));
-        }
-
-        $this->getForm();
-    }
-
-    public function update() {
-        if (!$this->customer->isLogged()) {
-            $this->session->set('redirect', Url::createUrl("account/address"));
-            $this->redirect(Url::createUrl("account/login"));
-        }
-
-        $this->language->load('account/address');
-
-        $this->document->title = $this->language->get('heading_title');
-
-        $this->load->model('account/address');
-
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
-            $this->modelAddress->editAddress($this->request->get['address_id'], $this->request->post);
-
-            if ($this->session->has('shipping_address_id') && $this->request->get['address_id'] == $this->session->get('shipping_address_id')) {
-                $this->session->clear('shipping_methods');
-                $this->session->clear('shipping_method');
-                $this->tax->setZone($this->request->post['country_id'], $this->request->post['zone_id']);
-            }
-
-            if ($this->session->has('payment_address_id') && $this->request->get['address_id'] == $this->session->get('payment_address_id')) {
-                $this->session->clear('payment_methods');
-                $this->session->clear('payment_method');
-            }
-
-            $this->session->set('success', $this->language->get('text_update'));
-            $this->redirect(Url::createUrl("account/address"));
-        }
-
-        $this->getForm();
-    }
-
-    public function delete() {
-        if (!$this->customer->isLogged()) {
-            $this->session->set('redirect', Url::createUrl("account/address"));
-            $this->redirect(Url::createUrl("account/login"));
-        }
-
-        $this->language->load('account/address');
-
-        $this->document->title = $this->language->get('heading_title');
-
-        $this->load->model('account/address');
-
-        if (isset($this->request->get['address_id']) && $this->validateDelete()) {
-            $this->modelAddress->deleteAddress($this->request->get['address_id']);
-
-            if ($this->session->has('shipping_address_id') && $this->request->get['address_id'] == $this->session->get('shipping_address_id')) {
-                $this->session->clear('shipping_address_id');
-                $this->session->clear('shipping_methods');
-                $this->session->clear('shipping_method');
-            }
-
-            if ($this->session->has('payment_address_id') && $this->request->get['address_id'] == $this->session->get('payment_address_id')) {
-                $this->session->clear('payment_address_id');
-                $this->session->clear('payment_methods');
-                $this->session->clear('payment_method');
-            }
-            $this->session->set('success', $this->language->get('text_delete'));
-            $this->redirect(Url::createUrl("account/address"));
-        }
-
-        $this->getList();
-    }
-
-    private function getList() {
         $this->document->breadcrumbs[] = array(
             'href' => Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
@@ -124,13 +38,6 @@ class ControllerAccountAddress extends Controller {
         );
 
         $this->data['heading_title'] = $this->language->get('heading_title');
-
-        $this->data['text_address_book'] = $this->language->get('text_address_book');
-
-        $this->data['button_new_address'] = $this->language->get('button_new_address');
-        $this->data['button_edit'] = $this->language->get('button_edit');
-        $this->data['button_delete'] = $this->language->get('button_delete');
-        $this->data['button_back'] = $this->language->get('button_back');
 
         if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];
@@ -199,18 +106,16 @@ class ControllerAccountAddress extends Controller {
             );
         }
 
-        $this->data['insert'] = Url::createUrl("account/address/insert");
-        $this->data['back'] = Url::createUrl("account/account");
+        $this->session->set('landing_page','account/address');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        $this->loadWidgets();
-
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
-
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
         $template = ($this->config->get('default_view_account_addresses')) ? $this->config->get('default_view_account_addresses') : 'account/addresses.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -220,6 +125,103 @@ class ControllerAccountAddress extends Controller {
         }
 
         $this->response->setOutput($this->render(true), $this->config->get('config_compression'));
+    }
+
+    public function insert() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+        $this->session->set('landing_page','account/address/insert');
+
+        if (!$this->customer->isLogged()) {
+            $this->session->set('redirect', Url::createUrl("account/address"));
+            $this->redirect(Url::createUrl("account/login"));
+        }
+
+        $this->language->load('account/address');
+
+        $this->document->title = $this->language->get('heading_title');
+
+        $this->load->model('account/address');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->modelAddress->addAddress($this->request->post);
+            $this->session->set('success', $this->language->get('text_insert'));
+            $this->redirect(Url::createUrl("account/address"));
+        }
+
+        $this->getForm();
+    }
+
+    public function update() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+        $this->session->set('landing_page','account/address/update');
+
+        if (!$this->customer->isLogged()) {
+            $this->session->set('redirect', Url::createUrl("account/address"));
+            $this->redirect(Url::createUrl("account/login"));
+        }
+
+        $this->language->load('account/address');
+
+        $this->document->title = $this->language->get('heading_title');
+
+        $this->load->model('account/address');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+
+            $this->modelAddress->editAddress($this->request->get['address_id'], $this->request->post);
+
+            if ($this->session->has('shipping_address_id') && $this->request->get['address_id'] == $this->session->get('shipping_address_id')) {
+                $this->session->clear('shipping_methods');
+                $this->session->clear('shipping_method');
+                $this->tax->setZone($this->request->post['country_id'], $this->request->post['zone_id']);
+            }
+
+            if ($this->session->has('payment_address_id') && $this->request->get['address_id'] == $this->session->get('payment_address_id')) {
+                $this->session->clear('payment_methods');
+                $this->session->clear('payment_method');
+            }
+
+            $this->session->set('success', $this->language->get('text_update'));
+            $this->redirect(Url::createUrl("account/address"));
+        }
+
+        $this->getForm();
+    }
+
+    public function delete() {
+        if (!$this->customer->isLogged()) {
+            $this->session->set('redirect', Url::createUrl("account/address"));
+            $this->redirect(Url::createUrl("account/login"));
+        }
+
+        $this->language->load('account/address');
+
+        $this->document->title = $this->language->get('heading_title');
+
+        $this->load->model('account/address');
+
+        if (isset($this->request->get['address_id']) && $this->validateDelete()) {
+            $this->modelAddress->deleteAddress($this->request->get['address_id']);
+
+            if ($this->session->has('shipping_address_id') && $this->request->get['address_id'] == $this->session->get('shipping_address_id')) {
+                $this->session->clear('shipping_address_id');
+                $this->session->clear('shipping_methods');
+                $this->session->clear('shipping_method');
+            }
+
+            if ($this->session->has('payment_address_id') && $this->request->get['address_id'] == $this->session->get('payment_address_id')) {
+                $this->session->clear('payment_address_id');
+                $this->session->clear('payment_methods');
+                $this->session->clear('payment_method');
+            }
+            $this->session->set('success', $this->language->get('text_delete'));
+        }
+
+        $this->redirect(Url::createUrl("account/address"));
     }
 
     private function getForm() {
@@ -259,67 +261,13 @@ class ControllerAccountAddress extends Controller {
 
         $this->data['heading_title'] = $this->language->get('heading_title');
 
-        $this->data['text_edit_address'] = $this->language->get('text_edit_address');
-        $this->data['text_yes'] = $this->language->get('text_yes');
-        $this->data['text_no'] = $this->language->get('text_no');
-        $this->data['text_select'] = $this->language->get('text_select');
-
-        $this->data['entry_firstname'] = $this->language->get('entry_firstname');
-        $this->data['entry_lastname'] = $this->language->get('entry_lastname');
-        $this->data['entry_company'] = $this->language->get('entry_company');
-        $this->data['entry_address_1'] = $this->language->get('entry_address_1');
-        $this->data['entry_address_2'] = $this->language->get('entry_address_2');
-        $this->data['entry_postcode'] = $this->language->get('entry_postcode');
-        $this->data['entry_city'] = $this->language->get('entry_city');
-        $this->data['entry_country'] = $this->language->get('entry_country');
-        $this->data['entry_zone'] = $this->language->get('entry_zone');
-        $this->data['entry_default'] = $this->language->get('entry_default');
-        $this->data['entry_captcha'] = $this->language->get('entry_captcha');
-
-        $this->data['button_continue'] = $this->language->get('button_continue');
-        $this->data['button_back'] = $this->language->get('button_back');
-
-        if (isset($this->error['firstname'])) {
-            $this->data['error_firstname'] = $this->error['firstname'];
-        } else {
-            $this->data['error_firstname'] = '';
-        }
-
-        if (isset($this->error['lastname'])) {
-            $this->data['error_lastname'] = $this->error['lastname'];
-        } else {
-            $this->data['error_lastname'] = '';
-        }
-
-        if (isset($this->error['address_1'])) {
-            $this->data['error_address_1'] = $this->error['address_1'];
-        } else {
-            $this->data['error_address_1'] = '';
-        }
-
-        if (isset($this->error['city'])) {
-            $this->data['error_city'] = $this->error['city'];
-        } else {
-            $this->data['error_city'] = '';
-        }
-
-        if (isset($this->error['country'])) {
-            $this->data['error_country'] = $this->error['country'];
-        } else {
-            $this->data['error_country'] = '';
-        }
-
-        if (isset($this->error['zone'])) {
-            $this->data['error_zone'] = $this->error['zone'];
-        } else {
-            $this->data['error_zone'] = '';
-        }
-
-        if (isset($this->error['captcha'])) {
-            $this->data['error_captcha'] = $this->error['captcha'];
-        } else {
-            $this->data['error_captcha'] = '';
-        }
+        $this->data['error_firstname'] = isset($this->error['firstname']) ? $this->error['firstname'] : '';
+        $this->data['error_lastname'] = isset($this->error['lastname']) ? $this->error['lastname'] : '';
+        $this->data['error_address_1'] = isset($this->error['address_1']) ? $this->error['address_1'] : '';
+        $this->data['error_city'] = isset($this->error['city']) ? $this->error['city'] : '';
+        $this->data['error_country'] = isset($this->error['country']) ? $this->error['country'] : '';
+        $this->data['error_zone'] = isset($this->error['zone']) ? $this->error['zone'] : '';
+        $this->data['error_captcha'] = isset($this->error['captcha']) ? $this->error['captcha'] : '';
 
         if (!isset($this->request->get['address_id'])) {
             $this->data['action'] = Url::createUrl("account/address/insert");
@@ -331,83 +279,16 @@ class ControllerAccountAddress extends Controller {
             $address_info = $this->modelAddress->getAddress($this->request->get['address_id']);
         }
 
-        if (isset($this->request->post['firstname'])) {
-            $this->data['firstname'] = ucwords($this->request->post['firstname']);
-        } elseif (isset($address_info)) {
-            $this->data['firstname'] = ucwords($address_info['firstname']);
-        } else {
-            $this->data['firstname'] = '';
-        }
-
-        if (isset($this->request->post['lastname'])) {
-            $this->data['lastname'] = ucwords($this->request->post['lastname']);
-        } elseif (isset($address_info)) {
-            $this->data['lastname'] = ucwords($address_info['lastname']);
-        } else {
-            $this->data['lastname'] = '';
-        }
-
-        if (isset($this->request->post['company'])) {
-            $this->data['company'] = ucwords($this->request->post['company']);
-        } elseif (isset($address_info)) {
-            $this->data['company'] = ucwords($address_info['company']);
-        } else {
-            $this->data['company'] = '';
-        }
-
-        if (isset($this->request->post['address_1'])) {
-            $this->data['address_1'] = $this->request->post['address_1'];
-        } elseif (isset($address_info)) {
-            $this->data['address_1'] = $address_info['address_1'];
-        } else {
-            $this->data['address_1'] = '';
-        }
-
-        if (isset($this->request->post['address_2'])) {
-            $this->data['address_2'] = $this->request->post['address_2'];
-        } elseif (isset($address_info)) {
-            $this->data['address_2'] = $address_info['address_2'];
-        } else {
-            $this->data['address_2'] = '';
-        }
-
-        if (isset($this->request->post['postcode'])) {
-            $this->data['postcode'] = $this->request->post['postcode'];
-        } elseif (isset($address_info)) {
-            $this->data['postcode'] = $address_info['postcode'];
-        } else {
-            $this->data['postcode'] = '';
-        }
-
-        if (isset($this->request->post['city'])) {
-            $this->data['city'] = ucwords($this->request->post['city']);
-        } elseif (isset($address_info)) {
-            $this->data['city'] = ucwords($address_info['city']);
-        } else {
-            $this->data['city'] = '';
-        }
-
-        if (isset($this->request->post['country_id'])) {
-            $this->data['country_id'] = $this->request->post['country_id'];
-        } elseif (isset($address_info)) {
-            $this->data['country_id'] = $address_info['country_id'];
-        } else {
-            $this->data['country_id'] = $this->config->get('config_country_id');
-        }
-
-        if (isset($this->request->post['zone_id'])) {
-            $this->data['zone_id'] = $this->request->post['zone_id'];
-        } elseif (isset($address_info)) {
-            $this->data['zone_id'] = $address_info['zone_id'];
-        } else {
-            $this->data['zone_id'] = 'false';
-        }
-
-        if (isset($this->request->post['captcha'])) {
-            $this->data['captcha'] = $this->request->post['captcha'];
-        } else {
-            $this->data['captcha'] = '';
-        }
+        $this->setvar('firstname', $address_info, '');
+        $this->setvar('lastname', $address_info, '');
+        $this->setvar('company', $address_info, '');
+        $this->setvar('address_1', $address_info, '');
+        $this->setvar('address_2', $address_info, '');
+        $this->setvar('postcode', $address_info, '');
+        $this->setvar('city', $address_info, '');
+        $this->setvar('city', $address_info, $this->config->get('config_country_id'));
+        $this->setvar('zone_id', $address_info, 'false');
+        $this->setvar('captcha', null, 'false');
 
         $this->load->model('localisation/country');
 
@@ -421,35 +302,15 @@ class ControllerAccountAddress extends Controller {
             $this->data['default'] = false;
         }
 
-        $this->data['back'] = Url::createUrl("account/address");
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        // scripts
-        $scripts[] = array('id' => 'scriptsEdit', 'method' => 'ready', 'script' =>
-            "$('#form').ntForm();");
-
-        $this->scripts = array_merge($this->scripts, $scripts);
-
-        // javascript files
-        $jspath = defined("CDN_JS") ? CDN_JS : HTTP_JS;
-        $javascripts[] = $jspath . "necojs/neco.form.js";
-        $javascripts[] = $jspath . "vendor/jquery-ui.min.js";
-        $this->javascripts = array_merge($this->javascripts, $javascripts);
-
-        // style files
-        $csspath = defined("CDN_CSS") ? CDN_CSS : HTTP_CSS;
-        $styles[] = array('media' => 'all', 'href' => $csspath . 'jquery-ui/jquery-ui.min.css');
-        $styles[] = array('media' => 'all', 'href' => $csspath . 'neco.form.css');
-        $this->styles = array_merge($this->styles, $styles);
-
-        $this->loadWidgets();
-
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
-
-        $this->children[] = 'account/column_left';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->addChild('account/column_left');
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
 
         $template = ($this->config->get('default_view_account_address')) ? $this->config->get('default_view_account_address') : 'account/address.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -530,99 +391,4 @@ class ControllerAccountAddress extends Controller {
 
         $this->response->setOutput($output, $this->config->get('config_compression'));
     }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-    }
-
 }

@@ -49,7 +49,7 @@ class ControllerApiPayPal extends Controller {
                         . '&grant_type=authorization_code';
 
                 $response = $this->handler->fetch('https://api.mercadolibre.com/oauth/token', $requestData);
-                var_dump($response);
+
                 if ($response['body']) {
                     $this->session->set('meliAccessToken', $response['body']);
                 } else {
@@ -274,7 +274,6 @@ class ControllerApiPayPal extends Controller {
             $url = 'https://api.mercadolibre.com/users/me/items?access_token=' . $token->access_token;
             $response = $this->handler->fetch($url);
             $picture = json_decode($response['body'], true);
-            var_dump($picture);
             /*
               $photo = str_replace(' ','_',strtolower($profile['name'])).'_'.md5(uniqid().time()).'.jpg';
               file_put_contents(DIR_IMAGE . $photo, file_get_contents($photo['picture']));

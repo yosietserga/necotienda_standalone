@@ -5,35 +5,32 @@ class ControllerAccountForgotten extends Controller {
     private $error = array();
 
     public function index() {
+        $this->session->clear('object_type');
+        $this->session->clear('object_id');
+        $this->session->clear('landing_page');
+
         $Url = new Url($this->registry);
         if ($this->customer->isLogged()) {
-            $this->redirect(Url::createUrl("account/account"));
+            $this->redirect($Url::createUrl("account/account"));
         }
 
         $this->language->load('account/forgotten');
-
-        $this->document->title = $this->language->get('heading_title');
 
         $this->load->model('account/customer');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->load->library('email/mailer');
             $this->load->library('BarcodeQR');
-            $this->load->library('Barcode39');
 
             $mailer = new Mailer;
             $qr = new BarcodeQR;
             $barcode = new Barcode39(C_CODE);
             $password = substr(md5(rand()), 0, 11);
             $qrStore = "cache/" . str_replace(".", "_", $this->config->get('config_owner')) . '.png';
-            $eanStore = "cache/" . str_replace(" ", "_", $this->config->get('config_owner') . "_barcode_39_order_id_" . $order_id) . '.gif';
 
             if (!file_exists(DIR_IMAGE . $qrStore)) {
                 $qr->url(HTTP_HOME);
                 $qr->draw(150, DIR_IMAGE . $qrStore);
-            }
-            if (!file_exists(DIR_IMAGE . $eanStore)) {
-                $barcode->draw(DIR_IMAGE . $eanStore);
             }
 
             if ($this->config->get('marketing_email_new_password')) {
@@ -56,7 +53,6 @@ class ControllerAccountForgotten extends Controller {
                 $message = str_replace("{%date_added%}", date('d-m-Y h:i A'), $message);
                 $message = str_replace("{%ip%}", $_SERVER['REMOTE_ADDR'], $message);
                 $message = str_replace("{%qr_code_store%}", '<img src="' . HTTP_IMAGE . $qrStore . '" alt="QR Code" />', $message);
-                $message = str_replace("{%barcode_39_order_id%}", '<img src="' . HTTP_IMAGE . $eanStore . '" alt="NT Code" />', $message);
 
                 $message .= "<p style=\"text-align:center\">Powered By Necotienda&reg; " . date('Y') . "</p>";
             } else {
@@ -64,7 +60,6 @@ class ControllerAccountForgotten extends Controller {
                 $message .= "<p>" . $this->language->get('text_password_renew') . "</p>";
                 $message .= "<p><b>" . $password . "</b></p><br />";
                 $message .= '<img src="' . HTTP_IMAGE . $qrStore . '" alt="QR Code" />';
-                $message .= '<img src="' . HTTP_IMAGE . $eanStore . '" alt="NT Code" />';
                 $message .= "<br /><p style=\"text-align:center\">Powered By Necotienda&reg; " . date('Y') . "</p>";
             }
 
@@ -96,34 +91,23 @@ class ControllerAccountForgotten extends Controller {
         }
 
         $this->document->breadcrumbs = array();
-
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("common/home"),
+            'href' => $Url::createUrl("common/home"),
             'text' => $this->language->get('text_home'),
             'separator' => false
         );
-
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/account"),
+            'href' => $Url::createUrl("account/account"),
             'text' => $this->language->get('text_account'),
             'separator' => $this->language->get('text_separator')
         );
-
         $this->document->breadcrumbs[] = array(
-            'href' => Url::createUrl("account/forgotten"),
+            'href' => $Url::createUrl("account/forgotten"),
             'text' => $this->language->get('text_forgotten'),
             'separator' => $this->language->get('text_separator')
         );
 
-        $this->data['heading_title'] = $this->language->get('heading_title');
-
-        $this->data['text_your_email'] = $this->language->get('text_your_email');
-        $this->data['text_email'] = $this->language->get('text_email');
-
-        $this->data['entry_email'] = $this->language->get('entry_email');
-
-        $this->data['button_continue'] = $this->language->get('button_continue');
-        $this->data['button_back'] = $this->language->get('button_back');
+        $this->data['heading_title'] = $this->document->title = $this->language->get('heading_title');
 
         if (isset($this->error['message'])) {
             $this->data['error'] = $this->error['message'];
@@ -131,19 +115,21 @@ class ControllerAccountForgotten extends Controller {
             $this->data['error'] = '';
         }
 
-        $this->data['action'] = Url::createUrl("account/forgotten");
-        $this->data['back'] = Url::createUrl("account/account");
+        $this->data['action'] = $Url::createUrl("account/forgotten");
+        $this->data['back'] = $Url::createUrl("account/account");
 
-        $this->loadWidgets();
+        
 
-        if ($scripts)
-            $this->scripts = array_merge($this->scripts, $scripts);
+        $this->session->set('landing_page','account/forgotten');
+        $this->loadWidgets('featuredContent');
+        $this->loadWidgets('main');
+        $this->loadWidgets('featuredFooter');
 
-        $this->children[] = 'common/column_left';
-        $this->children[] = 'common/column_right';
-        $this->children[] = 'common/nav';
-        $this->children[] = 'common/header';
-        $this->children[] = 'common/footer';
+        $this->addChild('common/column_left');
+        $this->addChild('common/column_right');
+        $this->addChild('common/footer');
+        $this->addChild('common/header');
+
 
         $template = ($this->config->get('default_view_account_forgotten')) ? $this->config->get('default_view_account_forgotten') : 'account/forgotten.tpl';
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $template)) {
@@ -167,100 +153,6 @@ class ControllerAccountForgotten extends Controller {
             return true;
         } else {
             return false;
-        }
-    }
-
-    protected function loadWidgets() {
-        $this->load->helper('widgets');
-        $widgets = new NecoWidget($this->registry, $this->Route);
-        foreach ($widgets->getWidgets('main') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['widgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-
-        foreach ($widgets->getWidgets('featuredContent') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
-        }
-        
-        foreach ($widgets->getWidgets('featuredFooter') as $widget) {
-            $settings = (array) unserialize($widget['settings']);
-            if ($settings['asyn']) {
-                $url = Url::createUrl("{$settings['route']}", $settings['params']);
-                $scripts[$widget['name']] = array(
-                    'id' => $widget['name'],
-                    'method' => 'ready',
-                    'script' =>
-                    "$(document.createElement('div'))
-                        .attr({
-                            id:'" . $widget['name'] . "'
-                        })
-                        .html(makeWaiting())
-                        .load('" . $url . "')
-                        .appendTo('" . $settings['target'] . "');"
-                );
-            } else {
-                if (isset($settings['route'])) {
-                    if (($this->browser->isMobile() && $settings['showonmobile']) || (!$this->browser->isMobile() && $settings['showondesktop'])) {
-                        if ($settings['autoload']) {
-                            $this->data['featuredFooterWidgets'][] = $widget['name'];
-                        }
-                        
-                        $this->children[$widget['name']] = $settings['route'];
-                        $this->widget[$widget['name']] = $widget;
-                    }
-                }
-            }
         }
     }
 

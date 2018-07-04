@@ -27,13 +27,14 @@ class ControllerApiFacebook extends Controller {
     }
 
     public function index() {
+        $Url = new Url($this->registry);
         if (!$this->initialize()) {
             if ($this->request->hasQuery('redirect')) {
                 $_SESSION['fbaction'] = $this->request->getQuery('redirect');
             }
             if ($this->request->hasQuery('code')) {
                 $_SESSION['fcode'] = $this->request->getQuery('code');
-                //$this->redirect(Url::createUrl('api/facebook'));
+                //$this->redirect($Url::createUrl('api/facebook'));
             }
 
             $redirect_uri = HTTP_HOME . 'api/facebook';
@@ -57,25 +58,37 @@ class ControllerApiFacebook extends Controller {
             $helper = new FacebookRedirectLoginHelper($redirect_uri);
 
             $params = array(
-                'scope' => 'read_stream, '
-                . 'email, '
-                . 'publish_fbactions'
-                    /*
-                      . 'user_photos, '
-                      . 'read_insights, '
-                      . 'read_mailbox, '
-                      . 'read_page_mailboxes, '
-                      . 'manage_pages'
-                     * 
-                     */
+                'scope' => 'email,'
+                    . 'public_profile,'
+                    . 'publish_actions,'
+                    . 'publish_pages,'
+                    . 'user_managed_groups,'
+                    . 'user_posts,'
+                    . 'user_groups,'
+                    . 'user_photos,'
+                /*
+                . 'read_page_mailboxes,'
+                . 'manage_pages,'
+                . 'user_photos,'
+                . 'user_posts,'
+                . 'read_insights,'
+                . 'pages_show_list,'
+                . 'pages_manage_instant_articles,'
+                . 'pages_manage_cta,'
+                . 'pages_messaging,'
+                . 'pages_messaging_phone_number,'
+                . 'ads_read,'
+                . 'ads_management,'
+                */
             );
 
             if (!isset($_SESSION['fcode']) && !$this->request->hasQuery('error_code')) {
                 $this->redirect($helper->getLoginUrl($params));
             } elseif ($this->request->hasQuery('error_code')) {
                 echo $this->request->getQuery('error_message');
-                //$this->redirect(Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Facebook, por favor intente con otro servicio")));
+                $this->redirect($Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Facebook, por favor intente con otro servicio")));
             }
+            $_GET['code'] = $_SESSION['fcode'];
 
             if (isset($_SESSION['ftoken'])) {
                 $this->fb = new FacebookSession($_SESSION['ftoken']);
@@ -89,10 +102,14 @@ class ControllerApiFacebook extends Controller {
             } else {
                 try {
                     $this->fb = $helper->getSessionFromRedirect();
-                } catch (FacebookRequestException $ex) {
-                    echo $ex . '<br />';
-                } catch (Exception $ex) {
-                    echo $ex . '<br />';
+                } catch(Facebook\Exceptions\FacebookResponseException $e) {
+                    // When Graph returns an error
+                    echo 'Graph returned an error: ' . $e->getMessage();
+                    exit;
+                } catch(Facebook\Exceptions\FacebookSDKException $e) {
+                    // When validation fails or other local issues
+                    echo 'Facebook SDK returned an error: ' . $e->getMessage();
+                    exit;
                 }
             }
 
@@ -102,10 +119,8 @@ class ControllerApiFacebook extends Controller {
                 }
 
                 $fbactions = array(
-                    'invitefriends',
                     'login',
-                    'promote',
-                    'inboxlist'
+                    'promote'
                 );
                 if (in_array($_SESSION['fbaction'], $fbactions)) {
 
@@ -123,12 +138,41 @@ class ControllerApiFacebook extends Controller {
 
                     if ($_SESSION['fbaction'] === 'promote') {
                         try {
+                            /*
+                            //posting in customer profile
                             $request = new FacebookRequest($this->fb, 'POST', '/me/feed', array(
                                 'link' => 'http://www.necoyoad.com',
                                 'message' => 'Test: Auto post from NecoTienda ' . date('d-m-Y h:i:s')
                             ));
                             $response = $request->execute();
                             $graphObject = $response->getGraphObject(GraphUser::className());
+                            */
+
+                            /*
+                            //posting in customer group
+                            $request = new FacebookRequest($this->fb, 'POST', '/214832205379700/feed', array(
+                                'link' => 'https://www.facebook.com/permalink.php?story_fbid=1852761101623430&id=1375647206001491',
+                                'message' => 'auto-post by Necoyoad.com ' . date('d-m-Y h:i:s')
+                            ));
+                            $response = $request->execute();
+                            $graphObject = $response->getGraphObject(GraphUser::className());
+                            */
+
+                            /*
+                            //posting in customer managed page
+                            $request = new FacebookRequest($this->fb, 'POST', '/1375647206001491/feed', array(
+                                'link' => 'http://www.necoyoad.com',
+                                'message' => 'Test: Auto post from NecoTienda ' . date('d-m-Y h:i:s')
+                            ));
+                            $response = $request->execute();
+                            $graphObject = $response->getGraphObject(GraphUser::className());
+                            */
+
+
+                            $request = new FacebookRequest($this->fb, 'GET', '/1375647206001491/feed');
+                            $response = $request->execute();
+                            $graphObject = $response->getGraphObject(GraphUser::className());
+
                         } catch (FacebookRequestException $e) {
                             echo __LINE__ . ': ' . $e->getCode() . '<br />';
                             echo __LINE__ . ': ' . $e->getMessage() . '<br />';
@@ -146,11 +190,14 @@ class ControllerApiFacebook extends Controller {
                      */
                 }
             } else {
+
+                unset($_SESSION['ftoken']);
+                unset($_SESSION['fcode']);
                 if (!$this->request->hasQuery('error_code')) {
                     $this->redirect($helper->getLoginUrl($params));
                 } else {
                     echo $this->request->getQuery('error_message');
-                    //$this->redirect(Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Facebook, por favor intente con otro servicio")));
+                    //$this->redirect($Url::createUrl("account/login", array("error" => "No se pudo iniciar sesion utilizando Facebook, por favor intente con otro servicio")));
                 }
             }
         }
@@ -229,7 +276,7 @@ class ControllerApiFacebook extends Controller {
                 echo __LINE__ . ': ' . $e->getMessage() . '<br />';
             }
         } else {
-            
+
         }
     }
 }

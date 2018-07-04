@@ -37,7 +37,7 @@ class ControllerPaymentAmazonLoginPay extends Controller {
                 $data['amazon_login_pay_test'] = true;
             }
             
-            $this->loadAssets();
+
             
             $scripts[] = array('id'=>'amazonJs','script'=>
                 "window.onAmazonLoginReady = function() {"
@@ -88,7 +88,7 @@ class ControllerPaymentAmazonLoginPay extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
 
-        $this->loadAssets();
+
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/amazon_login_pay_address.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/amazon_login_pay_address.tpl', $data));
@@ -136,7 +136,7 @@ class ControllerPaymentAmazonLoginPay extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
 
-        $this->loadAssets();
+
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/amazon_login_pay_payment.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/amazon_login_pay_payment.tpl', $data));
@@ -520,7 +520,7 @@ class ControllerPaymentAmazonLoginPay extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
 
-        $this->loadAssets();
+
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/amazon_login_pay_confirm.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/amazon_login_pay_confirm.tpl', $data));
@@ -655,7 +655,7 @@ class ControllerPaymentAmazonLoginPay extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
 
-        $this->loadAssets();
+
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/amazon_login_pay_failure.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/amazon_login_pay_failure.tpl', $data));
@@ -925,48 +925,6 @@ class ControllerPaymentAmazonLoginPay extends Controller {
                 $this->model_payment_amazon_login_pay->addTransaction($amazon_login_pay_order['amazon_login_pay_order_id'], $amazon_login_pay_order['amazon_authorization_id'], $capture_response['amazon_capture_id'], 'capture', $capture_response['status'], $amazon_login_pay_order['total']);
                 $this->model_payment_amazon_login_pay->updateCaptureStatus($amazon_login_pay_order['amazon_login_pay_order_id'], 1);
             }
-        }
-    }
-
-    protected function loadAssets() {
-        $csspath = defined("CDN") ? CDN_CSS : HTTP_THEME_CSS;
-        $jspath = defined("CDN") ? CDN_JS : HTTP_THEME_JS;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/common/header.tpl')) {
-            $csspath = str_replace("%theme%", $this->config->get('config_template'), $csspath);
-            $cssFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", $this->config->get('config_template'), $jspath);
-            $jsFolder = str_replace("%theme%", $this->config->get('config_template'), DIR_THEME_JS);
-        } else {
-            $csspath = str_replace("%theme%", "default", $csspath);
-            $cssFolder = str_replace("%theme%", "default", DIR_THEME_CSS);
-
-            $jspath = str_replace("%theme%", "default", $jspath);
-            $jsFolder = str_replace("%theme%", "default", DIR_THEME_JS);
-        }
-
-        if (file_exists($cssFolder . strtolower(__CLASS__) . '.css')) {
-            if ($this->config->get('config_render_css_in_file')) {
-                $this->data['css'] .= file_get_contents($cssFolder . strtolower(__CLASS__) .'.css');
-            } else {
-                $styles[strtolower(__CLASS__) .'.css'] = array('media' => 'all', 'href' => $csspath . strtolower(__CLASS__) .'.css');
-            }
-        }
-
-        if (file_exists($jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js'))) {
-            if ($this->config->get('config_render_js_in_file')) {
-                $javascripts[] = $jsFolder . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            } else {
-                $javascripts[] = $jspath . str_replace('controller', '', strtolower(__CLASS__) . '.js');
-            }
-        }
-
-        if (count($styles)) {
-            $this->data['styles'] = $this->styles = array_merge($this->styles, $styles);
-        }
-
-        if (count($javascripts)) {
-            $this->javascripts = array_merge($this->javascripts, $javascripts);
         }
     }
 }

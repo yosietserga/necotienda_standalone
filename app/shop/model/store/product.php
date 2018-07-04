@@ -3,7 +3,8 @@
 class ModelStoreProduct extends Model {
 
     public function getAll($data, $sort_data= null) {
-        $cachedId = "all_products_".
+            $cache_prefix = "shop.products";
+        $cachedId = $cache_prefix.
             (int)STORE_ID ."_".
             serialize($data).
             $this->config->get('config_language_id') . "." .
@@ -13,22 +14,13 @@ class ModelStoreProduct extends Model {
             $this->config->get('config_currency') . "." .
             (int)$this->config->get('config_store_id');
 
-        if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-            $cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-        $cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-        $cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-        $cachedId = strtolower( trim($cachedId, '-') );
-
-        $cached = $this->cache->get($cachedId);
+        $cached = $this->cache->get($cachedId, "shop.products");
         if (!$cached) {
             $sql = "SELECT DISTINCT *, (SELECT AVG(r.rating) FROM " . DB_PREFIX . "review r WHERE p.product_id = r.object_id GROUP BY r.object_id) AS rating, p.date_added AS created, pd.name AS name, p.image, m.name AS manufacturer, ss.name AS stock, wcd.unit AS weight_class ".
-            "FROM " . DB_PREFIX . "product p ".
-            "LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) ".
-            "LEFT JOIN " . DB_PREFIX . "stock_status ss ON (p.stock_status_id = ss.stock_status_id) ".
-            "LEFT JOIN " . DB_PREFIX . "weight_class_description wcd ON (p.weight_class_id = wcd.weight_class_id) ".
-            "LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) ";
+                "FROM " . DB_PREFIX . "product p ".
+                "LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) ".
+                "LEFT JOIN " . DB_PREFIX . "stock_status ss ON (p.stock_status_id = ss.stock_status_id) ".
+                "LEFT JOIN " . DB_PREFIX . "weight_class_description wcd ON (p.weight_class_id = wcd.weight_class_id) ";
 
             if (!isset($sort_data)) {
                 $sort_data = array(
@@ -41,10 +33,10 @@ class ModelStoreProduct extends Model {
                     'p.price'
                 );
             }
-            
+
             $sql .= $this->buildSQLQuery($data, $sort_data);
             $query = $this->db->query($sql);
-            $this->cache->set($cachedId, $query->rows);
+            $this->cache->set($cachedId, $query->rows, "shop.products");
             return $query->rows;
         } else {
             return $cached;
@@ -52,7 +44,8 @@ class ModelStoreProduct extends Model {
     }
 
     public function getAllTotal($data) {
-        $cachedId = "all_products_total".
+            $cache_prefix = "shop.products.total";
+        $cachedId = $cache_prefix.
             (int)STORE_ID ."_".
             serialize($data).
             $this->config->get('config_language_id') . "." .
@@ -62,25 +55,16 @@ class ModelStoreProduct extends Model {
             $this->config->get('config_currency') . "." .
             (int)$this->config->get('config_store_id');
 
-        if($cachedId !== mb_convert_encoding( mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
-            $cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-        $cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-        $cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace(array('`[^a-z0-9]`i','`[-]+`'), '-', $cachedId);
-        $cachedId = strtolower( trim($cachedId, '-') );
-        
-        $cached = $this->cache->get($cachedId);
+        $cached = $this->cache->get($cachedId, "shop.products.total");
         if (!$cached) {
             $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product p
             LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) ";
 
             $sql .= $this->buildSQLQuery($data, null, true);
-
             $query = $this->db->query($sql);
 
-            $this->cache->set($cachedId, $query->row['total']);
-            
+            $this->cache->set($cachedId, $query->row['total'], "shop.products.total");
+
             return $query->row['total'];
         } else {
             return $cached;
@@ -90,12 +74,14 @@ class ModelStoreProduct extends Model {
     private function buildSQLQuery($data, $sort_data = null, $countAsTotal = false) {
         $criteria = array();
         $sql = "";
-        
+
+        $sql .= "LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) ";
         $sql .= " LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) ";
         $sql .= " LEFT JOIN " . DB_PREFIX . "store s ON (s.store_id = p2s.store_id) ";
-        
+
         $data['product_id'] = !is_array($data['product_id']) && !empty($data['product_id']) ? array($data['product_id']) : $data['product_id'];
         $data['category_id'] = !is_array($data['category_id']) && !empty($data['category_id']) ? array($data['category_id']) : $data['category_id'];
+        $data['manufacturer_id'] = !is_array($data['manufacturer_id']) && !empty($data['manufacturer_id']) ? array($data['manufacturer_id']) : $data['manufacturer_id'];
 
         if (!empty($data['language_id']) && is_numeric($data['language_id'])) {
             $criteria[] = " pd.language_id = '". intval($data['language_id']) ."' ";
@@ -108,7 +94,7 @@ class ModelStoreProduct extends Model {
         } else {
             $criteria[] = " p.status = '1' ";
         }
-        
+
         if (!empty($data['date_available'])) {
             $criteria[] = " p.date_available <= '". $this->db->escape($data['date_available']) ."' ";
         } else {
@@ -118,7 +104,7 @@ class ModelStoreProduct extends Model {
         if (!empty($data['product_id']) && empty($data['related']) && empty($data['suggested']) && empty($data['xsell'])) {
             $criteria[] = " p.product_id IN (" . implode(', ', $data['product_id']) . ") ";
         }
-        
+
         if ($data['queries']) {
             $search =  $search2 = '';
             foreach ($data['queries'] as $key => $value) {
@@ -141,7 +127,7 @@ class ModelStoreProduct extends Model {
                 $criteria[] = " (". rtrim($search2,'OR') .")";
             }
         }
-        
+
         if (!empty($data['category']) || !empty($data['category_id'])) {
             $sql .= " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id) ";
         }
@@ -156,7 +142,15 @@ class ModelStoreProduct extends Model {
             $criteria[] = " c2s.store_id = '" . (int) STORE_ID . "' ";
             $criteria[] = " p2c.category_id IN (" . implode(', ', $data['category_id']) . ") ";
         }
-        
+
+        if (!empty($data['manufacturer'])) {
+            $criteria[] = " LCASE(m.name) LIKE '%" . $this->db->escape(strtolower($data['manufacturer'])) . "%' collate utf8_general_ci ";
+        }
+
+        if (!empty($data['manufacturer_id'])) {
+            $criteria[] = " m.manufacturer_id IN (" . implode(', ', $data['manufacturer_id']) . ") ";
+        }
+
         if (!empty($data['properties'])) {
             $sql .= " LEFT JOIN " . DB_PREFIX . "product_property pp ON (p.product_id = pp.product_id) ";
             foreach ($data['properties'] as $key => $value) {
@@ -176,7 +170,7 @@ class ModelStoreProduct extends Model {
             $criteria[] = " ss.language_id = '". (int)$this->config->get('config_language_id') ."'";
             $criteria[] = " LCASE(ss.name) LIKE '%" . $this->db->escape($data['stock_status']) . "%' collate utf8_general_ci ";
         }
-        
+
         if (!empty($data['seller'])) {
             $sql .= " LEFT JOIN " . DB_PREFIX . "customer cu ON (p.owner_id = cu.customer_id) ";
             $search = '';
@@ -187,10 +181,6 @@ class ModelStoreProduct extends Model {
             if (!empty($search)) {
                 $criteria[] = " (". rtrim($search,'OR') .")";
             }
-        }
-        
-        if (!empty($data['manufacturer'])) {
-            $criteria[] = " LCASE(m.name) LIKE '%" . $this->db->escape(strtolower($data['manufacturer'])) . "%' collate utf8_general_ci ";
         }
 
         if (!empty($data['store'])) {
@@ -204,7 +194,7 @@ class ModelStoreProduct extends Model {
         } else {
             $criteria[] = " p2s.store_id = '". (int)STORE_ID ."' ";
         }
-        
+
         if (!empty($data['shipping_method']) || !empty($data['payment_method']) || !empty($data['product_status'])) {
             $sql .= " LEFT JOIN " . DB_PREFIX . "product_property pp ON (p.product_id = pp.product_id) ";
 
@@ -229,25 +219,25 @@ class ModelStoreProduct extends Model {
                 }
             }
         }
-        
+
         if (!empty($data['suggested']) && !empty($data['product_id'])) {
             $search = '';
-            
+
             $search .= " p.product_id IN ( " .
                 "SELECT product_id FROM `" . DB_PREFIX . "product_to_category` WHERE category_id IN ( " .
                 "SELECT category_id FROM `" . DB_PREFIX . "product_to_category` WHERE product_id IN (". implode(', ', $data['product_id']) .") "
                 ." )) OR";
-            
+
             $search .= " p.product_id IN ( " .
                 "SELECT product_id FROM `" . DB_PREFIX . "product` WHERE manufacturer_id = ( " .
                 "SELECT manufacturer_id FROM `" . DB_PREFIX . "product` WHERE product_id IN (". implode(', ', $data['product_id']) .") "
                 ." )) OR";
-            
+
             $search .= " p.product_id IN ( " .
                 "SELECT product_id FROM `" . DB_PREFIX . "order_product` WHERE order_id IN ( " .
                 "SELECT order_id FROM `" . DB_PREFIX . "order_product` WHERE product_id IN (". implode(', ', $data['product_id']) .") "
                 ." )) OR";
-            
+
             foreach ($data['queries'] as $key => $value) {
                 if (empty($value)) continue;
                 if ($value !== mb_convert_encoding( mb_convert_encoding($value, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32') )
@@ -270,13 +260,13 @@ class ModelStoreProduct extends Model {
             $search .= " p.product_id IN ( " .
                 "SELECT related_id FROM `" . DB_PREFIX . "product_related` WHERE product_id IN (". implode(', ', $data['product_id']) .") "
                 ." ) OR";
-            
+
             if (!empty($search)) {
                 $criteria[] = " " . rtrim($search, 'OR') . " ";
                 $criteria[] = " p.product_id NOT IN (". implode(', ', $data['product_id']) .") ";
                 if ($data['limit'] > 12 || (int)$data['limit'] == 0) $data['limit'] = 12;
             }
-            
+
         } elseif (!empty($data['xsell']) && !empty($data['product_id'])) {
             $search = '';
             //TODO: filter by order status
@@ -299,7 +289,7 @@ class ModelStoreProduct extends Model {
         } elseif (!empty($data['date_end'])) {
             $criteria[] = " p.date_added BETWEEN NOW() AND '". date('Y-m-d',strtotime($data['date_end'])) ."'";
         }
-        
+
         if (!empty($data['price_start']) && !empty($data['price_end'])) {
             $criteria[] = " p.price BETWEEN '". (float)$data['price_start'] ."' AND '". (float)$data['price_end'] ."'";
         } elseif (!empty($data['price_start'])) {
@@ -311,7 +301,7 @@ class ModelStoreProduct extends Model {
         if ($criteria) {
             $sql .= " WHERE " . implode(" AND ",$criteria);
         }
-        
+
         if (!$countAsTotal) {
             if (isset($sort_data)) {
                 $sql .= " GROUP BY p.product_id";
@@ -343,214 +333,24 @@ class ModelStoreProduct extends Model {
         return $this->getAll($data);
     }
 
-    public function getProductsToCompare($ids) {
-        return $this->getAll(array('product_id'=>$ids));
-    }
-
     public function getTotalProducts($data) {
         return $this->getAllTotal($data);
     }
 
-    public function getProductsByCategoryId($category_id, $sort = 'p.sort_order', $order = 'ASC', $start = 0, $limit = 20) {
-        $sort_data = array(
-            'pd.name',
-            'p.sort_order',
-            'special',
-            'rating'
-        );
-
-        $data['category_id'] = array($category_id);
-        $data['order'] = $order;
-        $data['sort'] = $sort;
-        $data['start'] = $start;
-        $data['limit'] = $limit;
-
-        return $this->getAll($data, $sort_data);
-    }
-
-    public function getTotalProductsByCategoryId($category_id = 0) {
-        $data['category_id'] = array($category_id);
-        return $this->getAllTotal($data);
-    }
-
-    public function getProductsByManufacturerId($manufacturer_id, $sort = 'p.sort_order', $order = 'ASC', $start = 0, $limit = 20) {
-        $sort_data = array(
-            'pd.name',
-            'p.sort_order',
-            'special',
-            'rating'
-        );
-
-        $data['manufacturer_id'] = $manufacturer_id;
-        $data['order'] = $order;
-        $data['sort'] = $sort;
-        $data['start'] = $start;
-        $data['limit'] = $limit;
-
-        return $this->getAll($data, $sort_data);
-    }
-
-    public function getTotalProductsByManufacturerId($manufacturer_id = 0) {
-        return $this->getAllTotal(array('manufacturer_id'=>$manufacturer_id));
-    }
-
-    public function getCategoriesByProduct($data) {
-        $cachedId = "search_categories_" . $data['filter_keyword'] . "_" . (int) STORE_ID . "_" . $data['filter_category'];
-        if ($cachedId !== mb_convert_encoding(mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32'))
-            $cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-        $cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-        $cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace(array('`[^a-z0-9]`i', '`[-]+`'), '-', $cachedId);
-        $cachedId = strtolower(trim($cachedId, '-'));
-
-        $cachedId .=$this->config->get('config_language_id') . "." .
-        $this->request->getQuery('hl') . "." .
-        $this->request->getQuery('cc') . "." .
-        $this->customer->getId() . "." .
-        $this->config->get('config_currency') . "." .
-        (int)$this->config->get('config_store_id');
-
-        $cached = $this->cache->get($cachedId);
-        if (!$cached) {
-            $sql = "SELECT *, COUNT(*) AS total, cd.name AS category
-            FROM " . DB_PREFIX . "category_description cd
-                LEFT JOIN " . DB_PREFIX . "category_to_store c2s ON (cd.category_id = c2s.category_id)
-                LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p2c.category_id = cd.category_id)
-                LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2c.product_id = pd.product_id)
-                LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (pd.product_id = p2s.product_id)
-                LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = pd.product_id) ";
-
-            $criteria = array();
-
-            if ($data['filter_keyword']) {
-                $criteria[] = " LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_keyword'])) . "%' ";
-            }
-
-            if ($data['product_id']) {
-                $criteria[] = " p2c.product_id = '" . (int) $data['product_id'] . "' ";
-            }
-
-            if ($data['filter_category']) {
-                $criteria[] = " LCASE(cd.name) LIKE '%" . $this->db->escape(strtolower($data['filter_category'])) . "%' ";
-            }
-
-            $criteria[] = " pd.language_id = '" . (int) $this->config->get('config_language_id') . "' ";
-            $criteria[] = " p.status = '1' ";
-            $criteria[] = " p.date_available <= NOW() ";
-            $criteria[] = " p2s.store_id = '" . (int) STORE_ID . "' ";
-            $criteria[] = " c2s.store_id = '" . (int) STORE_ID . "' ";
-
-            if ($criteria) {
-                $sql .= " WHERE " . implode(" AND ", $criteria);
-            }
-
-            $sql .= " GROUP BY cd.category_id";
-
-            $query = $this->db->query($sql);
-
-            foreach ($query->rows as $key => $value) {
-                $return[] = array(
-                    'category_id' => $value['category_id'],
-                    'name' => $value['category'],
-                    'total' => $value['total']
-                );
-            }
-            $this->cache->set($cachedId, $return);
-            return $return;
-        } else {
-            return $cached;
-        }
-    }
-
-    public function getManufacturersByProduct($data) {
-        $cachedId = "search_manufacturers_" . $data['keyword'] . "_" . $data['manufacturer'] . "_" . (int) STORE_ID . "_" . $data['city'];
-        if ($cachedId !== mb_convert_encoding(mb_convert_encoding($cachedId, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32'))
-            $cachedId = mb_convert_encoding($cachedId, 'UTF-8', mb_detect_encoding($cachedId));
-        $cachedId = htmlentities($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace('`&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\1', $cachedId);
-        $cachedId = html_entity_decode($cachedId, ENT_NOQUOTES, 'UTF-8');
-        $cachedId = preg_replace(array('`[^a-z0-9]`i', '`[-]+`'), '-', $cachedId);
-        $cachedId = strtolower(trim($cachedId, '-'));
-
-        $cachedId .=$this->config->get('config_language_id') . "." .
-            $this->request->getQuery('hl') . "." .
-            $this->request->getQuery('cc') . "." .
-            $this->customer->getId() . "." .
-            $this->config->get('config_currency') . "." .
-            (int)$this->config->get('config_store_id');
-
-        $cached = $this->cache->get($cachedId);
-        if (!$cached) {
-            $sql = "SELECT *, COUNT(*) AS total, md.name AS manufacturer
-            FROM " . DB_PREFIX . "manufacturer_description md
-                LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (md.manufacturer_id = m2s.manufacturer_id)
-                LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p2c.category_id = cd.category_id)
-                LEFT JOIN " . DB_PREFIX . "product_description pd ON (p2c.product_id = pd.product_id)
-                LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)
-                LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = pd.product_id) ";
-
-            $criteria = array();
-
-            if ($data['keyword']) {
-                $criteria[] = " LCASE(pd.name) LIKE '%" . $this->db->escape(strtolower($data['keyword'])) . "%' ";
-            }
-
-            if ($data['category']) {
-                $criteria[] = " LCASE(cd.name) LIKE '%" . $this->db->escape(strtolower($data['category'])) . "%' ";
-            }
-
-            $criteria[] = " pd.language_id = '" . (int) $this->config->get('config_language_id') . "' ";
-            $criteria[] = " p.status = '1' ";
-            $criteria[] = " p.date_available <= NOW() ";
-            $criteria[] = " p2s.store_id = '" . (int) STORE_ID . "' ";
-            $criteria[] = " m2s.store_id = '" . (int) STORE_ID . "' ";
-
-            if ($criteria) {
-                $sql .= " AND " . implode(" AND ", $criteria);
-            }
-
-            $sql .= " GROUP BY cd.category_id";
-
-            $query = $this->db->query($sql);
-
-            foreach ($query->rows as $key => $value) {
-                $return[] = array(
-                    'category_id' => $value['category_id'],
-                    'name' => $value['category'],
-                    'total' => $value['total']
-                );
-            }
-
-            $this->cache->set($cachedId, $return);
-            return $return;
-        } else {
-            return $cached;
-        }
-    }
-
-    public function getByKeyword($data) {
-        return $this->getAll($data);
-    }
-
-    public function getTotalByKeyword($data) {
-        return $this->getAllTotal($data);
-    }
-
-    public function getPath($category_id) {
-        $string = $category_id . ',';
-        $results = $this->modelCategory->getCategories($category_id);
-        foreach ($results as $result) {
-            $string .= $this->getPath($result['category_id']);
-        }
-
-        return $string;
+    public function getProductsToCompare($ids) {
+        return $this->getAll(array('product_id'=>$ids));
     }
 
     public function getProductRelated($id, $data) {
         $data['product_id'] = $id;
         $data['related'] = true;
         return $this->getAll($data);
+    }
+
+    public function getTotalProductRelated($id, $data) {
+        $data['product_id'] = $id;
+        $data['related'] = true;
+        return $this->getAllTotal($data);
     }
 
     public function getRandomProducts($data) {
@@ -564,18 +364,31 @@ class ModelStoreProduct extends Model {
 
     public function getRecommendedProducts($data) {
         $query = $this->db->query("SELECT DISTINCT object_id ".
-        "FROM " . DB_PREFIX . "stat s ".
-        "WHERE s.object_type = 'product' ".
+            "FROM " . DB_PREFIX . "stat s ".
+            "WHERE s.object_type = 'product' ".
             "AND s.customer_id = '" . (int) $this->customer->getId() . "' ".
-        "GROUP BY object_id, object_type ".
-        "ORDER BY s.date_added DESC ".
-        "LIMIT " . (int)$data['limit']);
+            "GROUP BY object_id, object_type ".
+            "ORDER BY s.date_added DESC ".
+            "LIMIT " . (int)$data['limit']);
 
         foreach ($query->rows as $k=>$v) {
             $data['product_id'][$k] = $v['object_id'];
         }
 
         return $this->getAll($data);
+    }
+
+    public function getTotalRecommendedProducts($data) {
+        $query = $this->db->query("SELECT DISTINCT object_id ".
+            "FROM " . DB_PREFIX . "stat s ".
+            "WHERE s.object_type = 'product' ".
+            "AND s.customer_id = '" . (int) $this->customer->getId() . "' ");
+
+        foreach ($query->rows as $k=>$v) {
+            $data['product_id'][$k] = $v['object_id'];
+        }
+
+        return $this->getAllTotal($data);
     }
 
     public function getLatestProducts($data) {
@@ -598,14 +411,25 @@ class ModelStoreProduct extends Model {
 
     public function getFeaturedProducts($data) {
         $query = $this->db->query("SELECT DISTINCT product_id ".
-        "FROM " . DB_PREFIX . "product_featured ".
-        "LIMIT " . (int) $data['limit']);
+            "FROM " . DB_PREFIX . "product_featured ".
+            "LIMIT " . (int) $data['limit']);
 
         foreach ($query->rows as $k=>$v) {
             $data['product_id'][$k] = $v['product_id'];
         }
 
         return $this->getAll($data);
+    }
+
+    public function getTotalFeaturedProducts($data) {
+        $query = $this->db->query("SELECT DISTINCT product_id ".
+            "FROM " . DB_PREFIX . "product_featured ");
+
+        foreach ($query->rows as $k=>$v) {
+            $data['product_id'][$k] = $v['product_id'];
+        }
+
+        return $this->getAllTotal($data);
     }
 
     public function getBestSellerProducts($data) {
@@ -622,6 +446,19 @@ class ModelStoreProduct extends Model {
         }
 
         return $this->getAll($data);
+    }
+
+    public function getTotalBestSellerProducts($data) {
+        $query = $this->db->query("SELECT product_id, SUM(op.quantity) AS total ".
+            "FROM " . DB_PREFIX . "order_product op ".
+            "LEFT JOIN " . DB_PREFIX . "order o ON (op.order_id = o.order_id) ".
+            "WHERE o.order_status_id> '0' ");
+
+        foreach ($query->rows as $k=>$v) {
+            $data['product_id'][$k] = $v['product_id'];
+        }
+
+        return $this->getAllTotal($data);
     }
 
     public function updateStats($product_id) {
@@ -739,20 +576,27 @@ class ModelStoreProduct extends Model {
         }
 
         $sql = "SELECT *, p.date_added AS created, pd.name AS name, p.price,
-                (SELECT ps2.price
-                    FROM " . DB_PREFIX . "product_special ps2
-                    WHERE p.product_id = ps2.product_id
-                        AND ps2.customer_group_id = '" . (int) $customer_group_id . "'
-                        AND ((ps2.date_start = '0000-00-00' OR ps2.date_start < NOW())
-                        AND (ps2.date_end = '0000-00-00' OR ps2.date_end> NOW()))
-                    ORDER BY ps2.priority ASC, ps2.price ASC LIMIT 1) AS special,
+                (
+                    SELECT ps2.price
+                        FROM " . DB_PREFIX . "product_special ps2
+                        WHERE p.product_id = ps2.product_id
+                            AND ps2.customer_group_id = '" . (int) $customer_group_id . "'
+                            AND 
+                            ( 
+                                (ps2.date_start = '0000-00-00' OR ps2.date_start < NOW())
+                                AND (ps2.date_end = '0000-00-00' OR ps2.date_end> NOW())
+                            )
+                    ORDER BY ps2.priority ASC, ps2.price ASC LIMIT 1
+                ) AS special,
                 p.image,
                 m.name AS manufacturer,
                 ss.name AS stock,
-                (SELECT AVG(r.rating)
-                    FROM " . DB_PREFIX . "review r
-                    WHERE p.product_id = r.object_id AND `object_type` = 'product'
-                    GROUP BY r.object_id) AS rating
+                (
+                    SELECT AVG(r.rating)
+                        FROM " . DB_PREFIX . "review r
+                        WHERE p.product_id = r.object_id AND `object_type` = 'product'
+                        GROUP BY r.object_id
+                ) AS rating
             FROM " . DB_PREFIX . "product p
                 LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)
                 LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)
